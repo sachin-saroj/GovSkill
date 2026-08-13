@@ -1,10 +1,10 @@
-# Node.js
+# Node.js & Frontend
 node_modules/
 dist/
 build/
 .env
 
-# Python
+# Python & Backend
 __pycache__/
 *.py[cod]
 *$py.class
@@ -12,8 +12,16 @@ venv/
 env/
 .venv/
 .pytest_cache/
+*.db
 govskill.db
+backend/govskill.db
 
-# OS
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS & IDE
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/

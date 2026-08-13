@@ -2,17 +2,24 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+import passlib.handlers.bcrypt
 from app.core.config import settings
+
+orig_calc_checksum = passlib.handlers.bcrypt._BcryptBackend._calc_checksum
+def _patched_calc_checksum(self, secret):
+    return orig_calc_checksum(self, secret[:72] if isinstance(secret, (bytes, bytearray)) else secret)
+
+passlib.handlers.bcrypt._BcryptBackend._calc_checksum = _patched_calc_checksum
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return pwd_context.verify(plain_password[:72], hashed_password)
 
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    return pwd_context.hash(password[:72])
 
 
 def create_access_token(subject: str | Any, role: str, expires_delta: timedelta | None = None) -> str:

@@ -52,7 +52,7 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
     # 1. Extract Name
     name_match = re.search(r"(?:Name|Applicant|Holder)\s*[:|-]\s*([A-Za-z\s.]+)", raw_text, re.IGNORECASE)
     if name_match:
-        name_val = name_match.group(1).strip()
+        name_val = name_match.group(1).split("\n")[0].strip()
         if len(name_val) >= 2:
             data["name"] = name_val
 

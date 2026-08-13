@@ -6,20 +6,16 @@ echo Adding files...
 git add .
 
 echo Committing files...
-git commit -m "Initial commit - CLG PROJECT"
+git commit -m "Initial release - GovSkill Full-Stack Platform"
 
 echo Setting main branch...
 git branch -M main
 
-echo Adding remote origin...
-git remote add origin https://github.com/nikhil-surve-dev/clg-project.git
-
-echo Pushing to GitHub...
+echo Pushing to GitHub repository GovSkill...
 git push -u origin main
 
 echo.
 echo ========================================================
 echo Done! Your code has been pushed to GitHub.
-echo Repository URL: https://github.com/nikhil-surve-dev/clg-project
 echo ========================================================
 pause

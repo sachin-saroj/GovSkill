@@ -37,7 +37,6 @@ app.include_router(quiz.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(documents.router, prefix=settings.API_V1_STR)
 
-
 @app.get("/health", tags=["health"])
 async def health_check():
     return {"status": "ok", "app": settings.PROJECT_NAME}
