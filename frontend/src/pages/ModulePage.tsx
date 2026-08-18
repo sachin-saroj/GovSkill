@@ -3,19 +3,23 @@ import { Link } from 'react-router-dom';
 import api from '@/lib/api';
 import { Module } from '@/types';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { BookOpen, Bot, Award, Loader2, ArrowRight } from 'lucide-react';
 
+
 export const ModulePage: React.FC = () => {
-  const [module, setModule] = useState<Module | null>(null);
+  const [modules, setModules] = useState<Module[]>([]);
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchModule = async () => {
+    const fetchModules = async () => {
       try {
-        const res = await api.get<Module>('/modules/default');
-        setModule(res.data);
+        const res = await api.get<Module[]>('/modules');
+        setModules(res.data);
+        if (res.data.length > 0) {
+          setSelectedModule(res.data[0]);
+        }
       } catch (err: any) {
         const msg = err.response?.data?.detail?.error?.message || 'Failed to load module content';
         setError(msg);
@@ -23,7 +27,7 @@ export const ModulePage: React.FC = () => {
         setIsLoading(false);
       }
     };
-    fetchModule();
+    fetchModules();
   }, []);
 
   if (isLoading) {
@@ -47,18 +51,42 @@ export const ModulePage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
-      {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#1E4D8C] to-[#163A6B] p-8 text-white shadow-sm">
-        <div className="flex items-center gap-3 text-white/80 text-sm font-medium mb-2">
-          <BookOpen className="h-5 w-5" />
-          <span>Core Employee Training Module</span>
+      {/* Header Banner & Module Selector */}
+      <div className="rounded-2xl bg-gradient-to-r from-[#1E4D8C] to-[#163A6B] p-8 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-3 text-white/80 text-sm font-medium mb-2">
+            <BookOpen className="h-5 w-5" />
+            <span>Core Employee Training Module</span>
+          </div>
+          <h1 className="text-3xl font-semibold leading-tight mb-2">
+            {selectedModule?.title || 'Digital Document Handling'}
+          </h1>
+          <p className="text-white/90 text-sm max-w-2xl leading-relaxed">
+            Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
+          </p>
         </div>
-        <h1 className="text-3xl font-semibold leading-tight mb-3">
-          {module?.title || 'Digital Document Handling'}
-        </h1>
-        <p className="text-white/90 text-sm max-w-2xl leading-relaxed">
-          Master the official workflow for reviewing, verifying, and indexing citizen documents with zero errors.
-        </p>
+
+        {modules.length > 1 && (
+          <div className="bg-white/10 p-3 rounded-xl backdrop-blur border border-white/20 shrink-0">
+            <label className="block text-[11px] uppercase font-semibold text-white/80 mb-1">
+              Switch Training Module:
+            </label>
+            <select
+              value={selectedModule?.id || ''}
+              onChange={(e) => {
+                const target = modules.find((m) => m.id === e.target.value);
+                if (target) setSelectedModule(target);
+              }}
+              className="w-full px-3 py-1.5 text-xs font-semibold text-[#1A1F2B] bg-white rounded-lg focus:outline-none"
+            >
+              {modules.map((mod) => (
+                <option key={mod.id} value={mod.id}>
+                  {mod.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -66,20 +94,23 @@ export const ModulePage: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           <Card className="prose max-w-none">
             <div className="space-y-6 text-[#1A1F2B]">
-              {module?.content.split('# ').filter(Boolean).map((section, idx) => {
-                const lines = section.trim().split('\n');
-                const title = lines[0];
-                const body = lines.slice(1).join('\n');
+              {selectedModule?.content
+                .split('# ')
+                .filter(Boolean)
+                .map((section, idx) => {
+                  const lines = section.trim().split('\n');
+                  const title = lines[0];
+                  const body = lines.slice(1).join('\n');
 
-                return (
-                  <div key={idx} className="border-b border-[#E2E6EB] pb-6 last:border-0 last:pb-0">
-                    <h2 className="text-xl font-semibold text-[#1E4D8C] mb-3">{title}</h2>
-                    <div className="text-sm text-[#5A6472] leading-relaxed whitespace-pre-line">
-                      {body}
+                  return (
+                    <div key={idx} className="border-b border-[#E2E6EB] pb-6 last:border-0 last:pb-0">
+                      <h2 className="text-xl font-semibold text-[#1E4D8C] mb-3">{title}</h2>
+                      <div className="text-sm text-[#5A6472] leading-relaxed whitespace-pre-line">
+                        {body}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </Card>
         </div>
@@ -133,3 +164,4 @@ export const ModulePage: React.FC = () => {
   );
 };
 export default ModulePage;
+

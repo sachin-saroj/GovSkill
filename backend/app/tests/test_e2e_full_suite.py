@@ -31,12 +31,17 @@ async def test_full_application_e2e():
             assert h_resp.status_code == 200
             assert h_resp.json()["status"] == "ok"
 
-            # 2. Register employee & admin
+            # 2. Register employee & create admin user
             e_reg = await client.post("/api/auth/register", json={"email": "employee@test.gov", "password": "password123", "role": "employee"})
             assert e_reg.status_code == 201
 
-            a_reg = await client.post("/api/auth/register", json={"email": "admin@test.gov", "password": "password123", "role": "admin"})
-            assert a_reg.status_code == 201
+            async with async_session_test() as session:
+                from app.core.security import get_password_hash
+                from app.models.user import User
+                admin_user = User(email="admin@test.gov", password_hash=get_password_hash("password123"), role="admin")
+                session.add(admin_user)
+                await session.commit()
+
 
             # 3. Employee login & module read
             e_login = await client.post("/api/auth/login", json={"email": "employee@test.gov", "password": "password123"})

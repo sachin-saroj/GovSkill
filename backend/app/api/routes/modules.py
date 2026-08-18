@@ -31,19 +31,80 @@ Always ensure citizen privacy and PII protection. Documents must be stored secur
 """
 
 
-async def get_or_create_default_module(db: AsyncSession) -> Module:
-    result = await db.execute(select(Module).where(Module.title == DEFAULT_MODULE_TITLE))
-    module = result.scalar_one_or_none()
-    if not module:
-        module = Module(
-            id=uuid.UUID("11111111-1111-1111-1111-111111111111"),
-            title=DEFAULT_MODULE_TITLE,
-            content=DEFAULT_MODULE_CONTENT,
-        )
-        db.add(module)
+SEED_MODULES = [
+    {
+        "id": uuid.UUID("11111111-1111-1111-1111-111111111111"),
+        "title": DEFAULT_MODULE_TITLE,
+        "content": DEFAULT_MODULE_CONTENT,
+    },
+    {
+        "id": uuid.UUID("11111111-1111-1111-1111-111111111112"),
+        "title": "Government Portal Operations",
+        "content": """# Lesson 1: Portal Overview & Citizen Service Workflow
+Municipal and district portals process thousands of citizen requests daily. Service SLA tracking ensures timely delivery for certificates, permits, and grievance resolutions.
+
+# Lesson 2: Application Processing & Verification Steps
+1. Review inbound application details against supporting documents.
+2. Route applications to designated departmental supervisors for secondary sign-off.
+3. Update portal status flags ('Under Review', 'Approved', 'Rejected') promptly.
+
+# Lesson 3: SLA Compliance & Escalation Workflow
+Applications exceeding 7 business days without resolution are automatically flagged for supervisor escalation.
+""",
+    },
+    {
+        "id": uuid.UUID("11111111-1111-1111-1111-111111111113"),
+        "title": "Cybersecurity & Data Privacy Basics",
+        "content": """# Lesson 1: Protecting Government Networks & Credentials
+Government workstations contain sensitive PII. Employees must maintain strong password hygiene, multi-factor authentication (MFA), and lock screens when away from desks.
+
+# Lesson 2: Identifying Phishing & Social Engineering
+Never click unverified link attachments in external emails. Verify sender domain addresses before entering administrative portal credentials.
+
+# Lesson 3: PII Security & Encryption
+Citizen records must be encrypted at rest and in transit. Never store unencrypted Excel files containing citizen Aadhaar or bank details on personal drives.
+""",
+    },
+    {
+        "id": uuid.UUID("11111111-1111-1111-1111-111111111114"),
+        "title": "Digital Record Management",
+        "content": """# Lesson 1: Archival Standards & Indexing
+Official local government documents require standardized metadata tags (Year, Category, Issuing Office, Record ID) to enable fast retrieveability and audit logging.
+
+# Lesson 2: Record Retention & Destruction Policy
+Financial and land record documents must be retained permanently. Income certificates are retained for 5 years before scheduled archive purging.
+
+# Lesson 3: Audit Trail & Chain of Custody
+All document updates, exports, and access requests generate immutable system audit logs.
+""",
+    },
+]
+
+
+async def seed_all_default_modules(db: AsyncSession) -> list[Module]:
+    result = await db.execute(select(Module))
+    existing = {m.id: m for m in result.scalars().all()}
+    added_any = False
+    for m_data in SEED_MODULES:
+        if m_data["id"] not in existing:
+            mod = Module(
+                id=m_data["id"],
+                title=m_data["title"],
+                content=m_data["content"],
+            )
+            db.add(mod)
+            added_any = True
+    if added_any:
         await db.commit()
-        await db.refresh(module)
-    return module
+        result = await db.execute(select(Module))
+        return list(result.scalars().all())
+    return list(existing.values())
+
+
+
+async def get_or_create_default_module(db: AsyncSession) -> Module:
+    modules = await seed_all_default_modules(db)
+    return modules[0]
 
 
 @router.get("", response_model=list[ModuleResponse])
@@ -51,11 +112,7 @@ async def list_modules(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    result = await db.execute(select(Module))
-    modules = result.scalars().all()
-    if not modules:
-        default_mod = await get_or_create_default_module(db)
-        return [default_mod]
+    modules = await seed_all_default_modules(db)
     return modules
 
 
@@ -80,13 +137,10 @@ async def get_module(
     module = result.scalar_one_or_none()
 
     if not module:
-        # Fallback to seed default module if requesting seed UUID or not found
-        default_mod = await get_or_create_default_module(db)
-        if default_mod.id == mod_uuid:
-            return default_mod
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={"error": {"code": "MODULE_NOT_FOUND", "message": "Training module not found"}},
         )
 
     return module
+

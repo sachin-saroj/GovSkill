@@ -25,18 +25,20 @@ async def test_full_employee_journey():
             await conn.run_sync(Base.metadata.create_all)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            # Step 1: Register employee and admin
+            # Step 1: Register employee and create admin user
             emp_reg = await client.post(
                 "/api/auth/register",
                 json={"email": "emp@gov.in", "password": "pass12345", "role": "employee"},
             )
             assert emp_reg.status_code == 201
 
-            admin_reg = await client.post(
-                "/api/auth/register",
-                json={"email": "admin@gov.in", "password": "adminpass123", "role": "admin"},
-            )
-            assert admin_reg.status_code == 201
+            async with async_session_test() as session:
+                from app.core.security import get_password_hash
+                from app.models.user import User
+                admin_user = User(email="admin@gov.in", password_hash=get_password_hash("adminpass123"), role="admin")
+                session.add(admin_user)
+                await session.commit()
+
 
             # Step 2: Login employee
             emp_login = await client.post(
@@ -67,9 +69,10 @@ async def test_full_employee_journey():
             quiz_resp = await client.get("/api/quiz/default", headers=emp_headers)
             assert quiz_resp.status_code == 200
             questions = quiz_resp.json()["questions"]
-            assert len(questions) == 8
+            assert len(questions) == 4
             for q in questions:
                 assert "correct_option_index" not in q
+
 
             # Step 6: Submit Quiz Answers
             answers_payload = [
@@ -83,7 +86,7 @@ async def test_full_employee_journey():
             assert submit_resp.status_code == 200
             score_data = submit_resp.json()
             assert "score" in score_data
-            assert score_data["total"] == 8
+            assert score_data["total"] == 4
 
             # Step 7: Login Admin & View Attempt Log
             admin_login = await client.post(

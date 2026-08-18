@@ -33,14 +33,42 @@ export interface QuizAttempt {
   submitted_at?: string;
 }
 
+export interface AdminQuizQuestion {
+  id: string;
+  module_id: string;
+  question: string;
+  options: string[];
+  correct_option_index: number;
+}
+
+export interface EmployeeSkillItem {
+  module_id: string;
+  module_title: string;
+  lessons_completed: boolean;
+  best_score: number;
+  total_questions: number;
+  score_percentage: number;
+  status: 'not_started' | 'in_progress' | 'completed' | 'certified';
+  updated_at: string;
+}
+
+export interface EmployeeSkillStatusResponse {
+  overall_skill_score: number;
+  total_modules: number;
+  certified_modules: number;
+  skills: EmployeeSkillItem[];
+}
+
 export interface ValidationRuleResult {
   ruleName: string;
   passed: boolean;
   explanation?: string;
 }
 
+
 export interface DocumentUploadResponse {
   document_id: string;
   extracted_data: Record<string, any>;
   validation_results: ValidationRuleResult[];
 }
+
