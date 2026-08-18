@@ -62,6 +62,7 @@ GovSkill is structured as a full-stack monorepo featuring a FastAPI backend and 
   - `QuizPage.tsx`: Multiple-choice quiz interface with server submission.
   - `AdminDashboardPage.tsx`: Supervisor performance overview and attempt table.
   - `CitizenUploadPage.tsx`: Public document upload and pre-check validation page.
+  - `ProgressDashboardPage.tsx`: Employee skill tracking dashboard.
 - **`components/`**:
   - `ui/`: Button, Card, Input, Badge primitives.
   - `quiz/QuizCard.tsx`: Individual MCQ rendering component.
@@ -75,4 +76,5 @@ GovSkill is structured as a full-stack monorepo featuring a FastAPI backend and 
 2. **`modules`**: Stores training module titles and markdown lesson content.
 3. **`quiz_questions`**: Stores MCQs linked to `modules.id` including `correct_option_index`.
 4. **`quiz_attempts`**: Records employee score submissions (`user_id`, `module_id`, `score`, `total`).
-5. **`citizen_documents`**: Stores pre-check document uploads and validation results (isolated; no user FK).
+5. **`user_progress`**: Tracks employee skill advancement (`user_id`, `module_id`, `highest_score`, `lessons_completed`, `skill_status`).
+6. **`citizen_documents`**: Stores pre-check document uploads and validation results (isolated; no user FK).

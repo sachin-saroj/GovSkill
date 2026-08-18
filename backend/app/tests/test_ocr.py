@@ -41,6 +41,28 @@ def test_parse_structured_fields_realistic_formats():
     assert res_3["certificate_number"] == "887766"
     assert res_3["expiry_date"] == "2025-11-30"
 
+    # Format 4: Natural language name and textual date
+    raw_4 = """
+    This is to certify that Shri Prakash Rao son of...
+    Certificate Number: INC123999
+    Valid Until: 31st Dec 2025
+    """
+    res_4 = parse_structured_fields(raw_4)
+    assert res_4["name"] == "Prakash Rao"
+    assert res_4["certificate_number"] == "INC123999"
+    assert res_4["expiry_date"] == "2025-12-31"
+
+    # Format 5: Financial year validity
+    raw_5 = """
+    certified that Smt Kamala Devi is a resident of...
+    Cert No: GOV-888-777
+    Valid for the Year 2024-25
+    """
+    res_5 = parse_structured_fields(raw_5)
+    assert res_5["name"] == "Kamala Devi"
+    assert res_5["certificate_number"] == "GOV-888-777"
+    assert res_5["expiry_date"] == "2025-03-31"
+
 
 def test_parse_structured_fields_dirty_ocr_text():
     dirty_text = """
