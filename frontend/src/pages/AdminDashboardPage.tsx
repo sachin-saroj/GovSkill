@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/lib/api';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { QuizAttempt, Module, AdminQuizQuestion } from '@/types';
 import { Card } from '@/components/ui/Card';
 import {
@@ -59,8 +60,8 @@ export const AdminDashboardPage: React.FC = () => {
     try {
       const res = await api.get<QuizAttempt[]>(`/admin/attempts?limit=${LIMIT}&offset=${attemptOffset}`);
       setAttempts(res.data);
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to load attempt logs');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to load attempt logs'));
     } finally {
       setIsLoadingAttempts(false);
     }
@@ -74,8 +75,8 @@ export const AdminDashboardPage: React.FC = () => {
       if (res.data.length > 0 && !selectedModuleId) {
         setSelectedModuleId(res.data[0].id);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to load modules');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to load modules'));
     }
   };
 
@@ -87,8 +88,8 @@ export const AdminDashboardPage: React.FC = () => {
     try {
       const res = await api.get<AdminQuizQuestion[]>(`/admin/modules/${modId}/questions`);
       setQuestions(res.data);
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to load quiz questions');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to load quiz questions'));
     } finally {
       setIsLoadingQuestions(false);
     }
@@ -138,8 +139,8 @@ export const AdminDashboardPage: React.FC = () => {
       }
       setIsModuleModalOpen(false);
       fetchModules();
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to save module');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to save module'));
     }
   };
 
@@ -149,8 +150,8 @@ export const AdminDashboardPage: React.FC = () => {
       await api.delete(`/admin/modules/${modId}`);
       setSuccessMsg('Module deleted successfully');
       fetchModules();
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to delete module');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to delete module'));
     }
   };
 
@@ -196,8 +197,8 @@ export const AdminDashboardPage: React.FC = () => {
       }
       setIsQuestionModalOpen(false);
       fetchQuestions(selectedModuleId);
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to save question');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to save question'));
     }
   };
 
@@ -207,8 +208,8 @@ export const AdminDashboardPage: React.FC = () => {
       await api.delete(`/admin/questions/${qId}`);
       setSuccessMsg('Question deleted successfully');
       fetchQuestions(selectedModuleId);
-    } catch (err: any) {
-      setError(err.response?.data?.detail?.error?.message || 'Failed to delete question');
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to delete question'));
     }
   };
 

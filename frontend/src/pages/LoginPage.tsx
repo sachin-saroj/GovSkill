@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/api';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -30,9 +31,8 @@ export const LoginPage: React.FC = () => {
       const res = await api.post<{ access_token: string }>('/auth/login', { email, password });
       await login(res.data.access_token);
       navigate(role === 'admin' ? '/admin' : '/module');
-    } catch (err: any) {
-      const msg = err.response?.data?.detail?.error?.message || err.response?.data?.message || 'Authentication failed';
-      setError(msg);
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Authentication failed'));
     } finally {
       setIsLoading(false);
     }
