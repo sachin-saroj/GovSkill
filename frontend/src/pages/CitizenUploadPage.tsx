@@ -90,6 +90,7 @@ export const CitizenUploadPage: React.FC = () => {
                 </span>
                 <input
                   id="file-upload"
+                  aria-label="Choose a file to upload"
                   type="file"
                   accept="image/png,image/jpeg,application/pdf"
                   onChange={handleFileChange}
