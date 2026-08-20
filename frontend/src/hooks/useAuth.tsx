@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (token: string) => Promise<void>;
+  login: (token: string) => Promise<User | null>;
   logout: () => void;
 }
 
@@ -17,14 +17,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchUser = async () => {
+  const fetchUser = async (): Promise<User | null> => {
     try {
       const res = await api.get<User>('/auth/me');
       setUser(res.data);
+      return res.data;
     } catch {
       localStorage.removeItem('token');
       setToken(null);
       setUser(null);
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -38,11 +40,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token]);
 
-  const login = async (newToken: string) => {
+  const login = async (newToken: string): Promise<User | null> => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setIsLoading(true);
-    await fetchUser();
+    return await fetchUser();
   };
 
   const logout = () => {

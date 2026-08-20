@@ -29,8 +29,8 @@ export const LoginPage: React.FC = () => {
         await api.post('/auth/register', { email, password, role });
       }
       const res = await api.post<{ access_token: string }>('/auth/login', { email, password });
-      await login(res.data.access_token);
-      navigate(role === 'admin' ? '/admin' : '/module');
+      const loggedInUser = await login(res.data.access_token);
+      navigate(loggedInUser?.role === 'admin' ? '/admin' : '/module');
     } catch (error: unknown) {
       setError(getApiErrorMessage(error, 'Authentication failed'));
     } finally {
