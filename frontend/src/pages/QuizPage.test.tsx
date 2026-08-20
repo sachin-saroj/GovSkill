@@ -4,6 +4,7 @@ import QuizPage from './QuizPage';
 import api from '@/lib/api';
 
 const navigate = vi.fn();
+let mockModuleId: string | undefined = undefined;
 
 vi.mock('@/lib/api', () => ({
   default: {
@@ -14,6 +15,7 @@ vi.mock('@/lib/api', () => ({
 
 vi.mock('react-router-dom', () => ({
   useNavigate: () => navigate,
+  useParams: () => ({ moduleId: mockModuleId }),
 }));
 
 const mockedGet = vi.mocked(api.get);
@@ -34,6 +36,7 @@ const questions = [
 
 describe('QuizPage', () => {
   beforeEach(() => {
+    mockModuleId = undefined;
     mockedGet.mockReset();
     mockedPost.mockReset();
     navigate.mockReset();
@@ -69,6 +72,27 @@ describe('QuizPage', () => {
       ],
     }));
     expect(await screen.findByText('2 / 2')).toBeInTheDocument();
-    expect(screen.getByText('100% — Passed')).toBeInTheDocument();
+    expect(screen.getByText(/100%.*Passed/)).toBeInTheDocument();
+  });
+
+  it('fetches and submits answers to a module-specific quiz endpoint', async () => {
+    mockModuleId = 'cybersecurity-101';
+    mockedPost.mockResolvedValue({ data: { score: 1, total: 2 } });
+
+    render(<QuizPage />);
+    await screen.findByRole('button', { name: /submit quiz/i });
+
+    expect(mockedGet).toHaveBeenCalledWith('/quiz/cybersecurity-101');
+
+    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Alphanumeric' }));
+    fireEvent.click(screen.getByRole('button', { name: /submit quiz/i }));
+
+    await waitFor(() => expect(mockedPost).toHaveBeenCalledWith('/quiz/cybersecurity-101/submit', {
+      answers: [
+        { question_id: 'question-1', selected_option_index: 1 },
+        { question_id: 'question-2', selected_option_index: 1 },
+      ],
+    }));
   });
 });

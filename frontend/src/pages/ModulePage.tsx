@@ -129,7 +129,7 @@ export const ModulePage: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/quiz">
+              <Link to={`/quiz/${selectedModule?.id || 'default'}`}>
                 <div className="p-4 rounded-xl border border-[#E2E6EB] bg-[#F7F9FB] hover:border-[#1E4D8C] transition-all group cursor-pointer">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 text-[#2E9E6B] font-semibold text-sm">

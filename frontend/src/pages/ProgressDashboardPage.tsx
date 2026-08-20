@@ -186,7 +186,7 @@ export const ProgressDashboardPage: React.FC = () => {
                 </Link>
 
                 <Link
-                  to="/quiz"
+                  to={`/quiz/${skill.module_id}`}
                   className="flex items-center gap-1 font-semibold text-[#2E9E6B] hover:underline"
                 >
                   <Award className="h-3.5 w-3.5" />
