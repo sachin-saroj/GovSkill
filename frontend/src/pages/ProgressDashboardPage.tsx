@@ -13,7 +13,6 @@ import {
   ArrowRight,
   RefreshCw,
   Sparkles,
-  Loader2
 } from 'lucide-react';
 
 export const ProgressDashboardPage: React.FC = () => {
@@ -161,7 +160,7 @@ export const ProgressDashboardPage: React.FC = () => {
                           : 'bg-white text-[#5A6472] border-[#E2E6EB] hover:border-[#1E4D8C]'
                       }`}
                     >
-                      {skill.lessons_completed ? 'Completed ✓' : 'Mark as Read'}
+                      {skill.lessons_completed ? 'Completed Ã¢Å“â€œ' : 'Mark as Read'}
                     </button>
                   </div>
 
