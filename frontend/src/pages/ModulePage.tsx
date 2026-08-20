@@ -64,10 +64,11 @@ export const ModulePage: React.FC = () => {
 
         {modules.length > 1 && (
           <div className="bg-white/10 p-3 rounded-xl backdrop-blur border border-white/20 shrink-0">
-            <label className="block text-[11px] uppercase font-semibold text-white/80 mb-1">
+            <label htmlFor="training-module-selector" className="block text-[11px] uppercase font-semibold text-white/80 mb-1">
               Switch Training Module:
             </label>
             <select
+              id="training-module-selector"
               value={selectedModule?.id || ''}
               onChange={(e) => {
                 const target = modules.find((m) => m.id === e.target.value);
