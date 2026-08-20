@@ -95,8 +95,11 @@ export const AdminDashboardPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchAttempts();
     fetchModules();
+  }, []);
+
+  useEffect(() => {
+    fetchAttempts();
   }, [attemptOffset]);
 
   useEffect(() => {
@@ -173,9 +176,15 @@ export const AdminDashboardPage: React.FC = () => {
   const handleSaveQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const cleanOptions = qOptions.filter((o) => o.trim().length > 0);
+    const correctOptionText = qOptions[qCorrectIdx]?.trim();
+    const cleanOptions = qOptions.map((o) => o.trim()).filter(Boolean);
     if (cleanOptions.length < 2) {
       setError('Please provide at least 2 non-empty options');
+      return;
+    }
+    const finalCorrectIdx = cleanOptions.indexOf(correctOptionText);
+    if (finalCorrectIdx === -1) {
+      setError('Please select a valid option as the correct answer');
       return;
     }
     try {
@@ -183,14 +192,14 @@ export const AdminDashboardPage: React.FC = () => {
         await api.put(`/admin/questions/${editingQuestion.id}`, {
           question: qText,
           options: cleanOptions,
-          correct_option_index: qCorrectIdx,
+          correct_option_index: finalCorrectIdx,
         });
         setSuccessMsg('Question updated successfully');
       } else {
         await api.post(`/admin/modules/${selectedModuleId}/questions`, {
           question: qText,
           options: cleanOptions,
-          correct_option_index: qCorrectIdx,
+          correct_option_index: finalCorrectIdx,
         });
         setSuccessMsg('Question created successfully');
       }
@@ -656,7 +665,7 @@ export const AdminDashboardPage: React.FC = () => {
                     />
                     <input
                       type="text"
-                      required
+                      required={idx < 2}
                       value={opt}
                       onChange={(e) => {
                         const updated = [...qOptions];
@@ -664,7 +673,7 @@ export const AdminDashboardPage: React.FC = () => {
                         setQOptions(updated);
                       }}
                       className="w-full px-3 py-1.5 text-xs border rounded-lg"
-                      placeholder={`Option ${String.fromCharCode(65 + idx)}`}
+                      placeholder={`Option ${String.fromCharCode(65 + idx)}${idx >= 2 ? ' (Optional)' : ''}`}
                     />
                   </div>
                 ))}

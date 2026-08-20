@@ -35,6 +35,7 @@ describe('LoginPage', () => {
       logout: vi.fn(),
     });
     login.mockReset();
+    login.mockResolvedValue({ role: 'employee' });
     navigate.mockReset();
   });
 
@@ -100,5 +101,22 @@ describe('LoginPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
 
     expect(await screen.findByText('Invalid email or password')).toBeInTheDocument();
+  });
+
+  it('logs in an admin and navigates to the admin dashboard page', async () => {
+    mockedPost.mockResolvedValue({ data: { access_token: 'admin-token' } });
+    login.mockResolvedValue({ role: 'admin' });
+
+    render(<LoginPage />);
+    fireEvent.change(screen.getByLabelText('Official Email Address'), {
+      target: { value: 'admin@govskill.test' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+
+    await waitFor(() => expect(login).toHaveBeenCalledWith('admin-token'));
+    expect(navigate).toHaveBeenCalledWith('/admin');
   });
 });
