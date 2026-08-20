@@ -13,7 +13,8 @@ import {
   ArrowRight,
   RefreshCw,
   Sparkles,
-, Loader2 } from 'lucide-react';
+  Loader2
+} from 'lucide-react';
 
 export const ProgressDashboardPage: React.FC = () => {
   const [data, setData] = useState<EmployeeSkillStatusResponse | null>(null);
