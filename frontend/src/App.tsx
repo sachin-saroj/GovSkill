@@ -68,6 +68,14 @@ export const AppContent: React.FC = () => {
             }
           />
           <Route
+            path="/quiz/:moduleId"
+            element={
+              <ProtectedRoute>
+                <QuizPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/quiz"
             element={
               <ProtectedRoute>

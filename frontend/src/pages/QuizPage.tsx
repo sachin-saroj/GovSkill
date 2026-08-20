@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
-import { QuizQuestion } from '@/types';
+import { QuizQuestion, Module } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -12,12 +12,16 @@ import EmptyState from '@/components/ui/EmptyState';
 import { Award, CheckCircle2, Loader2, RefreshCw, ArrowRight } from 'lucide-react';
 
 export const QuizPage: React.FC = () => {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const activeModuleId = moduleId || 'default';
+
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<{ score: number; total: number } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [moduleTitle, setModuleTitle] = useState<string>('Digital Document Handling Quiz');
 
   const navigate = useNavigate();
 
@@ -25,8 +29,21 @@ export const QuizPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await api.get<{ questions: QuizQuestion[] }>('/quiz/default');
-      setQuestions(res.data.questions);
+      const [quizRes, modulesRes] = await Promise.all([
+        api.get<{ questions: QuizQuestion[] }>(`/quiz/${activeModuleId}`),
+        api.get<Module[]>('/modules').catch(() => ({ data: [] as Module[] }))
+      ]);
+      setQuestions(quizRes.data.questions);
+      if (modulesRes.data) {
+        const currentMod = modulesRes.data.find(m => m.id === activeModuleId);
+        if (currentMod) {
+          setModuleTitle(`${currentMod.title} Quiz`);
+        } else if (activeModuleId === 'default') {
+          setModuleTitle('Digital Document Handling Quiz');
+        } else {
+          setModuleTitle('Training Module Quiz');
+        }
+      }
     } catch (error: unknown) {
       setError(getApiErrorMessage(error, 'Failed to load quiz questions'));
     } finally {
@@ -36,7 +53,7 @@ export const QuizPage: React.FC = () => {
 
   useEffect(() => {
     fetchQuiz();
-  }, []);
+  }, [activeModuleId]);
 
   const handleSelectOption = (questionId: string, optionIndex: number) => {
     setAnswers((prev) => ({
@@ -60,7 +77,7 @@ export const QuizPage: React.FC = () => {
     }));
 
     try {
-      const res = await api.post<{ score: number; total: number }>('/quiz/default/submit', {
+      const res = await api.post<{ score: number; total: number }>(`/quiz/${activeModuleId}/submit`, {
         answers: payloadAnswers,
       });
       setResult(res.data);
@@ -148,7 +165,7 @@ export const QuizPage: React.FC = () => {
           <Award className="h-4 w-4" />
           <span>Module Quiz Evaluation</span>
         </div>
-        <h1 className="text-2xl font-semibold text-[#1A1F2B]">Digital Document Handling Quiz</h1>
+        <h1 className="text-2xl font-semibold text-[#1A1F2B]">{moduleTitle}</h1>
         <p className="text-sm text-[#5A6472] mt-1">
           Answer all {questions.length} questions below. Scores are submitted securely for server-side evaluation.
         </p>
