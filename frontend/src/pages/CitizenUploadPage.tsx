@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import api from '@/lib/api';
-import { getApiErrorMessage } from '@/lib/apiError';
 import { DocumentUploadResponse, ValidationRuleResult } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -43,8 +42,11 @@ export const CitizenUploadPage: React.FC = () => {
 
       setResults(res.data.validation_results);
       setExtractedData(res.data.extracted_data);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, 'Failed to upload and process citizen document.'));
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.detail?.error?.message ||
+        'Failed to upload and process citizen document.';
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
