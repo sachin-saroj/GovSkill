@@ -4,10 +4,7 @@ import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
 import { Module } from '@/types';
 import { Card } from '@/components/ui/Card';
-import LoadingState from '@/components/ui/LoadingState';
-import ErrorState from '@/components/ui/ErrorState';
-import EmptyState from '@/components/ui/EmptyState';
-import { BookOpen, Bot, Award, ArrowRight } from 'lucide-react';
+import { BookOpen, Bot, Award, ArrowRight , Loader2 } from 'lucide-react';
 
 
 export const ModulePage: React.FC = () => {
@@ -34,15 +31,15 @@ export const ModulePage: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <LoadingState message="Loading training module content..." />;
+    return <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]"><Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" /><span>Loading training module content...</span></div>;
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={() => window.location.reload()} />;
+    return <div className="max-w-4xl mx-auto py-12 px-4"><div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">{error}</div></div>;
   }
 
   if (modules.length === 0) {
-    return <EmptyState title="No training modules available" message="Please check back after your administrator publishes a module." />;
+    return <div className="max-w-4xl mx-auto py-12 px-4 text-center"><h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No training modules available</h2><p className="text-[#5A6472]">Please check back after your administrator publishes a module.</p></div>;
   }
 
   return (

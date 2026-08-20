@@ -4,8 +4,6 @@ import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
 import { EmployeeSkillStatusResponse } from '@/types';
 import { Card } from '@/components/ui/Card';
-import LoadingState from '@/components/ui/LoadingState';
-import ErrorState from '@/components/ui/ErrorState';
 import {
   Award,
   BookOpen,
@@ -15,7 +13,7 @@ import {
   ArrowRight,
   RefreshCw,
   Sparkles,
-} from 'lucide-react';
+, Loader2 } from 'lucide-react';
 
 export const ProgressDashboardPage: React.FC = () => {
   const [data, setData] = useState<EmployeeSkillStatusResponse | null>(null);
@@ -49,11 +47,11 @@ export const ProgressDashboardPage: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <LoadingState message="Loading your digital skill profile..." />;
+    return <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]"><Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" /><span>Loading your digital skill profile...</span></div>;
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={fetchSkillProgress} />;
+    return <div className="max-w-4xl mx-auto py-12 px-4"><div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">{error}</div></div>;
   }
 
   const certifiedCount = data?.certified_modules || 0;

@@ -25,3 +25,4 @@ export default defineConfig({
     },
   },
 });
+// Vitest configuration retained

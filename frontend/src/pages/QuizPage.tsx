@@ -6,9 +6,6 @@ import { QuizQuestion } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import LoadingState from '@/components/ui/LoadingState';
-import ErrorState from '@/components/ui/ErrorState';
-import EmptyState from '@/components/ui/EmptyState';
 import { Award, CheckCircle2, Loader2, RefreshCw, ArrowRight } from 'lucide-react';
 
 export const QuizPage: React.FC = () => {
@@ -77,15 +74,15 @@ export const QuizPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingState message="Loading quiz questions..." />;
+    return <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]"><Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" /><span>Loading quiz questions...</span></div>;
   }
 
   if (error && questions.length === 0) {
-    return <ErrorState message={error} onRetry={fetchQuiz} />;
+    return <div className="max-w-4xl mx-auto py-12 px-4"><div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">{error}</div></div>;
   }
 
   if (questions.length === 0) {
-    return <EmptyState title="No quiz questions available" message="Please check back after your administrator publishes quiz questions." />;
+    return <div className="max-w-4xl mx-auto py-12 px-4 text-center"><h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No quiz questions available</h2><p className="text-[#5A6472]">Please check back after your administrator publishes quiz questions.</p></div>;
   }
 
   if (result) {
