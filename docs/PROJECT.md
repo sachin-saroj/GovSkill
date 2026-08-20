@@ -43,6 +43,6 @@
 
 ## Scope Boundaries & Exclusions
 - **GovAssist Document Scope**: Income Certificates only (single document type).
-- **Single Seed Module**: Currently features 1 training module ("Digital Document Handling").
+- **Multi-Module Capable**: The application now features an Admin CMS supporting creation and management of unlimited training modules (seeded with 4 default modules).
 - **No Citizen Accounts**: Citizens do not register or maintain accounts.
 - **Out of Scope**: Formal document submission pipeline, offline sync, bilingual translation, user certification issuing.

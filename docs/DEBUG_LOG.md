@@ -20,6 +20,9 @@
 6. **`backend/app/api/routes/documents.py` — Missing Unhandled Exception Safeguard during OCR/Parsing**:
    If OCR or field parsing encounters an unreadable binary file, the route can throw an uncaught 500 error instead of returning a clean validation response.
 
+7. **`backend/app/services/ocr_service.py` — Over-aggressive Name Extraction Regex**:
+   The regex pattern extracting the applicant's name unintentionally matched trailing relational noise words like "Shri Prakash Rao son of...", passing the literal text "son of" as part of the parsed name to the Rule Engine.
+
 ## Fixes Applied
 
 1. **`backend/app/api/deps.py`**: Added explicit `uuid.UUID(str(user_id))` parsing in `get_current_user` to ensure type compatibility across all database dialects.
@@ -28,3 +31,4 @@
 4. **`frontend/src/hooks/`**: Standardized React Auth context into `useAuth.tsx` with clean type exports and updated `useAuth.ts` re-export module.
 5. **`frontend/src/pages/AdminDashboardPage.tsx`**: Filtered zero-total attempts in average score calculation (`validAttempts.length > 0`) to prevent `NaN` values.
 6. **`backend/app/api/routes/documents.py`**: Added try/except error boundaries around OCR text extraction and AI explanation generation to ensure clean JSON error responses instead of uncaught server crashes.
+7. **`backend/app/services/ocr_service.py`**: Updated the noise cleanup regex in `parse_structured_fields` to explicitly catch and remove trailing relational words (`son`, `daughter`, `wife`, `of`) after names are initially captured.

@@ -3,7 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import admin, auth, documents, modules, quiz, tutor
+from app.api.routes import admin, auth, documents, modules, progress, quiz, tutor
 from app.core.config import settings
 
 app = FastAPI(
@@ -13,11 +13,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 @app.exception_handler(RequestValidationError)
@@ -36,6 +37,8 @@ app.include_router(tutor.router, prefix=settings.API_V1_STR)
 app.include_router(quiz.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(documents.router, prefix=settings.API_V1_STR)
+app.include_router(progress.router, prefix=settings.API_V1_STR)
+
 
 @app.get("/health", tags=["health"])
 async def health_check():

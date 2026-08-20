@@ -17,6 +17,18 @@ UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
+MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".pdf", ".txt"}
+ALLOWED_MIME_TYPES = {
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "application/pdf",
+    "text/plain",
+    "application/octet-stream",
+}
+
+
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_document(
     file: UploadFile = File(...),
@@ -29,25 +41,46 @@ async def upload_document(
         )
 
     ext = os.path.splitext(file.filename)[1].lower()
-    if ext not in [".jpg", ".jpeg", ".png", ".pdf", ".txt"]:
+    if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"error": {"code": "INVALID_FORMAT", "message": "Only JPG, PNG, PDF, and TXT sample files are allowed"}},
         )
+
+    if file.content_type and file.content_type.lower() not in ALLOWED_MIME_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": {"code": "INVALID_MIME_TYPE", "message": f"Unsupported MIME type '{file.content_type}'"}},
+        )
+
+    try:
+        contents = await file.read()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": {"code": "FILE_READ_ERROR", "message": f"Failed to read file content: {str(e)}"}},
+        )
+
+    if len(contents) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            detail={"error": {"code": "FILE_TOO_LARGE", "message": f"File size exceeds maximum allowed 5MB limit ({len(contents)} bytes)"}},
+        )
+
 
     file_id = uuid.uuid4()
     saved_filename = f"{file_id}{ext}"
     saved_filepath = os.path.join(UPLOAD_DIR, saved_filename)
 
     try:
-        contents = await file.read()
         with open(saved_filepath, "wb") as f:
             f.write(contents)
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={"error": {"code": "FILE_SAVE_ERROR", "message": f"Failed to save uploaded file: {str(e)}"}},
         )
+
 
     # 1. OCR Raw Text Extraction with Exception Handling
     try:

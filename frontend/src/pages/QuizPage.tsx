@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '@/lib/api';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { QuizQuestion } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import LoadingState from '@/components/ui/LoadingState';
+import ErrorState from '@/components/ui/ErrorState';
+import EmptyState from '@/components/ui/EmptyState';
 import { Award, CheckCircle2, Loader2, RefreshCw, ArrowRight } from 'lucide-react';
 
 export const QuizPage: React.FC = () => {
@@ -23,9 +27,8 @@ export const QuizPage: React.FC = () => {
     try {
       const res = await api.get<{ questions: QuizQuestion[] }>('/quiz/default');
       setQuestions(res.data.questions);
-    } catch (err: any) {
-      const msg = err.response?.data?.detail?.error?.message || 'Failed to load quiz questions';
-      setError(msg);
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to load quiz questions'));
     } finally {
       setIsLoading(false);
     }
@@ -61,9 +64,8 @@ export const QuizPage: React.FC = () => {
         answers: payloadAnswers,
       });
       setResult(res.data);
-    } catch (err: any) {
-      const msg = err.response?.data?.detail?.error?.message || 'Failed to submit quiz';
-      setError(msg);
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to submit quiz'));
     } finally {
       setIsSubmitting(false);
     }
@@ -75,12 +77,15 @@ export const QuizPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]">
-        <Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" />
-        <span>Loading quiz questions...</span>
-      </div>
-    );
+    return <LoadingState message="Loading quiz questions..." />;
+  }
+
+  if (error && questions.length === 0) {
+    return <ErrorState message={error} onRetry={fetchQuiz} />;
+  }
+
+  if (questions.length === 0) {
+    return <EmptyState title="No quiz questions available" message="Please check back after your administrator publishes quiz questions." />;
   }
 
   if (result) {

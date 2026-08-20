@@ -34,6 +34,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
   return <>{children}</>;
 };
 
+import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
+
 export const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F9FB]">
@@ -41,6 +43,14 @@ export const AppContent: React.FC = () => {
       <main className="flex-1">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/progress"
+            element={
+              <ProtectedRoute>
+                <ProgressDashboardPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/module"
             element={
@@ -74,12 +84,14 @@ export const AppContent: React.FC = () => {
             }
           />
           <Route path="/citizen" element={<CitizenUploadPage />} />
-          <Route path="*" element={<Navigate to="/module" replace />} />
+          <Route path="/" element={<Navigate to="/progress" replace />} />
+          <Route path="*" element={<Navigate to="/progress" replace />} />
         </Routes>
       </main>
     </div>
   );
 };
+
 
 export const App: React.FC = () => {
   return (

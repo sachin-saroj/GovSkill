@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Shield, LogOut, BookOpen, Bot, Award, FileText, LayoutDashboard } from 'lucide-react';
+import { Shield, LogOut, BookOpen, Bot, Award, FileText, LayoutDashboard, Sparkles } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -25,6 +25,10 @@ export const Header: React.FC = () => {
             <nav className="hidden md:flex items-center gap-4 text-sm font-medium text-[#5A6472]">
               {user && (
                 <>
+                  <Link to="/progress" className="flex items-center gap-1.5 hover:text-[#1E4D8C] transition-colors font-semibold text-[#1E4D8C]">
+                    <Sparkles className="h-4 w-4 text-[#D98E04]" />
+                    <span>My Skills</span>
+                  </Link>
                   <Link to="/module" className="flex items-center gap-1.5 hover:text-[#1E4D8C] transition-colors">
                     <BookOpen className="h-4 w-4" />
                     <span>Lessons</span>
@@ -45,6 +49,7 @@ export const Header: React.FC = () => {
                   )}
                 </>
               )}
+
               <Link to="/citizen" className="flex items-center gap-1.5 text-[#1E4D8C] font-semibold hover:underline">
                 <FileText className="h-4 w-4" />
                 <span>GovAssist</span>

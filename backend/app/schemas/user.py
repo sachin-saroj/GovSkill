@@ -1,12 +1,12 @@
 import uuid
 from typing import Literal
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserRegister(BaseModel):
     email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
     password: str = Field(min_length=6)
-    role: Literal["employee", "admin"]
+    role: Literal["employee", "admin"] = "employee"
 
 
 class UserLogin(BaseModel):
@@ -15,15 +15,14 @@ class UserLogin(BaseModel):
 
 
 class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     email: str
     role: str
 
 
-    class Config:
-        from_attributes = True
-
-
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+

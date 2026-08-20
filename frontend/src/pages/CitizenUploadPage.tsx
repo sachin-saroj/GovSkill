@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '@/lib/api';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { DocumentUploadResponse, ValidationRuleResult } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -42,11 +43,8 @@ export const CitizenUploadPage: React.FC = () => {
 
       setResults(res.data.validation_results);
       setExtractedData(res.data.extracted_data);
-    } catch (err: any) {
-      const msg =
-        err.response?.data?.detail?.error?.message ||
-        'Failed to upload and process citizen document.';
-      setError(msg);
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, 'Failed to upload and process citizen document.'));
     } finally {
       setIsLoading(false);
     }
@@ -92,6 +90,7 @@ export const CitizenUploadPage: React.FC = () => {
                 </span>
                 <input
                   id="file-upload"
+                  aria-label="Choose a file to upload"
                   type="file"
                   accept="image/png,image/jpeg,application/pdf"
                   onChange={handleFileChange}
@@ -131,18 +130,20 @@ export const CitizenUploadPage: React.FC = () => {
               <dl className="grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <dt className="text-[#5A6472]">Applicant Name:</dt>
-                  <dd className="font-medium text-[#1A1F2B]">{extractedData.name || 'Not detected'}</dd>
+                  <dd className="font-medium text-[#1A1F2B]">
+                    {extractedData.name || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-[#5A6472]">Certificate No:</dt>
                   <dd className="font-medium text-[#1A1F2B]">
-                    {extractedData.certificate_number || 'Not detected'}
+                    {extractedData.certificate_number || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
                   </dd>
                 </div>
                 <div>
                   <dt className="text-[#5A6472]">Expiry Date:</dt>
                   <dd className="font-medium text-[#1A1F2B]">
-                    {extractedData.expiry_date || 'Not detected'}
+                    {extractedData.expiry_date || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
                   </dd>
                 </div>
               </dl>

@@ -1,14 +1,13 @@
 import uuid
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class QuestionOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     question: str
     options: list[str]
-
-    class Config:
-        from_attributes = True
 
 
 class QuizQuestionsResponse(BaseModel):
@@ -27,3 +26,4 @@ class QuizSubmitRequest(BaseModel):
 class QuizSubmitResponse(BaseModel):
     score: int
     total: int
+

@@ -32,3 +32,9 @@ This document records the fundamental architectural, technological, and security
 ## 5. Resilient LLM Fallback Architecture
 - **Decision**: `ai_service.py` provides hardcoded, keyword-matched fallback responses for both the AI Tutor (`generate_tutor_answer`) and AI Explanation Layer (`generate_rule_explanation`).
 - **Rationale**: Ensures the web application remains fully functional even when `GEMINI_API_KEY` is not provided in `.env` or if third-party LLM API requests time out.
+
+---
+
+## 6. Code-Driven AI Routing vs Vector Databases
+- **Decision**: Multi-module relevance routing for the AI Tutor is performed using a purely deterministic Python keyword/term-overlap scoring mechanism.
+- **Rationale**: Keeps the architecture simple and easy to deploy without requiring infrastructure dependencies like Redis, Pinecone, or PostgreSQL pgvector extensions just to match a query to 4-10 training modules.
