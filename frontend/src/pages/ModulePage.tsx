@@ -5,7 +5,6 @@ import { Module } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { BookOpen, Bot, Award, Loader2, ArrowRight } from 'lucide-react';
 
-
 export const ModulePage: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
@@ -49,6 +48,16 @@ export const ModulePage: React.FC = () => {
     );
   }
 
+  if (modules.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4 text-center">
+        <h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No training modules available</h2>
+        <p className="text-[#5A6472]">Please check back after your administrator publishes a module.</p>
+      </div>
+    );
+
+  }
+
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
       {/* Header Banner & Module Selector */}
@@ -68,10 +77,11 @@ export const ModulePage: React.FC = () => {
 
         {modules.length > 1 && (
           <div className="bg-white/10 p-3 rounded-xl backdrop-blur border border-white/20 shrink-0">
-            <label className="block text-[11px] uppercase font-semibold text-white/80 mb-1">
+            <label htmlFor="training-module-selector" className="block text-[11px] uppercase font-semibold text-white/80 mb-1">
               Switch Training Module:
             </label>
             <select
+              id="training-module-selector"
               value={selectedModule?.id || ''}
               onChange={(e) => {
                 const target = modules.find((m) => m.id === e.target.value);
@@ -135,7 +145,7 @@ export const ModulePage: React.FC = () => {
                 </div>
               </Link>
 
-              <Link to="/quiz">
+              <Link to={`/quiz/${selectedModule?.id || 'default'}`}>
                 <div className="p-4 rounded-xl border border-[#E2E6EB] bg-[#F7F9FB] hover:border-[#1E4D8C] transition-all group cursor-pointer">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 text-[#2E9E6B] font-semibold text-sm">
