@@ -477,8 +477,9 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#F7F9FB] p-4 rounded-xl border border-[#E2E6EB]">
             <div className="flex items-center gap-3">
-              <label className="text-xs font-semibold text-[#5A6472] uppercase">Select Module:</label>
+              <label htmlFor="admin-module-select" className="text-xs font-semibold text-[#5A6472] uppercase">Select Module:</label>
               <select
+                id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
                 className="px-3 py-1.5 text-xs font-medium text-[#1A1F2B] border border-[#E2E6EB] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]"
@@ -576,7 +577,7 @@ export const AdminDashboardPage: React.FC = () => {
               <h3 className="text-base font-semibold text-[#1A1F2B]">
                 {editingModule ? 'Edit Training Module' : 'Create Training Module'}
               </h3>
-              <button onClick={() => setIsModuleModalOpen(false)}>
+              <button onClick={() => setIsModuleModalOpen(false)} aria-label="Close modal">
                 <X className="h-5 w-5 text-[#5A6472]" />
               </button>
             </div>
@@ -634,7 +635,7 @@ export const AdminDashboardPage: React.FC = () => {
               <h3 className="text-base font-semibold text-[#1A1F2B]">
                 {editingQuestion ? 'Edit Quiz Question' : 'Add Quiz Question'}
               </h3>
-              <button onClick={() => setIsQuestionModalOpen(false)}>
+              <button onClick={() => setIsQuestionModalOpen(false)} aria-label="Close modal">
                 <X className="h-5 w-5 text-[#5A6472]" />
               </button>
             </div>
@@ -659,6 +660,7 @@ export const AdminDashboardPage: React.FC = () => {
                     <input
                       type="radio"
                       name="correct_idx"
+                      aria-label={`Mark Option ${String.fromCharCode(65 + idx)} as correct`}
                       checked={qCorrectIdx === idx}
                       onChange={() => setQCorrectIdx(idx)}
                       className="h-4 w-4 text-[#1E4D8C]"

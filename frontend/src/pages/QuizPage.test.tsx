@@ -95,4 +95,29 @@ describe('QuizPage', () => {
       ],
     }));
   });
+
+  it('disables input controls during submission', async () => {
+    let resolvePost: any;
+    const postPromise = new Promise((resolve) => {
+      resolvePost = resolve;
+    });
+    mockedPost.mockReturnValue(postPromise);
+
+    render(<QuizPage />);
+    await screen.findByRole('button', { name: /submit quiz/i });
+
+    const option1 = screen.getByRole('radio', { name: '6 characters' });
+    const option2 = screen.getByRole('radio', { name: 'Alphanumeric' });
+    fireEvent.click(option1);
+    fireEvent.click(option2);
+
+    const submitButton = screen.getByRole('button', { name: /submit quiz/i });
+    fireEvent.click(submitButton);
+
+    expect(option1).toBeDisabled();
+    expect(option2).toBeDisabled();
+
+    await resolvePost({ data: { score: 2, total: 2 } });
+    await screen.findByText('2 / 2');
+  });
 });

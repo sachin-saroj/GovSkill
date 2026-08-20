@@ -81,10 +81,14 @@ export const CitizenUploadPage: React.FC = () => {
           <h2 className="text-lg font-semibold text-[#1A1F2B]">Upload Income Certificate</h2>
 
           <form onSubmit={handleUpload} className="space-y-4">
-            <div className="border-2 border-dashed border-[#E2E6EB] hover:border-[#1E4D8C] rounded-xl p-6 text-center transition-colors bg-[#F7F9FB]">
+            <div className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors bg-[#F7F9FB] ${
+              isLoading
+                ? 'border-[#E2E6EB] cursor-not-allowed opacity-60'
+                : 'border-[#E2E6EB] hover:border-[#1E4D8C]'
+            }`}>
               <UploadCloud className="h-10 w-10 text-[#1E4D8C] mx-auto mb-2" />
-              <label htmlFor="file-upload" className="cursor-pointer">
-                <span className="text-sm font-semibold text-[#1E4D8C] hover:underline block">
+              <label htmlFor="file-upload" className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}>
+                <span className={`text-sm font-semibold block ${isLoading ? 'text-[#5A6472] no-underline' : 'text-[#1E4D8C] hover:underline'}`}>
                   Choose a file to upload
                 </span>
                 <span className="text-xs text-[#5A6472] block mt-1">
@@ -96,6 +100,7 @@ export const CitizenUploadPage: React.FC = () => {
                   type="file"
                   accept="image/png,image/jpeg,application/pdf"
                   onChange={handleFileChange}
+                  disabled={isLoading}
                   className="hidden"
                 />
               </label>

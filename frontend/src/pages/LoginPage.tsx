@@ -80,8 +80,9 @@ export const LoginPage: React.FC = () => {
 
           {isRegister && (
             <div>
-              <label className="block text-sm font-medium text-[#1A1F2B] mb-1">Account Role</label>
+              <label htmlFor="role-select" className="block text-sm font-medium text-[#1A1F2B] mb-1">Account Role</label>
               <select
+                id="role-select"
                 value={role}
                 onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
                 className="w-full rounded-lg border border-[#E2E6EB] bg-white px-3 py-2 text-sm text-[#1A1F2B] focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]/30 focus:border-[#1E4D8C]"

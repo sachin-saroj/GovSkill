@@ -95,11 +95,13 @@ export const TutorChatPage: React.FC = () => {
         {/* Module Scope Selector */}
         <div className="flex items-center gap-2 bg-[#F7F9FB] px-3 py-1.5 rounded-xl border border-[#E2E6EB] shrink-0">
           <BookOpen className="h-4 w-4 text-[#1E4D8C]" />
-          <label className="text-xs font-semibold text-[#5A6472]">Context:</label>
+          <label htmlFor="context-select" className="text-xs font-semibold text-[#5A6472]">Context:</label>
           <select
+            id="context-select"
             value={selectedModuleId}
             onChange={(e) => setSelectedModuleId(e.target.value)}
-            className="text-xs font-semibold text-[#1A1F2B] bg-transparent focus:outline-none cursor-pointer"
+            disabled={isLoading}
+            className="text-xs font-semibold text-[#1A1F2B] bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <option value="auto">Auto-Detect Relevant Module ✨</option>
             {modules.map((mod) => (

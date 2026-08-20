@@ -199,6 +199,7 @@ export const QuizPage: React.FC = () => {
             questionIndex={idx}
             selectedOption={answers[q.id] ?? null}
             onSelectOption={(optIdx) => handleSelectOption(q.id, optIdx)}
+            disabled={isSubmitting}
           />
         ))}
       </div>
