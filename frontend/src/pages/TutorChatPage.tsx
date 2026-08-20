@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/lib/api';
-import { getApiErrorMessage } from '@/lib/apiError';
 import { Module } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -35,8 +34,8 @@ export const TutorChatPage: React.FC = () => {
       try {
         const res = await api.get<Module[]>('/modules');
         setModules(res.data);
-      } catch (error: unknown) {
-        console.warn(getApiErrorMessage(error, 'Failed to load modules list for tutor dropdown'));
+      } catch (err: any) {
+        console.warn('Failed to load modules list for tutor dropdown');
       }
     };
     fetchModules();
@@ -73,8 +72,9 @@ export const TutorChatPage: React.FC = () => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, tutorMsg]);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, 'Failed to get answer from AI Tutor'));
+    } catch (err: any) {
+      const msg = err.response?.data?.detail?.error?.message || 'Failed to get answer from AI Tutor';
+      setError(msg);
     } finally {
       setIsLoading(false);
     }

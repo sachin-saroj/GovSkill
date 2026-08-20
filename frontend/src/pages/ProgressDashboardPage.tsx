@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '@/lib/api';
-import { getApiErrorMessage } from '@/lib/apiError';
 import { EmployeeSkillStatusResponse } from '@/types';
 import { Card } from '@/components/ui/Card';
 import {
@@ -10,6 +9,7 @@ import {
   CheckCircle2,
   Clock,
   Circle,
+  Loader2,
   ArrowRight,
   RefreshCw,
   Sparkles,
@@ -27,8 +27,8 @@ export const ProgressDashboardPage: React.FC = () => {
     try {
       const res = await api.get<EmployeeSkillStatusResponse>('/progress/my-skills');
       setData(res.data);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, 'Failed to load skill progress'));
+    } catch (err: any) {
+      setError(err.response?.data?.detail?.error?.message || 'Failed to load skill progress');
     } finally {
       setIsLoading(false);
     }
@@ -38,8 +38,8 @@ export const ProgressDashboardPage: React.FC = () => {
     try {
       await api.post(`/progress/modules/${module_id}/complete-lessons`);
       fetchSkillProgress();
-    } catch (error: unknown) {
-      alert(getApiErrorMessage(error, 'Failed to update lesson status'));
+    } catch (err: any) {
+      alert(err.response?.data?.detail?.error?.message || 'Failed to update lesson status');
     }
   };
 
@@ -48,11 +48,22 @@ export const ProgressDashboardPage: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]"><Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" /><span>Loading your digital skill profile...</span></div>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]">
+        <Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" />
+        <span>Loading your digital skill profile...</span>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="max-w-4xl mx-auto py-12 px-4"><div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">{error}</div></div>;
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">
+          {error}
+        </div>
+      </div>
+    );
   }
 
   const certifiedCount = data?.certified_modules || 0;

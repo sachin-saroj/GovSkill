@@ -78,8 +78,9 @@ export const QuizPage: React.FC = () => {
         answers: payloadAnswers,
       });
       setResult(res.data);
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, 'Failed to submit quiz'));
+    } catch (err: any) {
+      const msg = err.response?.data?.detail?.error?.message || 'Failed to submit quiz';
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -91,15 +92,31 @@ export const QuizPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]"><Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" /><span>Loading quiz questions...</span></div>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]">
+        <Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" />
+        <span>Loading quiz questions...</span>
+      </div>
+    );
   }
 
   if (error && questions.length === 0) {
-    return <div className="max-w-4xl mx-auto py-12 px-4"><div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">{error}</div></div>;
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">
+          {error}
+        </div>
+      </div>
+    );
   }
 
   if (questions.length === 0) {
-    return <div className="max-w-4xl mx-auto py-12 px-4 text-center"><h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No quiz questions available</h2><p className="text-[#5A6472]">Please check back after your administrator publishes quiz questions.</p></div>;
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4 text-center">
+        <h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No quiz questions available</h2>
+        <p className="text-[#5A6472]">Please check back after your administrator publishes quiz questions.</p>
+      </div>
+    );
   }
 
   if (result) {
