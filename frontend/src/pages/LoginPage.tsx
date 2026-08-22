@@ -61,7 +61,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-slate-50">
+    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-slate-50 animate-fade-in">
       <div className="w-full max-w-md space-y-6">
         {/* Main Authentication Card */}
         <Card className="border-slate-200 shadow-civic-lg p-6 sm:p-8 bg-white" variant="elevated">
@@ -111,7 +111,7 @@ export const LoginPage: React.FC = () => {
 
           {/* Error Feedback Message */}
           {error && (
-            <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fade-in">
+            <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2 animate-fade-in shadow-civic-xs">
               <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -148,7 +148,7 @@ export const LoginPage: React.FC = () => {
                   id="role-select"
                   value={role}
                   onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 cursor-pointer"
                 >
                   <option value="employee">Government Employee (Trainee Officer)</option>
                   <option value="admin">Department Supervisor (Admin)</option>
@@ -158,7 +158,7 @@ export const LoginPage: React.FC = () => {
 
             <Button
               type="submit"
-              className="w-full mt-2 font-semibold"
+              className="w-full mt-2 font-semibold shadow-civic-sm cursor-pointer"
               size="lg"
               isLoading={isLoading}
               variant="primary"
@@ -189,7 +189,7 @@ export const LoginPage: React.FC = () => {
           className="w-full p-4 bg-emerald-50/70 hover:bg-emerald-50 rounded-xl border border-emerald-200/90 shadow-civic-xs flex items-center justify-between text-xs transition-all group hover:border-emerald-300"
         >
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+            <div className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-civic-xs">
               <FileCheck className="h-4 w-4 text-emerald-700" />
             </div>
             <div>
