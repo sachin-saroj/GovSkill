@@ -61,6 +61,7 @@ const renderPage = () =>
 
 describe('ProgressDashboardPage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedPost.mockReset();
     mockedGet.mockResolvedValue({ data: mockSkillsData });
