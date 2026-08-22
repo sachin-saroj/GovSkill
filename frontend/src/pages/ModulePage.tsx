@@ -4,8 +4,8 @@ import api from '@/lib/api';
 import { Module, EmployeeSkillStatusResponse } from '@/types';
 import ModuleSidebar from '@/components/learning/ModuleSidebar';
 import LessonReader from '@/components/learning/LessonReader';
-import { BookOpen, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-import Card from '@/components/ui/Card';
+import { EmptyState, ErrorAlert } from '@/components/ui';
+import { BookOpen, Loader2, CheckCircle2 } from 'lucide-react';
 
 export const ModulePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -94,29 +94,19 @@ export const ModulePage: React.FC = () => {
   if (error && modules.length === 0) {
     return (
       <div className="max-w-5xl mx-auto py-12 px-4">
-        <Card className="border-red-200 bg-red-50/60 p-6 text-sm text-red-700 flex items-start gap-3 shadow-civic-xs">
-          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="font-bold text-red-900 mb-1">Curriculum Error</h4>
-            <p>{error}</p>
-          </div>
-        </Card>
+        <ErrorAlert title="Curriculum Error" message={error} />
       </div>
     );
   }
 
   if (modules.length === 0) {
     return (
-      <div className="max-w-5xl mx-auto py-16 px-4 text-center">
-        <Card className="p-8 max-w-md mx-auto bg-white border-slate-200 shadow-civic-sm space-y-3">
-          <div className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
-            <BookOpen className="h-6 w-6" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900">No training modules available</h2>
-          <p className="text-xs text-slate-500">
-            Please check back after your administrator publishes a module.
-          </p>
-        </Card>
+      <div className="max-w-5xl mx-auto py-16 px-4">
+        <EmptyState
+          icon={BookOpen}
+          title="No training modules available"
+          description="Please check back after your administrator publishes a module."
+        />
       </div>
     );
   }
