@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import Header from '@/layout/header';
 import LoginPage from '@/pages/LoginPage';
+import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
 import ModulePage from '@/pages/ModulePage';
 import TutorChatPage from '@/pages/TutorChatPage';
 import QuizPage from '@/pages/QuizPage';
@@ -33,8 +34,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
   return <>{children}</>;
 };
-
-import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
 
 export const AppContent: React.FC = () => {
   return (
@@ -99,7 +98,6 @@ export const AppContent: React.FC = () => {
     </div>
   );
 };
-
 
 export const App: React.FC = () => {
   return (

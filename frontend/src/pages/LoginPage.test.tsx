@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LoginPage from './LoginPage';
 import api from '@/lib/api';
@@ -17,12 +18,23 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }));
 
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => navigate,
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => navigate,
+  };
+});
 
 const mockedPost = vi.mocked(api.post);
 const mockedUseAuth = vi.mocked(useAuth);
+
+const renderPage = () =>
+  render(
+    <BrowserRouter>
+      <LoginPage />
+    </BrowserRouter>
+  );
 
 describe('LoginPage', () => {
   beforeEach(() => {
@@ -39,10 +51,10 @@ describe('LoginPage', () => {
     navigate.mockReset();
   });
 
-  it('logs in an employee and navigates to the module page', async () => {
+  it('logs in an employee and navigates to the skill progress page', async () => {
     mockedPost.mockResolvedValue({ data: { access_token: 'employee-token' } });
 
-    render(<LoginPage />);
+    renderPage();
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
       target: { value: 'employee@govskill.test' },
     });
@@ -56,7 +68,19 @@ describe('LoginPage', () => {
       email: 'employee@govskill.test',
       password: 'password123',
     });
-    expect(navigate).toHaveBeenCalledWith('/module');
+    expect(navigate).toHaveBeenCalledWith('/progress');
+  });
+
+  it('fills demo credentials when Employee demo button is clicked', async () => {
+    renderPage();
+    const demoEmployeeBtn = screen.getByRole('button', { name: /employee/i });
+    fireEvent.click(demoEmployeeBtn);
+
+    const emailInput = screen.getByLabelText('Official Email Address') as HTMLInputElement;
+    const passwordInput = screen.getByLabelText('Password') as HTMLInputElement;
+
+    expect(emailInput.value).toBe('employee@govskill.test');
+    expect(passwordInput.value).toBe('password123');
   });
 
   it('registers before logging in when account creation is selected', async () => {
@@ -64,7 +88,7 @@ describe('LoginPage', () => {
       .mockResolvedValueOnce({ data: {} })
       .mockResolvedValueOnce({ data: { access_token: 'new-token' } });
 
-    render(<LoginPage />);
+    renderPage();
     fireEvent.click(screen.getByRole('button', { name: 'Register Here' }));
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
       target: { value: 'new.employee@govskill.test' },
@@ -91,7 +115,7 @@ describe('LoginPage', () => {
       isAxiosError: true,
     });
 
-    render(<LoginPage />);
+    renderPage();
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
       target: { value: 'employee@govskill.test' },
     });
@@ -107,7 +131,7 @@ describe('LoginPage', () => {
     mockedPost.mockResolvedValue({ data: { access_token: 'admin-token' } });
     login.mockResolvedValue({ role: 'admin' });
 
-    render(<LoginPage />);
+    renderPage();
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
       target: { value: 'admin@govskill.test' },
     });
