@@ -36,6 +36,7 @@ const renderPage = () =>
 
 describe('ModulePage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedPost.mockReset();
     mockedGet.mockImplementation((url) => {

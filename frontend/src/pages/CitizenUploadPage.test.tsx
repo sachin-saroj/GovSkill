@@ -23,6 +23,7 @@ const renderPage = () =>
 
 describe('CitizenUploadPage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedPost.mockReset();
   });
@@ -109,14 +110,13 @@ describe('CitizenUploadPage', () => {
   });
 
   it('renders the backend upload error', async () => {
+    renderPage();
+    const file = new File(['certificate contents'], 'income-certificate.txt', { type: 'text/plain' });
+    fireEvent.change(screen.getByLabelText('Choose a file to upload'), { target: { files: [file] } });
     mockedPost.mockRejectedValue({
       isAxiosError: true,
       response: { data: { detail: { error: { message: 'File size exceeds maximum allowed 5MB limit' } } } },
     });
-
-    renderPage();
-    const file = new File(['certificate contents'], 'income-certificate.txt', { type: 'text/plain' });
-    fireEvent.change(screen.getByLabelText('Choose a file to upload'), { target: { files: [file] } });
     fireEvent.click(screen.getByRole('button', { name: 'Run Pre-check Validation' }));
 
     expect(await screen.findByText('File size exceeds maximum allowed 5MB limit')).toBeInTheDocument();

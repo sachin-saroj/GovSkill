@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { DocumentUploadResponse, ValidationRuleResult } from '@/types';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import Badge from '@/components/ui/Badge';
 import ValidationResultCard from '@/components/document/ValidationResultCard';
 import {
   FileText,
@@ -16,6 +17,10 @@ import {
   Check,
   RotateCcw,
   Tag,
+  ShieldCheck,
+  Info,
+  X,
+  FileCode2,
 } from 'lucide-react';
 
 export const CitizenUploadPage: React.FC = () => {
@@ -24,6 +29,7 @@ export const CitizenUploadPage: React.FC = () => {
 
   // --- Upload State ---
   const [file, setFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [results, setResults] = useState<ValidationRuleResult[] | null>(null);
@@ -84,6 +90,24 @@ export const CitizenUploadPage: React.FC = () => {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0]);
+      setError(null);
+    }
+  };
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
@@ -137,78 +161,133 @@ export const CitizenUploadPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
-      {/* Header Banner */}
-      <div className="border-b border-[#E2E6EB] pb-4">
-        <div className="flex items-center gap-2 text-[#1E4D8C] font-semibold text-sm mb-1">
-          <FileCheck className="h-4 w-4" />
-          <span>GovAssist Citizen Self-Service Portal</span>
+    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+      {/* Top Civic Header Banner */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-civic-sm p-6 sm:p-8 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <span className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+              <FileCheck className="h-4 w-4 text-emerald-700" />
+            </span>
+            <div>
+              <span className="font-bold text-xs uppercase tracking-wider text-emerald-800 block">
+                GovAssist Citizen Self-Service Portal
+              </span>
+              <span className="text-[11px] text-slate-500 font-medium">
+                Official Revenue & Taluk Document Verification Protocol
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Badge variant="success" size="sm" dot>
+              100% Deterministic Engine
+            </Badge>
+            <Badge variant="info" size="sm">
+              Zero Login Required
+            </Badge>
+          </div>
         </div>
-        <h1 className="text-2xl font-semibold text-[#1A1F2B]">
-          Income Certificate Pre-submission Checker
-        </h1>
-        <p className="text-sm text-[#5A6472] mt-1">
-          Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
-        </p>
+
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Income Certificate Pre-submission Checker
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+            Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
+          </p>
+        </div>
       </div>
 
+      {/* Error Alert Box */}
       {error && (
-        <div className="p-4 rounded-xl bg-[#C0392B]/10 border border-[#C0392B]/30 text-xs text-[#C0392B] flex items-center gap-2">
-          <AlertCircle className="h-4 w-4 flex-shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5 shadow-civic-xs animate-fade-in">
+          <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <p className="font-bold">Verification Error</p>
+            <p className="leading-relaxed">{error}</p>
+          </div>
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="flex border-b border-[#E2E6EB] gap-6">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-slate-200 gap-4 sm:gap-8">
         <button
           type="button"
           onClick={() => setActiveTab('upload')}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'upload'
-              ? 'border-[#1E4D8C] text-[#1E4D8C]'
-              : 'border-transparent text-[#5A6472] hover:text-[#1A1F2B]'
+              ? 'border-civic-800 text-civic-900'
+              : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
           }`}
         >
-          <UploadCloud className="h-4 w-4" />
+          <UploadCloud className="h-4 w-4 text-civic-700" />
           <span>Upload Document</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('lookup')}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'lookup'
-              ? 'border-[#1E4D8C] text-[#1E4D8C]'
-              : 'border-transparent text-[#5A6472] hover:text-[#1A1F2B]'
+              ? 'border-civic-800 text-civic-900'
+              : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
           }`}
         >
-          <Search className="h-4 w-4" />
+          <Search className="h-4 w-4 text-civic-700" />
           <span>Lookup by Reference ID</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Column: Upload Form OR Lookup Form */}
-        <div className="space-y-6">
+      {/* Main 2-Column Responsive Workspace */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column: Upload or Lookup Form (5 cols on lg) */}
+        <div className="lg:col-span-5 space-y-6">
           {activeTab === 'upload' ? (
-            <Card className="space-y-6">
-              <h2 className="text-lg font-semibold text-[#1A1F2B]">Upload Income Certificate</h2>
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200" variant="elevated">
+              <div className="pb-3 border-b border-slate-100">
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                  Upload Income Certificate
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Select digital scan or clear photograph
+                </p>
+              </div>
 
-              <form onSubmit={handleUpload} className="space-y-4">
+              <form onSubmit={handleUpload} className="space-y-5">
+                {/* Drag and Drop Box */}
                 <div
-                  className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors bg-[#F7F9FB] ${
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all ${
                     isLoading
-                      ? 'border-[#E2E6EB] cursor-not-allowed opacity-60'
-                      : 'border-[#E2E6EB] hover:border-[#1E4D8C]'
+                      ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
+                      : isDragging
+                      ? 'border-civic-700 bg-civic-50 ring-4 ring-civic-100'
+                      : file
+                      ? 'border-emerald-300 bg-emerald-50/40'
+                      : 'border-slate-300 bg-slate-50/70 hover:border-civic-700 hover:bg-white'
                   }`}
                 >
-                  <UploadCloud className="h-10 w-10 text-[#1E4D8C] mx-auto mb-2" />
-                  <label htmlFor="file-upload" className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}>
-                    <span className={`text-sm font-semibold block ${isLoading ? 'text-[#5A6472] no-underline' : 'text-[#1E4D8C] hover:underline'}`}>
+                  <div className="h-12 w-12 rounded-2xl bg-white shadow-civic-xs text-civic-700 mx-auto mb-3 flex items-center justify-center border border-slate-200">
+                    <UploadCloud className="h-6 w-6 text-civic-700" />
+                  </div>
+
+                  <label
+                    htmlFor="file-upload"
+                    className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
+                  >
+                    <span
+                      className={`text-sm font-bold block ${
+                        isLoading
+                          ? 'text-slate-400 no-underline'
+                          : 'text-civic-800 hover:text-civic-900 hover:underline'
+                      }`}
+                    >
                       Choose a file to upload
                     </span>
-                    <span className="text-xs text-[#5A6472] block mt-1">
+                    <span className="text-xs text-slate-500 block mt-1.5 font-medium">
                       Supports PNG, JPG, or PDF (Max 5MB)
                     </span>
                     <input
@@ -222,37 +301,80 @@ export const CitizenUploadPage: React.FC = () => {
                     />
                   </label>
 
+                  {/* Selected File Chip */}
                   {file && (
-                    <div className="mt-4 p-2 bg-white rounded-lg border border-[#E2E6EB] text-xs font-medium text-[#1A1F2B] flex items-center justify-center gap-2">
-                      <FileText className="h-4 w-4 text-[#1E4D8C]" />
-                      <span className="truncate max-w-[200px]">{file.name}</span>
+                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs">
+                      <div className="flex items-center gap-2 truncate">
+                        <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span className="truncate max-w-[200px]">{file.name}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setFile(null)}
+                        disabled={isLoading}
+                        title="Remove file"
+                        className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   )}
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isLoading || !file}>
+                <Button
+                  type="submit"
+                  className="w-full font-semibold shadow-civic-sm"
+                  size="lg"
+                  disabled={isLoading || !file}
+                  isLoading={isLoading}
+                  variant="primary"
+                >
                   {isLoading ? 'Processing Document...' : 'Run Pre-check Validation'}
                 </Button>
               </form>
 
-              <div className="text-xs text-[#5A6472] space-y-1 pt-2 border-t border-[#E2E6EB]">
-                <p className="font-semibold text-[#1A1F2B]">Pre-check Rules Tested:</p>
-                <ul className="list-disc pl-4 space-y-0.5">
-                  <li>Name present check</li>
-                  <li>Certificate number format check</li>
-                  <li>Certificate expiry check</li>
-                  <li>Required fields extraction check</li>
+              {/* Pre-check Rules Tested Guide */}
+              <div className="text-xs text-slate-600 space-y-2 pt-4 border-t border-slate-100">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                  <ShieldCheck className="h-3.5 w-3.5 text-civic-700" />
+                  <span>Pre-check Rules Tested:</span>
+                </div>
+                <ul className="grid grid-cols-1 gap-1.5 pl-1">
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
+                    <span>Name present check</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
+                    <span>Certificate number format check</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
+                    <span>Certificate expiry check</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
+                    <span>Required fields extraction check</span>
+                  </li>
                 </ul>
               </div>
             </Card>
           ) : (
-            <Card className="space-y-6">
-              <h2 className="text-lg font-semibold text-[#1A1F2B]">Lookup Previous Pre-check</h2>
-              <p className="text-xs text-[#5A6472]">
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200" variant="elevated">
+              <div className="pb-3 border-b border-slate-100">
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                  Lookup Previous Pre-check
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Retrieve existing document OCR & validation report
+                </p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
                 Enter your document's unique Reference ID to review existing OCR results and validation checks.
               </p>
 
-              <form onSubmit={handleLookupSubmit} className="space-y-4">
+              <form onSubmit={handleLookupSubmit} className="space-y-5">
                 <Input
                   label="Document Reference ID (UUID)"
                   placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
@@ -260,90 +382,138 @@ export const CitizenUploadPage: React.FC = () => {
                   onChange={(e) => setLookupId(e.target.value)}
                   required
                   disabled={isLoading}
+                  leftIcon={<Search className="h-4 w-4" />}
                 />
 
-                <Button type="submit" className="w-full" disabled={isLoading || !lookupId.trim()}>
+                <Button
+                  type="submit"
+                  className="w-full font-semibold shadow-civic-sm"
+                  size="lg"
+                  disabled={isLoading || !lookupId.trim()}
+                  isLoading={isLoading}
+                  variant="primary"
+                >
                   {isLoading ? 'Retrieving Document...' : 'Lookup Reference ID'}
                 </Button>
               </form>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-2">
+                <Info className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
+                <span>Reference IDs are generated automatically on upload and can be shared or reviewed at any time.</span>
+              </div>
             </Card>
           )}
 
+          {/* Reset Flow Button */}
           {results && (
-            <div className="flex items-center justify-between pt-2">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={handleReset}
-                className="flex items-center gap-1.5 text-xs text-[#5A6472] hover:text-[#1E4D8C] font-semibold transition-colors"
+                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer"
               >
-                <RotateCcw className="h-3.5 w-3.5" />
+                <RotateCcw className="h-3.5 w-3.5 text-civic-700" />
                 <span>Pre-check Another Document</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Right Column: Reference ID, Extracted Data, and Validation Results */}
-        <div className="space-y-6">
+        {/* Right Column: Reference ID, Extracted Fields, and Validation Results (7 cols on lg) */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Reference ID Pill Card */}
           {documentId && (
-            <div className="bg-[#1E4D8C]/5 border border-[#1E4D8C]/20 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2 truncate">
-                <Tag className="h-4 w-4 text-[#1E4D8C] shrink-0" />
-                <div>
-                  <span className="font-semibold text-[#1E4D8C] block">Reference ID:</span>
-                  <span className="font-mono text-[11px] text-[#5A6472] truncate block">{documentId}</span>
+            <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center shrink-0">
+                    <Tag className="h-4 w-4 text-saffron-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-civic-900 block">
+                      Document Reference ID:
+                    </span>
+                    <span className="font-mono text-xs font-semibold text-slate-800 truncate block">
+                      {documentId}
+                    </span>
+                  </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleCopyId}
+                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                >
+                  {copiedId ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                      <span className="text-emerald-700">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5 text-slate-500" />
+                      <span>Copy ID</span>
+                    </>
+                  )}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={handleCopyId}
-                className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-[#1E4D8C] bg-white border border-[#E2E6EB] rounded-lg hover:bg-gray-50 shrink-0 transition-colors"
-              >
-                {copiedId ? (
-                  <>
-                    <Check className="h-3 w-3 text-[#2E9E6B]" />
-                    <span className="text-[#2E9E6B]">Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3 w-3" />
-                    <span>Copy ID</span>
-                  </>
-                )}
-              </button>
-            </div>
+            </Card>
           )}
 
+          {/* Extracted OCR Fields Card */}
           {extractedData && Object.keys(extractedData).length > 0 && (
-            <Card className="bg-[#F7F9FB] border-[#E2E6EB]">
-              <h3 className="text-sm font-semibold text-[#1A1F2B] mb-2">Extracted Data Fields</h3>
-              <dl className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <dt className="text-[#5A6472]">Applicant Name:</dt>
-                  <dd className="font-medium text-[#1A1F2B]">
-                    {extractedData.name || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
+            <Card className="bg-white border-slate-200 p-5 shadow-civic-sm space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <FileCode2 className="h-4 w-4 text-civic-700" />
+                  <h3 className="text-sm font-bold text-slate-900">Extracted Data Fields</h3>
+                </div>
+                <span className="text-[11px] font-medium text-slate-400">Tesseract OCR Pipeline</span>
+              </div>
+
+              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <dt className="text-slate-500 font-medium">Applicant Name:</dt>
+                  <dd className="font-bold text-slate-900 text-sm">
+                    {extractedData.name || (
+                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                        Not detected
+                      </span>
+                    )}
                   </dd>
                 </div>
-                <div>
-                  <dt className="text-[#5A6472]">Certificate No:</dt>
-                  <dd className="font-medium text-[#1A1F2B]">
-                    {extractedData.certificate_number || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
+
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <dt className="text-slate-500 font-medium">Certificate No:</dt>
+                  <dd className="font-bold text-slate-900 text-sm font-mono">
+                    {extractedData.certificate_number || (
+                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                        Not detected
+                      </span>
+                    )}
                   </dd>
                 </div>
-                <div>
-                  <dt className="text-[#5A6472]">Expiry Date:</dt>
-                  <dd className="font-medium text-[#1A1F2B]">
-                    {extractedData.expiry_date || <span className="inline-block bg-[#C0392B]/10 text-[#C0392B] px-2 py-0.5 rounded text-[10px] font-bold">Not detected</span>}
+
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
+                  <dt className="text-slate-500 font-medium">Expiry Date:</dt>
+                  <dd className="font-bold text-slate-900 text-sm font-mono">
+                    {extractedData.expiry_date || (
+                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                        Not detected
+                      </span>
+                    )}
                   </dd>
                 </div>
               </dl>
             </Card>
           )}
 
+          {/* Validation Rule Engine Results */}
           <ValidationResultCard results={results} isLoading={isLoading} error={null} />
         </div>
       </div>
     </div>
   );
 };
+
 export default CitizenUploadPage;

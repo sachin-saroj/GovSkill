@@ -7,11 +7,13 @@ import {
   BookOpen,
   Bot,
   Award,
-  FileText,
+  FileCheck,
   LayoutDashboard,
   Sparkles,
   Menu,
   X,
+  User,
+  ExternalLink,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -32,242 +34,333 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="border-b border-[#E2E6EB] bg-white sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-center gap-2 font-semibold text-xl text-[#1E4D8C]">
-              <Shield className="h-6 w-6 text-[#1E4D8C]" />
-              <span>GovSkill</span>
-            </Link>
+    <header className="sticky top-0 z-50 bg-white shadow-civic-xs">
+      {/* Official Civic Top Bar */}
+      <div className="bg-civic-950 text-slate-300 text-[11px] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-civic-900">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-saffron-500 animate-pulse" />
+            <span className="font-medium tracking-wide uppercase text-slate-200">
+              National Digital Public Infrastructure • Local Governance Platform
+            </span>
+          </div>
+          <div className="hidden sm:flex items-center gap-4 text-slate-400">
+            <span className="hover:text-slate-200 transition-colors">GovSkill v1.0</span>
+            <span className="text-slate-600">|</span>
+            <span className="flex items-center gap-1 text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block" />
+              Services Operational
+            </span>
+          </div>
+        </div>
+      </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-4 text-sm font-medium">
+      {/* Main Navigation Bar */}
+      <div className="border-b border-slate-200/90 bg-white/95 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            {/* Brand Logo */}
+            <div className="flex items-center gap-8">
+              <Link
+                to="/"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-civic-700 rounded-lg p-1"
+              >
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-civic-800 to-civic-950 text-white flex items-center justify-center shadow-civic-sm group-hover:scale-105 transition-transform duration-200">
+                  <Shield className="h-5 w-5 text-saffron-400" />
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-xl tracking-tight text-civic-950">GovSkill</span>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-civic-100 text-civic-800">
+                      Portal
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-slate-500 font-medium hidden sm:inline-block">
+                    Digital Skills & Document Verification
+                  </span>
+                </div>
+              </Link>
+
+              {/* Desktop Navigation */}
+              <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
+                {user && (
+                  <>
+                    <Link
+                      to="/progress"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                        isActive('/progress')
+                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Sparkles className="h-4 w-4 text-saffron-600" />
+                      <span>My Skills</span>
+                    </Link>
+
+                    <Link
+                      to="/module"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                        isActive('/module')
+                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                      }`}
+                    >
+                      <BookOpen className="h-4 w-4 text-civic-700" />
+                      <span>Lessons</span>
+                    </Link>
+
+                    <Link
+                      to="/tutor"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                        isActive('/tutor')
+                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Bot className="h-4 w-4 text-civic-600" />
+                      <span>AI Tutor</span>
+                    </Link>
+
+                    <Link
+                      to="/quiz"
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                        isActive('/quiz')
+                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                      }`}
+                    >
+                      <Award className="h-4 w-4 text-saffron-600" />
+                      <span>Quiz</span>
+                    </Link>
+
+                    {user.role === 'admin' && (
+                      <Link
+                        to="/admin"
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                          isActive('/admin')
+                            ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
+                            : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                        }`}
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-civic-700" />
+                        <span>Admin Dashboard</span>
+                      </Link>
+                    )}
+                  </>
+                )}
+              </nav>
+            </div>
+
+            {/* Desktop Right Action Area */}
+            <div className="hidden lg:flex items-center gap-3">
+              {/* GovAssist Citizen Shortcut Pill */}
+              <Link
+                to="/citizen"
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 ${
+                  isActive('/citizen')
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-civic-xs'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-800'
+                }`}
+              >
+                <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>GovAssist Pre-Check</span>
+                <span className="text-[10px] bg-emerald-600 text-white px-1.5 py-0.2 rounded font-medium">
+                  Citizen
+                </span>
+              </Link>
+
+              <div className="h-5 w-px bg-slate-200" />
+
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
+                    <div className="h-6 w-6 rounded-full bg-civic-800 text-white flex items-center justify-center text-[10px] font-bold">
+                      <User className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-xs font-semibold text-slate-900 leading-tight max-w-[140px] truncate">
+                        {user.email}
+                      </p>
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-civic-700">
+                        {user.role}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    title="Sign Out"
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span className="hidden xl:inline">Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="rounded-lg bg-civic-800 px-4 py-2 text-xs font-semibold text-white shadow-civic-sm hover:bg-civic-900 transition-all active:scale-95"
+                >
+                  Officer Login
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <div className="flex lg:hidden items-center gap-2">
+              <Link
+                to="/citizen"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
+              >
+                <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>GovAssist</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-slate-600 hover:text-civic-900 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                aria-label="Toggle navigation menu"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Dropdown Navigation */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden py-4 border-t border-slate-200 space-y-3 animate-slide-up">
               {user && (
-                <>
+                <div className="space-y-1">
+                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Employee Training
+                  </div>
                   <Link
                     to="/progress"
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/progress')
-                        ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                        : 'text-[#5A6472] hover:text-[#1E4D8C]'
+                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
+                        : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <Sparkles className="h-4 w-4 text-[#D98E04]" />
-                    <span>My Skills</span>
+                    <Sparkles className="h-4 w-4 text-saffron-600" />
+                    <span>My Skills & Progress</span>
                   </Link>
 
                   <Link
                     to="/module"
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/module')
-                        ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                        : 'text-[#5A6472] hover:text-[#1E4D8C]'
+                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
+                        : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <BookOpen className="h-4 w-4" />
-                    <span>Lessons</span>
+                    <BookOpen className="h-4 w-4 text-civic-700" />
+                    <span>Lessons & Curriculum</span>
                   </Link>
 
                   <Link
                     to="/tutor"
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/tutor')
-                        ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                        : 'text-[#5A6472] hover:text-[#1E4D8C]'
+                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
+                        : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <Bot className="h-4 w-4" />
-                    <span>AI Tutor</span>
+                    <Bot className="h-4 w-4 text-civic-600" />
+                    <span>AI Tutor Assistance</span>
                   </Link>
 
                   <Link
                     to="/quiz"
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/quiz')
-                        ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                        : 'text-[#5A6472] hover:text-[#1E4D8C]'
+                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
+                        : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <Award className="h-4 w-4" />
-                    <span>Quiz</span>
+                    <Award className="h-4 w-4 text-saffron-600" />
+                    <span>Module Certification Quiz</span>
                   </Link>
 
                   {user.role === 'admin' && (
                     <Link
                       to="/admin"
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                         isActive('/admin')
-                          ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                          : 'text-[#5A6472] hover:text-[#1E4D8C]'
+                          ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
+                          : 'text-slate-600 hover:bg-slate-50'
                       }`}
                     >
-                      <LayoutDashboard className="h-4 w-4" />
-                      <span>Admin Dashboard</span>
+                      <LayoutDashboard className="h-4 w-4 text-civic-700" />
+                      <span>Admin Management Dashboard</span>
                     </Link>
                   )}
-                </>
+                </div>
               )}
 
-              <Link
-                to="/citizen"
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition-colors ${
-                  isActive('/citizen')
-                    ? 'text-[#1E4D8C] font-semibold bg-[#1E4D8C]/10'
-                    : 'text-[#1E4D8C] font-medium hover:underline'
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                <span>GovAssist</span>
-              </Link>
-            </nav>
-          </div>
-
-          {/* Desktop User Section */}
-          <div className="hidden md:flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="text-xs font-medium text-[#1A1F2B]">{user.email}</p>
-                  <span className="inline-block px-2 py-0.5 text-[10px] font-semibold uppercase rounded bg-[#1E4D8C]/10 text-[#1E4D8C]">
-                    {user.role}
-                  </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-1 rounded-lg border border-[#E2E6EB] px-3 py-1.5 text-xs font-medium text-[#5A6472] hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="rounded-lg bg-[#1E4D8C] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#163A6B] transition-colors"
-              >
-                Sign In
-              </Link>
-            )}
-          </div>
-
-          {/* Mobile Hamburger Toggle */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#5A6472] hover:text-[#1E4D8C] rounded-lg border border-[#E2E6EB]"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[#E2E6EB] space-y-3">
-            {user && (
               <div className="space-y-1">
+                <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Citizen Services
+                </div>
                 <Link
-                  to="/progress"
+                  to="/citizen"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                    isActive('/progress') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#5A6472]'
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium ${
+                    isActive('/citizen')
+                      ? 'bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200'
+                      : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <Sparkles className="h-4 w-4 text-[#D98E04]" />
-                  <span>My Skills</span>
+                  <div className="flex items-center gap-2.5">
+                    <FileCheck className="h-4 w-4 text-emerald-600" />
+                    <span>GovAssist Pre-Submission Checker</span>
+                  </div>
+                  <ExternalLink className="h-3.5 w-3.5 text-slate-400" />
                 </Link>
+              </div>
 
-                <Link
-                  to="/module"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                    isActive('/module') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#5A6472]'
-                  }`}
-                >
-                  <BookOpen className="h-4 w-4" />
-                  <span>Lessons</span>
-                </Link>
-
-                <Link
-                  to="/tutor"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                    isActive('/tutor') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#5A6472]'
-                  }`}
-                >
-                  <Bot className="h-4 w-4" />
-                  <span>AI Tutor</span>
-                </Link>
-
-                <Link
-                  to="/quiz"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                    isActive('/quiz') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#5A6472]'
-                  }`}
-                >
-                  <Award className="h-4 w-4" />
-                  <span>Quiz</span>
-                </Link>
-
-                {user.role === 'admin' && (
+              <div className="pt-3 border-t border-slate-200 flex items-center justify-between px-3">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="h-7 w-7 rounded-full bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+                        <User className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-slate-900">{user.email}</p>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-civic-700">
+                          {user.role}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-1.5 text-xs text-red-600 font-semibold px-2.5 py-1 rounded-md hover:bg-red-50"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>Logout</span>
+                    </button>
+                  </>
+                ) : (
                   <Link
-                    to="/admin"
+                    to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                      isActive('/admin') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#5A6472]'
-                    }`}
+                    className="w-full text-center py-2.5 bg-civic-800 text-white rounded-lg text-sm font-semibold shadow-civic-sm"
                   >
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>Admin Dashboard</span>
+                    Officer Sign In
                   </Link>
                 )}
               </div>
-            )}
-
-            <Link
-              to="/citizen"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
-                isActive('/citizen') ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] font-semibold' : 'text-[#1E4D8C]'
-              }`}
-            >
-              <FileText className="h-4 w-4" />
-              <span>GovAssist (Citizen Pre-check)</span>
-            </Link>
-
-            <div className="pt-3 border-t border-[#E2E6EB] flex items-center justify-between px-3">
-              {user ? (
-                <>
-                  <div>
-                    <p className="text-xs font-medium text-[#1A1F2B]">{user.email}</p>
-                    <span className="text-[10px] text-[#5A6472] uppercase">{user.role}</span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-1 text-xs text-[#C0392B] font-semibold"
-                  >
-                    <LogOut className="h-3.5 w-3.5" />
-                    <span>Logout</span>
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2 bg-[#1E4D8C] text-white rounded-lg text-sm font-semibold"
-                >
-                  Sign In
-                </Link>
-              )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );
 };
+
 export default Header;
