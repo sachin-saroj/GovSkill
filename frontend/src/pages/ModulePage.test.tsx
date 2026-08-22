@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ModulePage from './ModulePage';
 import api from '@/lib/api';
@@ -6,14 +7,12 @@ import api from '@/lib/api';
 vi.mock('@/lib/api', () => ({
   default: {
     get: vi.fn(),
+    post: vi.fn(),
   },
 }));
 
-vi.mock('react-router-dom', () => ({
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
-}));
-
 const mockedGet = vi.mocked(api.get);
+const mockedPost = vi.mocked(api.post);
 
 const modules = [
   {
@@ -28,15 +27,37 @@ const modules = [
   },
 ];
 
+const renderPage = () =>
+  render(
+    <BrowserRouter>
+      <ModulePage />
+    </BrowserRouter>
+  );
+
 describe('ModulePage', () => {
   beforeEach(() => {
     mockedGet.mockReset();
+    mockedPost.mockReset();
+    mockedGet.mockImplementation((url) => {
+      if (url.includes('/modules')) {
+        return Promise.resolve({ data: modules });
+      }
+      if (url.includes('/progress/my-skills')) {
+        return Promise.resolve({
+          data: {
+            overall_skill_score: 0,
+            total_modules: 2,
+            certified_modules: 0,
+            skills: [],
+          },
+        });
+      }
+      return Promise.resolve({ data: [] });
+    });
   });
 
   it('renders the first module and its lesson content', async () => {
-    mockedGet.mockResolvedValue({ data: modules });
-
-    render(<ModulePage />);
+    renderPage();
 
     expect(await screen.findByRole('heading', { name: 'Digital Document Handling' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Verification Checklist' })).toBeInTheDocument();
@@ -44,9 +65,7 @@ describe('ModulePage', () => {
   });
 
   it('switches the displayed module from the selector', async () => {
-    mockedGet.mockResolvedValue({ data: modules });
-
-    render(<ModulePage />);
+    renderPage();
     await screen.findByRole('heading', { name: 'Digital Document Handling' });
 
     fireEvent.change(screen.getByLabelText('Switch Training Module:'), {
@@ -57,10 +76,28 @@ describe('ModulePage', () => {
     expect(screen.getByRole('heading', { name: 'Portal Workflow' })).toBeInTheDocument();
   });
 
-  it('shows an empty state when no modules are returned', async () => {
-    mockedGet.mockResolvedValue({ data: [] });
+  it('marks lessons completed for the active module', async () => {
+    mockedPost.mockResolvedValue({ data: {} });
 
-    render(<ModulePage />);
+    renderPage();
+    await screen.findByRole('heading', { name: 'Digital Document Handling' });
+
+    const markBtn = screen.getByRole('button', { name: /mark lessons as completed/i });
+    fireEvent.click(markBtn);
+
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/progress/modules/module-1/complete-lessons')
+    );
+    expect(await screen.findByText('Lesson progress recorded! Competency status updated.')).toBeInTheDocument();
+  });
+
+  it('shows an empty state when no modules are returned', async () => {
+    mockedGet.mockImplementation((url) => {
+      if (url.includes('/modules')) return Promise.resolve({ data: [] });
+      return Promise.resolve({ data: {} });
+    });
+
+    renderPage();
 
     expect(await screen.findByRole('heading', { name: 'No training modules available' })).toBeInTheDocument();
   });

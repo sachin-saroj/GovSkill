@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TutorChatPage from './TutorChatPage';
 import api from '@/lib/api';
@@ -12,6 +13,13 @@ vi.mock('@/lib/api', () => ({
 
 const mockedGet = vi.mocked(api.get);
 const mockedPost = vi.mocked(api.post);
+
+const renderPage = () =>
+  render(
+    <BrowserRouter>
+      <TutorChatPage />
+    </BrowserRouter>
+  );
 
 describe('TutorChatPage', () => {
   beforeEach(() => {
@@ -30,7 +38,7 @@ describe('TutorChatPage', () => {
       },
     });
 
-    render(<TutorChatPage />);
+    renderPage();
     await screen.findByRole('option', { name: 'Digital Document Handling' });
     const input = screen.getByPlaceholderText(/Ask a question about document guidelines/i);
     fireEvent.change(input, { target: { value: 'How do I verify a certificate?' } });
@@ -50,7 +58,7 @@ describe('TutorChatPage', () => {
       response: { data: { detail: { error: { message: 'Tutor service unavailable' } } } },
     });
 
-    render(<TutorChatPage />);
+    renderPage();
     const input = screen.getByPlaceholderText(/Ask a question about document guidelines/i);
     fireEvent.change(input, { target: { value: 'How do I verify a certificate?' } });
     fireEvent.click(screen.getByRole('button', { name: /send/i }));

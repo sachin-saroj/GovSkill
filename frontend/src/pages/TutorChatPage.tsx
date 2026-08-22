@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { Module } from '@/types';
 import { Card } from '@/components/ui/Card';
@@ -15,8 +16,10 @@ interface ChatMessage {
 }
 
 export const TutorChatPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [modules, setModules] = useState<Module[]>([]);
-  const [selectedModuleId, setSelectedModuleId] = useState<string>('auto');
+  const initialModuleId = searchParams.get('module') || searchParams.get('moduleId') || 'auto';
+  const [selectedModuleId, setSelectedModuleId] = useState<string>(initialModuleId);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',

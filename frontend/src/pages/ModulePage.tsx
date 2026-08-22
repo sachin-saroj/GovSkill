@@ -1,23 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '@/lib/api';
-import { Module } from '@/types';
+import { Module, EmployeeSkillStatusResponse } from '@/types';
 import { Card } from '@/components/ui/Card';
-import { BookOpen, Bot, Award, Loader2, ArrowRight } from 'lucide-react';
+import { BookOpen, Bot, Award, Loader2, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 export const ModulePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [modules, setModules] = useState<Module[]>([]);
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [completedModuleIds, setCompletedModuleIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isMarkingComplete, setIsMarkingComplete] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  const fetchSkillProgress = async () => {
+    try {
+      const res = await api.get<EmployeeSkillStatusResponse>('/progress/my-skills');
+      const completedSet = new Set<string>();
+      res.data.skills.forEach((s) => {
+        if (s.lessons_completed) {
+          completedSet.add(s.module_id);
+        }
+      });
+      setCompletedModuleIds(completedSet);
+    } catch {
+      // Non-blocking progress sync
+    }
+  };
 
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const res = await api.get<Module[]>('/modules');
-        setModules(res.data);
-        if (res.data.length > 0) {
-          setSelectedModule(res.data[0]);
+        const [modRes] = await Promise.all([
+          api.get<Module[]>('/modules'),
+          fetchSkillProgress(),
+        ]);
+        setModules(modRes.data);
+        if (modRes.data.length > 0) {
+          const paramId = searchParams.get('id') || searchParams.get('moduleId');
+          const targetMod = paramId ? modRes.data.find((m) => m.id === paramId) : null;
+          setSelectedModule(targetMod || modRes.data[0]);
         }
       } catch (err: any) {
         const msg = err.response?.data?.detail?.error?.message || 'Failed to load module content';
@@ -29,6 +53,33 @@ export const ModulePage: React.FC = () => {
     fetchModules();
   }, []);
 
+  const handleModuleChange = (modId: string) => {
+    const target = modules.find((m) => m.id === modId);
+    if (target) {
+      setSelectedModule(target);
+      setSearchParams({ id: target.id });
+      setStatusMessage(null);
+    }
+  };
+
+  const handleCompleteLessons = async () => {
+    if (!selectedModule || isMarkingComplete) return;
+
+    setIsMarkingComplete(true);
+    setStatusMessage(null);
+    try {
+      await api.post(`/progress/modules/${selectedModule.id}/complete-lessons`);
+      setCompletedModuleIds((prev) => new Set([...prev, selectedModule.id]));
+      setStatusMessage('Lesson progress recorded! Competency status updated.');
+      fetchSkillProgress();
+    } catch (err: any) {
+      const msg = err.response?.data?.detail?.error?.message || 'Failed to record lesson completion';
+      setError(msg);
+    } finally {
+      setIsMarkingComplete(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]">
@@ -38,7 +89,7 @@ export const ModulePage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error && modules.length === 0) {
     return (
       <div className="max-w-4xl mx-auto py-12 px-4">
         <div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">
@@ -55,8 +106,9 @@ export const ModulePage: React.FC = () => {
         <p className="text-[#5A6472]">Please check back after your administrator publishes a module.</p>
       </div>
     );
-
   }
+
+  const isCurrentCompleted = selectedModule ? completedModuleIds.has(selectedModule.id) : false;
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
@@ -83,21 +135,25 @@ export const ModulePage: React.FC = () => {
             <select
               id="training-module-selector"
               value={selectedModule?.id || ''}
-              onChange={(e) => {
-                const target = modules.find((m) => m.id === e.target.value);
-                if (target) setSelectedModule(target);
-              }}
-              className="w-full px-3 py-1.5 text-xs font-semibold text-[#1A1F2B] bg-white rounded-lg focus:outline-none"
+              onChange={(e) => handleModuleChange(e.target.value)}
+              className="w-full px-3 py-1.5 text-xs font-semibold text-[#1A1F2B] bg-white rounded-lg focus:outline-none cursor-pointer"
             >
               {modules.map((mod) => (
                 <option key={mod.id} value={mod.id}>
-                  {mod.title}
+                  {mod.title} {completedModuleIds.has(mod.id) ? ' (Read)' : ''}
                 </option>
               ))}
             </select>
           </div>
         )}
       </div>
+
+      {statusMessage && (
+        <div className="p-4 rounded-xl bg-[#2E9E6B]/10 border border-[#2E9E6B]/30 text-xs text-[#2E9E6B] flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          <span>{statusMessage}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Lesson Content */}
@@ -122,6 +178,47 @@ export const ModulePage: React.FC = () => {
                   );
                 })}
             </div>
+
+            {/* Bottom Lesson Completion Bar */}
+            <div className="mt-8 pt-6 border-t border-[#E2E6EB] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs text-[#5A6472]">
+                {isCurrentCompleted ? (
+                  <span className="inline-flex items-center gap-1 font-semibold text-[#2E9E6B]">
+                    <CheckCircle2 className="h-4 w-4" /> Lessons Completed
+                  </span>
+                ) : (
+                  <span>Finished reading? Mark lessons completed to update your skill dashboard.</span>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleCompleteLessons}
+                disabled={isMarkingComplete || isCurrentCompleted}
+                className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors ${
+                  isCurrentCompleted
+                    ? 'bg-[#2E9E6B]/10 text-[#2E9E6B] border border-[#2E9E6B]/30 cursor-default'
+                    : 'bg-[#1E4D8C] text-white hover:bg-[#153866]'
+                }`}
+              >
+                {isMarkingComplete ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Saving Progress...</span>
+                  </>
+                ) : isCurrentCompleted ? (
+                  <>
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    <span>Completed</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>Mark Lessons as Completed</span>
+                  </>
+                )}
+              </button>
+            </div>
           </Card>
         </div>
 
@@ -130,7 +227,7 @@ export const ModulePage: React.FC = () => {
           <Card>
             <h3 className="text-lg font-semibold text-[#1A1F2B] mb-4">Module Actions</h3>
             <div className="space-y-4">
-              <Link to="/tutor">
+              <Link to={`/tutor?module=${selectedModule?.id || 'auto'}`}>
                 <div className="p-4 rounded-xl border border-[#E2E6EB] bg-[#F7F9FB] hover:border-[#1E4D8C] transition-all group cursor-pointer mb-3">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 text-[#1E4D8C] font-semibold text-sm">
@@ -140,7 +237,7 @@ export const ModulePage: React.FC = () => {
                     <ArrowRight className="h-4 w-4 text-[#5A6472] group-hover:translate-x-1 transition-transform" />
                   </div>
                   <p className="text-xs text-[#5A6472]">
-                    Have questions about document verification rules? Ask the grounded AI Tutor.
+                    Have questions about this module? Ask the grounded AI Tutor.
                   </p>
                 </div>
               </Link>
@@ -174,4 +271,3 @@ export const ModulePage: React.FC = () => {
   );
 };
 export default ModulePage;
-
