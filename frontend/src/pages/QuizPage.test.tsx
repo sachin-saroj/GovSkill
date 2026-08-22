@@ -34,13 +34,23 @@ const questions = [
   },
 ];
 
+const mockModules = [
+  { id: 'cybersecurity-101', title: 'Cybersecurity Basics', content: 'Cyber content' },
+  { id: 'default', title: 'Digital Document Handling', content: 'Default content' },
+];
+
 describe('QuizPage', () => {
   beforeEach(() => {
     mockModuleId = undefined;
     mockedGet.mockReset();
     mockedPost.mockReset();
     navigate.mockReset();
-    mockedGet.mockResolvedValue({ data: { questions } });
+    mockedGet.mockImplementation((url) => {
+      if (url.includes('/modules')) {
+        return Promise.resolve({ data: mockModules });
+      }
+      return Promise.resolve({ data: { questions } });
+    });
   });
 
   it('keeps submission disabled until every question is answered', async () => {
