@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import Header from '@/layout/header';
 import Footer from '@/layout/footer';
+import LandingPage from '@/pages/LandingPage';
 import LoginPage from '@/pages/LoginPage';
 import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
 import ModulePage from '@/pages/ModulePage';
@@ -45,6 +46,7 @@ export const AppContent: React.FC = () => {
       <Header />
       <main className="flex-1 flex flex-col">
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="/progress"
@@ -95,8 +97,7 @@ export const AppContent: React.FC = () => {
             }
           />
           <Route path="/citizen" element={<CitizenUploadPage />} />
-          <Route path="/" element={<Navigate to="/progress" replace />} />
-          <Route path="*" element={<Navigate to="/progress" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <Footer />
