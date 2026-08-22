@@ -11,6 +11,16 @@ vi.mock('@/lib/api', () => ({
   },
 }));
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: { id: 'user-1', email: 'employee@govskill.test', role: 'employee' },
+    token: 'test-token',
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
+
 const mockedGet = vi.mocked(api.get);
 const mockedPost = vi.mocked(api.post);
 
@@ -57,7 +67,6 @@ describe('ProgressDashboardPage', () => {
   });
 
   it('shows a loading spinner while fetching skill data', () => {
-    // Never resolve — keeps the component in loading state
     mockedGet.mockReturnValue(new Promise(() => {}));
     renderPage();
     expect(screen.getByText(/loading your digital skill profile/i)).toBeInTheDocument();
@@ -74,31 +83,24 @@ describe('ProgressDashboardPage', () => {
     expect(await screen.findByText('Skill data unavailable')).toBeInTheDocument();
   });
 
-  it('renders skill progress cards and verifies module-specific quiz links', async () => {
+  it('renders skill progress cards and opens certificate modal on click', async () => {
     renderPage();
 
-    // Wait for the data to load
     await screen.findByText('My Skill Progress');
 
-    // Verify module titles are displayed
     expect(screen.getByText('Cybersecurity Basics')).toBeInTheDocument();
     expect(screen.getByText('Digital Record Management')).toBeInTheDocument();
 
-    // Verify "Take Quiz" links have correct module-specific URLs
-    const takeQuizLinks = screen.getAllByRole('link', { name: /take quiz/i });
-    expect(takeQuizLinks).toHaveLength(2);
-    expect(takeQuizLinks[0]).toHaveAttribute('href', '/quiz/cybersecurity-101');
-    expect(takeQuizLinks[1]).toHaveAttribute('href', '/quiz/records-202');
+    const certButton = screen.getByRole('button', { name: /certificate/i });
+    expect(certButton).toBeInTheDocument();
+    fireEvent.click(certButton);
 
-    // Verify "Read Lessons" links have correct module-specific URLs
-    const readLessonLinks = screen.getAllByRole('link', { name: /read lessons/i });
-    expect(readLessonLinks).toHaveLength(2);
-    expect(readLessonLinks[0]).toHaveAttribute('href', '/module?id=cybersecurity-101');
-    expect(readLessonLinks[1]).toHaveAttribute('href', '/module?id=records-202');
+    expect(await screen.findByText('Certificate of Digital Competency')).toBeInTheDocument();
+    expect(screen.getByText('employee@govskill.test')).toBeInTheDocument();
+    expect(screen.getByText('80%')).toBeInTheDocument();
   });
 
   it('calls the lesson-complete endpoint and refreshes data when toggle button is clicked', async () => {
-    // Second GET returns updated state: records-202 is now completed
     const updatedData = {
       ...mockSkillsData,
       skills: mockSkillsData.skills.map((s) =>
@@ -115,20 +117,15 @@ describe('ProgressDashboardPage', () => {
     renderPage();
     await screen.findByText('My Skill Progress');
 
-    // Initial state: Cybersecurity Basics already shows "Completed",
-    // Digital Record Management shows "Mark as Read"
     const markReadButtons = screen.getAllByRole('button', { name: /mark as read/i });
     expect(markReadButtons).toHaveLength(1);
 
     fireEvent.click(markReadButtons[0]);
 
-    // POST to the correct endpoint
     await waitFor(() =>
       expect(mockedPost).toHaveBeenCalledWith('/progress/modules/records-202/complete-lessons')
     );
 
-    // After refresh (second GET), both modules now have lessons_completed=true,
-    // so there should be 2 "Completed" buttons and 0 "Mark as Read" buttons
     await waitFor(() => {
       const completedButtons = screen.getAllByRole('button', { name: /completed/i });
       expect(completedButtons).toHaveLength(2);

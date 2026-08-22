@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/api';
-import { EmployeeSkillStatusResponse } from '@/types';
+import { EmployeeSkillStatusResponse, EmployeeSkillItem } from '@/types';
 import { Card } from '@/components/ui/Card';
+import { CertificateModal } from '@/components/certificate/CertificateModal';
 import {
   Award,
   BookOpen,
@@ -16,7 +18,9 @@ import {
 } from 'lucide-react';
 
 export const ProgressDashboardPage: React.FC = () => {
+  const { user } = useAuth();
   const [data, setData] = useState<EmployeeSkillStatusResponse | null>(null);
+  const [selectedCertSkill, setSelectedCertSkill] = useState<EmployeeSkillItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -186,7 +190,7 @@ export const ProgressDashboardPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-4 border-t border-[#E2E6EB] text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-[#E2E6EB] text-xs">
                 <Link
                   to={`/module?id=${skill.module_id}`}
                   className="flex items-center gap-1 font-semibold text-[#1E4D8C] hover:underline"
@@ -195,19 +199,46 @@ export const ProgressDashboardPage: React.FC = () => {
                   <span>Read Lessons</span>
                 </Link>
 
-                <Link
-                  to={`/quiz/${skill.module_id}`}
-                  className="flex items-center gap-1 font-semibold text-[#2E9E6B] hover:underline"
-                >
-                  <Award className="h-3.5 w-3.5" />
-                  <span>Take Quiz</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <div className="flex items-center gap-2">
+                  {isCertified && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCertSkill(skill)}
+                      className="inline-flex items-center gap-1 font-semibold text-[#2E9E6B] bg-[#2E9E6B]/10 hover:bg-[#2E9E6B]/20 px-2.5 py-1 rounded-lg border border-[#2E9E6B]/30 transition-colors"
+                    >
+                      <Award className="h-3.5 w-3.5" />
+                      <span>Certificate</span>
+                    </button>
+                  )}
+
+                  <Link
+                    to={`/quiz/${skill.module_id}`}
+                    className="flex items-center gap-1 font-semibold text-[#2E9E6B] hover:underline"
+                  >
+                    <span>{isCertified ? 'Retake Quiz' : 'Take Quiz'}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </Card>
           );
         })}
       </div>
+
+      {/* Certificate Modal */}
+      {selectedCertSkill && (
+        <CertificateModal
+          isOpen={!!selectedCertSkill}
+          onClose={() => setSelectedCertSkill(null)}
+          employeeEmail={user?.email || 'employee@office.gov'}
+          moduleTitle={selectedCertSkill.module_title}
+          moduleId={selectedCertSkill.module_id}
+          scorePercentage={selectedCertSkill.score_percentage}
+          bestScore={selectedCertSkill.best_score}
+          totalQuestions={selectedCertSkill.total_questions}
+          completedDate={selectedCertSkill.updated_at}
+        />
+      )}
     </div>
   );
 };
