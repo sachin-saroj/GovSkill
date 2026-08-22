@@ -40,6 +40,17 @@
     outline: 2px solid #1E4D8C;
     outline-offset: 2px;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
@@ -62,6 +73,35 @@
 
   .civic-focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]/25 focus:border-[#1E4D8C];
+  }
+
+  /* Animated SVG Flow Keyframes */
+  .svg-flow-path {
+    stroke-dasharray: 8 8;
+    animation: flowDash 2.5s linear infinite;
+  }
+
+  .svg-flow-path-reverse {
+    stroke-dasharray: 8 8;
+    animation: flowDashReverse 2.5s linear infinite;
+  }
+
+  @keyframes flowDash {
+    from {
+      stroke-dashoffset: 32;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes flowDashReverse {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 32;
+    }
   }
 }
 

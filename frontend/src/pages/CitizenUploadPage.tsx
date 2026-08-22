@@ -165,8 +165,8 @@ export const CitizenUploadPage: React.FC = () => {
       {/* Top Civic Header Banner */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-civic-sm p-6 sm:p-8 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <span className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+          <div className="flex items-center gap-2.5">
+            <span className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-civic-xs">
               <FileCheck className="h-4 w-4 text-emerald-700" />
             </span>
             <div>
@@ -260,11 +260,11 @@ export const CitizenUploadPage: React.FC = () => {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all ${
+                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
                     isLoading
                       ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
                       : isDragging
-                      ? 'border-civic-700 bg-civic-50 ring-4 ring-civic-100'
+                      ? 'border-civic-700 bg-civic-50 ring-4 ring-civic-200/50 scale-[1.01]'
                       : file
                       ? 'border-emerald-300 bg-emerald-50/40'
                       : 'border-slate-300 bg-slate-50/70 hover:border-civic-700 hover:bg-white'
@@ -303,7 +303,7 @@ export const CitizenUploadPage: React.FC = () => {
 
                   {/* Selected File Chip */}
                   {file && (
-                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs">
+                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs animate-fade-in">
                       <div className="flex items-center gap-2 truncate">
                         <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
                         <span className="truncate max-w-[200px]">{file.name}</span>
@@ -313,7 +313,7 @@ export const CitizenUploadPage: React.FC = () => {
                         onClick={() => setFile(null)}
                         disabled={isLoading}
                         title="Remove file"
-                        className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors"
+                        className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>
@@ -323,7 +323,7 @@ export const CitizenUploadPage: React.FC = () => {
 
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-sm"
+                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
                   size="lg"
                   disabled={isLoading || !file}
                   isLoading={isLoading}
@@ -387,7 +387,7 @@ export const CitizenUploadPage: React.FC = () => {
 
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-sm"
+                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
                   size="lg"
                   disabled={isLoading || !lookupId.trim()}
                   isLoading={isLoading}
@@ -410,7 +410,7 @@ export const CitizenUploadPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
               >
                 <RotateCcw className="h-3.5 w-3.5 text-civic-700" />
                 <span>Pre-check Another Document</span>
@@ -426,7 +426,7 @@ export const CitizenUploadPage: React.FC = () => {
             <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center shrink-0">
+                  <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
                     <Tag className="h-4 w-4 text-saffron-400" />
                   </div>
                   <div className="min-w-0">
@@ -442,12 +442,12 @@ export const CitizenUploadPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCopyId}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer active:scale-95"
                 >
                   {copiedId ? (
                     <>
                       <Check className="h-3.5 w-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Copied</span>
+                      <span className="text-emerald-700 font-bold">Copied</span>
                     </>
                   ) : (
                     <>

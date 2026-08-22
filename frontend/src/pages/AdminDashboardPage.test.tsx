@@ -37,6 +37,7 @@ const mockSkillsOverview = {
 
 describe('AdminDashboardPage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedGet.mockImplementation((url) => {
       if (url.includes('/admin/attempts')) {

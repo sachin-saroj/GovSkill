@@ -23,6 +23,7 @@ const renderPage = () =>
 
 describe('TutorChatPage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedPost.mockReset();
     mockedGet.mockResolvedValue({

@@ -27,14 +27,15 @@ export const LandingPage: React.FC = () => {
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-civic-950 to-slate-900 text-white pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-civic-900">
         {/* Subtle Civic Ambient Backdrop */}
         <div className="absolute inset-0 bg-civic-pattern opacity-10 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-civic-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-civic-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-10 w-72 h-72 bg-saffron-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto space-y-10">
           {/* Top Pill / Badge */}
           <div className="flex flex-col items-center text-center space-y-4 max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-xs font-semibold text-saffron-400 shadow-civic-xs">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-civic-800/80 border border-civic-700/80 text-xs font-semibold text-saffron-400 shadow-civic-xs backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 text-saffron-400" />
-              <span>Digital Public Infrastructure • Local Governance Platform</span>
+              <span>National Digital Public Infrastructure • Local Governance Platform</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
@@ -53,7 +54,7 @@ export const LandingPage: React.FC = () => {
               <Link to="/citizen">
                 <Button
                   size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-civic-md font-semibold"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-civic-md font-semibold hover:shadow-civic-lg transition-all active:scale-95 cursor-pointer"
                   leftIcon={<FileCheck className="h-5 w-5" />}
                   rightIcon={<ArrowRight className="h-4 w-4" />}
                 >
@@ -65,7 +66,7 @@ export const LandingPage: React.FC = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-white/10 hover:bg-white/20 text-white border-slate-600 shadow-civic-md font-semibold backdrop-blur-sm"
+                  className="bg-white/10 hover:bg-white/20 text-white border-slate-600 shadow-civic-md font-semibold backdrop-blur-sm transition-all active:scale-95 cursor-pointer"
                   leftIcon={<Shield className="h-5 w-5 text-saffron-400" />}
                 >
                   {user ? 'Go to Officer Workspace' : 'Officer & Supervisor Login'}
@@ -75,19 +76,19 @@ export const LandingPage: React.FC = () => {
 
             {/* Key Trust Pillars Bar */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 w-full max-w-4xl text-left">
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs">
                 <Lock className="h-4 w-4 text-emerald-400 shrink-0" />
                 <span className="text-xs font-semibold text-slate-200">100% Deterministic Rules</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs">
                 <Bot className="h-4 w-4 text-blue-400 shrink-0" />
                 <span className="text-xs font-semibold text-slate-200">Grounded Gemini AI Tutor</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs">
                 <Award className="h-4 w-4 text-saffron-400 shrink-0" />
                 <span className="text-xs font-semibold text-slate-200">Server-Scored Quiz Scoring</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs">
                 <LayoutDashboard className="h-4 w-4 text-purple-400 shrink-0" />
                 <span className="text-xs font-semibold text-slate-200">Department Readiness Metrics</span>
               </div>
@@ -118,11 +119,14 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* GovSkill Pillar Card */}
-            <Card className="border-civic-200/90 shadow-civic-md bg-white flex flex-col justify-between" variant="default">
+            <Card
+              className="border-civic-200/90 shadow-civic-md bg-white flex flex-col justify-between hover:-translate-y-1 hover:shadow-civic-xl transition-all duration-300"
+              variant="default"
+            >
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-civic-100 text-civic-800 flex items-center justify-center font-bold">
+                    <div className="h-10 w-10 rounded-xl bg-civic-100 text-civic-800 flex items-center justify-center font-bold shadow-civic-xs">
                       <Shield className="h-5 w-5 text-civic-700" />
                     </div>
                     <div>
@@ -138,7 +142,7 @@ export const LandingPage: React.FC = () => {
                 </p>
 
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200/70">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/70">
                     <BookOpen className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">Structured Administrative Modules</h4>
@@ -146,7 +150,7 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200/70">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/70">
                     <Bot className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">Grounded Gemini AI Tutor</h4>
@@ -154,7 +158,7 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200/70">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/70">
                     <Award className="h-4 w-4 text-saffron-600 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">Server-Scored Certified Quizzes</h4>
@@ -175,11 +179,14 @@ export const LandingPage: React.FC = () => {
             </Card>
 
             {/* GovAssist Pillar Card */}
-            <Card className="border-emerald-200/90 shadow-civic-md bg-white flex flex-col justify-between" variant="default">
+            <Card
+              className="border-emerald-200/90 shadow-civic-md bg-white flex flex-col justify-between hover:-translate-y-1 hover:shadow-civic-xl transition-all duration-300"
+              variant="default"
+            >
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <div className="h-10 w-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-civic-xs">
                       <FileCheck className="h-5 w-5 text-emerald-700" />
                     </div>
                     <div>
@@ -195,7 +202,7 @@ export const LandingPage: React.FC = () => {
                 </p>
 
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-100">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
                     <FileText className="h-4 w-4 text-emerald-700 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">Instant OCR Text & Field Extraction</h4>
@@ -203,7 +210,7 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-100">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
                     <Lock className="h-4 w-4 text-emerald-700 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">4-Rule Deterministic Evaluation</h4>
@@ -211,7 +218,7 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50/50 border border-emerald-100">
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
                     <Sparkles className="h-4 w-4 text-emerald-700 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs font-bold text-slate-900">Plain-Language AI Rule Explanations</h4>
@@ -247,8 +254,8 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3 relative">
-              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-md transition-all">
+              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold shadow-civic-xs">
                 1
               </div>
               <h3 className="text-sm font-bold text-slate-900">Citizen Pre-Checks</h3>
@@ -257,8 +264,8 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3 relative">
-              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-md transition-all">
+              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold shadow-civic-xs">
                 2
               </div>
               <h3 className="text-sm font-bold text-slate-900">Officer Curriculum</h3>
@@ -267,8 +274,8 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3 relative">
-              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-md transition-all">
+              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold shadow-civic-xs">
                 3
               </div>
               <h3 className="text-sm font-bold text-slate-900">Certified Assessment</h3>
@@ -277,8 +284,8 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3 relative">
-              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-md transition-all">
+              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center text-xs font-bold shadow-civic-xs">
                 4
               </div>
               <h3 className="text-sm font-bold text-slate-900">Supervisor Oversight</h3>
@@ -304,12 +311,12 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
             <Link to="/citizen">
-              <Button size="md" className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+              <Button size="md" className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-civic-md">
                 Test Citizen Tool
               </Button>
             </Link>
             <Link to="/login">
-              <Button size="md" variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-slate-600 font-semibold">
+              <Button size="md" variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-slate-600 font-semibold shadow-civic-md">
                 Officer Sign In
               </Button>
             </Link>

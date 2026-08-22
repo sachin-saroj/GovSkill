@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { QuizAttempt, Module, AdminQuizQuestion, AdminSkillOverviewResponse } from '@/types';
-import { Card } from '@/components/ui/Card';
+import Card from '@/components/ui/Card';
+import GovernanceOverview from '@/components/admin/GovernanceOverview';
+import ReadinessMetricCard from '@/components/admin/ReadinessMetricCard';
+import CompetencyInsights from '@/components/admin/CompetencyInsights';
+import EmployeeReadinessTable from '@/components/admin/EmployeeReadinessTable';
 import {
   LayoutDashboard,
   Users,
   Award,
   CheckCircle2,
-  Loader2,
-  RefreshCw,
   BookOpen,
   HelpCircle,
   Plus,
   Edit2,
   Trash2,
-  ChevronLeft,
-  ChevronRight,
   X,
   Check,
   Sparkles,
+  Loader2,
 } from 'lucide-react';
 
 type TabType = 'attempts' | 'modules' | 'questions';
@@ -56,6 +57,7 @@ export const AdminDashboardPage: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // --- Fetch Methods ---
   const fetchSkillsOverview = async () => {
@@ -107,6 +109,20 @@ export const AdminDashboardPage: React.FC = () => {
       setError(err.response?.data?.detail?.error?.message || 'Failed to load quiz questions');
     } finally {
       setIsLoadingQuestions(false);
+    }
+  };
+
+  const handleRefreshAll = async () => {
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        fetchAttempts(),
+        fetchModules(),
+        fetchSkillsOverview(),
+        selectedModuleId ? fetchQuestions(selectedModuleId) : Promise.resolve(),
+      ]);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -247,105 +263,89 @@ export const AdminDashboardPage: React.FC = () => {
   const passCount = attempts.filter((a) => a.total > 0 && a.score / a.total >= 0.75).length;
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#E2E6EB] pb-4">
-        <div>
-          <div className="flex items-center gap-2 text-[#1E4D8C] font-semibold text-sm mb-1">
-            <LayoutDashboard className="h-4 w-4" />
-            <span>Supervisor Portal</span>
-          </div>
-          <h1 className="text-2xl font-semibold text-[#1A1F2B]">Admin Dashboard & CMS</h1>
-        </div>
+    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+      {/* Governance Hero Header */}
+      <GovernanceOverview
+        onRefresh={handleRefreshAll}
+        isRefreshing={isRefreshing}
+      />
 
-        <button
-          onClick={() => {
-            fetchAttempts();
-            fetchModules();
-            fetchSkillsOverview();
-            if (selectedModuleId) fetchQuestions(selectedModuleId);
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#5A6472] border border-[#E2E6EB] rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <RefreshCw className="h-3.5 w-3.5" />
-          <span>Refresh</span>
-        </button>
-      </div>
-
+      {/* Global Error Banner */}
       {error && (
-        <div className="p-4 rounded-xl bg-[#C0392B]/10 border border-[#C0392B]/30 text-xs text-[#C0392B] flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center justify-between shadow-civic-xs animate-fade-in">
           <span>{error}</span>
-          <button onClick={() => setError(null)}><X className="h-4 w-4" /></button>
+          <button type="button" onClick={() => setError(null)} className="p-1 hover:bg-red-100 rounded">
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
 
+      {/* Global Success Banner */}
       {successMsg && (
-        <div className="p-4 rounded-xl bg-[#2E9E6B]/10 border border-[#2E9E6B]/30 text-xs text-[#2E9E6B] flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-800 flex items-center justify-between shadow-civic-xs animate-fade-in">
           <span>{successMsg}</span>
-          <button onClick={() => setSuccessMsg(null)}><X className="h-4 w-4" /></button>
+          <button type="button" onClick={() => setSuccessMsg(null)} className="p-1 hover:bg-emerald-100 rounded">
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-[#1E4D8C]/10 text-[#1E4D8C]">
-            <Users className="h-6 w-6" />
-          </div>
-          <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Enrolled Employees</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">
-              {isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
-            </span>
-          </div>
-        </Card>
+      {/* KPI Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <ReadinessMetricCard
+          icon={Users}
+          iconBgClass="bg-civic-100"
+          iconColorClass="text-civic-800"
+          label="Enrolled Employees"
+          value={isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
+          subtext="Municipal office staff"
+          badgeText="Workforce"
+          badgeVariant="civic"
+        />
 
-        <Card className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-[#2E9E6B]/10 text-[#2E9E6B]">
-            <Award className="h-6 w-6" />
-          </div>
-          <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Total Certifications</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">
-              {isLoadingOverview ? '...' : (skillsOverview?.total_certifications ?? 0)}
-            </span>
-          </div>
-        </Card>
+        <ReadinessMetricCard
+          icon={Award}
+          iconBgClass="bg-emerald-100"
+          iconColorClass="text-emerald-700"
+          label="Total Certifications"
+          value={isLoadingOverview ? '...' : (skillsOverview?.total_certifications ?? 0)}
+          subtext="Verified credentials earned"
+          badgeText="Certified"
+          badgeVariant="emerald"
+        />
 
-        <Card className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-[#D98E04]/10 text-[#D98E04]">
-            <Sparkles className="h-6 w-6" />
-          </div>
-          <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Certification Rate</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">
-              {isLoadingOverview ? '...' : `${skillsOverview?.overall_certification_rate ?? 0}%`}
-            </span>
-          </div>
-        </Card>
+        <ReadinessMetricCard
+          icon={Sparkles}
+          iconBgClass="bg-saffron-100"
+          iconColorClass="text-saffron-700"
+          label="Certification Rate"
+          value={isLoadingOverview ? '...' : `${skillsOverview?.overall_certification_rate ?? 0}%`}
+          subtext="Workforce completion progress"
+          badgeText="Rate"
+          badgeVariant="saffron"
+        />
 
-        <Card className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-[#1E4D8C]/10 text-[#1E4D8C]">
-            <CheckCircle2 className="h-6 w-6" />
-          </div>
-          <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Quiz Attempts Logged</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-[#1A1F2B]">{totalAttempts}</span>
-              <span className="text-xs text-[#5A6472]">({passCount} passed, {Math.round(avgScore)}% avg)</span>
-            </div>
-          </div>
-        </Card>
+        <ReadinessMetricCard
+          icon={CheckCircle2}
+          iconBgClass="bg-civic-100"
+          iconColorClass="text-civic-800"
+          label="Quiz Attempts Logged"
+          value={totalAttempts}
+          subtext={`(${passCount} passed, ${Math.round(avgScore)}% avg)`}
+          badgeText="Telemetry"
+          badgeVariant="civic"
+        />
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-[#E2E6EB] gap-8">
+      <div className="flex border-b border-slate-200 gap-8">
         <button
+          type="button"
           onClick={() => setActiveTab('attempts')}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'attempts'
-              ? 'border-[#1E4D8C] text-[#1E4D8C]'
-              : 'border-transparent text-[#5A6472] hover:text-[#1A1F2B]'
+              ? 'border-civic-800 text-civic-900'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -353,11 +353,12 @@ export const AdminDashboardPage: React.FC = () => {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('modules')}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'modules'
-              ? 'border-[#1E4D8C] text-[#1E4D8C]'
-              : 'border-transparent text-[#5A6472] hover:text-[#1A1F2B]'
+              ? 'border-civic-800 text-civic-900'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
           }`}
         >
           <BookOpen className="h-4 w-4" />
@@ -365,11 +366,12 @@ export const AdminDashboardPage: React.FC = () => {
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('questions')}
-          className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'questions'
-              ? 'border-[#1E4D8C] text-[#1E4D8C]'
-              : 'border-transparent text-[#5A6472] hover:text-[#1A1F2B]'
+              ? 'border-civic-800 text-civic-900'
+              : 'border-transparent text-slate-500 hover:text-slate-900'
           }`}
         >
           <HelpCircle className="h-4 w-4" />
@@ -377,93 +379,46 @@ export const AdminDashboardPage: React.FC = () => {
         </button>
       </div>
 
-      {/* TAB 1: ATTEMPTS LOG */}
+      {/* TAB 1: ATTEMPTS LOG & COMPETENCY SIGNALS */}
       {activeTab === 'attempts' && (
-        <Card className="p-0 overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#E2E6EB] bg-[#F7F9FB] flex items-center justify-between">
-            <h2 className="text-base font-semibold text-[#1A1F2B]">Employee Quiz Performance Log</h2>
-            <div className="flex items-center gap-2 text-xs text-[#5A6472]">
-              <span>Offset: {attemptOffset}</span>
-              <button
-                disabled={attemptOffset === 0}
-                onClick={() => setAttemptOffset(Math.max(0, attemptOffset - LIMIT))}
-                className="p-1 border border-[#E2E6EB] rounded hover:bg-gray-100 disabled:opacity-40"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                disabled={attempts.length < LIMIT}
-                onClick={() => setAttemptOffset(attemptOffset + LIMIT)}
-                className="p-1 border border-[#E2E6EB] rounded hover:bg-gray-100 disabled:opacity-40"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+        <div className="space-y-6 animate-fade-in">
+          <CompetencyInsights
+            totalEmployees={skillsOverview?.total_employees ?? 0}
+            totalCertifications={skillsOverview?.total_certifications ?? 0}
+            certificationRate={skillsOverview?.overall_certification_rate ?? 0}
+            totalAttempts={totalAttempts}
+            passCount={passCount}
+            avgScore={avgScore}
+          />
 
-          {isLoadingAttempts ? (
-            <div className="p-8 text-center text-sm text-[#5A6472] flex items-center justify-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-[#1E4D8C]" />
-              <span>Loading attempt logs...</span>
-            </div>
-          ) : attempts.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[#5A6472]">
-              No employee quiz attempts recorded yet.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-[#1A1F2B]">
-                <thead className="bg-[#F7F9FB] border-b border-[#E2E6EB] text-xs font-semibold text-[#5A6472] uppercase tracking-wider">
-                  <tr>
-                    <th className="px-6 py-3">Employee Email</th>
-                    <th className="px-6 py-3">Module Title</th>
-                    <th className="px-6 py-3">Score</th>
-                    <th className="px-6 py-3">Percentage</th>
-                    <th className="px-6 py-3">Submitted At</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2E6EB]">
-                  {attempts.map((att, idx) => {
-                    const pct = att.total > 0 ? Math.round((att.score / att.total) * 100) : 0;
-                    const isPass = pct >= 75;
-
-                    return (
-                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 font-medium">{att.user_email}</td>
-                        <td className="px-6 py-4 text-[#5A6472]">{att.module_title}</td>
-                        <td className="px-6 py-4 font-semibold text-[#1E4D8C]">
-                          {att.score} / {att.total}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                              isPass ? 'bg-[#2E9E6B]/10 text-[#2E9E6B]' : 'bg-[#D98E04]/10 text-[#D98E04]'
-                            }`}
-                          >
-                            {pct}%
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-xs text-[#5A6472]">
-                          {att.submitted_at ? new Date(att.submitted_at).toLocaleString() : 'Recent'}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </Card>
+          <EmployeeReadinessTable
+            attempts={attempts}
+            isLoading={isLoadingAttempts}
+            offset={attemptOffset}
+            limit={LIMIT}
+            onPrevPage={() => setAttemptOffset(Math.max(0, attemptOffset - LIMIT))}
+            onNextPage={() => setAttemptOffset(attemptOffset + LIMIT)}
+          />
+        </div>
       )}
 
       {/* TAB 2: MODULE CMS */}
       {activeTab === 'modules' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[#1A1F2B]">Training Modules Management</h2>
+        <div className="space-y-6 animate-fade-in">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Training Modules Management
+              </h2>
+              <p className="text-xs text-slate-500">
+                Create, update, and manage official training curriculum modules
+              </p>
+            </div>
+
             <button
+              type="button"
               onClick={() => handleOpenModuleModal()}
-              className="flex items-center gap-1.5 px-4 py-2 bg-[#1E4D8C] text-white text-xs font-semibold rounded-lg hover:bg-[#153866] transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 bg-civic-800 text-white text-xs font-bold rounded-lg hover:bg-civic-900 transition-all shadow-civic-xs cursor-pointer active:scale-95"
             >
               <Plus className="h-4 w-4" />
               <span>Create New Module</span>
@@ -472,30 +427,37 @@ export const AdminDashboardPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {modules.map((mod) => (
-              <Card key={mod.id} className="p-5 flex flex-col justify-between space-y-4 border border-[#E2E6EB]">
+              <Card
+                key={mod.id}
+                className="p-5 flex flex-col justify-between space-y-4 border-slate-200 shadow-civic-sm bg-white hover:shadow-civic-md transition-all"
+              >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="text-base font-semibold text-[#1A1F2B]">{mod.title}</h3>
-                    <span className="text-[10px] font-mono bg-gray-100 px-2 py-0.5 rounded text-[#5A6472]">
+                    <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                      {mod.title}
+                    </h3>
+                    <span className="text-[10px] font-mono bg-slate-100 px-2 py-0.5 rounded text-slate-600 border border-slate-200 shrink-0">
                       {mod.id.substring(0, 8)}...
                     </span>
                   </div>
-                  <p className="text-xs text-[#5A6472] line-clamp-3 whitespace-pre-line font-mono bg-[#F7F9FB] p-2.5 rounded-lg border border-[#E2E6EB]">
+                  <p className="text-xs text-slate-600 line-clamp-3 whitespace-pre-line font-mono bg-slate-50 p-3 rounded-lg border border-slate-200">
                     {mod.content.substring(0, 150)}...
                   </p>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E6EB]">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 text-xs">
                   <button
+                    type="button"
                     onClick={() => handleOpenModuleModal(mod)}
-                    className="flex items-center gap-1 text-xs text-[#1E4D8C] font-semibold hover:underline"
+                    className="flex items-center gap-1 text-civic-800 font-bold hover:underline cursor-pointer"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                     <span>Edit</span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleDeleteModule(mod.id)}
-                    className="flex items-center gap-1 text-xs text-[#C0392B] font-semibold hover:underline ml-3"
+                    className="flex items-center gap-1 text-red-600 font-bold hover:underline cursor-pointer ml-2"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     <span>Delete</span>
@@ -509,15 +471,17 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* TAB 3: QUIZ MANAGEMENT CMS */}
       {activeTab === 'questions' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#F7F9FB] p-4 rounded-xl border border-[#E2E6EB]">
+        <div className="space-y-6 animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-civic-xs">
             <div className="flex items-center gap-3">
-              <label htmlFor="admin-module-select" className="text-xs font-semibold text-[#5A6472] uppercase">Select Module:</label>
+              <label htmlFor="admin-module-select" className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                Select Module:
+              </label>
               <select
                 id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
-                className="px-3 py-1.5 text-xs font-medium text-[#1A1F2B] border border-[#E2E6EB] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]"
+                className="px-3 py-1.5 text-xs font-semibold text-slate-900 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -528,8 +492,9 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
 
             <button
+              type="button"
               onClick={() => handleOpenQuestionModal()}
-              className="flex items-center gap-1.5 px-4 py-2 bg-[#1E4D8C] text-white text-xs font-semibold rounded-lg hover:bg-[#153866] transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 bg-civic-800 text-white text-xs font-bold rounded-lg hover:bg-civic-900 transition-all shadow-civic-xs cursor-pointer active:scale-95"
             >
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
@@ -537,35 +502,37 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           {isLoadingQuestions ? (
-            <div className="p-8 text-center text-sm text-[#5A6472] flex items-center justify-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-[#1E4D8C]" />
-              <span>Loading module questions...</span>
+            <div className="p-12 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-civic-700" />
+              <span className="font-medium">Loading module questions...</span>
             </div>
           ) : questions.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[#5A6472] bg-white rounded-xl border border-[#E2E6EB]">
+            <div className="p-12 text-center text-xs text-slate-500 bg-white rounded-xl border border-slate-200 shadow-civic-xs">
               No questions found for this module. Click "Add Question" above to create one.
             </div>
           ) : (
             <div className="space-y-4">
               {questions.map((q, qIdx) => (
-                <Card key={q.id} className="p-5 space-y-3 border border-[#E2E6EB]">
+                <Card key={q.id} className="p-5 space-y-3.5 border-slate-200 shadow-civic-sm bg-white">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-2">
-                      <span className="font-bold text-[#1E4D8C] text-sm">Q{qIdx + 1}.</span>
-                      <h4 className="text-sm font-semibold text-[#1A1F2B]">{q.question}</h4>
+                    <div className="flex items-start gap-2.5">
+                      <span className="font-extrabold text-civic-800 text-xs mt-0.5">Q{qIdx + 1}.</span>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-900">{q.question}</h4>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
                       <button
+                        type="button"
                         onClick={() => handleOpenQuestionModal(q)}
-                        className="text-xs text-[#1E4D8C] font-semibold hover:underline flex items-center gap-1"
+                        className="text-xs text-civic-800 font-bold hover:underline flex items-center gap-1 cursor-pointer"
                       >
                         <Edit2 className="h-3.5 w-3.5" />
                         <span>Edit</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleDeleteQuestion(q.id)}
-                        className="text-xs text-[#C0392B] font-semibold hover:underline flex items-center gap-1 ml-2"
+                        className="text-xs text-red-600 font-bold hover:underline flex items-center gap-1 ml-2 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         <span>Delete</span>
@@ -573,23 +540,23 @@ export const AdminDashboardPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-[#E2E6EB]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-100">
                     {q.options.map((opt, optIdx) => {
                       const isCorrect = optIdx === q.correct_option_index;
                       return (
                         <div
                           key={optIdx}
-                          className={`p-2.5 rounded-lg text-xs flex items-center justify-between border ${
+                          className={`p-3 rounded-xl text-xs flex items-center justify-between border transition-colors ${
                             isCorrect
-                              ? 'bg-[#2E9E6B]/10 border-[#2E9E6B]/40 font-semibold text-[#2E9E6B]'
-                              : 'bg-[#F7F9FB] border-[#E2E6EB] text-[#5A6472]'
+                              ? 'bg-emerald-50/70 border-emerald-300 font-bold text-emerald-900 shadow-civic-xs'
+                              : 'bg-slate-50 border-slate-200 text-slate-700'
                           }`}
                         >
-                          <span>
-                            {String.fromCharCode(65 + optIdx)}. {opt}
+                          <span className="leading-snug">
+                            <strong className="mr-1">{String.fromCharCode(65 + optIdx)}.</strong> {opt}
                           </span>
                           {isCorrect && (
-                            <span className="flex items-center gap-1 text-[10px] bg-[#2E9E6B] text-white px-2 py-0.5 rounded-full font-bold">
+                            <span className="flex items-center gap-1 text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold shadow-civic-xs shrink-0 ml-2">
                               <Check className="h-3 w-3" /> Answer
                             </span>
                           )}
@@ -606,53 +573,58 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* MODULE MODAL */}
       {isModuleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-base font-semibold text-[#1A1F2B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-civic-lg border border-slate-200">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900">
                 {editingModule ? 'Edit Training Module' : 'Create Training Module'}
               </h3>
-              <button onClick={() => setIsModuleModalOpen(false)} aria-label="Close modal">
-                <X className="h-5 w-5 text-[#5A6472]" />
+              <button
+                type="button"
+                onClick={() => setIsModuleModalOpen(false)}
+                aria-label="Close modal"
+                className="p-1 hover:bg-slate-100 rounded-lg text-slate-500"
+              >
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveModule} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#5A6472] mb-1">Module Title</label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Module Title</label>
                 <input
                   type="text"
                   required
                   value={moduleFormTitle}
                   onChange={(e) => setModuleFormTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#1E4D8C]"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
                   placeholder="e.g. Cybersecurity Basics"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#5A6472] mb-1">Markdown Lesson Content</label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Markdown Lesson Content</label>
                 <textarea
                   required
                   rows={8}
                   value={moduleFormContent}
                   onChange={(e) => setModuleFormContent(e.target.value)}
-                  className="w-full px-3 py-2 text-xs font-mono border rounded-lg focus:ring-2 focus:ring-[#1E4D8C]"
+                  className="w-full px-3.5 py-2 text-xs font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
                   placeholder="# Lesson 1: Overview..."
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModuleModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#5A6472] border rounded-lg"
+                  className="px-4 py-2 text-xs font-bold text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#1E4D8C] rounded-lg hover:bg-[#153866]"
+                  className="px-4 py-2 text-xs font-bold text-white bg-civic-800 rounded-lg hover:bg-civic-900 shadow-civic-xs"
                 >
                   Save Module
                 </button>
@@ -664,32 +636,37 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* QUESTION MODAL */}
       {isQuestionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-base font-semibold text-[#1A1F2B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-civic-lg border border-slate-200">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-sm font-bold text-slate-900">
                 {editingQuestion ? 'Edit Quiz Question' : 'Add Quiz Question'}
               </h3>
-              <button onClick={() => setIsQuestionModalOpen(false)} aria-label="Close modal">
-                <X className="h-5 w-5 text-[#5A6472]" />
+              <button
+                type="button"
+                onClick={() => setIsQuestionModalOpen(false)}
+                aria-label="Close modal"
+                className="p-1 hover:bg-slate-100 rounded-lg text-slate-500"
+              >
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveQuestion} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#5A6472] mb-1">Question Text</label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Question Text</label>
                 <input
                   type="text"
                   required
                   value={qText}
                   onChange={(e) => setQText(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#1E4D8C]"
+                  className="w-full px-3.5 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
                   placeholder="e.g. What is the minimum certificate number length?"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xs font-semibold text-[#5A6472]">Options (Select Correct Answer Radio)</label>
+                <label className="block text-xs font-bold text-slate-600">Options (Select Correct Answer Radio)</label>
                 {qOptions.map((opt, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <input
@@ -698,7 +675,7 @@ export const AdminDashboardPage: React.FC = () => {
                       aria-label={`Mark Option ${String.fromCharCode(65 + idx)} as correct`}
                       checked={qCorrectIdx === idx}
                       onChange={() => setQCorrectIdx(idx)}
-                      className="h-4 w-4 text-[#1E4D8C]"
+                      className="h-4 w-4 text-civic-700"
                     />
                     <input
                       type="text"
@@ -709,24 +686,24 @@ export const AdminDashboardPage: React.FC = () => {
                         updated[idx] = e.target.value;
                         setQOptions(updated);
                       }}
-                      className="w-full px-3 py-1.5 text-xs border rounded-lg"
+                      className="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-civic-700/20"
                       placeholder={`Option ${String.fromCharCode(65 + idx)}${idx >= 2 ? ' (Optional)' : ''}`}
                     />
                   </div>
                 ))}
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#5A6472] border rounded-lg"
+                  className="px-4 py-2 text-xs font-bold text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#1E4D8C] rounded-lg hover:bg-[#153866]"
+                  className="px-4 py-2 text-xs font-bold text-white bg-civic-800 rounded-lg hover:bg-civic-900 shadow-civic-xs"
                 >
                   Save Question
                 </button>
@@ -740,4 +717,3 @@ export const AdminDashboardPage: React.FC = () => {
 };
 
 export default AdminDashboardPage;
-

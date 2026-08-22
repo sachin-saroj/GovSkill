@@ -5,8 +5,8 @@ import { EmployeeSkillStatusResponse, EmployeeSkillItem } from '@/types';
 import CertificateModal from '@/components/certificate/CertificateModal';
 import CompetencyOverview from '@/components/progress/CompetencyOverview';
 import SkillModuleCard from '@/components/progress/SkillModuleCard';
-import { Loader2, RefreshCw, AlertCircle, BookOpen } from 'lucide-react';
-import Card from '@/components/ui/Card';
+import { EmptyState, ErrorAlert } from '@/components/ui';
+import { Loader2, RefreshCw, BookOpen } from 'lucide-react';
 
 export const ProgressDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -53,13 +53,11 @@ export const ProgressDashboardPage: React.FC = () => {
   if (error) {
     return (
       <div className="max-w-5xl mx-auto py-12 px-4">
-        <Card className="border-red-200 bg-red-50/60 p-6 text-sm text-red-700 flex items-start gap-3 shadow-civic-xs">
-          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="font-bold text-red-900 mb-1">Competency Data Error</h4>
-            <p>{error}</p>
-          </div>
-        </Card>
+        <ErrorAlert
+          title="Competency Data Error"
+          message={error}
+          onRetry={fetchSkillProgress}
+        />
       </div>
     );
   }
@@ -113,15 +111,11 @@ export const ProgressDashboardPage: React.FC = () => {
           ))}
         </div>
       ) : (
-        <Card className="p-8 text-center bg-white border-slate-200 shadow-civic-sm space-y-3">
-          <div className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
-            <BookOpen className="h-6 w-6" />
-          </div>
-          <h3 className="text-base font-bold text-slate-900">No Skill Modules Assigned</h3>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-            There are currently no training modules assigned to your account. Please check back later.
-          </p>
-        </Card>
+        <EmptyState
+          icon={BookOpen}
+          title="No Skill Modules Assigned"
+          description="There are currently no training modules assigned to your account. Please check back later."
+        />
       )}
 
       {/* Certificate Modal */}
