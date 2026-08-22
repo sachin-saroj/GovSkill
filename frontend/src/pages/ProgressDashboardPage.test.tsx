@@ -89,6 +89,12 @@ describe('ProgressDashboardPage', () => {
     expect(takeQuizLinks).toHaveLength(2);
     expect(takeQuizLinks[0]).toHaveAttribute('href', '/quiz/cybersecurity-101');
     expect(takeQuizLinks[1]).toHaveAttribute('href', '/quiz/records-202');
+
+    // Verify "Read Lessons" links have correct module-specific URLs
+    const readLessonLinks = screen.getAllByRole('link', { name: /read lessons/i });
+    expect(readLessonLinks).toHaveLength(2);
+    expect(readLessonLinks[0]).toHaveAttribute('href', '/module?id=cybersecurity-101');
+    expect(readLessonLinks[1]).toHaveAttribute('href', '/module?id=records-202');
   });
 
   it('calls the lesson-complete endpoint and refreshes data when toggle button is clicked', async () => {

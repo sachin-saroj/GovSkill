@@ -188,7 +188,7 @@ export const ProgressDashboardPage: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex items-center justify-between pt-4 border-t border-[#E2E6EB] text-xs">
                 <Link
-                  to="/module"
+                  to={`/module?id=${skill.module_id}`}
                   className="flex items-center gap-1 font-semibold text-[#1E4D8C] hover:underline"
                 >
                   <BookOpen className="h-3.5 w-3.5" />
