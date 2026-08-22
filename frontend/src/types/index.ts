@@ -72,3 +72,9 @@ export interface DocumentUploadResponse {
   validation_results: ValidationRuleResult[];
 }
 
+export interface AdminSkillOverviewResponse {
+  total_employees: number;
+  total_certifications: number;
+  overall_certification_rate: number;
+}
+
