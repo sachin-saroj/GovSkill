@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/lib/api';
-import { QuizAttempt, Module, AdminQuizQuestion } from '@/types';
+import { QuizAttempt, Module, AdminQuizQuestion, AdminSkillOverviewResponse } from '@/types';
 import { Card } from '@/components/ui/Card';
 import {
   LayoutDashboard,
@@ -18,12 +18,17 @@ import {
   ChevronRight,
   X,
   Check,
+  Sparkles,
 } from 'lucide-react';
 
 type TabType = 'attempts' | 'modules' | 'questions';
 
 export const AdminDashboardPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('attempts');
+
+  // --- Skills Overview State ---
+  const [skillsOverview, setSkillsOverview] = useState<AdminSkillOverviewResponse | null>(null);
+  const [isLoadingOverview, setIsLoadingOverview] = useState<boolean>(false);
 
   // --- Attempt History State & Pagination ---
   const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
@@ -53,6 +58,18 @@ export const AdminDashboardPage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // --- Fetch Methods ---
+  const fetchSkillsOverview = async () => {
+    setIsLoadingOverview(true);
+    try {
+      const res = await api.get<AdminSkillOverviewResponse>('/progress/admin/skills-overview');
+      setSkillsOverview(res.data);
+    } catch (err: any) {
+      console.warn('Failed to load skills overview', err);
+    } finally {
+      setIsLoadingOverview(false);
+    }
+  };
+
   const fetchAttempts = async () => {
     setIsLoadingAttempts(true);
     setError(null);
@@ -79,7 +96,6 @@ export const AdminDashboardPage: React.FC = () => {
     }
   };
 
-
   const fetchQuestions = async (modId: string) => {
     if (!modId) return;
     setIsLoadingQuestions(true);
@@ -96,6 +112,7 @@ export const AdminDashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchModules();
+    fetchSkillsOverview();
   }, []);
 
   useEffect(() => {
@@ -245,6 +262,7 @@ export const AdminDashboardPage: React.FC = () => {
           onClick={() => {
             fetchAttempts();
             fetchModules();
+            fetchSkillsOverview();
             if (selectedModuleId) fetchQuestions(selectedModuleId);
           }}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#5A6472] border border-[#E2E6EB] rounded-lg hover:bg-gray-50 transition-colors"
@@ -269,14 +287,16 @@ export const AdminDashboardPage: React.FC = () => {
       )}
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="flex items-center gap-4">
           <div className="p-3 rounded-xl bg-[#1E4D8C]/10 text-[#1E4D8C]">
             <Users className="h-6 w-6" />
           </div>
           <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Employee Quiz Attempts</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">{totalAttempts}</span>
+            <span className="text-xs text-[#5A6472] font-medium block">Enrolled Employees</span>
+            <span className="text-2xl font-bold text-[#1A1F2B]">
+              {isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
+            </span>
           </div>
         </Card>
 
@@ -285,20 +305,35 @@ export const AdminDashboardPage: React.FC = () => {
             <Award className="h-6 w-6" />
           </div>
           <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Average Employee Score</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">{Math.round(avgScore)}%</span>
+            <span className="text-xs text-[#5A6472] font-medium block">Total Certifications</span>
+            <span className="text-2xl font-bold text-[#1A1F2B]">
+              {isLoadingOverview ? '...' : (skillsOverview?.total_certifications ?? 0)}
+            </span>
           </div>
         </Card>
 
         <Card className="flex items-center gap-4">
           <div className="p-3 rounded-xl bg-[#D98E04]/10 text-[#D98E04]">
+            <Sparkles className="h-6 w-6" />
+          </div>
+          <div>
+            <span className="text-xs text-[#5A6472] font-medium block">Certification Rate</span>
+            <span className="text-2xl font-bold text-[#1A1F2B]">
+              {isLoadingOverview ? '...' : `${skillsOverview?.overall_certification_rate ?? 0}%`}
+            </span>
+          </div>
+        </Card>
+
+        <Card className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-[#1E4D8C]/10 text-[#1E4D8C]">
             <CheckCircle2 className="h-6 w-6" />
           </div>
           <div>
-            <span className="text-xs text-[#5A6472] font-medium block">Passed Attempts (≥75%)</span>
-            <span className="text-2xl font-bold text-[#1A1F2B]">
-              {passCount} / {totalAttempts}
-            </span>
+            <span className="text-xs text-[#5A6472] font-medium block">Quiz Attempts Logged</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-[#1A1F2B]">{totalAttempts}</span>
+              <span className="text-xs text-[#5A6472]">({passCount} passed, {Math.round(avgScore)}% avg)</span>
+            </div>
           </div>
         </Card>
       </div>
@@ -477,8 +512,9 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#F7F9FB] p-4 rounded-xl border border-[#E2E6EB]">
             <div className="flex items-center gap-3">
-              <label className="text-xs font-semibold text-[#5A6472] uppercase">Select Module:</label>
+              <label htmlFor="admin-module-select" className="text-xs font-semibold text-[#5A6472] uppercase">Select Module:</label>
               <select
+                id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
                 className="px-3 py-1.5 text-xs font-medium text-[#1A1F2B] border border-[#E2E6EB] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]"
@@ -576,7 +612,7 @@ export const AdminDashboardPage: React.FC = () => {
               <h3 className="text-base font-semibold text-[#1A1F2B]">
                 {editingModule ? 'Edit Training Module' : 'Create Training Module'}
               </h3>
-              <button onClick={() => setIsModuleModalOpen(false)}>
+              <button onClick={() => setIsModuleModalOpen(false)} aria-label="Close modal">
                 <X className="h-5 w-5 text-[#5A6472]" />
               </button>
             </div>
@@ -634,7 +670,7 @@ export const AdminDashboardPage: React.FC = () => {
               <h3 className="text-base font-semibold text-[#1A1F2B]">
                 {editingQuestion ? 'Edit Quiz Question' : 'Add Quiz Question'}
               </h3>
-              <button onClick={() => setIsQuestionModalOpen(false)}>
+              <button onClick={() => setIsQuestionModalOpen(false)} aria-label="Close modal">
                 <X className="h-5 w-5 text-[#5A6472]" />
               </button>
             </div>
@@ -659,6 +695,7 @@ export const AdminDashboardPage: React.FC = () => {
                     <input
                       type="radio"
                       name="correct_idx"
+                      aria-label={`Mark Option ${String.fromCharCode(65 + idx)} as correct`}
                       checked={qCorrectIdx === idx}
                       onChange={() => setQCorrectIdx(idx)}
                       className="h-4 w-4 text-[#1E4D8C]"

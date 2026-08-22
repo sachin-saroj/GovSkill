@@ -29,6 +29,12 @@ const mockAttempts = [
   },
 ];
 
+const mockSkillsOverview = {
+  total_employees: 12,
+  total_certifications: 8,
+  overall_certification_rate: 67,
+};
+
 describe('AdminDashboardPage', () => {
   beforeEach(() => {
     mockedGet.mockReset();
@@ -39,11 +45,14 @@ describe('AdminDashboardPage', () => {
       if (url.includes('/modules')) {
         return Promise.resolve({ data: mockModules });
       }
+      if (url.includes('/progress/admin/skills-overview')) {
+        return Promise.resolve({ data: mockSkillsOverview });
+      }
       return Promise.resolve({ data: [] });
     });
   });
 
-  it('loads attempts and modules on mount and supports switching tabs', async () => {
+  it('loads attempts, modules, and skills overview on mount and supports switching tabs', async () => {
     render(<AdminDashboardPage />);
 
     // Loader is visible initially
@@ -54,8 +63,14 @@ describe('AdminDashboardPage', () => {
     expect(screen.getByText('Cybersecurity Basics')).toBeInTheDocument();
     expect(screen.getByText('4 / 5')).toBeInTheDocument();
 
-    // Verify modules fetch happened once
+    // Verify skills overview stats render
+    expect(await screen.findByText('12')).toBeInTheDocument();
+    expect(screen.getByText('8')).toBeInTheDocument();
+    expect(screen.getByText('67%')).toBeInTheDocument();
+
+    // Verify API fetches happened
     expect(mockedGet).toHaveBeenCalledWith('/modules');
+    expect(mockedGet).toHaveBeenCalledWith('/progress/admin/skills-overview');
 
     // Switch to Module CMS Tab
     const cmsTabButton = screen.getByRole('button', { name: /module cms/i });

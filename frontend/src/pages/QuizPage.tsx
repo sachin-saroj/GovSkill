@@ -6,12 +6,13 @@ import { QuizQuestion, Module } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Award, CheckCircle2, Loader2, RefreshCw, ArrowRight } from 'lucide-react';
+import { Award, CheckCircle2, Loader2, RefreshCw, Sparkles, BookOpen } from 'lucide-react';
 
 export const QuizPage: React.FC = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
   const activeModuleId = moduleId || 'default';
 
+  const [modules, setModules] = useState<Module[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<{ score: number; total: number } | null>(null);
@@ -28,15 +29,16 @@ export const QuizPage: React.FC = () => {
     try {
       const [quizRes, modulesRes] = await Promise.all([
         api.get<{ questions: QuizQuestion[] }>(`/quiz/${activeModuleId}`),
-        api.get<Module[]>('/modules').catch(() => ({ data: [] as Module[] }))
+        api.get<Module[]>('/modules').catch(() => ({ data: [] as Module[] })),
       ]);
       setQuestions(quizRes.data.questions);
-      if (modulesRes.data) {
-        const currentMod = modulesRes.data.find(m => m.id === activeModuleId);
+      if (Array.isArray(modulesRes.data) && modulesRes.data.length > 0) {
+        setModules(modulesRes.data);
+        const currentMod = modulesRes.data.find((m) => m.id === activeModuleId);
         if (currentMod) {
           setModuleTitle(`${currentMod.title} Quiz`);
         } else if (activeModuleId === 'default') {
-          setModuleTitle('Digital Document Handling Quiz');
+          setModuleTitle(`${modulesRes.data[0].title} Quiz`);
         } else {
           setModuleTitle('Training Module Quiz');
         }
@@ -90,6 +92,9 @@ export const QuizPage: React.FC = () => {
     setAnswers({});
     setResult(null);
   };
+
+  const answeredCount = Object.keys(answers).length;
+  const progressPct = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
 
   if (isLoading) {
     return (
@@ -153,18 +158,22 @@ export const QuizPage: React.FC = () => {
                 passed ? 'bg-[#2E9E6B]/10 text-[#2E9E6B]' : 'bg-[#D98E04]/10 text-[#D98E04]'
               }`}
             >
-              {percentage}% — {passed ? 'Passed' : 'Needs Review'}
+              {percentage}% — {passed ? 'Passed & Certified' : 'Needs Review'}
             </span>
           </div>
 
-          <div className="flex justify-center gap-4 pt-4">
+          <div className="flex flex-wrap justify-center gap-3 pt-4">
             <Button variant="outline" onClick={handleRetake}>
               <RefreshCw className="h-4 w-4 mr-1.5" />
               Retake Quiz
             </Button>
+            <Button variant="outline" onClick={() => navigate('/progress')}>
+              <Sparkles className="h-4 w-4 mr-1.5 text-[#D98E04]" />
+              <span>My Skill Progress</span>
+            </Button>
             <Button onClick={() => navigate('/module')}>
+              <BookOpen className="h-4 w-4 mr-1.5" />
               <span>Back to Lessons</span>
-              <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
           </div>
         </Card>
@@ -174,15 +183,55 @@ export const QuizPage: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
-      <div className="border-b border-[#E2E6EB] pb-4">
-        <div className="flex items-center gap-2 text-[#2E9E6B] font-semibold text-sm mb-1">
-          <Award className="h-4 w-4" />
-          <span>Module Quiz Evaluation</span>
+      <div className="border-b border-[#E2E6EB] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-[#2E9E6B] font-semibold text-sm mb-1">
+            <Award className="h-4 w-4" />
+            <span>Module Quiz Evaluation</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-[#1A1F2B]">{moduleTitle}</h1>
+          <p className="text-sm text-[#5A6472] mt-1">
+            Answer all {questions.length} questions below. Scores are submitted securely for server-side evaluation.
+          </p>
         </div>
-        <h1 className="text-2xl font-semibold text-[#1A1F2B]">{moduleTitle}</h1>
-        <p className="text-sm text-[#5A6472] mt-1">
-          Answer all {questions.length} questions below. Scores are submitted securely for server-side evaluation.
-        </p>
+
+        {modules.length > 1 && (
+          <div className="bg-[#F7F9FB] p-2.5 rounded-xl border border-[#E2E6EB] shrink-0">
+            <label htmlFor="quiz-module-select" className="block text-[10px] uppercase font-semibold text-[#5A6472] mb-1">
+              Switch Quiz Module:
+            </label>
+            <select
+              id="quiz-module-select"
+              value={activeModuleId}
+              onChange={(e) => {
+                setAnswers({});
+                setResult(null);
+                navigate(`/quiz/${e.target.value}`);
+              }}
+              className="px-2.5 py-1 text-xs font-semibold text-[#1A1F2B] bg-white border border-[#E2E6EB] rounded-lg focus:outline-none cursor-pointer"
+            >
+              {modules.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {/* Answer Progress Bar */}
+      <div className="bg-[#F7F9FB] p-3 rounded-xl border border-[#E2E6EB] space-y-1.5">
+        <div className="flex items-center justify-between text-xs text-[#5A6472]">
+          <span className="font-semibold text-[#1A1F2B]">Progress:</span>
+          <span>{answeredCount} of {questions.length} answered ({progressPct}%)</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+          <div
+            className="h-1.5 bg-[#1E4D8C] transition-all duration-300"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
       </div>
 
       {error && (
@@ -199,17 +248,18 @@ export const QuizPage: React.FC = () => {
             questionIndex={idx}
             selectedOption={answers[q.id] ?? null}
             onSelectOption={(optIdx) => handleSelectOption(q.id, optIdx)}
+            disabled={isSubmitting}
           />
         ))}
       </div>
 
       <div className="flex justify-between items-center pt-4 border-t border-[#E2E6EB]">
         <span className="text-xs text-[#5A6472]">
-          Answered {Object.keys(answers).length} of {questions.length} questions
+          Answered {answeredCount} of {questions.length} questions
         </span>
         <Button
           onClick={handleSubmitQuiz}
-          disabled={isSubmitting || Object.keys(answers).length < questions.length}
+          disabled={isSubmitting || answeredCount < questions.length}
         >
           {isSubmitting ? (
             <>
