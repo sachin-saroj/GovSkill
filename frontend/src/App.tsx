@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import Header from '@/layout/header';
+import Footer from '@/layout/footer';
 import LoginPage from '@/pages/LoginPage';
 import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
 import ModulePage from '@/pages/ModulePage';
@@ -19,7 +20,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-[#5A6472] text-sm">Loading session...</p>
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 rounded-full border-2 border-civic-700 border-t-transparent animate-spin" />
+          <p className="text-slate-500 text-sm font-medium">Verifying officer session...</p>
+        </div>
       </div>
     );
   }
@@ -37,9 +41,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
 export const AppContent: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F9FB]">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
@@ -95,6 +99,7 @@ export const AppContent: React.FC = () => {
           <Route path="*" element={<Navigate to="/progress" replace />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 };
