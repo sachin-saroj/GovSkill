@@ -41,6 +41,7 @@ const mockModules = [
 
 describe('QuizPage', () => {
   beforeEach(() => {
+    window.history.pushState({}, '', '/');
     mockModuleId = undefined;
     mockedGet.mockReset();
     mockedPost.mockReset();

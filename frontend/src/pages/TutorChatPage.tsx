@@ -1,29 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import api from '@/lib/api';
 import { Module } from '@/types';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import ChatMessageItem, { ChatMessage } from '@/components/tutor/ChatMessageItem';
+import QuickPromptGrid from '@/components/tutor/QuickPromptGrid';
 import {
   Bot,
   Send,
-  User,
   Sparkles,
   Loader2,
   BookOpen,
-  Tag,
-  ArrowRight,
   RotateCcw,
+  AlertCircle,
 } from 'lucide-react';
-
-interface ChatMessage {
-  id: string;
-  sender: 'user' | 'tutor';
-  text: string;
-  matched_module_title?: string;
-  timestamp: string;
-}
 
 const PROMPT_SUGGESTIONS = [
   'What are the mandatory verification rules for Income Certificates?',
@@ -132,28 +124,35 @@ export const TutorChatPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#E2E6EB] pb-4 gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-[#1E4D8C] font-semibold text-sm mb-1">
-            <Sparkles className="h-4 w-4 text-[#D98E04]" />
+    <div className="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6 animate-fade-in">
+      {/* Header Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-5 gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-civic-800 font-bold text-xs">
+            <Sparkles className="h-4 w-4 text-saffron-500" />
             <span>AI Training Assistant</span>
           </div>
-          <h1 className="text-2xl font-semibold text-[#1A1F2B]">Interactive AI Tutor</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            Interactive AI Tutor
+          </h1>
+          <p className="text-xs text-slate-500">
+            Answers are grounded strictly in official training modules and standard operating guidelines.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Module Scope Selector */}
-          <div className="flex items-center gap-2 bg-[#F7F9FB] px-3 py-1.5 rounded-xl border border-[#E2E6EB] shrink-0">
-            <BookOpen className="h-4 w-4 text-[#1E4D8C]" />
-            <label htmlFor="context-select" className="text-xs font-semibold text-[#5A6472]">Context:</label>
+          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 shrink-0 shadow-civic-xs">
+            <BookOpen className="h-4 w-4 text-civic-700" />
+            <label htmlFor="context-select" className="text-xs font-bold text-slate-600">
+              Context:
+            </label>
             <select
               id="context-select"
               value={selectedModuleId}
               onChange={(e) => setSelectedModuleId(e.target.value)}
               disabled={isLoading}
-              className="text-xs font-semibold text-[#1A1F2B] bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="text-xs font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <option value="auto">Auto-Detect Relevant Module ✨</option>
               {modules.map((mod) => (
@@ -168,7 +167,7 @@ export const TutorChatPage: React.FC = () => {
             type="button"
             onClick={handleResetChat}
             title="Reset conversation"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#5A6472] border border-[#E2E6EB] rounded-xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer active:scale-95"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Reset</span>
@@ -177,98 +176,40 @@ export const TutorChatPage: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-[#C0392B]/10 border border-[#C0392B]/30 text-xs text-[#C0392B]">
-          {error}
+        <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center gap-2 shadow-civic-xs animate-fade-in">
+          <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Suggested Questions Pills */}
-      <div className="space-y-2">
-        <span className="text-[11px] font-semibold uppercase text-[#5A6472] block">
-          Quick Questions / Prompt Starters:
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {PROMPT_SUGGESTIONS.map((suggestion, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => sendQuestionText(suggestion)}
-              disabled={isLoading}
-              className="text-xs text-left px-3 py-1.5 bg-[#F7F9FB] border border-[#E2E6EB] hover:border-[#1E4D8C] hover:text-[#1E4D8C] text-[#5A6472] rounded-full transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              {suggestion}
-            </button>
+      {/* Suggested Questions Grid */}
+      <QuickPromptGrid
+        prompts={PROMPT_SUGGESTIONS}
+        onSelectPrompt={sendQuestionText}
+        disabled={isLoading}
+      />
+
+      {/* Chat Messages Workspace */}
+      <Card className="min-h-[460px] flex flex-col justify-between p-6 bg-slate-50/50 border-slate-200 shadow-civic-sm">
+        <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2 mb-4">
+          {messages.map((msg) => (
+            <ChatMessageItem
+              key={msg.id}
+              msg={msg}
+              matchedModule={findModuleByTitle(msg.matched_module_title)}
+            />
           ))}
-        </div>
-      </div>
-
-      {/* Messages Container */}
-      <Card className="min-h-[420px] flex flex-col justify-between p-6">
-        <div className="space-y-4 overflow-y-auto max-h-[480px] pr-2 mb-4">
-          {messages.map((msg) => {
-            const matchedMod = findModuleByTitle(msg.matched_module_title);
-
-            return (
-              <div
-                key={msg.id}
-                className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {msg.sender === 'tutor' && (
-                  <div className="h-8 w-8 rounded-full bg-[#1E4D8C]/10 text-[#1E4D8C] flex items-center justify-center flex-shrink-0">
-                    <Bot className="h-4 w-4" />
-                  </div>
-                )}
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    msg.sender === 'user'
-                      ? 'bg-[#1E4D8C] text-white rounded-br-none'
-                      : 'bg-[#F7F9FB] border border-[#E2E6EB] text-[#1A1F2B] rounded-bl-none'
-                  }`}
-                >
-                  {msg.matched_module_title && (
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1E4D8C] bg-[#1E4D8C]/10 px-2 py-0.5 rounded-full border border-[#1E4D8C]/20">
-                        <Tag className="h-3 w-3" />
-                        <span>Source: {msg.matched_module_title}</span>
-                      </div>
-
-                      {matchedMod && (
-                        <Link
-                          to={`/module?id=${matchedMod.id}`}
-                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#1E4D8C] hover:underline"
-                        >
-                          <span>Open Lesson</span>
-                          <ArrowRight className="h-2.5 w-2.5" />
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                  <p className="whitespace-pre-line">{msg.text}</p>
-                  <span
-                    className={`block text-[10px] mt-1 ${
-                      msg.sender === 'user' ? 'text-white/70 text-right' : 'text-[#5A6472]'
-                    }`}
-                  >
-                    {msg.timestamp}
-                  </span>
-                </div>
-                {msg.sender === 'user' && (
-                  <div className="h-8 w-8 rounded-full bg-[#1E4D8C] text-white flex items-center justify-center flex-shrink-0">
-                    <User className="h-4 w-4" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
 
           {isLoading && (
-            <div className="flex gap-3 items-center text-[#5A6472] text-xs">
-              <div className="h-8 w-8 rounded-full bg-[#1E4D8C]/10 text-[#1E4D8C] flex items-center justify-center">
-                <Bot className="h-4 w-4" />
+            <div className="flex gap-3 items-center text-slate-600 text-xs animate-fade-in">
+              <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
+                <Bot className="h-4 w-4 text-saffron-400" />
               </div>
-              <div className="flex items-center gap-2 bg-[#F7F9FB] border border-[#E2E6EB] px-4 py-2.5 rounded-2xl">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#1E4D8C]" />
-                <span>Matching question with module knowledge base...</span>
+              <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl shadow-civic-xs">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
+                <span className="font-medium text-slate-700">
+                  Matching question with module knowledge base...
+                </span>
               </div>
             </div>
           )}
@@ -276,17 +217,21 @@ export const TutorChatPage: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Form */}
-        <form onSubmit={handleSendMessage} className="flex gap-2 pt-4 border-t border-[#E2E6EB]">
+        {/* Input Form Bar */}
+        <form onSubmit={handleSendMessage} className="flex gap-2.5 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 p-4 rounded-b-xl">
           <Input
             placeholder="Ask a question about document guidelines, SLA rules, cybersecurity..."
             value={inputQuestion}
             onChange={(e) => setInputQuestion(e.target.value)}
             disabled={isLoading}
-            className="flex-1"
+            className="flex-1 text-xs sm:text-sm bg-slate-50 border-slate-200 focus:bg-white"
           />
-          <Button type="submit" disabled={isLoading || !inputQuestion.trim()}>
-            <Send className="h-4 w-4 mr-1" />
+          <Button
+            type="submit"
+            disabled={isLoading || !inputQuestion.trim()}
+            className="px-5 shadow-civic-xs shrink-0"
+          >
+            <Send className="h-4 w-4 mr-1.5" />
             <span>Send</span>
           </Button>
         </form>
@@ -294,4 +239,5 @@ export const TutorChatPage: React.FC = () => {
     </div>
   );
 };
+
 export default TutorChatPage;

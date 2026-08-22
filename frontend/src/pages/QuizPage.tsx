@@ -4,9 +4,16 @@ import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
 import { QuizQuestion, Module } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Award, CheckCircle2, Loader2, RefreshCw, Sparkles, BookOpen } from 'lucide-react';
+import QuizResultView from '@/components/quiz/QuizResultView';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import {
+  Award,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
+  HelpCircle,
+} from 'lucide-react';
 
 export const QuizPage: React.FC = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
@@ -98,9 +105,9 @@ export const QuizPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-2 text-[#5A6472]">
-        <Loader2 className="h-5 w-5 animate-spin text-[#1E4D8C]" />
-        <span>Loading quiz questions...</span>
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-slate-500">
+        <Loader2 className="h-6 w-6 animate-spin text-civic-700" />
+        <span className="font-medium text-sm">Loading quiz questions...</span>
       </div>
     );
   }
@@ -108,96 +115,63 @@ export const QuizPage: React.FC = () => {
   if (error && questions.length === 0) {
     return (
       <div className="max-w-4xl mx-auto py-12 px-4">
-        <div className="rounded-xl border border-[#C0392B]/30 bg-[#C0392B]/5 p-6 text-sm text-[#C0392B]">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
-  if (questions.length === 0) {
-    return (
-      <div className="max-w-4xl mx-auto py-12 px-4 text-center">
-        <h2 className="text-xl font-semibold text-[#1A1F2B] mb-2">No quiz questions available</h2>
-        <p className="text-[#5A6472]">Please check back after your administrator publishes quiz questions.</p>
-      </div>
-    );
-  }
-
-  if (result) {
-    const percentage = Math.round((result.score / result.total) * 100);
-    const passed = percentage >= 75;
-
-    return (
-      <div className="max-w-2xl mx-auto py-12 px-4">
-        <Card className="text-center p-8 space-y-6">
-          <div
-            className={`inline-flex p-4 rounded-full ${
-              passed ? 'bg-[#2E9E6B]/10 text-[#2E9E6B]' : 'bg-[#D98E04]/10 text-[#D98E04]'
-            }`}
-          >
-            <Award className="h-12 w-12" />
-          </div>
-
+        <Card className="border-red-200 bg-red-50/60 p-6 text-sm text-red-700 flex items-start gap-3 shadow-civic-xs">
+          <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
           <div>
-            <h2 className="text-2xl font-bold text-[#1A1F2B]">Quiz Submission Complete</h2>
-            <p className="text-sm text-[#5A6472] mt-1">
-              Your quiz score has been evaluated server-side and recorded in your official employee profile.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-[#F7F9FB] border border-[#E2E6EB] max-w-sm mx-auto">
-            <span className="text-xs font-semibold uppercase text-[#5A6472] tracking-wider block mb-1">
-              Official Score
-            </span>
-            <div className="text-4xl font-extrabold text-[#1E4D8C] mb-1">
-              {result.score} / {result.total}
-            </div>
-            <span
-              className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
-                passed ? 'bg-[#2E9E6B]/10 text-[#2E9E6B]' : 'bg-[#D98E04]/10 text-[#D98E04]'
-              }`}
-            >
-              {percentage}% — {passed ? 'Passed & Certified' : 'Needs Review'}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 pt-4">
-            <Button variant="outline" onClick={handleRetake}>
-              <RefreshCw className="h-4 w-4 mr-1.5" />
-              Retake Quiz
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/progress')}>
-              <Sparkles className="h-4 w-4 mr-1.5 text-[#D98E04]" />
-              <span>My Skill Progress</span>
-            </Button>
-            <Button onClick={() => navigate('/module')}>
-              <BookOpen className="h-4 w-4 mr-1.5" />
-              <span>Back to Lessons</span>
-            </Button>
+            <h4 className="font-bold text-red-900 mb-1">Assessment Error</h4>
+            <p>{error}</p>
           </div>
         </Card>
       </div>
     );
   }
 
+  if (questions.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto py-16 px-4 text-center">
+        <Card className="p-8 max-w-md mx-auto bg-white border-slate-200 shadow-civic-sm space-y-3">
+          <div className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
+            <HelpCircle className="h-6 w-6" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900">No quiz questions available</h2>
+          <p className="text-xs text-slate-500">
+            Please check back after your administrator publishes quiz questions.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  if (result) {
+    return (
+      <QuizResultView
+        score={result.score}
+        total={result.total}
+        onRetake={handleRetake}
+        onGoToProgress={() => navigate('/progress')}
+        onGoToLessons={() => navigate('/module')}
+      />
+    );
+  }
+
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
-      <div className="border-b border-[#E2E6EB] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-[#2E9E6B] font-semibold text-sm mb-1">
-            <Award className="h-4 w-4" />
+    <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6 animate-fade-in">
+      {/* Header Banner & Module Switcher */}
+      <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
+            <Award className="h-4 w-4 text-emerald-600" />
             <span>Module Quiz Evaluation</span>
           </div>
-          <h1 className="text-2xl font-semibold text-[#1A1F2B]">{moduleTitle}</h1>
-          <p className="text-sm text-[#5A6472] mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{moduleTitle}</h1>
+          <p className="text-xs text-slate-500">
             Answer all {questions.length} questions below. Scores are submitted securely for server-side evaluation.
           </p>
         </div>
 
         {modules.length > 1 && (
-          <div className="bg-[#F7F9FB] p-2.5 rounded-xl border border-[#E2E6EB] shrink-0">
-            <label htmlFor="quiz-module-select" className="block text-[10px] uppercase font-semibold text-[#5A6472] mb-1">
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 shrink-0 shadow-civic-xs">
+            <label htmlFor="quiz-module-select" className="block text-[10px] uppercase font-bold text-slate-600 mb-1.5 tracking-wider">
               Switch Quiz Module:
             </label>
             <select
@@ -208,7 +182,7 @@ export const QuizPage: React.FC = () => {
                 setResult(null);
                 navigate(`/quiz/${e.target.value}`);
               }}
-              className="px-2.5 py-1 text-xs font-semibold text-[#1A1F2B] bg-white border border-[#E2E6EB] rounded-lg focus:outline-none cursor-pointer"
+              className="w-full px-3 py-1.5 text-xs font-semibold text-slate-900 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
             >
               {modules.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -220,26 +194,30 @@ export const QuizPage: React.FC = () => {
         )}
       </div>
 
-      {/* Answer Progress Bar */}
-      <div className="bg-[#F7F9FB] p-3 rounded-xl border border-[#E2E6EB] space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-[#5A6472]">
-          <span className="font-semibold text-[#1A1F2B]">Progress:</span>
-          <span>{answeredCount} of {questions.length} answered ({progressPct}%)</span>
+      {/* Answer Progress Meter */}
+      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-civic-xs space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-bold text-slate-800">Progress:</span>
+          <span className="font-medium text-slate-600">
+            {answeredCount} of {questions.length} answered ({progressPct}%)
+          </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+        <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
           <div
-            className="h-1.5 bg-[#1E4D8C] transition-all duration-300"
+            className="h-2 bg-civic-800 rounded-full transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-[#C0392B]/10 border border-[#C0392B]/30 text-xs text-[#C0392B]">
-          {error}
+        <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center gap-2 shadow-civic-xs animate-fade-in">
+          <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
+      {/* Questions Stack */}
       <div className="space-y-4">
         {questions.map((q, idx) => (
           <QuizCard
@@ -253,13 +231,15 @@ export const QuizPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center pt-4 border-t border-[#E2E6EB]">
-        <span className="text-xs text-[#5A6472]">
+      {/* Bottom Submit Control Bar */}
+      <div className="flex justify-between items-center pt-5 border-t border-slate-200">
+        <span className="text-xs font-medium text-slate-500">
           Answered {answeredCount} of {questions.length} questions
         </span>
         <Button
           onClick={handleSubmitQuiz}
           disabled={isSubmitting || answeredCount < questions.length}
+          className="px-6 py-2.5 shadow-civic-sm"
         >
           {isSubmitting ? (
             <>
@@ -277,4 +257,5 @@ export const QuizPage: React.FC = () => {
     </div>
   );
 };
+
 export default QuizPage;
