@@ -41,5 +41,6 @@ app.include_router(progress.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/health", tags=["health"])
+@app.get(f"{settings.API_V1_STR}/health", tags=["health"])
 async def health_check():
     return {"status": "ok", "app": settings.PROJECT_NAME}
