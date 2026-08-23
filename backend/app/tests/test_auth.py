@@ -108,3 +108,69 @@ async def test_auth_security_integration_suite():
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_auth_self_service_password_change():
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+            # 1. Register user
+            reg_resp = await ac.post(
+                "/api/auth/register",
+                json={"email": "change_pw_user@example.gov", "password": "initialpassword123"},
+            )
+            assert reg_resp.status_code == 201
+
+            # 2. Login to get token
+            login_resp = await ac.post(
+                "/api/auth/login",
+                json={"email": "change_pw_user@example.gov", "password": "initialpassword123"},
+            )
+            assert login_resp.status_code == 200
+            token = login_resp.json()["access_token"]
+            headers = {"Authorization": f"Bearer {token}"}
+
+            # 3. Wrong current password rejected -> 400 Bad Request
+            wrong_pw_resp = await ac.post(
+                "/api/auth/change-password",
+                json={"current_password": "wrongpassword999", "new_password": "updatedpassword456"},
+                headers=headers,
+            )
+            assert wrong_pw_resp.status_code == 400
+            assert wrong_pw_resp.json()["detail"]["error"]["code"] == "INVALID_CURRENT_PASSWORD"
+
+            # 4. Correct current password + valid new password -> 200 OK
+            success_pw_resp = await ac.post(
+                "/api/auth/change-password",
+                json={
+                    "current_password": "initialpassword123",
+                    "new_password": "updatedpassword456",
+                },
+                headers=headers,
+            )
+            assert success_pw_resp.status_code == 200
+            assert success_pw_resp.json()["email"] == "change_pw_user@example.gov"
+
+            # 5. Old password no longer works -> 401 Unauthorized
+            old_login = await ac.post(
+                "/api/auth/login",
+                json={"email": "change_pw_user@example.gov", "password": "initialpassword123"},
+            )
+            assert old_login.status_code == 401
+
+            # 6. New password logs in successfully -> 200 OK
+            new_login = await ac.post(
+                "/api/auth/login",
+                json={"email": "change_pw_user@example.gov", "password": "updatedpassword456"},
+            )
+            assert new_login.status_code == 200
+            assert "access_token" in new_login.json()
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()
