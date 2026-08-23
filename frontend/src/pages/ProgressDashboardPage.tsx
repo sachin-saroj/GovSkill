@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/api';
 import { EmployeeSkillStatusResponse, EmployeeSkillItem } from '@/types';
@@ -7,6 +8,7 @@ import CompetencyOverview from '@/components/progress/CompetencyOverview';
 import SkillModuleCard from '@/components/progress/SkillModuleCard';
 import { EmptyState, ErrorAlert } from '@/components/ui';
 import { Loader2, RefreshCw, BookOpen } from 'lucide-react';
+import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const ProgressDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -14,6 +16,7 @@ export const ProgressDashboardPage: React.FC = () => {
   const [selectedCertSkill, setSelectedCertSkill] = useState<EmployeeSkillItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const fetchSkillProgress = async () => {
     setIsLoading(true);
@@ -67,7 +70,12 @@ export const ProgressDashboardPage: React.FC = () => {
   const overallScore = data?.overall_skill_score || 0;
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+    <motion.div
+      variants={staggerContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8"
+    >
       {/* Competency Overview Banner & Metrics */}
       <CompetencyOverview
         userEmail={user?.email}
@@ -78,7 +86,7 @@ export const ProgressDashboardPage: React.FC = () => {
       />
 
       {/* Module List Header & Action Bar */}
-      <div className="flex items-center justify-between pt-2">
+      <motion.div variants={fadeUpVariants} className="flex items-center justify-between pt-2">
         <div className="space-y-0.5">
           <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
             Assigned Skill Modules
@@ -88,19 +96,21 @@ export const ProgressDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <button
+        <motion.button
           type="button"
+          whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+          whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
           onClick={fetchSkillProgress}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
         >
           <RefreshCw className="h-3.5 w-3.5 text-civic-700" />
           <span>Refresh</span>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Module Skill Cards Grid */}
       {data?.skills && data.skills.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div variants={fadeUpVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {data.skills.map((skill) => (
             <SkillModuleCard
               key={skill.module_id}
@@ -109,7 +119,7 @@ export const ProgressDashboardPage: React.FC = () => {
               onViewCertificate={setSelectedCertSkill}
             />
           ))}
-        </div>
+        </motion.div>
       ) : (
         <EmptyState
           icon={BookOpen}
@@ -132,7 +142,7 @@ export const ProgressDashboardPage: React.FC = () => {
           completedDate={selectedCertSkill.updated_at}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

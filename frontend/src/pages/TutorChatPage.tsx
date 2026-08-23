@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
 import { Module } from '@/types';
 import Card from '@/components/ui/Card';
@@ -16,6 +17,7 @@ import {
   RotateCcw,
   AlertCircle,
 } from 'lucide-react';
+import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 const PROMPT_SUGGESTIONS = [
   'What are the mandatory verification rules for Income Certificates?',
@@ -40,6 +42,7 @@ export const TutorChatPage: React.FC = () => {
   const [inputQuestion, setInputQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -124,9 +127,14 @@ export const TutorChatPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6 animate-fade-in">
+    <motion.div
+      variants={staggerContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6"
+    >
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-5 gap-4">
+      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-5 gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-civic-800 font-bold text-xs">
             <Sparkles className="h-4 w-4 text-saffron-500" />
@@ -142,7 +150,7 @@ export const TutorChatPage: React.FC = () => {
 
         <div className="flex items-center gap-3">
           {/* Module Scope Selector */}
-          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 shrink-0 shadow-civic-xs">
+          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-2xl border border-slate-200 shrink-0 shadow-civic-xs">
             <BookOpen className="h-4 w-4 text-civic-700" />
             <label htmlFor="context-select" className="text-xs font-bold text-slate-600">
               Context:
@@ -163,80 +171,106 @@ export const TutorChatPage: React.FC = () => {
             </select>
           </div>
 
-          <button
+          <motion.button
             type="button"
+            whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
             onClick={handleResetChat}
             title="Reset conversation"
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Reset</span>
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center gap-2 shadow-civic-xs animate-fade-in">
-          <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
+      {/* Error Alert with AnimatePresence */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
+            className="p-4 rounded-2xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center gap-2 shadow-civic-xs"
+          >
+            <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+            <span>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Suggested Questions Grid */}
-      <QuickPromptGrid
-        prompts={PROMPT_SUGGESTIONS}
-        onSelectPrompt={sendQuestionText}
-        disabled={isLoading}
-      />
+      <motion.div variants={fadeUpVariants}>
+        <QuickPromptGrid
+          prompts={PROMPT_SUGGESTIONS}
+          onSelectPrompt={sendQuestionText}
+          disabled={isLoading}
+        />
+      </motion.div>
 
       {/* Chat Messages Workspace */}
-      <Card className="min-h-[460px] flex flex-col justify-between p-6 bg-slate-50/50 border-slate-200 shadow-civic-sm">
-        <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2 mb-4">
-          {messages.map((msg) => (
-            <ChatMessageItem
-              key={msg.id}
-              msg={msg}
-              matchedModule={findModuleByTitle(msg.matched_module_title)}
+      <motion.div variants={fadeUpVariants}>
+        <Card className="min-h-[460px] flex flex-col justify-between p-6 bg-slate-50/50 border-slate-200 shadow-civic-sm rounded-3xl">
+          <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2 mb-4">
+            {messages.map((msg) => (
+              <ChatMessageItem
+                key={msg.id}
+                msg={msg}
+                matchedModule={findModuleByTitle(msg.matched_module_title)}
+              />
+            ))}
+
+            <AnimatePresence>
+              {isLoading && (
+                <motion.div
+                  initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
+                  className="flex gap-3 items-center text-slate-600 text-xs"
+                >
+                  <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
+                    <Bot className="h-4 w-4 text-saffron-400" />
+                  </div>
+                  <div className="flex items-center gap-2.5 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl shadow-civic-xs">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
+                    <span className="font-medium text-slate-700">
+                      Matching question with module knowledge base...
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Form Bar */}
+          <form onSubmit={handleSendMessage} className="flex gap-2.5 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 p-4 rounded-b-3xl">
+            <Input
+              placeholder="Ask a question about document guidelines, SLA rules, cybersecurity..."
+              value={inputQuestion}
+              onChange={(e) => setInputQuestion(e.target.value)}
+              disabled={isLoading}
+              className="flex-1 text-xs sm:text-sm bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
             />
-          ))}
-
-          {isLoading && (
-            <div className="flex gap-3 items-center text-slate-600 text-xs animate-fade-in">
-              <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
-                <Bot className="h-4 w-4 text-saffron-400" />
-              </div>
-              <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl shadow-civic-xs">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
-                <span className="font-medium text-slate-700">
-                  Matching question with module knowledge base...
-                </span>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Form Bar */}
-        <form onSubmit={handleSendMessage} className="flex gap-2.5 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 p-4 rounded-b-xl">
-          <Input
-            placeholder="Ask a question about document guidelines, SLA rules, cybersecurity..."
-            value={inputQuestion}
-            onChange={(e) => setInputQuestion(e.target.value)}
-            disabled={isLoading}
-            className="flex-1 text-xs sm:text-sm bg-slate-50 border-slate-200 focus:bg-white"
-          />
-          <Button
-            type="submit"
-            disabled={isLoading || !inputQuestion.trim()}
-            className="px-5 shadow-civic-xs shrink-0"
-          >
-            <Send className="h-4 w-4 mr-1.5" />
-            <span>Send</span>
-          </Button>
-        </form>
-      </Card>
-    </div>
+            <motion.div
+              whileHover={shouldReduceMotion || isLoading || !inputQuestion.trim() ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion || isLoading || !inputQuestion.trim() ? {} : { scale: 0.97 }}
+            >
+              <Button
+                type="submit"
+                disabled={isLoading || !inputQuestion.trim()}
+                className="px-5 shadow-civic-xs shrink-0 cursor-pointer"
+              >
+                <Send className="h-4 w-4 mr-1.5" />
+                <span>Send</span>
+              </Button>
+            </motion.div>
+          </form>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 };
 

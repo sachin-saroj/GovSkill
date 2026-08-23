@@ -18,3 +18,7 @@ Object.defineProperty(global, 'IntersectionObserver', {
   configurable: true,
   value: MockIntersectionObserver,
 });
+
+if (typeof window !== 'undefined') {
+  window.scrollTo = vi.fn() as any;
+}
