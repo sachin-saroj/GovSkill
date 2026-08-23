@@ -103,6 +103,35 @@
       stroke-dashoffset: 32;
     }
   }
+
+  /* 3D Transform & Perspective Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .translate-z-4 {
+    transform: translateZ(16px);
+  }
+
+  .translate-z-8 {
+    transform: translateZ(32px);
+  }
+
+  .translate-z-12 {
+    transform: translateZ(48px);
+  }
 }
 
 /* Custom Civic Scrollbar */

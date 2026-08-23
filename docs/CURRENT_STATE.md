@@ -1,10 +1,11 @@
 # CURRENT STATE
 
 Last Updated:
-2026-08-18
+2026-08-23
 
 ## Working
 
+- **Immersive 3D-Style Landing Experience (Batch 9A)**: Built with official `framer-motion`, featuring spring physics, mouse-responsive 3D tilt cards (`InteractiveTiltCard`) with dynamic specular sheen, multi-layered 3D hero showcase (`HeroVisual`) with live DPI telemetry preview, dynamic architecture ecosystem visual (`EcosystemVisual`) with animated SVG path glow filters, spring-based node selection, interactive play/pause auto-cycling tour with smooth progress timer bar, staggered entrance animations, and full `prefers-reduced-motion` accessibility support.
 - **User Authentication**: Role-enforced JWT registration (forces `employee` on public signup), login, admin creation (`/auth/create-admin` & `app/db/seed_admin.py`), and role-based route protection (`employee` vs `admin`).
 - **File Upload Security Pipeline**: Max 5 MB size validation, extension whitelist (`.jpg`, `.jpeg`, `.png`, `.pdf`, `.txt`), MIME type checks, and UUID filename assignment.
 - **PDF Document OCR Processing**: PyMuPDF (`fitz`) rendering pipeline for direct text extraction and scanned PDF page image rendering for Tesseract OCR.
@@ -21,7 +22,7 @@ Last Updated:
 - **GovAssist Citizen Pre-Checker**: Document upload pre-check, OCR, 4-rule Engine, and failed rule AI explanations.
 - **Database & Migrations**: PostgreSQL + SQLite fallback with Alembic migrations (`001_initial_schema.py`, `002_add_user_progress.py`).
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets) and domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`).
-- **Automated Testing Suite**: 21 Pytest unit/integration test cases covering Auth Security, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, and Employee/Citizen journeys.
+- **Automated Testing Suite**: 21 Pytest backend test cases and 36 Vitest frontend test cases covering Landing Page interactive motion & 3D tilt, Auth Security, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, and Employee/Citizen journeys.
 
 ## Partially Working
 
