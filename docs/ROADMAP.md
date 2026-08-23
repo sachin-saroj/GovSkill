@@ -20,14 +20,21 @@ This roadmap outlines recommended future work based directly on current implemen
 
 ---
 
+## Completed Milestones & Infrastructure
+
+1. **Phases 1-7 Core Deliverables**:
+   - PDF OCR extraction, deterministic rule engine, grounded Gemini AI tutor, server-scored quizzes, and role-based Admin CMS.
+2. **Containerization & Deployment Parity**:
+   - Production Dockerfiles for backend and frontend.
+   - `docker-compose.yml` orchestrating PostgreSQL, FastAPI, and Vite dev/build services with Nginx reverse proxy.
+3. **CI/CD Pipeline**:
+   - GitHub Actions workflow (`.github/workflows/ci.yml`) automatically executing backend Pytest suite and frontend TypeScript compilation checks.
+
+---
+
 ## Long-Term / Infrastructure Priorities
 
-1. **Containerization**:
-   - Create `Dockerfile` for backend and frontend.
-   - Create `docker-compose.yml` orchestrating PostgreSQL, FastAPI, and Vite dev/build services.
-
-2. **CI/CD Integration**:
-   - Configure GitHub Actions pipeline to run pytest and frontend TypeScript build checks automatically.
+- **None**: All infrastructure, testing, and CI/CD integration goals are achieved.
 
 ---
 
