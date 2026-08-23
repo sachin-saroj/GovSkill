@@ -1,24 +1,31 @@
-import { Variants } from 'framer-motion';
+import { Variants, Transition } from 'framer-motion';
 
 /**
- * Standard spring physics configuration for tactile civic UI elements.
+ * Standardized spring physics configurations for tactile civic UI elements.
  */
-export const springTransition = {
-  type: 'spring' as const,
-  stiffness: 280,
+export const springTactile: Transition = {
+  type: 'spring',
+  stiffness: 400,
+  damping: 28,
+};
+
+export const springSmooth: Transition = {
+  type: 'spring',
+  stiffness: 240,
   damping: 24,
 };
 
-export const gentleSpring = {
-  type: 'spring' as const,
-  stiffness: 200,
-  damping: 22,
+export const springGentle: Transition = {
+  type: 'spring',
+  stiffness: 180,
+  damping: 20,
 };
 
-export const snappySpring = {
-  type: 'spring' as const,
-  stiffness: 400,
-  damping: 28,
+export const springHero: Transition = {
+  type: 'spring',
+  stiffness: 150,
+  damping: 22,
+  mass: 0.8,
 };
 
 /**
@@ -43,7 +50,7 @@ export const fadeUpVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: springTransition,
+    transition: springSmooth,
   },
   exit: {
     opacity: 0,
@@ -60,7 +67,7 @@ export const scaleInVariants: Variants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: springTransition,
+    transition: springTactile,
   },
   exit: {
     opacity: 0,
@@ -77,11 +84,19 @@ export const slideInVariants: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: springTransition,
+    transition: springSmooth,
   },
   exit: {
     opacity: 0,
     x: 12,
     transition: { duration: 0.15 },
   },
+};
+
+/**
+ * Viewport reveal configuration for scroll triggers.
+ */
+export const viewportOnce = {
+  once: true,
+  margin: '-40px',
 };

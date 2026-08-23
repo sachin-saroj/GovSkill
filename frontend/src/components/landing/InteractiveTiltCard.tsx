@@ -1,5 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useMotionTemplate,
+  useReducedMotion,
+} from 'framer-motion';
 
 interface InteractiveTiltCardProps {
   children: React.ReactNode;
@@ -13,7 +20,7 @@ interface InteractiveTiltCardProps {
 export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   children,
   className = '',
-  maxTilt = 8,
+  maxTilt = 5,
   perspective = 1000,
   showSheen = true,
   onClick,
@@ -22,33 +29,32 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  // Raw mouse coordinates normalized from -0.5 to 0.5
+  // Raw normalized mouse coordinates [-0.5, 0.5]
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Smooth spring physics for natural tactile feel
-  const springConfig = { damping: 20, stiffness: 200, mass: 0.5 };
-  const springX = useSpring(mouseX, springConfig);
-  const springY = useSpring(mouseY, springConfig);
+  // Smooth, non-jittery spring physics
+  const springConfig = { damping: 24, stiffness: 220, mass: 0.5 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
 
-  // Derive tilt rotations (rotateX responds to Y movement, rotateY responds to X movement)
-  const rotateX = useTransform(springY, [-0.5, 0.5], [maxTilt, -maxTilt]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], [-maxTilt, maxTilt]);
+  // Derive tilt angles (rotateX maps to Y-movement, rotateY maps to X-movement)
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [maxTilt, -maxTilt]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-maxTilt, maxTilt]);
 
-  // Derive dynamic specular sheen position
-  const sheenX = useTransform(springX, [-0.5, 0.5], ['0%', '100%']);
-  const sheenY = useTransform(springY, [-0.5, 0.5], ['0%', '100%']);
+  // Derive specular sheen percentages (0% to 100%)
+  const sheenX = useTransform(smoothX, [-0.5, 0.5], [10, 90]);
+  const sheenY = useTransform(smoothY, [-0.5, 0.5], [10, 90]);
+  const sheenBackground = useMotionTemplate`radial-gradient(circle 260px at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.2), transparent 75%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (shouldReduceMotion || !cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    if (rect.width === 0 || rect.height === 0) return;
 
-    // Calculate normalized relative position from center [-0.5, 0.5]
-    const relativeX = (e.clientX - rect.left) / width - 0.5;
-    const relativeY = (e.clientY - rect.top) / height - 0.5;
+    const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
+    const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
 
     mouseX.set(relativeX);
     mouseY.set(relativeY);
@@ -60,7 +66,6 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    // Smoothly return to flat resting position
     mouseX.set(0);
     mouseY.set(0);
   };
@@ -69,7 +74,7 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
     return (
       <div
         ref={cardRef}
-        className={`relative rounded-2xl ${className}`}
+        className={`relative rounded-3xl ${className}`}
         onClick={onClick}
       >
         {children}
@@ -78,16 +83,13 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   }
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
-      style={{
-        perspective: `${perspective}px`,
-        transformStyle: 'preserve-3d',
-      }}
+      style={{ perspective: `${perspective}px` }}
       className="relative w-full"
     >
       <motion.div
@@ -96,21 +98,21 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
           rotateY,
           transformStyle: 'preserve-3d',
         }}
-        whileHover={{ scale: 1.015 }}
-        whileTap={{ scale: 0.985 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        className={`relative overflow-hidden rounded-2xl transition-shadow duration-300 ${
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+        className={`relative overflow-hidden rounded-3xl ${
           isHovered ? 'shadow-civic-xl' : 'shadow-civic-md'
         } ${className}`}
       >
-        {/* Dynamic Specular Sheen / Light Highlight */}
+        {/* Dynamic Specular Sheen (GPU accelerated, no re-render lag) */}
         {showSheen && (
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-30 transition-opacity duration-500"
+            className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
             style={{
-              opacity: isHovered ? 0.35 : 0,
-              background: `radial-gradient(circle 280px at ${sheenX.get()} ${sheenY.get()}, rgba(255,255,255,0.4), transparent 80%)`,
+              opacity: isHovered ? 0.6 : 0,
+              background: sheenBackground,
             }}
           />
         )}
@@ -120,7 +122,7 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
           {children}
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

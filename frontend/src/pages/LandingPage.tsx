@@ -21,28 +21,18 @@ import Badge from '@/components/ui/Badge';
 import EcosystemVisual from '@/components/landing/EcosystemVisual';
 import HeroVisual from '@/components/landing/HeroVisual';
 import InteractiveTiltCard from '@/components/landing/InteractiveTiltCard';
+import { staggerContainerVariants, viewportOnce } from '@/lib/motion';
 
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const shouldReduceMotion = useReducedMotion();
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.05,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
+  const heroItemVariants: Variants = {
     hidden: shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: 'spring' as const, stiffness: 260, damping: 20 },
+      transition: { type: 'spring', stiffness: 280, damping: 24 },
     },
   };
 
@@ -50,22 +40,22 @@ export const LandingPage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-slate-900 selection:bg-civic-200 selection:text-civic-900">
       {/* 1. Immersive 3D Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-civic-950 to-slate-900 text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-        {/* Layered Ambient Lighting Backdrops */}
-        <div className="absolute inset-0 bg-civic-pattern opacity-10 pointer-events-none" />
-        <div className="absolute top-1/6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[450px] bg-civic-600/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 -right-20 w-80 h-80 bg-saffron-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Layered Ambient Depth Lighting */}
+        <div className="absolute inset-0 bg-civic-dark-pattern opacity-30 pointer-events-none" />
+        <div className="absolute top-1/6 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-civic-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/3 -left-20 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 -right-20 w-96 h-96 bg-saffron-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto space-y-12">
           {/* Staggered Hero Header Content */}
           <motion.div
-            variants={containerVariants}
+            variants={staggerContainerVariants}
             initial="hidden"
             animate="visible"
             className="flex flex-col items-center text-center space-y-5 max-w-4xl mx-auto"
           >
             {/* Top DPI Pill Badge */}
-            <motion.div variants={itemVariants}>
+            <motion.div variants={heroItemVariants}>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-civic-700/80 text-xs font-semibold text-saffron-400 shadow-civic-md backdrop-blur-md">
                 <Sparkles className="h-3.5 w-3.5 text-saffron-400 animate-pulse" />
                 <span>National Digital Public Infrastructure • Local Governance Platform</span>
@@ -74,7 +64,7 @@ export const LandingPage: React.FC = () => {
 
             {/* Headline */}
             <motion.h1
-              variants={itemVariants}
+              variants={heroItemVariants}
               className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight"
             >
               Precision Digital Skills & <br className="hidden sm:inline" />
@@ -85,7 +75,7 @@ export const LandingPage: React.FC = () => {
 
             {/* Description */}
             <motion.p
-              variants={itemVariants}
+              variants={heroItemVariants}
               className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed font-normal"
             >
               GovSkill empowers local administrative officers with grounded AI curriculum training and server-scored certification, while GovAssist provides citizens with instant self-service pre-submission income certificate verification.
@@ -93,13 +83,13 @@ export const LandingPage: React.FC = () => {
 
             {/* Hero Action Buttons */}
             <motion.div
-              variants={itemVariants}
+              variants={heroItemVariants}
               className="flex flex-wrap items-center justify-center gap-4 pt-2"
             >
               <Link to="/citizen">
                 <motion.div
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
                 >
                   <Button
                     size="lg"
@@ -114,8 +104,8 @@ export const LandingPage: React.FC = () => {
 
               <Link to={user ? (user.role === 'admin' ? '/admin' : '/progress') : '/login'}>
                 <motion.div
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
                 >
                   <Button
                     size="lg"
@@ -131,7 +121,7 @@ export const LandingPage: React.FC = () => {
 
             {/* Key Trust Pillars Bar */}
             <motion.div
-              variants={itemVariants}
+              variants={heroItemVariants}
               className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 w-full max-w-4xl text-left"
             >
               <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs backdrop-blur-sm">
@@ -155,9 +145,9 @@ export const LandingPage: React.FC = () => {
 
           {/* Interactive 3D Hero Visual Showcase */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <HeroVisual />
           </motion.div>
@@ -170,8 +160,8 @@ export const LandingPage: React.FC = () => {
           <motion.div
             initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            viewport={viewportOnce}
+            transition={{ duration: 0.4 }}
             className="text-center max-w-3xl mx-auto space-y-3"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-900 border border-civic-700 text-xs font-bold text-civic-300">
@@ -196,8 +186,8 @@ export const LandingPage: React.FC = () => {
           <motion.div
             initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            viewport={viewportOnce}
+            transition={{ duration: 0.4 }}
             className="text-center max-w-3xl mx-auto space-y-3"
           >
             <Badge variant="info" size="md">
@@ -214,7 +204,7 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* GovSkill Pillar Card with 3D Tilt */}
             <InteractiveTiltCard
-              maxTilt={6}
+              maxTilt={4}
               className="bg-white border border-civic-200/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between"
             >
               <div className="space-y-5">
@@ -274,7 +264,7 @@ export const LandingPage: React.FC = () => {
 
             {/* GovAssist Pillar Card with 3D Tilt */}
             <InteractiveTiltCard
-              maxTilt={6}
+              maxTilt={4}
               className="bg-white border border-emerald-200/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between"
             >
               <div className="space-y-5">
@@ -341,8 +331,8 @@ export const LandingPage: React.FC = () => {
           <motion.div
             initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            viewport={viewportOnce}
+            transition={{ duration: 0.4 }}
             className="text-center max-w-2xl mx-auto space-y-2"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">
@@ -359,11 +349,11 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.05 }}
-              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.35, delay: 0.05 }}
+              whileHover={shouldReduceMotion ? {} : { y: -3 }}
               className="p-6 rounded-3xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-lg transition-all"
             >
               <div className="h-10 w-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-sm font-bold shadow-civic-xs">
@@ -376,11 +366,11 @@ export const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.35, delay: 0.12 }}
+              whileHover={shouldReduceMotion ? {} : { y: -3 }}
               className="p-6 rounded-3xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-lg transition-all"
             >
               <div className="h-10 w-10 rounded-2xl bg-civic-700 text-white flex items-center justify-center text-sm font-bold shadow-civic-xs">
@@ -393,11 +383,11 @@ export const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.25 }}
-              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.35, delay: 0.19 }}
+              whileHover={shouldReduceMotion ? {} : { y: -3 }}
               className="p-6 rounded-3xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-lg transition-all"
             >
               <div className="h-10 w-10 rounded-2xl bg-saffron-600 text-white flex items-center justify-center text-sm font-bold shadow-civic-xs">
@@ -410,11 +400,11 @@ export const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.35 }}
-              whileHover={shouldReduceMotion ? {} : { y: -4 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.35, delay: 0.26 }}
+              whileHover={shouldReduceMotion ? {} : { y: -3 }}
               className="p-6 rounded-3xl border border-slate-200 bg-slate-50/70 space-y-3 relative hover:shadow-civic-lg transition-all"
             >
               <div className="h-10 w-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-sm font-bold shadow-civic-xs">
@@ -431,7 +421,7 @@ export const LandingPage: React.FC = () => {
 
       {/* 5. Ready to Get Started Call to Action */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-civic-950 via-civic-900 to-civic-950 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-civic-pattern opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-civic-dark-pattern opacity-20 pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <div className="space-y-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -445,8 +435,8 @@ export const LandingPage: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-3.5 shrink-0">
             <Link to="/citizen">
               <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
               >
                 <Button size="md" className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-civic-lg cursor-pointer">
                   Test Citizen Tool
@@ -455,8 +445,8 @@ export const LandingPage: React.FC = () => {
             </Link>
             <Link to="/login">
               <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
               >
                 <Button size="md" variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-slate-600 font-semibold shadow-civic-md cursor-pointer">
                   Officer Sign In

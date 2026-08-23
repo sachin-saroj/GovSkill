@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    --civic-navy: #0B2545;
+    --civic-navy: #0B192C;
     --civic-blue: #1E4D8C;
     --civic-blue-hover: #163A6B;
     --civic-saffron: #D97706;
-    --civic-emerald: #107C41;
-    --civic-crimson: #C5221F;
+    --civic-emerald: #059669;
+    --civic-crimson: #DC2626;
     --civic-bg: #F8FAFC;
     --civic-surface: #FFFFFF;
     --civic-border: #E2E8F0;
@@ -33,7 +33,7 @@
 
   ::selection {
     background-color: #DBEAFE;
-    color: #0B2545;
+    color: #0B192C;
   }
 
   :focus-visible {
@@ -61,14 +61,19 @@
     background-size: 24px 24px;
   }
 
+  .bg-civic-dark-pattern {
+    background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
   .bg-civic-gradient {
-    background: linear-gradient(135deg, #0B2545 0%, #133E87 50%, #1E4D8C 100%);
+    background: linear-gradient(135deg, #071322 0%, #0B192C 50%, #133E87 100%);
   }
 
   .bg-civic-card {
     background-color: #FFFFFF;
     border: 1px solid #E2E8F0;
-    box-shadow: 0 1px 3px 0 rgba(11, 37, 69, 0.06), 0 1px 2px -1px rgba(11, 37, 69, 0.04);
+    box-shadow: 0 1px 3px 0 rgba(7, 19, 34, 0.06), 0 1px 2px -1px rgba(7, 19, 34, 0.04);
   }
 
   .civic-focus-ring {
@@ -105,6 +110,10 @@
   }
 
   /* 3D Transform & Perspective Utilities */
+  .perspective-800 {
+    perspective: 800px;
+  }
+
   .perspective-1000 {
     perspective: 1000px;
   }
@@ -131,6 +140,10 @@
 
   .translate-z-12 {
     transform: translateZ(48px);
+  }
+
+  .translate-z-16 {
+    transform: translateZ(64px);
   }
 }
 
