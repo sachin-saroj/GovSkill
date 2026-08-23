@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   FileCheck,
@@ -23,8 +23,8 @@ interface ArchitectureNode {
   track: 'citizen' | 'core' | 'employee' | 'admin';
   badgeColor: string;
   icon: React.ElementType;
-  x: number; // percentage on canvas
-  y: number; // percentage on canvas
+  x: number; // Percentage horizontal position on canvas
+  y: number; // Percentage vertical position on canvas
   tagline: string;
   details: string[];
   metrics: { label: string; value: string };
@@ -178,48 +178,100 @@ const ARCHITECTURE_NODES: ArchitectureNode[] = [
   },
 ];
 
+const TOUR_ORDER = [
+  'citizen-upload',
+  'ocr-extraction',
+  'deterministic-rules',
+  'ai-explanation',
+  'employee-curriculum',
+  'grounded-tutor',
+  'server-quiz',
+  'supervisor-telemetry',
+];
+
+type TourStatus = 'idle' | 'playing' | 'paused' | 'completed';
+
 export const EcosystemVisual: React.FC = () => {
   const [activeNodeId, setActiveNodeId] = useState<string>('deterministic-rules');
-  const [isTourPlaying, setIsTourPlaying] = useState<boolean>(false);
+  const [tourStatus, setTourStatus] = useState<TourStatus>('idle');
   const [tourProgress, setTourProgress] = useState<number>(0);
   const shouldReduceMotion = useReducedMotion();
+
+  const activeNodeRef = useRef(activeNodeId);
+  activeNodeRef.current = activeNodeId;
+
+  const tourStatusRef = useRef(tourStatus);
+  tourStatusRef.current = tourStatus;
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeNode =
     ARCHITECTURE_NODES.find((n) => n.id === activeNodeId) || ARCHITECTURE_NODES[2];
 
-  // Auto-cycling tour lifecycle
+  // Helper to clear timer cleanly
+  const clearTourTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  // Deterministic state-machine tour player
   useEffect(() => {
-    if (!isTourPlaying) {
-      setTourProgress(0);
+    if (tourStatus !== 'playing') {
+      clearTourTimer();
+      if (tourStatus === 'idle') {
+        setTourProgress(0);
+      }
       return;
     }
 
-    const intervalDuration = 4500;
-    const updateRate = 50;
-    const step = (updateRate / intervalDuration) * 100;
+    const stepDuration = 3000;
+    const intervalTick = 50;
+    const progressStep = (intervalTick / stepDuration) * 100;
 
-    const timer = setInterval(() => {
+    clearTourTimer();
+
+    timerRef.current = setInterval(() => {
       setTourProgress((prev) => {
         if (prev >= 100) {
-          setActiveNodeId((currentId) => {
-            const idx = ARCHITECTURE_NODES.findIndex((n) => n.id === currentId);
-            const nextIdx = (idx + 1) % ARCHITECTURE_NODES.length;
-            return ARCHITECTURE_NODES[nextIdx].id;
-          });
+          const currentId = activeNodeRef.current;
+          const currentIndex = TOUR_ORDER.indexOf(currentId);
+          const nextIndex = currentIndex + 1;
+
+          if (nextIndex >= TOUR_ORDER.length) {
+            setTourStatus('completed');
+            return 100;
+          }
+
+          const nextNodeId = TOUR_ORDER[nextIndex];
+          setActiveNodeId(nextNodeId);
           return 0;
         }
-        return prev + step;
+        return prev + progressStep;
       });
-    }, updateRate);
+    }, intervalTick);
 
-    return () => clearInterval(timer);
-  }, [isTourPlaying]);
+    return () => clearTourTimer();
+  }, [tourStatus, clearTourTimer]);
+
+  const handleToggleTour = () => {
+    if (tourStatus === 'playing') {
+      setTourStatus('paused');
+    } else if (tourStatus === 'paused') {
+      setTourStatus('playing');
+    } else {
+      // idle or completed: start from beginning
+      setActiveNodeId(TOUR_ORDER[0]);
+      setTourProgress(0);
+      setTourStatus('playing');
+    }
+  };
 
   const handleSelectNode = (id: string) => {
     setActiveNodeId(id);
-    if (isTourPlaying) {
-      setIsTourPlaying(false);
-      setTourProgress(0);
+    if (tourStatus === 'playing') {
+      setTourStatus('paused');
     }
   };
 
@@ -231,14 +283,14 @@ export const EcosystemVisual: React.FC = () => {
     <div className="w-full bg-white rounded-3xl border border-slate-200/90 shadow-civic-xl overflow-hidden flex flex-col">
       {/* Top Architecture Diagram Canvas */}
       <div className="relative bg-gradient-to-b from-slate-950 via-civic-950 to-slate-900 p-6 sm:p-8 min-h-[460px] flex flex-col justify-between overflow-hidden">
-        {/* Background Ambient Glows & Grid */}
+        {/* Background Ambient Glows & Grid (pointer-events-none) */}
         <div className="absolute inset-0 bg-civic-dark-pattern opacity-30 pointer-events-none" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-civic-500/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-saffron-500/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Header Control Bar */}
-        <div className="relative z-10 flex flex-wrap items-center justify-between pb-4 border-b border-slate-800/80 gap-3 text-xs">
+        <div className="relative z-20 flex flex-wrap items-center justify-between pb-4 border-b border-slate-800/80 gap-3 text-xs">
           <div className="flex items-center gap-2 text-slate-200 font-bold uppercase tracking-wider">
             <Cpu className="h-4 w-4 text-saffron-400" />
             <span>Dual-Track System Architecture & Data Flow</span>
@@ -247,18 +299,23 @@ export const EcosystemVisual: React.FC = () => {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setIsTourPlaying(!isTourPlaying)}
-              aria-label={isTourPlaying ? 'Pause architecture tour' : 'Play architecture tour'}
-              className={`relative overflow-hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border shadow-civic-xs cursor-pointer ${
-                isTourPlaying
+              onClick={handleToggleTour}
+              aria-label={tourStatus === 'playing' ? 'Pause architecture tour' : 'Play architecture tour'}
+              className={`relative overflow-hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border shadow-civic-xs cursor-pointer select-none transition-colors ${
+                tourStatus === 'playing'
                   ? 'bg-saffron-500 text-slate-950 border-saffron-400 font-bold shadow-lg shadow-saffron-500/20'
                   : 'bg-slate-800/90 text-slate-200 border-slate-700 hover:bg-slate-700 hover:text-white'
               }`}
             >
-              {isTourPlaying ? (
+              {tourStatus === 'playing' ? (
                 <>
                   <Pause className="h-3.5 w-3.5" />
                   <span>Pause Architecture Tour</span>
+                </>
+              ) : tourStatus === 'paused' ? (
+                <>
+                  <Play className="h-3.5 w-3.5" />
+                  <span>Resume Architecture Tour</span>
                 </>
               ) : (
                 <>
@@ -268,25 +325,25 @@ export const EcosystemVisual: React.FC = () => {
               )}
 
               {/* Progress Bar inside tour button */}
-              {isTourPlaying && (
+              {tourStatus === 'playing' && (
                 <div
-                  className="absolute bottom-0 left-0 h-1 bg-slate-950/40 transition-all duration-75"
-                  style={{ width: `${tourProgress}%` }}
+                  className="absolute bottom-0 left-0 h-1 bg-slate-950/40"
+                  style={{ width: `${Math.min(100, Math.max(0, tourProgress))}%` }}
                 />
               )}
             </button>
 
-            {isTourPlaying && (
+            {tourStatus === 'playing' && (
               <span className="flex items-center gap-1.5 text-[11px] text-saffron-400 font-medium">
                 <Sparkles className="h-3 w-3 animate-spin" />
-                <span className="hidden sm:inline">Auto-cycling nodes</span>
+                <span className="hidden sm:inline">Advancing sequence</span>
               </span>
             )}
           </div>
         </div>
 
         {/* Dual Track Labels */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 text-[11px] font-bold">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 text-[11px] font-bold pointer-events-none">
           <div className="flex items-center gap-2 text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-800/40 w-fit">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Track 1: GovAssist Citizen Pre-Submission Verification</span>
@@ -297,25 +354,32 @@ export const EcosystemVisual: React.FC = () => {
           </div>
         </div>
 
-        {/* SVG Flow Paths Canvas */}
+        {/* SVG Flow Paths Canvas & Interactive Fixed Nodes */}
         <div className="relative z-10 my-auto py-6">
-          <svg className="w-full h-56 sm:h-64" viewBox="0 0 1000 360" fill="none" aria-hidden="true">
+          {/* SVG Connection Layer (STRICTLY POINTER EVENTS NONE) */}
+          <svg
+            className="w-full h-56 sm:h-64 pointer-events-none select-none"
+            viewBox="0 0 1000 360"
+            fill="none"
+            aria-hidden="true"
+            style={{ pointerEvents: 'none' }}
+          >
             <defs>
               <linearGradient id="emerald-stream" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#10B981" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#059669" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#10B981" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#059669" stopOpacity="0.95" />
               </linearGradient>
               <linearGradient id="blue-stream" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#60A5FA" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#60A5FA" stopOpacity="0.95" />
               </linearGradient>
               <linearGradient id="saffron-stream" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#FBBF24" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#FBBF24" stopOpacity="0.95" />
               </linearGradient>
               <linearGradient id="purple-stream" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#9333EA" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#C084FC" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#9333EA" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#C084FC" stopOpacity="0.95" />
               </linearGradient>
               <filter id="stream-glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="3" result="blur" />
@@ -326,140 +390,153 @@ export const EcosystemVisual: React.FC = () => {
               </filter>
             </defs>
 
-            {/* Track 1 Paths (Citizen) */}
-            {/* Path 1: Upload -> OCR */}
+            {/* Track 1 Paths (Citizen: Y=100) */}
+            {/* Path 1: Upload (140) -> OCR (380) */}
             <path
               id="path-upload-ocr"
-              d="M 140 100 C 240 100, 280 100, 380 100"
+              d="M 140 100 L 380 100"
               stroke={isPathActive('path-upload-ocr') ? 'url(#emerald-stream)' : '#065F46'}
-              strokeWidth={isPathActive('path-upload-ocr') ? '4' : '2'}
-              opacity={isPathActive('path-upload-ocr') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-upload-ocr') ? 3.5 : 2}
+              opacity={isPathActive('path-upload-ocr') ? 1 : 0.25}
               filter={isPathActive('path-upload-ocr') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Path 2: OCR -> Deterministic Rules */}
+            {/* Path 2: OCR (380) -> Rules (620) */}
             <path
               id="path-ocr-rule"
-              d="M 380 100 C 480 100, 520 100, 620 100"
+              d="M 380 100 L 620 100"
               stroke={isPathActive('path-ocr-rule') ? 'url(#emerald-stream)' : '#065F46'}
-              strokeWidth={isPathActive('path-ocr-rule') ? '4' : '2'}
-              opacity={isPathActive('path-ocr-rule') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-ocr-rule') ? 3.5 : 2}
+              opacity={isPathActive('path-ocr-rule') ? 1 : 0.25}
               filter={isPathActive('path-ocr-rule') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Path 3: Rules -> AI Explanation (Failed rules only) */}
+            {/* Path 3: Rules (620) -> AI Explanation (860) */}
             <path
               id="path-rule-ai"
-              d="M 620 100 C 720 100, 760 100, 860 100"
+              d="M 620 100 L 860 100"
               stroke={isPathActive('path-rule-ai') ? 'url(#blue-stream)' : '#1E40AF'}
-              strokeWidth={isPathActive('path-rule-ai') ? '4' : '2'}
-              opacity={isPathActive('path-rule-ai') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-rule-ai') ? 3.5 : 2}
+              opacity={isPathActive('path-rule-ai') ? 1 : 0.25}
               filter={isPathActive('path-rule-ai') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Track 2 Paths (Employee) */}
-            {/* Path 4: Curriculum -> Tutor */}
+            {/* Track 2 Paths (Employee: Y=260) */}
+            {/* Path 4: Curriculum (180) -> Tutor (440) */}
             <path
               id="path-curriculum-tutor"
-              d="M 180 260 C 280 260, 340 260, 440 260"
+              d="M 180 260 L 440 260"
               stroke={isPathActive('path-curriculum-tutor') ? 'url(#blue-stream)' : '#1E40AF'}
-              strokeWidth={isPathActive('path-curriculum-tutor') ? '4' : '2'}
-              opacity={isPathActive('path-curriculum-tutor') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-curriculum-tutor') ? 3.5 : 2}
+              opacity={isPathActive('path-curriculum-tutor') ? 1 : 0.25}
               filter={isPathActive('path-curriculum-tutor') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Path 5: Tutor -> Quiz */}
+            {/* Path 5: Tutor (440) -> Quiz (700) */}
             <path
               id="path-tutor-quiz"
-              d="M 440 260 C 540 260, 600 260, 700 260"
+              d="M 440 260 L 700 260"
               stroke={isPathActive('path-tutor-quiz') ? 'url(#saffron-stream)' : '#9A3412'}
-              strokeWidth={isPathActive('path-tutor-quiz') ? '4' : '2'}
-              opacity={isPathActive('path-tutor-quiz') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-tutor-quiz') ? 3.5 : 2}
+              opacity={isPathActive('path-tutor-quiz') ? 1 : 0.25}
               filter={isPathActive('path-tutor-quiz') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Path 6: Quiz -> Supervisor Telemetry */}
+            {/* Path 6: Quiz (700) -> Supervisor Telemetry (920) */}
             <path
               id="path-quiz-telemetry"
-              d="M 700 260 C 780 260, 840 260, 920 260"
+              d="M 700 260 L 920 260"
               stroke={isPathActive('path-quiz-telemetry') ? 'url(#purple-stream)' : '#581C87'}
-              strokeWidth={isPathActive('path-quiz-telemetry') ? '4' : '2'}
-              opacity={isPathActive('path-quiz-telemetry') ? 1 : 0.35}
+              strokeWidth={isPathActive('path-quiz-telemetry') ? 3.5 : 2}
+              opacity={isPathActive('path-quiz-telemetry') ? 1 : 0.25}
               filter={isPathActive('path-quiz-telemetry') ? 'url(#stream-glow)' : undefined}
-              className="svg-flow-path"
+              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
+              style={{ pointerEvents: 'none' }}
             />
 
-            {/* Inter-Track Governance Standard Anchor (Central Core Rule Engine) */}
+            {/* Central Anchor Dot for Deterministic Rule Hub */}
             <circle
               cx="620"
               cy="100"
-              r={activeNodeId === 'deterministic-rules' ? 16 : 10}
+              r={activeNodeId === 'deterministic-rules' ? 14 : 9}
               fill="#1E4D8C"
               stroke="#93C5FD"
-              strokeWidth="3"
+              strokeWidth="2.5"
               filter="url(#stream-glow)"
+              style={{ pointerEvents: 'none' }}
             />
           </svg>
 
-          {/* Interactive HTML Node Markers */}
-          <div className="absolute inset-0 p-3">
+          {/* Interactive Fixed HTML Node Markers */}
+          <div className="absolute inset-0 p-3 pointer-events-none">
             <div className="relative w-full h-full">
               {ARCHITECTURE_NODES.map((node) => {
                 const isSelected = node.id === activeNodeId;
                 const IconComp = node.icon;
 
                 return (
-                  <motion.button
+                  <div
                     key={node.id}
-                    type="button"
-                    onClick={() => handleSelectNode(node.id)}
                     style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                    aria-label={`Inspect ${node.title} architecture node`}
-                    aria-selected={isSelected}
-                    whileHover={shouldReduceMotion ? {} : { scale: 1.06 }}
-                    whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
-                    className={`absolute -translate-x-1/2 -translate-y-1/2 p-2.5 sm:p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron-400 ${
-                      isSelected
-                        ? 'bg-white text-slate-900 border-saffron-400 ring-4 ring-saffron-400/30 scale-105 z-20 shadow-2xl'
-                        : 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500 z-10 shadow-civic-md'
-                    }`}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
                   >
-                    <div className="flex items-center gap-2 whitespace-nowrap">
-                      <div
-                        className={`p-1.5 rounded-xl ${
-                          isSelected
-                            ? 'bg-civic-100 text-civic-800'
-                            : 'bg-slate-800 text-slate-400'
-                        }`}
-                      >
-                        <IconComp className="h-4 w-4" />
-                      </div>
-                      <div className="text-left hidden lg:block">
-                        <span className="text-xs font-bold block leading-tight">
-                          {node.title}
-                        </span>
-                        <span
-                          className={`text-[9px] block font-mono ${
-                            isSelected ? 'text-slate-500 font-medium' : 'text-slate-500'
+                    <motion.button
+                      type="button"
+                      onClick={() => handleSelectNode(node.id)}
+                      aria-label={`Inspect ${node.title} architecture node`}
+                      aria-selected={isSelected}
+                      whileHover={shouldReduceMotion ? {} : { scale: 1.02, y: -2 }}
+                      whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                      className={`p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron-400 select-none ${
+                        isSelected
+                          ? 'bg-white text-slate-900 border-saffron-400 ring-4 ring-saffron-400/30 z-30 shadow-2xl'
+                          : 'bg-slate-900/95 hover:bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500 z-10 shadow-civic-md'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 whitespace-nowrap">
+                        <div
+                          className={`p-1.5 rounded-xl ${
+                            isSelected
+                              ? 'bg-civic-100 text-civic-800'
+                              : 'bg-slate-800 text-slate-400'
                           }`}
                         >
-                          {node.category}
-                        </span>
+                          <IconComp className="h-4 w-4" />
+                        </div>
+                        <div className="text-left hidden lg:block">
+                          <span className="text-xs font-bold block leading-tight">
+                            {node.title}
+                          </span>
+                          <span
+                            className={`text-[9px] block font-mono ${
+                              isSelected ? 'text-slate-500 font-medium' : 'text-slate-500'
+                            }`}
+                          >
+                            {node.category}
+                          </span>
+                        </div>
                       </div>
-                    </div>
 
-                    {isSelected && (
-                      <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5" aria-hidden="true">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-saffron-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-saffron-500 border-2 border-white" />
-                      </span>
-                    )}
-                  </motion.button>
+                      {/* Active Status Indicator Dot */}
+                      {isSelected && (
+                        <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5" aria-hidden="true">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-saffron-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-saffron-500 border-2 border-white" />
+                        </span>
+                      )}
+                    </motion.button>
+                  </div>
                 );
               })}
             </div>
