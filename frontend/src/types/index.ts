@@ -76,5 +76,9 @@ export interface AdminSkillOverviewResponse {
   total_employees: number;
   total_certifications: number;
   overall_certification_rate: number;
+  total_modules: number;
+  total_quiz_attempts: number;
+  average_quiz_score_pct: number;
 }
+
 

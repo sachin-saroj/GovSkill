@@ -110,7 +110,11 @@ async def test_employee_skill_tracking_pipeline():
                 "/api/progress/admin/skills-overview", headers=admin_headers
             )
             assert admin_overview.status_code == 200
-            assert admin_overview.json()["total_certifications"] == 1
+            overview_data = admin_overview.json()
+            assert overview_data["total_certifications"] == 1
+            assert overview_data["total_modules"] >= 1
+            assert overview_data["total_quiz_attempts"] == 1
+            assert overview_data["average_quiz_score_pct"] == 100
 
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)

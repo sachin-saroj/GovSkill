@@ -26,3 +26,6 @@ class AdminSkillOverviewResponse(BaseModel):
     total_employees: int
     total_certifications: int
     overall_certification_rate: int
+    total_modules: int
+    total_quiz_attempts: int
+    average_quiz_score_pct: int

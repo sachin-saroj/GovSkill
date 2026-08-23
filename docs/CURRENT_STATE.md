@@ -21,8 +21,10 @@ Last Updated:
 - **GovAssist Citizen Pre-Checker**: Document upload pre-check, OCR, 4-rule Engine, and failed rule AI explanations.
 - **Database & Migrations**: PostgreSQL + SQLite fallback with Alembic migrations (`001_initial_schema.py`, `002_add_user_progress.py`).
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets) and domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`).
-- **User Password Reset**: Admin-only direct password reset endpoint (`POST /api/admin/users/{user_id}/reset-password`) for employee/admin accounts without external SMTP/email dependencies.
-- **Automated Testing Suite**: 23 Pytest unit/integration test cases covering Auth Security, Password Reset, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **User Password Management**: Admin password reset (`POST /api/admin/users/{user_id}/reset-password`) and self-service password change for authenticated users (`POST /api/auth/change-password`) requiring current password verification.
+- **Admin Skills & Analytics Overview**: Administrative endpoint (`GET /api/progress/admin/skills-overview`) and Admin Dashboard KPI cards computing workforce enrollment, active training modules, total quiz evaluations, average assessment scores, certifications earned, and completion rates.
+- **Automated Testing Suite**: 24 Pytest unit/integration test cases covering Auth Security, Password Management, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend tests and frontend build on push/PR.
 
 ## Partially Working
 
@@ -30,8 +32,7 @@ Last Updated:
 
 ## Not Implemented
 
-- **Email Verification**: No email confirmation upon account registration.
-- **Production Deployment Setup**: No Docker containerization or Nginx proxy configuration. (CI automated testing & build pipeline configured via `.github/workflows/ci.yml`).
+- **Email Verification**: No email confirmation upon account registration (out of scope / demo simplicity).
 
 ## Known Bugs
 
@@ -39,17 +40,8 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (23/23 passed) are fully operational.
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (24/24 passed) are fully operational.
 
-
-## Current Focus
-
-- Production containerization & deployment readiness (Docker, Docker Compose, Nginx).
-
-## Next Tasks
-
-1. Setup Dockerfile and Docker Compose for full-stack local deployment parity.
-2. Setup Nginx configuration for production frontend proxying.
 
 
 

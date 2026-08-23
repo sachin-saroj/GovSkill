@@ -33,6 +33,9 @@ const mockSkillsOverview = {
   total_employees: 12,
   total_certifications: 8,
   overall_certification_rate: 67,
+  total_modules: 4,
+  total_quiz_attempts: 25,
+  average_quiz_score_pct: 88,
 };
 
 describe('AdminDashboardPage', () => {
@@ -66,8 +69,12 @@ describe('AdminDashboardPage', () => {
 
     // Verify skills overview stats render
     expect(await screen.findByText('12')).toBeInTheDocument();
+    expect(screen.getByText('4')).toBeInTheDocument();
+    expect(screen.getByText('25')).toBeInTheDocument();
+    expect(screen.getByText('88%')).toBeInTheDocument();
     expect(screen.getByText('8')).toBeInTheDocument();
     expect(screen.getByText('67%')).toBeInTheDocument();
+
 
     // Verify API fetches happened
     expect(mockedGet).toHaveBeenCalledWith('/modules');

@@ -291,16 +291,49 @@ export const AdminDashboardPage: React.FC = () => {
       )}
 
       {/* KPI Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <ReadinessMetricCard
           icon={Users}
           iconBgClass="bg-civic-100"
           iconColorClass="text-civic-800"
           label="Enrolled Employees"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
-          subtext="Municipal office staff"
+          subtext="Municipal office workforce"
           badgeText="Workforce"
           badgeVariant="civic"
+        />
+
+        <ReadinessMetricCard
+          icon={BookOpen}
+          iconBgClass="bg-blue-100"
+          iconColorClass="text-blue-700"
+          label="Training Modules"
+          value={isLoadingOverview ? '...' : (skillsOverview?.total_modules ?? 0)}
+          subtext="Standardized curriculum courses"
+          badgeText="Curriculum"
+          badgeVariant="civic"
+        />
+
+        <ReadinessMetricCard
+          icon={CheckCircle2}
+          iconBgClass="bg-indigo-100"
+          iconColorClass="text-indigo-700"
+          label="Quiz Attempts Logged"
+          value={isLoadingOverview ? '...' : (skillsOverview?.total_quiz_attempts ?? 0)}
+          subtext="Server-scored evaluations"
+          badgeText="Telemetry"
+          badgeVariant="civic"
+        />
+
+        <ReadinessMetricCard
+          icon={Sparkles}
+          iconBgClass="bg-amber-100"
+          iconColorClass="text-amber-700"
+          label="Avg Assessment Score"
+          value={isLoadingOverview ? '...' : `${skillsOverview?.average_quiz_score_pct ?? 0}%`}
+          subtext="System-wide quiz average"
+          badgeText="Proficiency"
+          badgeVariant="saffron"
         />
 
         <ReadinessMetricCard
@@ -324,18 +357,8 @@ export const AdminDashboardPage: React.FC = () => {
           badgeText="Rate"
           badgeVariant="saffron"
         />
-
-        <ReadinessMetricCard
-          icon={CheckCircle2}
-          iconBgClass="bg-civic-100"
-          iconColorClass="text-civic-800"
-          label="Quiz Attempts Logged"
-          value={totalAttempts}
-          subtext={`(${passCount} passed, ${Math.round(avgScore)}% avg)`}
-          badgeText="Telemetry"
-          badgeVariant="civic"
-        />
       </div>
+
 
       {/* Navigation Tabs */}
       <div className="flex border-b border-slate-200 gap-8">

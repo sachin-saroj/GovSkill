@@ -7,6 +7,7 @@ from app.api.deps import get_current_admin_user, get_current_user, get_db
 from app.api.routes.modules import seed_all_default_modules
 from app.models.module import Module
 from app.models.progress import UserProgress
+from app.models.quiz import QuizAttempt
 from app.models.user import User
 from app.schemas.progress import (
     AdminSkillOverviewResponse,
@@ -162,10 +163,34 @@ async def get_admin_skills_overview(
     cert_res = await db.execute(cert_stmt)
     total_cert = cert_res.scalar() or 0
 
-    rate = round((total_cert / (total_emp * 4)) * 100) if total_emp > 0 else 0
+    mod_stmt = select(func.count(Module.id))
+    mod_res = await db.execute(mod_stmt)
+    total_modules = mod_res.scalar() or 0
+
+    attempt_stmt = select(func.count(QuizAttempt.id))
+    attempt_res = await db.execute(attempt_stmt)
+    total_attempts = attempt_res.scalar() or 0
+
+    attempts_data_stmt = select(QuizAttempt.score, QuizAttempt.total)
+    attempts_data_res = await db.execute(attempts_data_stmt)
+    attempt_rows = attempts_data_res.all()
+
+    if attempt_rows:
+        valid_pcts = [(score / total * 100.0) for score, total in attempt_rows if total > 0]
+        avg_score_pct = round(sum(valid_pcts) / len(valid_pcts)) if valid_pcts else 0
+    else:
+        avg_score_pct = 0
+
+    max_possible_certs = (
+        total_emp * total_modules if (total_emp > 0 and total_modules > 0) else (total_emp * 4)
+    )
+    rate = round((total_cert / max_possible_certs) * 100) if max_possible_certs > 0 else 0
 
     return AdminSkillOverviewResponse(
         total_employees=total_emp,
         total_certifications=total_cert,
         overall_certification_rate=rate,
+        total_modules=total_modules,
+        total_quiz_attempts=total_attempts,
+        average_quiz_score_pct=avg_score_pct,
     )
