@@ -22,23 +22,40 @@ async def override_get_db():
 
 def test_find_relevant_modules_unit():
     dummy_modules = [
-        {"title": "Digital Document Handling", "content": "Verifying citizen certificates and names."},
-        {"title": "Government Portal Operations", "content": "Citizen request routing and 7 day SLA escalation."},
-        {"title": "Cybersecurity & Data Privacy Basics", "content": "Phishing prevention, passwords, and MFA security."},
-        {"title": "Digital Record Management", "content": "Archival record retention policies for income certificates and audit log tracking."},
+        {
+            "title": "Digital Document Handling",
+            "content": "Verifying citizen certificates and names.",
+        },
+        {
+            "title": "Government Portal Operations",
+            "content": "Citizen request routing and 7 day SLA escalation.",
+        },
+        {
+            "title": "Cybersecurity & Data Privacy Basics",
+            "content": "Phishing prevention, passwords, and MFA security.",
+        },
+        {
+            "title": "Digital Record Management",
+            "content": "Archival record retention policies for income certificates and audit log tracking.",
+        },
     ]
 
-
     # Test 1: Cybersecurity query
-    cyber_matched = find_relevant_modules("How do I protect against phishing emails?", dummy_modules)
+    cyber_matched = find_relevant_modules(
+        "How do I protect against phishing emails?", dummy_modules
+    )
     assert cyber_matched[0]["title"] == "Cybersecurity & Data Privacy Basics"
 
     # Test 2: SLA Escalation query
-    sla_matched = find_relevant_modules("What is the SLA limit before supervisor escalation?", dummy_modules)
+    sla_matched = find_relevant_modules(
+        "What is the SLA limit before supervisor escalation?", dummy_modules
+    )
     assert sla_matched[0]["title"] == "Government Portal Operations"
 
     # Test 3: Record Retention query
-    rec_matched = find_relevant_modules("How long is the retention policy for income certificates?", dummy_modules)
+    rec_matched = find_relevant_modules(
+        "How long is the retention policy for income certificates?", dummy_modules
+    )
     assert rec_matched[0]["title"] == "Digital Record Management"
 
 
@@ -50,19 +67,28 @@ async def test_ai_tutor_auto_routing_api():
             await conn.run_sync(Base.metadata.create_all)
 
         async with async_session_test() as session:
-            emp_user = User(email="tutor_emp@gov.in", password_hash=get_password_hash("pass123456"), role="employee")
+            emp_user = User(
+                email="tutor_emp@gov.in",
+                password_hash=get_password_hash("pass123456"),
+                role="employee",
+            )
             session.add(emp_user)
             await session.commit()
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            login_resp = await client.post("/api/auth/login", json={"email": "tutor_emp@gov.in", "password": "pass123456"})
+            login_resp = await client.post(
+                "/api/auth/login", json={"email": "tutor_emp@gov.in", "password": "pass123456"}
+            )
             token = login_resp.json()["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             # 1. Ask cybersecurity question in Auto mode
             tutor_resp_1 = await client.post(
                 "/api/tutor/ask",
-                json={"module_id": "auto", "question": "What should I do if I suspect a phishing email?"},
+                json={
+                    "module_id": "auto",
+                    "question": "What should I do if I suspect a phishing email?",
+                },
                 headers=headers,
             )
             assert tutor_resp_1.status_code == 200

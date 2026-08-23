@@ -38,3 +38,10 @@ This document records the fundamental architectural, technological, and security
 ## 6. Code-Driven AI Routing vs Vector Databases
 - **Decision**: Multi-module relevance routing for the AI Tutor is performed using a purely deterministic Python keyword/term-overlap scoring mechanism.
 - **Rationale**: Keeps the architecture simple and easy to deploy without requiring infrastructure dependencies like Redis, Pinecone, or PostgreSQL pgvector extensions just to match a query to 4-10 training modules.
+
+---
+
+## 7. Public Unauthenticated Access for Citizen Document Pre-Checks
+- **Decision**: `GET /api/documents/{document_id}` is intentionally unauthenticated and accessible without login or ownership checks.
+- **Rationale**: The endpoint is public-by-design to provide frictionless citizen pre-submission checks, with the 122-bit cryptographic entropy of UUID-v4 serving as the accepted mitigation against enumeration and unauthorized access.
+

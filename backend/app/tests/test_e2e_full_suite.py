@@ -32,19 +32,28 @@ async def test_full_application_e2e():
             assert h_resp.json()["status"] == "ok"
 
             # 2. Register employee & create admin user
-            e_reg = await client.post("/api/auth/register", json={"email": "employee@test.gov", "password": "password123", "role": "employee"})
+            e_reg = await client.post(
+                "/api/auth/register",
+                json={"email": "employee@test.gov", "password": "password123", "role": "employee"},
+            )
             assert e_reg.status_code == 201
 
             async with async_session_test() as session:
                 from app.core.security import get_password_hash
                 from app.models.user import User
-                admin_user = User(email="admin@test.gov", password_hash=get_password_hash("password123"), role="admin")
+
+                admin_user = User(
+                    email="admin@test.gov",
+                    password_hash=get_password_hash("password123"),
+                    role="admin",
+                )
                 session.add(admin_user)
                 await session.commit()
 
-
             # 3. Employee login & module read
-            e_login = await client.post("/api/auth/login", json={"email": "employee@test.gov", "password": "password123"})
+            e_login = await client.post(
+                "/api/auth/login", json={"email": "employee@test.gov", "password": "password123"}
+            )
             e_token = e_login.json()["access_token"]
             e_hdr = {"Authorization": f"Bearer {e_token}"}
 
@@ -52,7 +61,11 @@ async def test_full_application_e2e():
             assert mod_resp.status_code == 200
 
             # 4. Ask AI Tutor
-            tutor_resp = await client.post("/api/tutor/ask", json={"module_id": "default", "question": "What is PII?"}, headers=e_hdr)
+            tutor_resp = await client.post(
+                "/api/tutor/ask",
+                json={"module_id": "default", "question": "What is PII?"},
+                headers=e_hdr,
+            )
             assert tutor_resp.status_code == 200
             assert "answer" in tutor_resp.json()
 
@@ -61,12 +74,16 @@ async def test_full_application_e2e():
             questions = q_resp.json()["questions"]
             answers = [{"question_id": q["id"], "selected_option_index": 0} for q in questions]
 
-            submit_resp = await client.post("/api/quiz/default/submit", json={"answers": answers}, headers=e_hdr)
+            submit_resp = await client.post(
+                "/api/quiz/default/submit", json={"answers": answers}, headers=e_hdr
+            )
             assert submit_resp.status_code == 200
             assert "score" in submit_resp.json()
 
             # 6. Admin Login & Check Attempts
-            a_login = await client.post("/api/auth/login", json={"email": "admin@test.gov", "password": "password123"})
+            a_login = await client.post(
+                "/api/auth/login", json={"email": "admin@test.gov", "password": "password123"}
+            )
             a_token = a_login.json()["access_token"]
             a_hdr = {"Authorization": f"Bearer {a_token}"}
 
@@ -76,7 +93,9 @@ async def test_full_application_e2e():
 
             # 7. Citizen GovAssist Document Pre-check (No Auth)
             sample_doc = "Income Certificate\nApplicant Name: John Citizen\nCertificate No: INC777888\nExpiry Date: 2099-12-31\n"
-            doc_files = {"file": ("income.txt", io.BytesIO(sample_doc.encode("utf-8")), "text/plain")}
+            doc_files = {
+                "file": ("income.txt", io.BytesIO(sample_doc.encode("utf-8")), "text/plain")
+            }
             doc_resp = await client.post("/api/documents/upload", files=doc_files)
             assert doc_resp.status_code == 200
             doc_data = doc_resp.json()
@@ -86,4 +105,3 @@ async def test_full_application_e2e():
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
-

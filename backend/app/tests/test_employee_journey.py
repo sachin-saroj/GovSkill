@@ -35,10 +35,14 @@ async def test_full_employee_journey():
             async with async_session_test() as session:
                 from app.core.security import get_password_hash
                 from app.models.user import User
-                admin_user = User(email="admin@gov.in", password_hash=get_password_hash("adminpass123"), role="admin")
+
+                admin_user = User(
+                    email="admin@gov.in",
+                    password_hash=get_password_hash("adminpass123"),
+                    role="admin",
+                )
                 session.add(admin_user)
                 await session.commit()
-
 
             # Step 2: Login employee
             emp_login = await client.post(
@@ -59,7 +63,10 @@ async def test_full_employee_journey():
             # Step 4: Ask AI Tutor
             tutor_resp = await client.post(
                 "/api/tutor/ask",
-                json={"module_id": "default", "question": "What is the minimum required certificate number length?"},
+                json={
+                    "module_id": "default",
+                    "question": "What is the minimum required certificate number length?",
+                },
                 headers=emp_headers,
             )
             assert tutor_resp.status_code == 200
@@ -72,7 +79,6 @@ async def test_full_employee_journey():
             assert len(questions) == 4
             for q in questions:
                 assert "correct_option_index" not in q
-
 
             # Step 6: Submit Quiz Answers
             answers_payload = [
@@ -109,4 +115,3 @@ async def test_full_employee_journey():
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
-

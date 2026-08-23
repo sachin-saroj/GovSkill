@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -43,4 +43,3 @@ async def ask_tutor(
         question=payload.question,
     )
     return TutorAskResponse(answer=answer, matched_module_title=module.title)
-

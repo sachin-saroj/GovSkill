@@ -18,6 +18,4 @@ class User(Base):
         nullable=False,
     )
 
-    __table_args__ = (
-        CheckConstraint("role IN ('employee', 'admin')", name="check_user_role"),
-    )
+    __table_args__ = (CheckConstraint("role IN ('employee', 'admin')", name="check_user_role"),)

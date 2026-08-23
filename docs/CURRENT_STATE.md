@@ -21,7 +21,8 @@ Last Updated:
 - **GovAssist Citizen Pre-Checker**: Document upload pre-check, OCR, 4-rule Engine, and failed rule AI explanations.
 - **Database & Migrations**: PostgreSQL + SQLite fallback with Alembic migrations (`001_initial_schema.py`, `002_add_user_progress.py`).
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets) and domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`).
-- **Automated Testing Suite**: 21 Pytest unit/integration test cases covering Auth Security, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, and Employee/Citizen journeys.
+- **User Password Reset**: Admin-only direct password reset endpoint (`POST /api/admin/users/{user_id}/reset-password`) for employee/admin accounts without external SMTP/email dependencies.
+- **Automated Testing Suite**: 23 Pytest unit/integration test cases covering Auth Security, Password Reset, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
 
 ## Partially Working
 
@@ -30,8 +31,7 @@ Last Updated:
 ## Not Implemented
 
 - **Email Verification**: No email confirmation upon account registration.
-- **Password Reset**: No password recovery or account update flow.
-- **Production Deployment Setup**: No Docker containerization, Nginx config, or CI/CD deployment pipelines.
+- **Production Deployment Setup**: No Docker containerization or Nginx proxy configuration. (CI automated testing & build pipeline configured via `.github/workflows/ci.yml`).
 
 ## Known Bugs
 
@@ -39,7 +39,8 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (21/21 passed) are fully operational.
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (23/23 passed) are fully operational.
+
 
 ## Current Focus
 

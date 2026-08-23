@@ -38,7 +38,11 @@ async def test_auth_security_integration_suite():
             # 2. Public registration attempting role='admin' -> FORCED role='employee'
             hacker_resp = await ac.post(
                 "/api/auth/register",
-                json={"email": "hacker@example.gov", "password": "securepassword123", "role": "admin"},
+                json={
+                    "email": "hacker@example.gov",
+                    "password": "securepassword123",
+                    "role": "admin",
+                },
             )
             assert hacker_resp.status_code == 201
             assert hacker_resp.json()["role"] == "employee"

@@ -15,4 +15,3 @@ class DocumentUploadResponse(BaseModel):
     document_id: uuid.UUID
     extracted_data: dict[str, Any] | None = Field(default_factory=dict)
     validation_results: list[RuleResultSchema] | None = Field(default_factory=list)
-

@@ -1,6 +1,6 @@
 import os
 import re
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageEnhance
 import pytesseract
 
 try:
@@ -24,14 +24,13 @@ if os.name == "nt":
 def _preprocess_image(img: Image.Image) -> Image.Image:
     """Enhances image quality for better OCR results."""
     # Convert to grayscale
-    img = img.convert('L')
+    img = img.convert("L")
     # Increase contrast
     enhancer = ImageEnhance.Contrast(img)
     img = enhancer.enhance(2.0)
     # Basic binarization thresholding
-    img = img.point(lambda x: 0 if x < 140 else 255, '1')
+    img = img.point(lambda x: 0 if x < 140 else 255, "1")
     return img
-
 
 
 def _extract_pdf_text(file_path: str) -> str:
@@ -105,19 +104,53 @@ def _normalize_date(date_str: str) -> str | None:
     if m:
         day, month, year = m.groups()
         return f"{year}-{int(month):02d}-{int(day):02d}"
-    
+
     # Textual dates like "31st Dec 2025" or "Dec 31, 2025"
-    m_text = re.search(r"(\d{1,2})(?:st|nd|rd|th)?\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[,]?\s+(\d{4})", date_str, re.IGNORECASE)
+    m_text = re.search(
+        r"(\d{1,2})(?:st|nd|rd|th)?\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[,]?\s+(\d{4})",
+        date_str,
+        re.IGNORECASE,
+    )
     if m_text:
         day, month_str, year = m_text.groups()
-        months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+        months = [
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "may",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "oct",
+            "nov",
+            "dec",
+        ]
         month_idx = months.index(month_str.lower()[:3]) + 1
         return f"{year}-{month_idx:02d}-{int(day):02d}"
 
-    m_text_rev = re.search(r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(\d{4})", date_str, re.IGNORECASE)
+    m_text_rev = re.search(
+        r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(\d{4})",
+        date_str,
+        re.IGNORECASE,
+    )
     if m_text_rev:
         month_str, day, year = m_text_rev.groups()
-        months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+        months = [
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "may",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "oct",
+            "nov",
+            "dec",
+        ]
         month_idx = months.index(month_str.lower()[:3]) + 1
         return f"{year}-{month_idx:02d}-{int(day):02d}"
 
@@ -151,14 +184,19 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
         r"(?:Name\s*of\s*Applicant|Applicant\s*Name|Holder\s*Name|Applicant|Holder|Name)\s*[:|-]\s*([A-Za-z\s.]+)",
         r"(?:Shri|Smt|Kumari|Mr|Mrs|Ms)\.?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)",
         r"(?:certify that|certified that)\s+(?:Shri|Smt|Kumari|Mr|Mrs|Ms)?\.?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+(?:son|daughter|wife)\s+of",
-        r"(?:certify that|certified that)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+is"
+        r"(?:certify that|certified that)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+is",
     ]
     for pat in name_patterns:
         name_match = re.search(pat, raw_text, re.IGNORECASE)
         if name_match:
             candidate = name_match.group(1).split("\n")[0].strip()
             # Cleanup noise words
-            candidate = re.sub(r"\b(?:is|has|been|verified|certified|son|daughter|wife|of)\b.*$", "", candidate, flags=re.IGNORECASE).strip()
+            candidate = re.sub(
+                r"\b(?:is|has|been|verified|certified|son|daughter|wife|of)\b.*$",
+                "",
+                candidate,
+                flags=re.IGNORECASE,
+            ).strip()
             if len(candidate) >= 2:
                 data["name"] = candidate
                 break
@@ -174,10 +212,14 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
         cert_match = re.search(pat, raw_text, re.IGNORECASE)
         if cert_match:
             cert_val = cert_match.group(1).strip()
-            if len(cert_val) >= 3 and cert_val.upper() not in ["DEPT", "OFFICE", "GOVERNMENT", "APPLICANT"]:
+            if len(cert_val) >= 3 and cert_val.upper() not in [
+                "DEPT",
+                "OFFICE",
+                "GOVERNMENT",
+                "APPLICANT",
+            ]:
                 data["certificate_number"] = cert_val
                 break
-
 
     # 3. Extract Expiry Date
     date_patterns = [
@@ -196,4 +238,3 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
                 break
 
     return data
-

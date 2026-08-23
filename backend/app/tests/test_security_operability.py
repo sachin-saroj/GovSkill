@@ -54,13 +54,20 @@ async def test_admin_attempts_pagination():
 
         # Seed admin user, module, and 5 quiz attempts
         async with async_session_test() as session:
-            admin = User(email="admin_page@gov.in", password_hash=get_password_hash("adminpass123"), role="admin")
-            emp = User(email="emp_page@gov.in", password_hash=get_password_hash("emppass123"), role="employee")
+            admin = User(
+                email="admin_page@gov.in",
+                password_hash=get_password_hash("adminpass123"),
+                role="admin",
+            )
+            emp = User(
+                email="emp_page@gov.in",
+                password_hash=get_password_hash("emppass123"),
+                role="employee",
+            )
             mod = Module(id=uuid.uuid4(), title="Test Module", content="Content")
 
             session.add_all([admin, emp, mod])
             await session.commit()
-
 
             for i in range(5):
                 attempt = QuizAttempt(user_id=emp.id, module_id=mod.id, score=i + 1, total=5)

@@ -66,7 +66,9 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
     if not user or not verify_password(credentials.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": {"code": "INVALID_CREDENTIALS", "message": "Invalid email or password"}},
+            detail={
+                "error": {"code": "INVALID_CREDENTIALS", "message": "Invalid email or password"}
+            },
         )
 
     access_token = create_access_token(subject=user.id, role=user.role)
@@ -76,4 +78,3 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
 @router.get("/me", response_model=UserResponse)
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
-

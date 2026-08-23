@@ -54,6 +54,12 @@ cd backend
 pytest
 ```
 
+### Backend Lint & Format
+```bash
+cd backend
+ruff check . --fix && ruff format .
+```
+
 ### Frontend Setup & Execution
 ```bash
 cd frontend

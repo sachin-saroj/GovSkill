@@ -45,7 +45,6 @@ def find_relevant_modules(question: str, modules: list[Any]) -> list[Any]:
     return [mod for score, mod in scored_modules]
 
 
-
 async def generate_tutor_answer(module_title: str, module_content: str, question: str) -> str:
     prompt = f"""You are an AI Tutor assisting a local government office employee.
 Answer the employee's question clearly, concisely, and accurately, strictly grounded in the training module content provided below.
@@ -76,11 +75,18 @@ Provide a helpful, direct, and professional answer based on the module content a
     q_lower = question.lower()
     t_lower = module_title.lower()
 
-    if "cybersecurity" in t_lower or "phishing" in q_lower or "password" in q_lower or "mfa" in q_lower:
+    if (
+        "cybersecurity" in t_lower
+        or "phishing" in q_lower
+        or "password" in q_lower
+        or "mfa" in q_lower
+    ):
         return f"Based on '{module_title}': Protect government workstations by maintaining strong password hygiene, using MFA, locking screens when away, and never clicking unverified email attachments."
     elif "portal" in t_lower or "sla" in q_lower or "escalat" in q_lower or "workflow" in q_lower:
         return f"Based on '{module_title}': Review inbound applications against supporting documents, route for supervisor sign-off, and resolve within 7 business days to prevent automatic SLA escalation."
-    elif "record" in t_lower or "retention" in q_lower or "archive" in q_lower or "audit" in q_lower:
+    elif (
+        "record" in t_lower or "retention" in q_lower or "archive" in q_lower or "audit" in q_lower
+    ):
         return f"Based on '{module_title}': Official records require metadata tags for indexing. Land/financial records are kept permanently; income certificates are retained 5 years before archive purging."
     elif "checklist" in q_lower or "verify" in q_lower or "field" in q_lower:
         return f"Based on '{module_title}': When reviewing citizen documents, verify that Full Name, Certificate Number (alphanumeric, min 6 chars), and Expiry Date are clearly readable."
@@ -90,7 +96,6 @@ Provide a helpful, direct, and professional answer based on the module content a
         return f"Based on '{module_title}': Always protect citizen PII and ensure records are encrypted at rest and in transit in compliance with privacy regulations."
     else:
         return f"Based on '{module_title}': Regarding your query ('{question}'), ensure all mandatory details are validated against official standards."
-
 
 
 async def generate_rule_explanation(failed_rule_name: str, extracted_data: dict) -> str:
@@ -129,4 +134,3 @@ Write a short, polite, 1-2 sentence plain-language explanation to the citizen ex
         return "Some mandatory fields (Name, Certificate Number, or Expiry Date) could not be read. Please upload a clearer scan of your document."
     else:
         return f"Validation check '{failed_rule_name}' failed. Please review your document details and upload a clean, unblurred copy."
-

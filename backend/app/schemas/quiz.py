@@ -26,4 +26,3 @@ class QuizSubmitRequest(BaseModel):
 class QuizSubmitResponse(BaseModel):
     score: int
     total: int
-

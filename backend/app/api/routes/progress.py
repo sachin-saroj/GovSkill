@@ -37,7 +37,11 @@ async def get_my_skill_progress(
             b_score = prog.best_score
             t_questions = prog.total_questions
             p_status = prog.status
-            updated_str = prog.updated_at.isoformat() if hasattr(prog.updated_at, "isoformat") else str(prog.updated_at)
+            updated_str = (
+                prog.updated_at.isoformat()
+                if hasattr(prog.updated_at, "isoformat")
+                else str(prog.updated_at)
+            )
         else:
             lessons_comp = False
             b_score = 0
@@ -127,7 +131,11 @@ async def mark_module_lessons_completed(
     await db.refresh(prog)
 
     pct = Math_pct(prog.best_score, prog.total_questions)
-    updated_str = prog.updated_at.isoformat() if hasattr(prog.updated_at, "isoformat") else str(prog.updated_at)
+    updated_str = (
+        prog.updated_at.isoformat()
+        if hasattr(prog.updated_at, "isoformat")
+        else str(prog.updated_at)
+    )
 
     return EmployeeSkillItem(
         module_id=module.id,

@@ -8,4 +8,3 @@ class ModuleResponse(BaseModel):
     id: uuid.UUID
     title: str
     content: str
-

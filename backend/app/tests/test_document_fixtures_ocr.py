@@ -29,6 +29,7 @@ def _is_tesseract_available() -> bool:
     if shutil.which("tesseract"):
         return True
     import pytesseract
+
     cmd = getattr(pytesseract.pytesseract, "tesseract_cmd", None)
     return bool(cmd and os.path.exists(cmd))
 
@@ -70,7 +71,11 @@ async def test_ocr_pipeline_with_physical_pdf_fixtures():
             assert expired_data["extracted_data"]["expiry_date"] == "2020-01-01"
 
             # Check that Certificate not expired rule failed
-            expiry_rule = next(r for r in expired_data["validation_results"] if r["ruleName"] == "Certificate not expired")
+            expiry_rule = next(
+                r
+                for r in expired_data["validation_results"]
+                if r["ruleName"] == "Certificate not expired"
+            )
             assert expiry_rule["passed"] is False
             assert expiry_rule["explanation"] is not None
 
@@ -83,9 +88,10 @@ async def test_ocr_pipeline_with_physical_pdf_fixtures():
                 )
             assert resp.status_code == 200
             missing_data = resp.json()
-            name_rule = next(r for r in missing_data["validation_results"] if r["ruleName"] == "Name present")
+            name_rule = next(
+                r for r in missing_data["validation_results"] if r["ruleName"] == "Name present"
+            )
             assert name_rule["passed"] is False
-
 
             # 4. Test poor-quality.pdf (Unreadable Document Upload)
             poor_pdf_path = os.path.join(FIXTURES_DIR, "poor-quality.pdf")

@@ -1,5 +1,4 @@
 import uuid
-from typing import AsyncGenerator
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
@@ -21,7 +20,9 @@ async def get_current_user(
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": {"code": "UNAUTHORIZED", "message": "Invalid or expired access token"}},
+            detail={
+                "error": {"code": "UNAUTHORIZED", "message": "Invalid or expired access token"}
+            },
         )
     user_id = payload.get("sub")
     if not user_id:
@@ -35,7 +36,9 @@ async def get_current_user(
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": {"code": "UNAUTHORIZED", "message": "Invalid token subject UUID format"}},
+            detail={
+                "error": {"code": "UNAUTHORIZED", "message": "Invalid token subject UUID format"}
+            },
         )
 
     result = await db.execute(select(User).where(User.id == user_uuid))
@@ -57,4 +60,3 @@ async def get_current_admin_user(
             detail={"error": {"code": "FORBIDDEN", "message": "Admin privileges required"}},
         )
     return current_user
-

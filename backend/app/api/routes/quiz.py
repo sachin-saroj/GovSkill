@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
 from app.api.routes.modules import get_or_create_default_module
+from app.models.progress import UserProgress
 from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
 from app.schemas.quiz import (
@@ -41,14 +42,24 @@ SEED_QUESTIONS = [
         "id": uuid.UUID("22222222-2222-2222-2222-222222222203"),
         "module_id": MODULE_1_ID,
         "question": "What action should an employee take if a certificate's expiry date has passed?",
-        "options": ["Approve anyway", "Reject or flag as expired", "Manually extend the date", "Ignore expiry date"],
+        "options": [
+            "Approve anyway",
+            "Reject or flag as expired",
+            "Manually extend the date",
+            "Ignore expiry date",
+        ],
         "correct_option_index": 1,
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222204"),
         "module_id": MODULE_1_ID,
         "question": "Which of the following is a mandatory field that must be present on an Income Certificate?",
-        "options": ["Applicant Full Name", "Social media handle", "Home wifi password", "Blood group"],
+        "options": [
+            "Applicant Full Name",
+            "Social media handle",
+            "Home wifi password",
+            "Blood group",
+        ],
         "correct_option_index": 0,
     },
     # Module 2: Government Portal Operations
@@ -63,7 +74,12 @@ SEED_QUESTIONS = [
         "id": uuid.UUID("22222222-2222-2222-2222-222222222206"),
         "module_id": MODULE_2_ID,
         "question": "What is the second step in citizen application verification workflow?",
-        "options": ["Delete citizen files", "Route application for departmental supervisor sign-off", "Approve immediately", "Send SMS notification"],
+        "options": [
+            "Delete citizen files",
+            "Route application for departmental supervisor sign-off",
+            "Approve immediately",
+            "Send SMS notification",
+        ],
         "correct_option_index": 1,
     },
     # Module 3: Cybersecurity & Data Privacy Basics
@@ -71,14 +87,24 @@ SEED_QUESTIONS = [
         "id": uuid.UUID("22222222-2222-2222-2222-222222222207"),
         "module_id": MODULE_3_ID,
         "question": "What should an employee do when receiving an email with an unverified external attachment?",
-        "options": ["Open attachment immediately", "Do not click link/attachment and verify sender", "Forward to all colleagues", "Reply with portal password"],
+        "options": [
+            "Open attachment immediately",
+            "Do not click link/attachment and verify sender",
+            "Forward to all colleagues",
+            "Reply with portal password",
+        ],
         "correct_option_index": 1,
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222208"),
         "module_id": MODULE_3_ID,
         "question": "How must sensitive citizen records (e.g. Aadhaar / Bank details) be stored?",
-        "options": ["Unencrypted on personal USB drives", "Encrypted at rest and in transit", "Publicly on local desktop", "Printed on paper only"],
+        "options": [
+            "Unencrypted on personal USB drives",
+            "Encrypted at rest and in transit",
+            "Publicly on local desktop",
+            "Printed on paper only",
+        ],
         "correct_option_index": 1,
     },
     # Module 4: Digital Record Management
@@ -93,7 +119,12 @@ SEED_QUESTIONS = [
         "id": uuid.UUID("22222222-2222-2222-2222-222222222210"),
         "module_id": MODULE_4_ID,
         "question": "What tracks every document edit, export, and access request in government portals?",
-        "options": ["Immutable system audit logs", "Manual paper ledger", "Daily browser cache", "Temporary email notes"],
+        "options": [
+            "Immutable system audit logs",
+            "Manual paper ledger",
+            "Daily browser cache",
+            "Temporary email notes",
+        ],
         "correct_option_index": 0,
     },
 ]
@@ -114,8 +145,6 @@ async def seed_quiz_questions_if_needed(db: AsyncSession, module_id: uuid.UUID):
                 )
                 db.add(q)
         await db.commit()
-
-
 
 
 def _resolve_module_id(module_id: str, default_mod_id: uuid.UUID) -> uuid.UUID:
@@ -151,9 +180,6 @@ async def get_quiz_questions(
     return QuizQuestionsResponse(questions=questions_out)
 
 
-from app.models.progress import UserProgress
-
-
 @router.post("/{module_id}/submit", response_model=QuizSubmitResponse)
 async def submit_quiz(
     module_id: str,
@@ -172,7 +198,12 @@ async def submit_quiz(
     if not questions:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"error": {"code": "QUIZ_NOT_FOUND", "message": "No quiz questions found for this module"}},
+            detail={
+                "error": {
+                    "code": "QUIZ_NOT_FOUND",
+                    "message": "No quiz questions found for this module",
+                }
+            },
         )
 
     score = 0
@@ -225,4 +256,3 @@ async def submit_quiz(
     await db.commit()
 
     return QuizSubmitResponse(score=score, total=total)
-

@@ -1,5 +1,4 @@
 import os
-from PIL import Image, ImageDraw
 import fitz
 
 FIXTURES_DIR = os.path.dirname(__file__)
@@ -15,7 +14,6 @@ def create_text_image(text_lines: list[str], file_path: str):
     pix = page.get_pixmap(dpi=150)
     pix.save(file_path)
     doc.close()
-
 
 
 def create_pdf(text_lines: list[str], file_path: str):
@@ -86,8 +84,6 @@ def generate_all_fixtures():
     poor_lines = ["#@$%^&*() blurry unreadable noise text"]
     create_text_image(poor_lines, poor_png_path)
     create_pdf(poor_lines, poor_pdf_path)
-
-
 
     print(f"[Fixtures] Successfully generated 5 test fixture files in {FIXTURES_DIR}")
 

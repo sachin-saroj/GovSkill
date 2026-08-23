@@ -4,18 +4,21 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_admin_user, get_db
+from app.core.security import get_password_hash
 from app.models.module import Module
 from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
 from app.schemas.admin import (
     AdminAttemptResponse,
     AdminQuestionOut,
+    AdminResetPasswordRequest,
     ModuleCreate,
     ModuleUpdate,
     QuestionCreate,
     QuestionUpdate,
 )
 from app.schemas.module import ModuleResponse
+from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -60,6 +63,7 @@ async def list_quiz_attempts(
 
 
 # --- Module CMS ---
+
 
 @router.post("/modules", response_model=ModuleResponse, status_code=status.HTTP_201_CREATED)
 async def create_module(
@@ -142,6 +146,7 @@ async def delete_module(
 
 # --- Quiz Question CMS ---
 
+
 @router.get("/modules/{module_id}/questions", response_model=list[AdminQuestionOut])
 async def list_admin_module_questions(
     module_id: str,
@@ -160,7 +165,11 @@ async def list_admin_module_questions(
     return result.scalars().all()
 
 
-@router.post("/modules/{module_id}/questions", response_model=AdminQuestionOut, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/modules/{module_id}/questions",
+    response_model=AdminQuestionOut,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_quiz_question(
     module_id: str,
     q_in: QuestionCreate,
@@ -178,7 +187,12 @@ async def create_quiz_question(
     if q_in.correct_option_index >= len(q_in.options):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_OPTION_INDEX", "message": "correct_option_index is out of range for options"}},
+            detail={
+                "error": {
+                    "code": "INVALID_OPTION_INDEX",
+                    "message": "correct_option_index is out of range for options",
+                }
+            },
         )
 
     q = QuizQuestion(
@@ -228,7 +242,12 @@ async def update_quiz_question(
     if q.correct_option_index >= len(q.options):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_OPTION_INDEX", "message": "correct_option_index is out of range for options"}},
+            detail={
+                "error": {
+                    "code": "INVALID_OPTION_INDEX",
+                    "message": "correct_option_index is out of range for options",
+                }
+            },
         )
 
     await db.commit()
@@ -263,3 +282,36 @@ async def delete_quiz_question(
     await db.commit()
     return None
 
+
+# --- User Management / Password Reset ---
+
+
+@router.post("/users/{user_id}/reset-password", response_model=UserResponse)
+async def reset_user_password(
+    user_id: str,
+    payload: AdminResetPasswordRequest,
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_current_admin_user),
+):
+    try:
+        target_uuid = uuid.UUID(user_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": {"code": "INVALID_ID", "message": "Invalid user UUID format"}},
+        )
+
+    result = await db.execute(select(User).where(User.id == target_uuid))
+    target_user = result.scalar_one_or_none()
+
+    if not target_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": {"code": "USER_NOT_FOUND", "message": "User not found"}},
+        )
+
+    target_user.password_hash = get_password_hash(payload.new_password)
+    await db.commit()
+    await db.refresh(target_user)
+
+    return target_user

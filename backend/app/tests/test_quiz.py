@@ -57,9 +57,11 @@ async def test_quiz_full_functionality():
                 assert "id" in q
                 assert "question" in q
                 assert "options" in q
-                assert "correct_option_index" not in q  # Strict security check: answer key stripped!
+                assert (
+                    "correct_option_index" not in q
+                )  # Strict security check: answer key stripped!
 
-            questions = q_data["questions"]
+            q_data["questions"]
 
             # 3. Invalid Module ID Retrieval (returns 400)
             invalid_mod_resp = await client.get("/api/quiz/invalid-uuid-string", headers=headers)
@@ -90,7 +92,10 @@ async def test_quiz_full_functionality():
 
             # 5. Submit All Wrong Answers
             wrong_answers = [
-                {"question_id": str(sq["id"]), "selected_option_index": (sq["correct_option_index"] + 1) % 4}
+                {
+                    "question_id": str(sq["id"]),
+                    "selected_option_index": (sq["correct_option_index"] + 1) % 4,
+                }
                 for sq in mod1_questions
             ]
 
@@ -117,7 +122,10 @@ async def test_quiz_full_functionality():
             fake_q_id = str(uuid.uuid4())
             invalid_submission = [
                 {"question_id": fake_q_id, "selected_option_index": 0},
-                {"question_id": str(SEED_QUESTIONS[0]["id"]), "selected_option_index": 99},  # out-of-bounds
+                {
+                    "question_id": str(SEED_QUESTIONS[0]["id"]),
+                    "selected_option_index": 99,
+                },  # out-of-bounds
             ]
             invalid_sub_resp = await client.post(
                 "/api/quiz/default/submit",
@@ -136,7 +144,6 @@ async def test_quiz_full_functionality():
             assert empty_resp.status_code == 200
             assert empty_resp.json()["score"] == 0
             assert empty_resp.json()["total"] == len(mod1_questions)
-
 
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)

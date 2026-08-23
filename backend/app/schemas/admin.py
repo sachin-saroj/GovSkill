@@ -44,3 +44,5 @@ class QuestionUpdate(BaseModel):
     correct_option_index: int | None = Field(default=None, ge=0)
 
 
+class AdminResetPasswordRequest(BaseModel):
+    new_password: str = Field(min_length=6)

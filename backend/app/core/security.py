@@ -6,8 +6,13 @@ import passlib.handlers.bcrypt
 from app.core.config import settings
 
 orig_calc_checksum = passlib.handlers.bcrypt._BcryptBackend._calc_checksum
+
+
 def _patched_calc_checksum(self, secret):
-    return orig_calc_checksum(self, secret[:72] if isinstance(secret, (bytes, bytearray)) else secret)
+    return orig_calc_checksum(
+        self, secret[:72] if isinstance(secret, (bytes, bytearray)) else secret
+    )
+
 
 passlib.handlers.bcrypt._BcryptBackend._calc_checksum = _patched_calc_checksum
 
@@ -22,12 +27,16 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password[:72])
 
 
-def create_access_token(subject: str | Any, role: str, expires_delta: timedelta | None = None) -> str:
+def create_access_token(
+    subject: str | Any, role: str, expires_delta: timedelta | None = None
+) -> str:
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+
     to_encode = {
         "exp": expire,
         "sub": str(subject),

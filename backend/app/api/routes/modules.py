@@ -101,7 +101,6 @@ async def seed_all_default_modules(db: AsyncSession) -> list[Module]:
     return list(existing.values())
 
 
-
 async def get_or_create_default_module(db: AsyncSession) -> Module:
     modules = await seed_all_default_modules(db)
     return modules[0]
@@ -143,4 +142,3 @@ async def get_module(
         )
 
     return module
-

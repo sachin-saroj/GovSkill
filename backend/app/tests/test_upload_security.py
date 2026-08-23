@@ -27,13 +27,21 @@ async def test_upload_security_validations():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
             # 1. Invalid file extension (.exe)
-            bad_ext_file = ("malicious.exe", io.BytesIO(b"binary content"), "application/octet-stream")
+            bad_ext_file = (
+                "malicious.exe",
+                io.BytesIO(b"binary content"),
+                "application/octet-stream",
+            )
             resp = await ac.post("/api/documents/upload", files={"file": bad_ext_file})
             assert resp.status_code == 400
             assert resp.json()["detail"]["error"]["code"] == "INVALID_FORMAT"
 
             # 2. Invalid MIME type
-            bad_mime_file = ("document.pdf", io.BytesIO(b"%PDF-1.4 test"), "application/x-executable")
+            bad_mime_file = (
+                "document.pdf",
+                io.BytesIO(b"%PDF-1.4 test"),
+                "application/x-executable",
+            )
             resp = await ac.post("/api/documents/upload", files={"file": bad_mime_file})
             assert resp.status_code == 400
             assert resp.json()["detail"]["error"]["code"] == "INVALID_MIME_TYPE"

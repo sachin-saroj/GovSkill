@@ -1,4 +1,5 @@
 import io
+import uuid
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -35,7 +36,11 @@ async def test_govassist_document_upload_and_rule_engine():
             )
 
             files = {
-                "file": ("income_cert_expired.txt", io.BytesIO(sample_doc_content.encode("utf-8")), "text/plain")
+                "file": (
+                    "income_cert_expired.txt",
+                    io.BytesIO(sample_doc_content.encode("utf-8")),
+                    "text/plain",
+                )
             }
 
             response = await client.post("/api/documents/upload", files=files)
@@ -69,3 +74,55 @@ async def test_govassist_document_upload_and_rule_engine():
     finally:
         app.dependency_overrides.clear()
 
+
+@pytest.mark.asyncio
+async def test_govassist_get_document_by_id_public_lookup():
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            # 1. Upload a document
+            sample_doc_content = (
+                "INCOME CERTIFICATE\n"
+                "Applicant Name: Ramesh Gupta\n"
+                "Certificate No: INC123456\n"
+                "Expiry Date: 2028-12-31\n"
+            )
+            files = {
+                "file": (
+                    "income_cert_valid.txt",
+                    io.BytesIO(sample_doc_content.encode("utf-8")),
+                    "text/plain",
+                )
+            }
+            upload_resp = await client.post("/api/documents/upload", files=files)
+            assert upload_resp.status_code == 200
+            upload_data = upload_resp.json()
+            doc_id = upload_data["document_id"]
+
+            # 2. Retrieve document by UUID without authentication (public access by UUID-v4 reference)
+            get_resp = await client.get(f"/api/documents/{doc_id}")
+            assert get_resp.status_code == 200
+            get_data = get_resp.json()
+            assert get_data["document_id"] == doc_id
+            assert get_data["extracted_data"]["name"] == "Ramesh Gupta"
+            assert get_data["extracted_data"]["certificate_number"] == "INC123456"
+            assert len(get_data["validation_results"]) == 4
+
+            # 3. Non-existent UUID returns 404
+            non_existent_uuid = str(uuid.uuid4())
+            not_found_resp = await client.get(f"/api/documents/{non_existent_uuid}")
+            assert not_found_resp.status_code == 404
+            assert not_found_resp.json()["detail"]["error"]["code"] == "DOCUMENT_NOT_FOUND"
+
+            # 4. Malformed UUID returns 400
+            bad_id_resp = await client.get("/api/documents/not-a-valid-uuid")
+            assert bad_id_resp.status_code == 400
+            assert bad_id_resp.json()["detail"]["error"]["code"] == "INVALID_ID"
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()

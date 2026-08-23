@@ -1,10 +1,11 @@
 """initial_schema
 
 Revision ID: 001_initial_schema
-Revises: 
+Revises:
 Create Date: 2026-07-21 20:20:00.000000
 
 """
+
 from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
@@ -23,7 +24,12 @@ def upgrade() -> None:
         sa.Column("email", sa.String(), nullable=False),
         sa.Column("password_hash", sa.String(), nullable=False),
         sa.Column("role", sa.String(), nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            nullable=False,
+            server_default=sa.text("now()"),
+        ),
         sa.CheckConstraint("role IN ('employee', 'admin')", name="check_user_role"),
     )
     op.create_index("ix_users_email", "users", ["email"], unique=True)
@@ -40,7 +46,9 @@ def upgrade() -> None:
     op.create_table(
         "quiz_questions",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False),
+        sa.Column(
+            "module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False
+        ),
         sa.Column("question", sa.Text(), nullable=False),
         sa.Column("options", sa.JSON(), nullable=False),
         sa.Column("correct_option_index", sa.Integer(), nullable=False),
@@ -50,11 +58,20 @@ def upgrade() -> None:
     op.create_table(
         "quiz_attempts",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("user_id", sa.Uuid(), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
-        sa.Column("module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False),
+        sa.Column(
+            "user_id", sa.Uuid(), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        ),
+        sa.Column(
+            "module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False
+        ),
         sa.Column("score", sa.Integer(), nullable=False),
         sa.Column("total", sa.Integer(), nullable=False),
-        sa.Column("submitted_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.Column(
+            "submitted_at",
+            sa.DateTime(timezone=True),
+            nullable=False,
+            server_default=sa.text("now()"),
+        ),
     )
 
     # citizen_documents table
@@ -64,7 +81,12 @@ def upgrade() -> None:
         sa.Column("file_path", sa.String(), nullable=False),
         sa.Column("extracted_data", sa.JSON(), nullable=True),
         sa.Column("validation_results", sa.JSON(), nullable=True),
-        sa.Column("uploaded_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.Column(
+            "uploaded_at",
+            sa.DateTime(timezone=True),
+            nullable=False,
+            server_default=sa.text("now()"),
+        ),
     )
 
 

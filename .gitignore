@@ -12,6 +12,8 @@ venv/
 env/
 .venv/
 .pytest_cache/
+.coverage
+htmlcov/
 *.db
 govskill.db
 backend/govskill.db
