@@ -170,6 +170,11 @@ async def test_employee_skill_tracking_pipeline():
             assert gap["target_threshold"] == 75
             assert gap["gap_percentage"] == 75
             assert "required for certification" in gap["evidence"]
+            assert gap["competency"] is not None
+            assert gap["target_section_index"] >= 0
+            assert gap["target_section_title"] is not None
+            assert gap["deep_link"].startswith("/module?id=")
+            assert gap["tutor_prompt"] is not None
             assert fp_data["recommended_action"]["action_type"] == "retake_quiz"
             assert len(fp_data["assessment_history"]) == 1
             assert fp_data["assessment_history"][0]["passed"] is False

@@ -99,7 +99,13 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
                   </div>
                 </div>
 
-                <div className="text-xs space-y-1.5 bg-white/80 p-3 rounded-lg border border-slate-200/70">
+                <div className="text-xs space-y-2 bg-white/80 p-3 rounded-lg border border-slate-200/70">
+                  {gap.competency && (
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-civic-900 bg-civic-50 px-2 py-1 rounded border border-civic-200/80">
+                      <span className="font-bold text-civic-700">Target Competency:</span>
+                      <span>{gap.competency}</span>
+                    </div>
+                  )}
                   <div>
                     <span className="font-bold text-slate-700">Observed Evidence: </span>
                     <span className="text-slate-600">{gap.evidence}</span>
@@ -111,20 +117,34 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
                 <Link
-                  to={`/module?id=${gap.module_id}`}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-civic-800 hover:text-civic-900 px-2.5 py-1 rounded-lg hover:bg-civic-50 transition-colors"
+                  to={
+                    gap.tutor_prompt
+                      ? `/tutor?moduleId=${gap.module_id}&competency=${encodeURIComponent(gap.competency || '')}&mode=remediation&prompt=${encodeURIComponent(gap.tutor_prompt)}`
+                      : `/tutor?moduleId=${gap.module_id}&mode=remediation`
+                  }
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-saffron-800 bg-saffron-50 hover:bg-saffron-100 border border-saffron-200 px-2.5 py-1 rounded-lg transition-colors"
+                  title="Ask AI Tutor to explain this weak competency and provide a practice check"
                 >
-                  <span>Review Notes</span>
+                  <span>Ask AI Tutor</span>
                 </Link>
-                <Link
-                  to={`/quiz/${gap.module_id}`}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-white bg-civic-800 hover:bg-civic-900 px-3 py-1.5 rounded-lg shadow-civic-xs active:scale-95 transition-all"
-                >
-                  <span>Take Quiz</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={gap.deep_link || `/module?id=${gap.module_id}`}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-civic-800 hover:text-civic-900 px-2.5 py-1 rounded-lg hover:bg-civic-50 transition-colors"
+                  >
+                    <span>{gap.target_section_title ? `Review Section` : 'Review Notes'}</span>
+                  </Link>
+                  <Link
+                    to={`/quiz/${gap.module_id}`}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-white bg-civic-800 hover:bg-civic-900 px-3 py-1.5 rounded-lg shadow-civic-xs active:scale-95 transition-all"
+                  >
+                    <span>{current > 0 ? 'Retake Quiz' : 'Take Quiz'}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </Card>
           );

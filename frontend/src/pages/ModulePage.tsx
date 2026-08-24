@@ -51,13 +51,18 @@ export const ModulePage: React.FC = () => {
         setModules(modRes.data);
         if (modRes.data.length > 0) {
           const paramId = searchParams.get('id') || searchParams.get('moduleId');
+          const paramSection = searchParams.get('section');
           const targetMod = paramId ? modRes.data.find((m) => m.id === paramId) : null;
           const initialMod = targetMod || modRes.data[0];
           setSelectedModule(initialMod);
 
-          // Resume last accessed section if stored on server
-          const savedSection = progMap[initialMod.id]?.last_accessed_section ?? 0;
-          setCurrentSectionIndex(savedSection);
+          if (paramSection !== null && !isNaN(parseInt(paramSection, 10))) {
+            setCurrentSectionIndex(parseInt(paramSection, 10));
+          } else {
+            // Resume last accessed section if stored on server
+            const savedSection = progMap[initialMod.id]?.last_accessed_section ?? 0;
+            setCurrentSectionIndex(savedSection);
+          }
         }
       } catch (err: any) {
         const msg = err.response?.data?.detail?.error?.message || 'Failed to load module content';
@@ -73,10 +78,9 @@ export const ModulePage: React.FC = () => {
     const target = modules.find((m) => m.id === modId);
     if (target) {
       setSelectedModule(target);
-      setSearchParams({ id: target.id });
-      setStatusMessage(null);
-      // Resume last accessed section for the target module
       const savedSection = skillProgressMap[target.id]?.last_accessed_section ?? 0;
+      setSearchParams({ id: target.id, section: String(savedSection) });
+      setStatusMessage(null);
       setCurrentSectionIndex(savedSection);
     }
   };

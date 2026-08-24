@@ -52,6 +52,11 @@ class SkillGapItem(BaseModel):
     gap_percentage: int = 0
     evidence: str
     recommended_action: str
+    competency: str | None = None
+    target_section_index: int = 0
+    target_section_title: str | None = None
+    deep_link: str | None = None
+    tutor_prompt: str | None = None
 
 
 class NextActionRecommendation(BaseModel):

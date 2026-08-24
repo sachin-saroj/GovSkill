@@ -110,6 +110,11 @@ export interface SkillGapItem {
   gap_percentage?: number;
   evidence: string;
   recommended_action: string;
+  competency?: string | null;
+  target_section_index?: number;
+  target_section_title?: string | null;
+  deep_link?: string | null;
+  tutor_prompt?: string | null;
 }
 
 export interface NextActionRecommendation {

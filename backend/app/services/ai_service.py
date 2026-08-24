@@ -218,6 +218,7 @@ async def generate_tutor_answer(
         "pitfalls": "Highlight critical red flags, common mistakes, and errors the officer must avoid.",
         "example": "Provide a realistic workplace administrative scenario illustrating this concept in action.",
         "test_understanding": "Provide a quick check-for-understanding scenario followed by the correct answer explanation.",
+        "remediation": "Provide a targeted 4-part remediation: 1. Core Rule Summary, 2. Workplace Administrative Scenario, 3. Critical Mistakes to Avoid, 4. Self-Check Practice Scenario with Explanation.",
     }.get(mode, "Provide professional, structured step-by-step guidance with clear bullet points.")
 
 
@@ -269,7 +270,24 @@ def get_deterministic_tutor_fallback(module_title: str, question: str, mode: str
         or "password" in q_lower
         or "mfa" in q_lower
     ):
-        if mode == "procedure":
+        if mode == "remediation":
+            return (
+                f"### Targeted Remediation: {module_title}\n\n"
+                "**1. Core Rule Summary:**\n"
+                "- Maintain strict password hygiene with Multi-Factor Authentication (MFA).\n"
+                "- Lock your workstation screen whenever unattended (Win + L).\n"
+                "- Encrypt all citizen PII in transit and at rest. Never store unencrypted Aadhaar or bank details on personal drives.\n\n"
+                "**2. Workplace Scenario:**\n"
+                "An employee receives an urgent email claiming to be from the State IT Portal asking for password confirmation.\n"
+                "*Correct Action:* Do NOT click the link. Verify the official sender domain (.gov.in) and report the incident to the IT security officer.\n\n"
+                "**3. Mistakes to Avoid:**\n"
+                "- Clicking unverified links or downloading attachments from unknown senders.\n"
+                "- Leaving unlocked workstations active during breaks.\n\n"
+                "**4. Self-Check Practice Scenario:**\n"
+                "*Scenario:* You need to export a citizen welfare recipient list for field verification. How should the file be secured?\n"
+                "*Correct Standard:* Encrypt the file before transfer and store strictly on designated departmental secured drives."
+            )
+        elif mode == "procedure":
             return (
                 f"Based on '{module_title}':\n"
                 "1. Maintain strong password hygiene and enable Multi-Factor Authentication (MFA).\n"
@@ -301,7 +319,24 @@ def get_deterministic_tutor_fallback(module_title: str, question: str, mode: str
         return f"Based on '{module_title}': Protect government networks and credentials by maintaining password hygiene, using MFA, locking screens when away, and avoiding unverified email attachments."
 
     elif "portal" in t_lower or "sla" in q_lower or "escalat" in q_lower or "workflow" in q_lower:
-        if mode == "procedure":
+        if mode == "remediation":
+            return (
+                f"### Targeted Remediation: {module_title}\n\n"
+                "**1. Core Rule Summary:**\n"
+                "- Review citizen application details against attached supporting documentation.\n"
+                "- Route applications to designated departmental supervisors for secondary sign-off.\n"
+                "- All standard applications must be resolved within 7 business days before automatic escalation.\n\n"
+                "**2. Workplace Scenario:**\n"
+                "An application has been pending in the portal for 5 business days without departmental review.\n"
+                "*Correct Action:* Prioritize processing and notify the supervisor to complete verification before the Day 7 automatic escalation trigger.\n\n"
+                "**3. Mistakes to Avoid:**\n"
+                "- Approving applications without secondary supervisor sign-off.\n"
+                "- Failing to update portal status flags to 'Under Review' or 'Approved'.\n\n"
+                "**4. Self-Check Practice Scenario:**\n"
+                "*Scenario:* What happens automatically when an application reaches 8 business days without resolution?\n"
+                "*Correct Standard:* The system automatically flags and escalates the file to the administrative supervisor."
+            )
+        elif mode == "procedure":
             return (
                 f"Based on '{module_title}':\n"
                 "1. Review inbound citizen applications against supporting documents.\n"
@@ -335,7 +370,25 @@ def get_deterministic_tutor_fallback(module_title: str, question: str, mode: str
     elif (
         "record" in t_lower or "retention" in q_lower or "archive" in q_lower or "audit" in q_lower
     ):
-        if mode == "procedure":
+        if mode == "remediation":
+            return (
+                f"### Targeted Remediation: {module_title}\n\n"
+                "**1. Core Rule Summary:**\n"
+                "- Apply standardized metadata tags (Year, Category, Issuing Office, Record ID) to all archived documents.\n"
+                "- Retain permanent land and financial records indefinitely.\n"
+                "- Retain standard Income Certificate records for 5 years before scheduled archive purging.\n"
+                "- Ensure every file edit, export, and access is logged in immutable system audit trails.\n\n"
+                "**2. Workplace Scenario:**\n"
+                "An officer is asked to purge citizen Income Certificate records submitted 3 years ago to free storage.\n"
+                "*Correct Action:* Deny the purge. Statutory retention mandates a minimum 5-year retention period before archiving or destruction.\n\n"
+                "**3. Mistakes to Avoid:**\n"
+                "- Premature destruction of records before the 5-year statutory period.\n"
+                "- Bypassing or disabling audit trail logging during batch operations.\n\n"
+                "**4. Self-Check Practice Scenario:**\n"
+                "*Scenario:* How long must local government Income Certificates be retained?\n"
+                "*Correct Standard:* 5 years."
+            )
+        elif mode == "procedure":
             return (
                 f"Based on '{module_title}':\n"
                 "1. Apply standardized metadata tags (Year, Category, Issuing Office, Record ID) during ingest.\n"
@@ -368,7 +421,25 @@ def get_deterministic_tutor_fallback(module_title: str, question: str, mode: str
 
     else:
         # Default: Digital Document Handling
-        if mode == "procedure":
+        if mode == "remediation":
+            return (
+                f"### Targeted Remediation: {module_title}\n\n"
+                "**1. Core Rule Summary:**\n"
+                "- Verify all mandatory fields: Full Name, Certificate Number, Issue Date, Expiry Date.\n"
+                "- Certificate numbers must follow standard alphanumeric format and have at least 6 characters.\n"
+                "- The certificate expiry date must be current and not expired.\n"
+                "- Verify issuing authority stamps and digital signatures.\n\n"
+                "**2. Workplace Scenario:**\n"
+                "A citizen presents a certificate with number 'INC-99' (5 characters) and valid upto date in the past.\n"
+                "*Correct Action:* Flag the document as invalid. The number fails the 6-character alphanumeric standard, and expired documents cannot be accepted.\n\n"
+                "**3. Mistakes to Avoid:**\n"
+                "- Accepting certificate numbers with fewer than 6 characters.\n"
+                "- Approving documents with expired dates or unreadable scans.\n\n"
+                "**4. Self-Check Practice Scenario:**\n"
+                "*Scenario:* What is the minimum required alphanumeric length for a certificate number?\n"
+                "*Correct Standard:* At least 6 characters."
+            )
+        elif mode == "procedure":
             return (
                 f"Based on '{module_title}':\n"
                 "1. Verify that Full Name, Certificate Number, Issue Date, and Expiry Date are legible.\n"

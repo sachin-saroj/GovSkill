@@ -135,6 +135,21 @@ async def test_ai_tutor_copilot_pipeline():
             assert res_3["matched_module_title"] == "Digital Document Handling"
             assert res_3["mode"] == "pitfalls"
 
+            # 3b. Ask question in 'remediation' mode (Phase 2 Targeted Remediation)
+            tutor_resp_remediation = await client.post(
+                "/api/tutor/ask",
+                json={
+                    "module_id": "auto",
+                    "question": "Explain verification rules and expiry validation standards.",
+                    "mode": "remediation",
+                },
+                headers=headers,
+            )
+            assert tutor_resp_remediation.status_code == 200
+            res_rem = tutor_resp_remediation.json()
+            assert "Targeted Remediation" in res_rem["answer"] or "Verification" in res_rem["answer"]
+            assert res_rem["mode"] == "remediation"
+
             # 4. Out-of-scope question refusal (Strict anti-hallucination guardrail)
             out_of_scope_resp = await client.post(
                 "/api/tutor/ask",

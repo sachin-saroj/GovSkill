@@ -33,11 +33,15 @@ export const TutorChatPage: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const initialModuleId = searchParams.get('module') || searchParams.get('moduleId') || 'auto';
   const [selectedModuleId, setSelectedModuleId] = useState<string>(initialModuleId);
+  const incomingMode = searchParams.get('mode') || 'standard';
+  const incomingCompetency = searchParams.get('competency') || null;
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       sender: 'tutor',
-      text: "Hello! I am your official Government Training Copilot. Ask me any question regarding document verification, portal workflows, cybersecurity standards, or record retention. All answers are strictly grounded in approved curriculum.",
+      text: incomingCompetency
+        ? `Hello! I am your official Government Training Copilot. I've activated Targeted Remediation for "${incomingCompetency}". Review the guidance below or ask for specific examples, red flags, or practice checks.`
+        : "Hello! I am your official Government Training Copilot. Ask me any question regarding document verification, portal workflows, cybersecurity standards, or record retention. All answers are strictly grounded in approved curriculum.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       grounding_status: 'grounded',
     },
@@ -73,7 +77,7 @@ export const TutorChatPage: React.FC = () => {
     const incomingPrompt = searchParams.get('prompt') || searchParams.get('question');
     if (incomingPrompt && !promptSentRef.current) {
       promptSentRef.current = true;
-      sendQuestionText(incomingPrompt);
+      sendQuestionText(incomingPrompt, incomingMode);
     }
   }, []);
 
@@ -231,7 +235,6 @@ export const TutorChatPage: React.FC = () => {
 
       {/* Active Scope Pill */}
       <motion.div variants={fadeUpVariants} className="flex items-center justify-between px-4 py-2 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs text-slate-600 shadow-civic-xs">
-
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
           <span>
@@ -242,6 +245,57 @@ export const TutorChatPage: React.FC = () => {
           Anti-hallucination verified
         </span>
       </motion.div>
+
+      {/* Targeted Remediation Banner */}
+      {incomingCompetency && (
+        <motion.div
+          variants={fadeUpVariants}
+          className="p-4 rounded-2xl bg-saffron-50 border border-saffron-300/80 text-xs text-saffron-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-civic-xs"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-saffron-100 text-saffron-800 shrink-0">
+              <Sparkles className="h-4 w-4 text-saffron-600" />
+            </div>
+            <div>
+              <div className="font-bold text-saffron-900">
+                Targeted Remediation Active: {incomingCompetency}
+              </div>
+              <p className="text-[11px] text-saffron-800">
+                Grounded guidance tailored to resolve this specific operational skill gap.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() =>
+                sendQuestionText(
+                  `Give me a practice scenario to test my understanding of ${incomingCompetency}`,
+                  'test_understanding'
+                )
+              }
+              disabled={isLoading}
+              className="px-2.5 py-1 rounded-lg bg-white border border-saffron-300 text-[11px] font-bold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60"
+            >
+              Practice Scenario
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                sendQuestionText(
+                  `What critical mistakes and red flags should I avoid in ${incomingCompetency}?`,
+                  'pitfalls'
+                )
+              }
+              disabled={isLoading}
+              className="px-2.5 py-1 rounded-lg bg-white border border-saffron-300 text-[11px] font-bold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60"
+            >
+              Red Flags
+            </button>
+          </div>
+        </motion.div>
+      )}
 
       {/* Error Alert with AnimatePresence */}
       <AnimatePresence>

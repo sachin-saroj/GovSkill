@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { QuizSubmitResponse } from '@/types';
 import Card from '@/components/ui/Card';
@@ -164,6 +165,31 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
+
+                  {!item.passed && (
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-200/60 text-[11px]">
+                      <span className="text-amber-800 font-medium">
+                        Targeted review recommended before retaking.
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <Link
+                          to={`/tutor?competency=${encodeURIComponent(item.competency)}&mode=remediation&prompt=${encodeURIComponent(`I need help understanding ${item.competency}. Can you explain the core rules and give me a practice scenario?`)}`}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-saffron-50 hover:bg-saffron-100 text-saffron-900 border border-saffron-200 font-bold transition-colors"
+                        >
+                          <Sparkles className="h-3 w-3 text-saffron-600" />
+                          <span>Ask AI Tutor</span>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={onGoToLessons}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-civic-50 hover:bg-civic-100 text-civic-800 border border-civic-200 font-bold transition-colors cursor-pointer"
+                        >
+                          <BookOpen className="h-3 w-3 text-civic-600" />
+                          <span>Review Lesson</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 class TutorAskRequest(BaseModel):
     module_id: str
     question: str = Field(min_length=2, max_length=1000)
-    mode: str = "standard"  # "standard", "simple", "procedure", "pitfalls"
+    mode: str = "standard"  # "standard", "simple", "procedure", "pitfalls", "remediation"
 
 
 class TutorAskResponse(BaseModel):

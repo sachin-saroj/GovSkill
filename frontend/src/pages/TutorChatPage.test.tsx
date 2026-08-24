@@ -164,6 +164,37 @@ describe('TutorChatPage & Copilot Interface', () => {
     expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
   });
 
+  it('renders targeted remediation banner and handles preloaded prompt', async () => {
+    window.history.pushState(
+      {},
+      '',
+      '/tutor?moduleId=module-1&competency=Verification%20Rules&mode=remediation&prompt=Explain%20verification%20rules'
+    );
+
+    mockedPost.mockResolvedValue({
+      data: {
+        answer: 'Targeted Remediation for Verification Rules:\n1. Core Rule Summary...',
+        matched_module_title: 'Digital Document Handling',
+        grounding_status: 'grounded',
+        mode: 'remediation',
+      },
+    });
+
+    renderPage();
+
+    expect(await screen.findByText(/Targeted Remediation Active: Verification Rules/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /practice scenario/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /red flags/i })).toBeInTheDocument();
+
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/tutor/ask', {
+        module_id: 'module-1',
+        question: 'Explain verification rules',
+        mode: 'remediation',
+      })
+    );
+  });
+
   it('resets the conversation cleanly', async () => {
     renderPage();
     const resetBtn = screen.getByRole('button', { name: /reset/i });

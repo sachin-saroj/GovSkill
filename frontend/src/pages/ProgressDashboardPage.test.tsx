@@ -53,6 +53,13 @@ const mockCompetencyData: EmployeeSkillStatusResponse = {
       skill: 'Digital Record Management',
       proficiency: 'Developing',
       current_score_pct: 0,
+      target_threshold: 75,
+      gap_percentage: 75,
+      competency: 'Record Archival & Retention Standards',
+      target_section_index: 1,
+      target_section_title: 'Lesson 2: Record Retention & Destruction Policy',
+      deep_link: '/module?id=records-202&section=1',
+      tutor_prompt: 'Explain record archival standards.',
       evidence: 'Lesson curriculum completed, but mandatory certification assessment has not been attempted.',
       recommended_action: 'Take the module assessment to demonstrate digital competency.',
     },
@@ -152,9 +159,12 @@ describe('ProgressDashboardPage', () => {
     // 2. Recommended Next Action
     expect(screen.getByText('Take Assessment: Digital Record Management')).toBeInTheDocument();
 
-    // 3. Skill Gaps Card
+    // 3. Skill Gaps Card with Targeted Remediation Actions
     expect(screen.getByText('Identified Skill Gaps & Action Items')).toBeInTheDocument();
     expect(screen.getByText(/mandatory certification assessment has not been attempted/i)).toBeInTheDocument();
+    expect(screen.getByText('Record Archival & Retention Standards')).toBeInTheDocument();
+    expect(screen.getByText('Ask AI Tutor')).toBeInTheDocument();
+    expect(screen.getByText('Review Section')).toBeInTheDocument();
 
     // 4. Core Skill Cards
     expect(screen.getAllByText('Cybersecurity Basics').length).toBeGreaterThan(0);

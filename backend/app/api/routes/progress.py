@@ -272,13 +272,120 @@ async def get_my_skill_progress(
         readiness_explanation=readiness_explanation,
     )
 
-    # Identify Skill Gaps
+    # Targeted Competency & Lesson Section Mapping Registry
+    MODULE_COMPETENCY_SECTION_MAP: dict[uuid.UUID, dict[str, Any]] = {
+        # Module 1: Digital Document Handling
+        uuid.UUID("11111111-1111-1111-1111-111111111111"): {
+            "Document Formatting & Standards": {
+                "section_index": 1,
+                "section_title": "Lesson 2: Verification Checklist & Standards",
+                "tutor_prompt": "I need help with Document Formatting & Standards. Can you explain minimum character lengths, alphanumeric format requirements, and give me a practice scenario?",
+            },
+            "Verification Rules & Expiry Validation": {
+                "section_index": 1,
+                "section_title": "Lesson 2: Verification Checklist & Standards",
+                "tutor_prompt": "Explain the rules and procedures for checking certificate validity periods and handling expired documents in local government administration.",
+            },
+            "Mandatory Data Integrity": {
+                "section_index": 2,
+                "section_title": "Lesson 3: Common Data Entry Errors & Prevention",
+                "tutor_prompt": "What are the mandatory fields required on citizen documents, and how do we prevent name mismatches and data entry errors?",
+            },
+            "default": {
+                "competency": "Document Verification Standards",
+                "section_index": 1,
+                "section_title": "Lesson 2: Verification Checklist & Standards",
+                "tutor_prompt": "Can you provide a comprehensive review and practice check on Digital Document Handling standards?",
+            },
+        },
+        # Module 2: Government Portal Operations
+        uuid.UUID("11111111-1111-1111-1111-111111111112"): {
+            "Workflow Routing & Sign-off": {
+                "section_index": 1,
+                "section_title": "Lesson 2: Application Processing & Verification Steps",
+                "tutor_prompt": "Explain the step-by-step workflow for routing citizen applications to departmental supervisors for secondary sign-off.",
+            },
+            "SLA Compliance & Escalation": {
+                "section_index": 2,
+                "section_title": "Lesson 3: SLA Compliance & Escalation Workflow",
+                "tutor_prompt": "What are the SLA timelines for local office requests and after how many business days does automatic supervisor escalation occur?",
+            },
+            "default": {
+                "competency": "Portal Operations & Workflow",
+                "section_index": 1,
+                "section_title": "Lesson 2: Application Processing & Verification Steps",
+                "tutor_prompt": "Provide guidance on Government Portal Operations, workflow routing, and SLA compliance procedures.",
+            },
+        },
+        # Module 3: Cybersecurity & Data Privacy Basics
+        uuid.UUID("11111111-1111-1111-1111-111111111113"): {
+            "Phishing Prevention & Incident Response": {
+                "section_index": 1,
+                "section_title": "Lesson 2: Identifying Phishing & Social Engineering",
+                "tutor_prompt": "How do government employees identify phishing emails, verify sender domains, and handle suspicious external attachments?",
+            },
+            "PII Protection & Data Privacy": {
+                "section_index": 2,
+                "section_title": "Lesson 3: PII Security & Encryption",
+                "tutor_prompt": "What are the mandatory security rules for storing and encrypting citizen Aadhaar numbers, bank details, and personal records?",
+            },
+            "default": {
+                "competency": "Data Privacy & Workstation Security",
+                "section_index": 0,
+                "section_title": "Lesson 1: Protecting Government Networks & Credentials",
+                "tutor_prompt": "Explain cybersecurity hygiene, screen lock policies, and MFA requirements for government office workstations.",
+            },
+        },
+        # Module 4: Digital Record Management
+        uuid.UUID("11111111-1111-1111-1111-111111111114"): {
+            "Archival Retention Policies": {
+                "section_index": 1,
+                "section_title": "Lesson 2: Record Retention & Destruction Policy",
+                "tutor_prompt": "What are the statutory retention periods for Income Certificates versus permanent land/financial records before archiving or destruction?",
+            },
+            "System Audit Trail & Compliance": {
+                "section_index": 2,
+                "section_title": "Lesson 3: Audit Trail & Chain of Custody",
+                "tutor_prompt": "How do immutable system audit logs track document updates, exports, and access requests for compliance verification?",
+            },
+            "default": {
+                "competency": "Record Archival & Retention Standards",
+                "section_index": 1,
+                "section_title": "Lesson 2: Record Retention & Destruction Policy",
+                "tutor_prompt": "Explain standardized metadata tagging and indexing rules for government document archiving.",
+            },
+        },
+    }
+
+    # Identify Skill Gaps with Deterministic Remediation Mapping
     skill_gaps: list[SkillGapItem] = []
     for s in skill_items:
         if s.status != "certified":
             gap_pct = max(0, 75 - s.score_percentage)
+            mod_meta = MODULE_COMPETENCY_SECTION_MAP.get(s.module_id, {})
+            def_meta = mod_meta.get("default", {
+                "competency": "Core Procedures",
+                "section_index": 0,
+                "section_title": "Lesson 1: Introduction",
+                "tutor_prompt": f"Can you explain the core concepts and procedures for {s.module_title}?",
+            })
+
+            target_comp = def_meta.get("competency", "Core Operating Procedures")
+            target_sec_idx = def_meta.get("section_index", 0)
+            target_sec_title = def_meta.get("section_title", "Lesson 1: Core Guidelines")
+            tutor_prompt = def_meta.get("tutor_prompt", f"Explain key requirements for {s.module_title}.")
+
+            # If user has attempt history with < 75%, prioritize the module's key weak competency
             if s.attempts_count > 0 and s.score_percentage < 75:
                 gap_prof = "Needs Attention" if s.score_percentage < 50 else "Developing"
+                # Pick specific competency if available in registry
+                keys = [k for k in mod_meta.keys() if k != "default"]
+                if keys:
+                    target_comp = keys[0]
+                    target_sec_idx = mod_meta[target_comp].get("section_index", 1)
+                    target_sec_title = mod_meta[target_comp].get("section_title", "Lesson 2")
+                    tutor_prompt = mod_meta[target_comp].get("tutor_prompt", tutor_prompt)
+
                 skill_gaps.append(
                     SkillGapItem(
                         module_id=s.module_id,
@@ -288,7 +395,12 @@ async def get_my_skill_progress(
                         target_threshold=75,
                         gap_percentage=gap_pct,
                         evidence=f"Scored {s.score_percentage}% ({s.best_score}/{s.total_questions}) on assessment — 75% required for certification (gap: {gap_pct}%).",
-                        recommended_action="Review lesson notes and retake assessment to clear the competency gap.",
+                        recommended_action=f"Review '{target_sec_title}' and practice with AI Tutor before retaking the assessment.",
+                        competency=target_comp,
+                        target_section_index=target_sec_idx,
+                        target_section_title=target_sec_title,
+                        deep_link=f"/module?id={s.module_id}&section={target_sec_idx}",
+                        tutor_prompt=tutor_prompt,
                     )
                 )
             elif s.lessons_completed and s.attempts_count == 0:
@@ -302,9 +414,15 @@ async def get_my_skill_progress(
                         gap_percentage=75,
                         evidence="Lesson curriculum completed, but mandatory certification assessment has not been attempted.",
                         recommended_action="Take the module assessment to achieve verified certification.",
+                        competency=target_comp,
+                        target_section_index=target_sec_idx,
+                        target_section_title=target_sec_title,
+                        deep_link=f"/module?id={s.module_id}&section={target_sec_idx}",
+                        tutor_prompt=tutor_prompt,
                     )
                 )
             elif not s.lessons_completed and s.status == "in_progress":
+                sec_to_resume = s.last_accessed_section
                 skill_gaps.append(
                     SkillGapItem(
                         module_id=s.module_id,
@@ -313,8 +431,13 @@ async def get_my_skill_progress(
                         current_score_pct=0,
                         target_threshold=75,
                         gap_percentage=75,
-                        evidence=f"Module started (Section {s.last_accessed_section + 1}), but official lesson reading is not completed.",
-                        recommended_action="Read official lesson guidelines and mark curriculum as completed.",
+                        evidence=f"Module started (Section {sec_to_resume + 1}), but official lesson reading is not completed.",
+                        recommended_action=f"Continue reading Section {sec_to_resume + 1} and complete the lesson guidelines.",
+                        competency=target_comp,
+                        target_section_index=sec_to_resume,
+                        target_section_title=f"Section {sec_to_resume + 1}",
+                        deep_link=f"/module?id={s.module_id}&section={sec_to_resume}",
+                        tutor_prompt=tutor_prompt,
                     )
                 )
             elif s.status == "not_started":
@@ -328,6 +451,11 @@ async def get_my_skill_progress(
                         gap_percentage=75,
                         evidence="Curriculum has not been started.",
                         recommended_action="Begin reading official module guidelines.",
+                        competency=target_comp,
+                        target_section_index=0,
+                        target_section_title="Lesson 1: Introduction",
+                        deep_link=f"/module?id={s.module_id}&section=0",
+                        tutor_prompt=tutor_prompt,
                     )
                 )
 
