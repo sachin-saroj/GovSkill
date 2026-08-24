@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
-import { QuizQuestion, Module, QuizSubmitResponse } from '@/types';
+import { QuizQuestion, Module, QuizSubmitResponse, AdaptiveMeta } from '@/types';
 import QuizCard from '@/components/quiz/QuizCard';
 import QuizNavigator from '@/components/quiz/QuizNavigator';
 import QuizSubmitModal from '@/components/quiz/QuizSubmitModal';
@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   Flag,
   BookOpen,
+  Sparkles,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
@@ -28,6 +29,7 @@ export const QuizPage: React.FC = () => {
 
   const [modules, setModules] = useState<Module[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [adaptiveMeta, setAdaptiveMeta] = useState<AdaptiveMeta | null>(null);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Record<string, boolean>>({});
   const [result, setResult] = useState<QuizSubmitResponse | null>(null);
@@ -44,10 +46,11 @@ export const QuizPage: React.FC = () => {
     setError(null);
     try {
       const [quizRes, modulesRes] = await Promise.all([
-        api.get<{ questions: QuizQuestion[] }>(`/quiz/${activeModuleId}`),
+        api.get<{ questions: QuizQuestion[]; adaptive_meta?: AdaptiveMeta }>(`/quiz/${activeModuleId}`),
         api.get<Module[]>('/modules').catch(() => ({ data: [] as Module[] })),
       ]);
       setQuestions(quizRes.data.questions);
+      setAdaptiveMeta(quizRes.data.adaptive_meta || null);
       if (Array.isArray(modulesRes.data) && modulesRes.data.length > 0) {
         setModules(modulesRes.data);
         const currentMod = modulesRes.data.find((m) => m.id === activeModuleId);
@@ -224,6 +227,40 @@ export const QuizPage: React.FC = () => {
           </div>
         )}
       </motion.div>
+
+      {/* Adaptive Assessment Focus Banner (Phase 3) */}
+      {adaptiveMeta?.is_adaptive && (
+        <motion.div
+          variants={fadeUpVariants}
+          className="p-4 rounded-2xl bg-gradient-to-r from-civic-50 via-indigo-50/60 to-white border border-civic-200/90 shadow-2xs space-y-2"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 font-bold text-civic-900 text-xs">
+              <Sparkles className="h-4 w-4 text-civic-700" />
+              <span>Adaptive Question Selection Active</span>
+            </div>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-civic-700 text-white tracking-wide uppercase">
+              Targeted Remediation
+            </span>
+          </div>
+          <p className="text-xs text-slate-700 font-medium leading-relaxed">
+            {adaptiveMeta.message}
+          </p>
+          {adaptiveMeta.focus_competencies.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[11px] font-bold text-slate-500">Priority Competencies:</span>
+              {adaptiveMeta.focus_competencies.map((comp) => (
+                <span
+                  key={comp}
+                  className="px-2.5 py-0.5 rounded-lg text-[11px] font-bold bg-white border border-civic-200 text-civic-800 shadow-2xs"
+                >
+                  {comp}
+                </span>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Instructions & Assessment Rules Bar */}
       <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2">

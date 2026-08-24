@@ -92,6 +92,21 @@ const mockCompetencyData: EmployeeSkillStatusResponse = {
       updated_at: '2026-08-20',
     },
   ],
+  competency_mastery: [
+    {
+      competency: 'Record Archival & Retention Standards',
+      module_id: 'records-202',
+      module_title: 'Digital Record Management',
+      mastery_score: 80,
+      mastery_level: 'Mastered',
+      attempts_evaluated: 1,
+      recent_trend: 'Improving',
+      target_section_index: 1,
+      target_section_title: 'Lesson 2: Record Retention & Destruction Policy',
+      deep_link: '/module?id=records-202&section=1',
+      tutor_prompt: 'Explain record archival standards.',
+    },
+  ],
   assessment_history: [
     {
       attempt_id: 'att-1',
@@ -162,19 +177,23 @@ describe('ProgressDashboardPage', () => {
     // 3. Skill Gaps Card with Targeted Remediation Actions
     expect(screen.getByText('Identified Skill Gaps & Action Items')).toBeInTheDocument();
     expect(screen.getByText(/mandatory certification assessment has not been attempted/i)).toBeInTheDocument();
-    expect(screen.getByText('Record Archival & Retention Standards')).toBeInTheDocument();
+    expect(screen.getAllByText('Record Archival & Retention Standards').length).toBeGreaterThan(0);
     expect(screen.getByText('Ask AI Tutor')).toBeInTheDocument();
-    expect(screen.getByText('Review Section')).toBeInTheDocument();
+    expect(screen.getAllByText('Review Section').length).toBeGreaterThan(0);
 
-    // 4. Core Skill Cards
+    // 4. Competency Mastery Breakdown (Phase 3)
+    expect(screen.getByText('Competency Mastery Breakdown')).toBeInTheDocument();
+    expect(screen.getByText('Practice in Copilot')).toBeInTheDocument();
+
+    // 5. Core Skill Cards
     expect(screen.getAllByText('Cybersecurity Basics').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Digital Record Management').length).toBeGreaterThan(0);
 
-    // 5. Assessment History Table
+    // 6. Assessment History Table
     expect(screen.getByText('Assessment Attempt History')).toBeInTheDocument();
     expect(screen.getByText(/Passed/i)).toBeInTheDocument();
 
-    // 6. Recent Learning Activity
+    // 7. Recent Learning Activity
     expect(screen.getByText('Learning & Assessment Audit Trail')).toBeInTheDocument();
     expect(screen.getByText('Certification Standard Achieved')).toBeInTheDocument();
 

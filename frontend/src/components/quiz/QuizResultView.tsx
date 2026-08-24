@@ -147,12 +147,14 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
                       </span>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                          item.passed
+                          item.mastery_level === 'Mastered' || item.passed
                             ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            : item.mastery_level === 'Operational'
+                            ? 'bg-blue-100 text-blue-800 border-blue-300'
                             : 'bg-amber-100 text-amber-800 border-amber-300'
                         }`}
                       >
-                        {item.passed ? 'Mastered' : 'Needs Review'}
+                        {item.mastery_level || (item.passed ? 'Mastered' : 'Needs Review')}
                       </span>
                     </div>
                   </div>
@@ -160,7 +162,11 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
                   <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        item.passed ? 'bg-emerald-600' : 'bg-amber-500'
+                        item.mastery_level === 'Mastered' || item.passed
+                          ? 'bg-emerald-600'
+                          : item.mastery_level === 'Operational'
+                          ? 'bg-blue-600'
+                          : 'bg-amber-500'
                       }`}
                       style={{ width: `${item.percentage}%` }}
                     />

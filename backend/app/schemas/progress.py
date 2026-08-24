@@ -82,6 +82,20 @@ class AssessmentHistoryItem(BaseModel):
     submitted_at: str
 
 
+class CompetencyMasteryItem(BaseModel):
+    competency: str
+    module_id: uuid.UUID
+    module_title: str
+    mastery_score: int  # 0 to 100 percentage
+    mastery_level: str  # "Unknown", "Learning", "Developing", "Operational", "Mastered"
+    attempts_evaluated: int = 0
+    recent_trend: str = "Unassessed"  # "Improving", "Stable", "Needs Attention", "Unassessed"
+    target_section_index: int = 0
+    target_section_title: str | None = None
+    deep_link: str = ""
+    tutor_prompt: str = ""
+
+
 class LearningActivityItem(BaseModel):
     activity_type: str  # "certification", "quiz_attempt", "quiz_improved", "lesson_completed", "lesson_started"
     title: str
@@ -97,9 +111,19 @@ class EmployeeSkillStatusResponse(BaseModel):
     skills: list[EmployeeSkillItem]
     summary: CompetencySummary
     skill_gaps: list[SkillGapItem] = []
+    competency_mastery: list[CompetencyMasteryItem] = []
     recommended_action: NextActionRecommendation
     assessment_history: list[AssessmentHistoryItem] = []
     recent_activity: list[LearningActivityItem] = []
+
+
+class CompetencyHealthItem(BaseModel):
+    competency: str
+    module_title: str
+    average_mastery_pct: int
+    employees_mastered: int
+    employees_developing: int
+    status: str  # "Healthy", "Needs Attention", "Critical"
 
 
 class AdminSkillOverviewResponse(BaseModel):
@@ -109,3 +133,5 @@ class AdminSkillOverviewResponse(BaseModel):
     total_modules: int
     total_quiz_attempts: int
     average_quiz_score_pct: int
+    lowest_performing_competency: str | None = None
+    competency_health: list[CompetencyHealthItem] = []

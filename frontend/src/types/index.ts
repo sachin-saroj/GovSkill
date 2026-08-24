@@ -49,6 +49,18 @@ export interface CompetencyScoreItem {
   total: number;
   percentage: number;
   passed: boolean;
+  mastery_level?: 'Mastered' | 'Operational' | 'Developing' | string;
+}
+
+export interface AdaptiveMeta {
+  is_adaptive: boolean;
+  focus_competencies: string[];
+  message: string;
+}
+
+export interface QuizQuestionsResponse {
+  questions: QuizQuestion[];
+  adaptive_meta?: AdaptiveMeta | null;
 }
 
 export interface QuizSubmitResponse {
@@ -99,6 +111,20 @@ export interface CompetencySummary {
   average_assessment_score?: number;
   readiness_criteria?: string[];
   readiness_explanation?: string;
+}
+
+export interface CompetencyMasteryItem {
+  competency: string;
+  module_id: string;
+  module_title: string;
+  mastery_score: number;
+  mastery_level: 'Unknown' | 'Learning' | 'Developing' | 'Operational' | 'Mastered' | string;
+  attempts_evaluated: number;
+  recent_trend: 'Improving' | 'Stable' | 'Needs Attention' | 'Unassessed' | 'Baseline Set' | string;
+  target_section_index: number;
+  target_section_title?: string | null;
+  deep_link: string;
+  tutor_prompt: string;
 }
 
 export interface SkillGapItem {
@@ -155,6 +181,7 @@ export interface EmployeeSkillStatusResponse {
   skills: EmployeeSkillItem[];
   summary: CompetencySummary;
   skill_gaps: SkillGapItem[];
+  competency_mastery?: CompetencyMasteryItem[];
   recommended_action: NextActionRecommendation;
   assessment_history: AssessmentHistoryItem[];
   recent_activity: LearningActivityItem[];
@@ -181,6 +208,15 @@ export interface DocumentUploadResponse {
   recommended_next_step?: string;
 }
 
+export interface CompetencyHealthItem {
+  competency: string;
+  module_title: string;
+  average_mastery_pct: number;
+  employees_mastered: number;
+  employees_developing: number;
+  status: 'Healthy' | 'Needs Attention' | 'Critical' | string;
+}
+
 export interface AdminSkillOverviewResponse {
   total_employees: number;
   total_certifications: number;
@@ -188,6 +224,8 @@ export interface AdminSkillOverviewResponse {
   total_modules: number;
   total_quiz_attempts: number;
   average_quiz_score_pct: number;
+  lowest_performing_competency?: string | null;
+  competency_health?: CompetencyHealthItem[];
 }
 
 export interface TutorAskResponse {

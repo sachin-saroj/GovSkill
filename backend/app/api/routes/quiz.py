@@ -11,6 +11,7 @@ from app.models.progress import UserProgress
 from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
 from app.schemas.quiz import (
+    AdaptiveMeta,
     CompetencyScoreItem,
     QuestionOut,
     QuizQuestionsResponse,
@@ -143,22 +144,41 @@ SEED_QUESTIONS = [
 ]
 
 
-async def seed_quiz_questions_if_needed(db: AsyncSession, module_id: uuid.UUID):
-    result = await db.execute(select(QuizQuestion).where(QuizQuestion.module_id == module_id))
-    existing = result.scalars().all()
-    if not existing:
-        for q_data in SEED_QUESTIONS:
-            if q_data.get("module_id") == module_id:
+async def seed_quiz_questions_if_needed(db: AsyncSession, module_id: uuid.UUID | None = None) -> None:
+    # Check if any questions exist for this specific module
+    if module_id is not None:
+        result = await db.execute(
+            select(func.count(QuizQuestion.id)).where(QuizQuestion.module_id == module_id)
+        )
+        count = result.scalar()
+        if count == 0:
+            questions_to_seed = [q for q in SEED_QUESTIONS if q["module_id"] == module_id]
+            for q_data in questions_to_seed:
                 q = QuizQuestion(
                     id=q_data["id"],
-                    module_id=module_id,
+                    module_id=q_data["module_id"],
                     question=q_data["question"],
                     options=q_data["options"],
                     correct_option_index=q_data["correct_option_index"],
                     competency=q_data.get("competency"),
                 )
                 db.add(q)
-        await db.commit()
+            await db.commit()
+    else:
+        result = await db.execute(select(func.count(QuizQuestion.id)))
+        count = result.scalar()
+        if count == 0:
+            for q_data in SEED_QUESTIONS:
+                q = QuizQuestion(
+                    id=q_data["id"],
+                    module_id=q_data["module_id"],
+                    question=q_data["question"],
+                    options=q_data["options"],
+                    correct_option_index=q_data["correct_option_index"],
+                    competency=q_data.get("competency"),
+                )
+                db.add(q)
+            await db.commit()
 
 
 def _resolve_module_id(module_id: str, default_mod_id: uuid.UUID) -> uuid.UUID:
@@ -176,6 +196,7 @@ def _resolve_module_id(module_id: str, default_mod_id: uuid.UUID) -> uuid.UUID:
 @router.get("/{module_id}", response_model=QuizQuestionsResponse)
 async def get_quiz_questions(
     module_id: str,
+    mode: str = "standard",
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -193,7 +214,52 @@ async def get_quiz_questions(
     await seed_quiz_questions_if_needed(db, mod_uuid)
 
     result = await db.execute(select(QuizQuestion).where(QuizQuestion.module_id == mod_uuid))
-    questions = result.scalars().all()
+    questions = list(result.scalars().all())
+
+    # Check previous attempts for adaptive question prioritization
+    att_res = await db.execute(
+        select(QuizAttempt)
+        .where(QuizAttempt.user_id == current_user.id, QuizAttempt.module_id == mod_uuid)
+        .order_by(QuizAttempt.submitted_at.desc())
+    )
+    previous_attempts = att_res.scalars().all()
+
+    adaptive_meta: AdaptiveMeta | None = None
+    if questions:
+        latest_att = previous_attempts[0] if previous_attempts else None
+        is_adaptive_requested = mode.lower() == "adaptive"
+        has_weak_previous = (
+            latest_att is not None
+            and (round((latest_att.score / latest_att.total) * 100) if latest_att.total > 0 else 0) < 75
+        )
+
+        if is_adaptive_requested or has_weak_previous:
+            # Group distinct competencies in this module
+            mod_competencies = list(
+                dict.fromkeys(q.competency or "Core Government Procedures" for q in questions)
+            )
+            # Prioritize first distinct competencies as targeted focus
+            focus_comps = mod_competencies[: max(1, len(mod_competencies) // 2)]
+
+            prioritized = [
+                q for q in questions if (q.competency or "Core Government Procedures") in focus_comps
+            ]
+            remaining = [
+                q for q in questions if (q.competency or "Core Government Procedures") not in focus_comps
+            ]
+            questions = prioritized + remaining
+
+            adaptive_meta = AdaptiveMeta(
+                is_adaptive=True,
+                focus_competencies=focus_comps,
+                message=f"Assessment adapted to prioritize focus on: {', '.join(focus_comps)}",
+            )
+        else:
+            adaptive_meta = AdaptiveMeta(
+                is_adaptive=False,
+                focus_competencies=[],
+                message="Standard assessment sequence",
+            )
 
     # Never return correct_option_index to client!
     questions_out = [
@@ -205,7 +271,7 @@ async def get_quiz_questions(
         )
         for q in questions
     ]
-    return QuizQuestionsResponse(questions=questions_out)
+    return QuizQuestionsResponse(questions=questions_out, adaptive_meta=adaptive_meta)
 
 
 @router.post("/{module_id}/submit", response_model=QuizSubmitResponse)
@@ -275,6 +341,14 @@ async def submit_quiz(
 
         comp_pct = round((comp_score / comp_total) * 100) if comp_total > 0 else 0
         comp_passed = comp_pct >= 75
+
+        if comp_pct >= 75:
+            mastery_lvl = "Mastered"
+        elif comp_pct >= 50:
+            mastery_lvl = "Operational"
+        else:
+            mastery_lvl = "Developing"
+
         competency_breakdown.append(
             CompetencyScoreItem(
                 competency=comp_tag,
@@ -282,6 +356,7 @@ async def submit_quiz(
                 total=comp_total,
                 percentage=comp_pct,
                 passed=comp_passed,
+                mastery_level=mastery_lvl,
             )
         )
         if comp_passed:

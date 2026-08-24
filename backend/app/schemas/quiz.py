@@ -11,8 +11,15 @@ class QuestionOut(BaseModel):
     competency: str | None = None
 
 
+class AdaptiveMeta(BaseModel):
+    is_adaptive: bool = False
+    focus_competencies: list[str] = []
+    message: str = ""
+
+
 class QuizQuestionsResponse(BaseModel):
     questions: list[QuestionOut]
+    adaptive_meta: AdaptiveMeta | None = None
 
 
 class QuizAnswerSubmission(BaseModel):
@@ -30,6 +37,7 @@ class CompetencyScoreItem(BaseModel):
     total: int
     percentage: int
     passed: bool
+    mastery_level: str = "Developing"  # "Mastered", "Operational", "Developing"
 
 
 class QuizSubmitResponse(BaseModel):

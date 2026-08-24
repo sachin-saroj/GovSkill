@@ -2,6 +2,7 @@ import uuid
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import StaticPool
 
 from app.core.security import get_password_hash
 from app.db.base import Base
@@ -368,4 +369,182 @@ def test_competency_mapping_integrity():
         assert comp is not None and len(comp.strip()) > 0, f"Question {q['id']} must have a valid competency."
         mod_id = q["module_id"]
         assert mod_id in mod_sections, f"Question {q['id']} references unknown module {mod_id}."
+
+
+@pytest.mark.asyncio
+async def test_competency_mastery_recency_weighting():
+    """
+    Phase 3: Verify that competency mastery applies 70/30 recency weighting
+    and accurately transitions through mastery levels (Unknown -> Operational -> Mastered).
+    """
+    engine_test = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    TestingSessionLocal = async_sessionmaker(
+        bind=engine_test, class_=AsyncSession, expire_on_commit=False
+    )
+
+    async def override_get_db():
+        async with TestingSessionLocal() as session:
+            yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            await client.post(
+                "/api/auth/register",
+                json={"email": "mastery_emp@govskill.local", "password": "Password123!"},
+            )
+            login_res = await client.post(
+                "/api/auth/login",
+                json={"email": "mastery_emp@govskill.local", "password": "Password123!"},
+            )
+            token = login_res.json()["access_token"]
+            auth_headers = {"Authorization": f"Bearer {token}"}
+
+            # 1. Initial State (no attempts) -> Competency Mastery has Unknown or Learning
+            init_res = await client.get("/api/progress/my-skills", headers=auth_headers)
+            assert init_res.status_code == 200
+            init_data = init_res.json()
+            assert "competency_mastery" in init_data
+            assert len(init_data["competency_mastery"]) > 0
+            first_comp = init_data["competency_mastery"][0]
+            assert first_comp["mastery_level"] in ["Unknown", "Learning"]
+            assert first_comp["mastery_score"] in [0, 15, 30]
+
+            # 2. Complete lessons for Module 1
+            mod_1_id = "11111111-1111-1111-1111-111111111111"
+            await client.post(f"/api/progress/modules/{mod_1_id}/complete-lessons", headers=auth_headers)
+
+            # 3. Attempt 1: 50% score (2/4 correct)
+            quiz_res = await client.get(f"/api/quiz/{mod_1_id}", headers=auth_headers)
+            questions = quiz_res.json()["questions"]
+            half_answers = [
+                {"question_id": questions[0]["id"], "selected_option_index": 1},
+                {"question_id": questions[1]["id"], "selected_option_index": 1},
+                {"question_id": questions[2]["id"], "selected_option_index": 99},
+                {"question_id": questions[3]["id"], "selected_option_index": 99},
+            ]
+            sub1 = await client.post(
+                f"/api/quiz/{mod_1_id}/submit",
+                json={"answers": half_answers},
+                headers=auth_headers,
+            )
+            assert sub1.status_code == 200
+            sub1_data = sub1.json()
+            assert sub1_data["score"] == 2
+            # Verify submit returns mastery_level on competency items
+            assert sub1_data["competency_breakdown"][0]["mastery_level"] in ["Mastered", "Operational", "Developing"]
+
+            p1_res = await client.get("/api/progress/my-skills", headers=auth_headers)
+            p1_comps = [c for c in p1_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id]
+            assert p1_comps[0]["attempts_evaluated"] == 1
+            assert p1_comps[0]["mastery_score"] == 50
+            assert p1_comps[0]["mastery_level"] == "Operational"
+            assert p1_comps[0]["recent_trend"] == "Baseline Set"
+
+            # 4. Attempt 2: 100% score (4/4 correct)
+            full_answers = [
+                {"question_id": questions[0]["id"], "selected_option_index": 1},
+                {"question_id": questions[1]["id"], "selected_option_index": 1},
+                {"question_id": questions[2]["id"], "selected_option_index": 1},
+                {"question_id": questions[3]["id"], "selected_option_index": 0},
+            ]
+            sub2 = await client.post(
+                f"/api/quiz/{mod_1_id}/submit",
+                json={"answers": full_answers},
+                headers=auth_headers,
+            )
+            assert sub2.status_code == 200
+
+            # 5. Check recency weighting: 0.7 * 100 + 0.3 * 50 = 70 + 15 = 85%
+            p2_res = await client.get("/api/progress/my-skills", headers=auth_headers)
+            p2_comps = [c for c in p2_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id]
+            assert p2_comps[0]["attempts_evaluated"] == 2
+            assert p2_comps[0]["mastery_score"] == 85
+            assert p2_comps[0]["mastery_level"] == "Mastered"
+            assert p2_comps[0]["recent_trend"] == "Improving"
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_adaptive_quiz_question_ordering():
+    """
+    Phase 3: Verify adaptive quiz question prioritization when an employee has weak competencies.
+    """
+    engine_test = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    TestingSessionLocal = async_sessionmaker(
+        bind=engine_test, class_=AsyncSession, expire_on_commit=False
+    )
+
+    async def override_get_db():
+        async with TestingSessionLocal() as session:
+            yield session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            await client.post(
+                "/api/auth/register",
+                json={"email": "adaptive_emp@govskill.local", "password": "Password123!"},
+            )
+            login_res = await client.post(
+                "/api/auth/login",
+                json={"email": "adaptive_emp@govskill.local", "password": "Password123!"},
+            )
+            token = login_res.json()["access_token"]
+            auth_headers = {"Authorization": f"Bearer {token}"}
+
+            mod_1_id = "11111111-1111-1111-1111-111111111111"
+
+            # 1. Standard mode without attempts
+            q_std = await client.get(f"/api/quiz/{mod_1_id}", headers=auth_headers)
+            assert q_std.status_code == 200
+            std_data = q_std.json()
+            assert std_data["adaptive_meta"] is not None
+            assert std_data["adaptive_meta"]["is_adaptive"] is False
+
+            # 2. Submit a weak attempt (<75%)
+            questions = std_data["questions"]
+            wrong_answers = [{"question_id": q["id"], "selected_option_index": 99} for q in questions]
+            await client.post(
+                f"/api/quiz/{mod_1_id}/submit",
+                json={"answers": wrong_answers},
+                headers=auth_headers,
+            )
+
+            # 3. Next quiz request automatically prioritizes focus competencies
+            q_adap = await client.get(f"/api/quiz/{mod_1_id}", headers=auth_headers)
+            assert q_adap.status_code == 200
+            adap_data = q_adap.json()
+            assert adap_data["adaptive_meta"]["is_adaptive"] is True
+            assert len(adap_data["adaptive_meta"]["focus_competencies"]) > 0
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()
+
 

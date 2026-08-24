@@ -8,6 +8,7 @@ import CompetencyOverview from '@/components/progress/CompetencyOverview';
 import RecommendedActionCard from '@/components/progress/RecommendedActionCard';
 import SkillModuleCard from '@/components/progress/SkillModuleCard';
 import SkillGapsCard from '@/components/progress/SkillGapsCard';
+import CompetencyMasteryCard from '@/components/progress/CompetencyMasteryCard';
 import AssessmentHistoryTable from '@/components/progress/AssessmentHistoryTable';
 import LearningActivityTimeline from '@/components/progress/LearningActivityTimeline';
 import { EmptyState, ErrorAlert } from '@/components/ui';
@@ -104,7 +105,14 @@ export const ProgressDashboardPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* 4. Core Skill Modules Breakdown */}
+      {/* 4. Competency Mastery Breakdown (Phase 3) */}
+      {data?.competency_mastery && data.competency_mastery.length > 0 && (
+        <motion.div variants={fadeUpVariants}>
+          <CompetencyMasteryCard masteryList={data.competency_mastery} />
+        </motion.div>
+      )}
+
+      {/* 5. Core Skill Modules Breakdown */}
       <motion.div variants={fadeUpVariants} className="space-y-4 pt-2">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">

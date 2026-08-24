@@ -42,7 +42,13 @@ Last Updated:
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets), domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`), and endpoint rate limiters.
 - **User Password Management**: Admin password reset (`POST /api/admin/users/{user_id}/reset-password`) and self-service password change for authenticated users (`POST /api/auth/change-password`) requiring current password verification.
 - **Admin Skills & Analytics Overview**: Administrative endpoint (`GET /api/progress/admin/skills-overview`) and Admin Dashboard KPI cards computing workforce enrollment, active training modules, total quiz evaluations, average assessment scores, certifications earned, and completion rates.
-- **Automated Testing Suite**: 27 Pytest backend test cases and 44 Vitest frontend test cases across 10 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Targeted Competency Remediation, Multi-Module AI Tutor Routing & Remediation Mode, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **Phase 3 Adaptive Assessment & Mastery Engine**:
+  - **70/30 Recency-Weighted Competency Mastery Engine (`backend/app/api/routes/progress.py`)**: Computes granular mastery scores and trends (`Improving`, `Needs Attention`, `Stable`, `Baseline Set`, `Unassessed`) with discrete mastery states (`Mastered`, `Operational`, `Developing`, `Learning`, `Unknown`) per competency across multi-attempt evaluations.
+  - **Adaptive Question Prioritization (`backend/app/api/routes/quiz.py`)**: Dynamically analyzes previous attempts and prioritizes unmastered focus competencies first when serving quiz questions (`adaptive_meta`), without exposing server-side correct answers.
+  - **Competency Mastery Breakdown Card (`CompetencyMasteryCard.tsx`)**: Granular competency visualization featuring 75% target threshold indicator lines, recency trend badges, quick filtering (`All`, `Priority`, `Mastered`), and instant targeted action triggers (`Review Section X`, `Practice with Copilot`).
+  - **Adaptive Assessment Focus Banner (`QuizPage.tsx`)**: Active personalized remediation banner notifying employees of prioritized focus areas during assessment retakes.
+  - **Workforce Competency Health Analytics (`AdminDashboardPage.tsx`, `/progress/admin/skills-overview`)**: Administrative telemetry aggregating average competency mastery percentages, healthy vs developing employee distributions, and identification of the lowest-performing workforce competency for targeted training intervention.
+- **Automated Testing Suite**: 30 Pytest backend test cases and 45 Vitest frontend test cases across 10 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Targeted Competency Remediation, Multi-Module AI Tutor Routing & Remediation Mode, Public Citizen Document Lookup, 70/30 Recency-Weighted Competency Mastery, Adaptive Quiz Question Ordering, and Employee/Citizen journeys.
 - **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend tests and frontend build on push/PR.
 
 ## Partially Working
@@ -59,5 +65,5 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (27/27 Pytest, 44/44 Vitest) are fully operational.
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (30/30 Pytest, 45/45 Vitest) are fully operational.
 

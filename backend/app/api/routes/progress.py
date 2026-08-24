@@ -13,6 +13,8 @@ from app.models.user import User
 from app.schemas.progress import (
     AdminSkillOverviewResponse,
     AssessmentHistoryItem,
+    CompetencyHealthItem,
+    CompetencyMasteryItem,
     CompetencySummary,
     EmployeeSkillItem,
     EmployeeSkillStatusResponse,
@@ -684,6 +686,81 @@ async def get_my_skill_progress(
     raw_activities.sort(key=lambda x: x["dt"], reverse=True)
     recent_activity = [a["item"] for a in raw_activities[:15]]
 
+    # Calculate granular Competency Mastery with Recency Weighting (P3-M1)
+    competency_mastery: list[CompetencyMasteryItem] = []
+    for m in modules:
+        mod_meta_dict = MODULE_COMPETENCY_SECTION_MAP.get(m.id, {})
+        mod_atts = mod_attempts_history.get(m.id, [])  # ascending order
+        attempts_count = len(mod_atts)
+        prog = progress_map.get(m.id)
+
+        for comp_name, comp_meta in mod_meta_dict.items():
+            if comp_name == "default":
+                continue
+
+            sec_idx = comp_meta.get("section_index", 0)
+            sec_title = comp_meta.get("section_title")
+            tutor_prompt = comp_meta.get("tutor_prompt", f"Help me understand {comp_name}")
+
+            if attempts_count == 0:
+                if prog and prog.lessons_completed:
+                    m_score = 30
+                    m_level = "Learning"
+                elif prog and (prog.status == "in_progress" or prog.last_accessed_section > 0):
+                    m_score = 15
+                    m_level = "Learning"
+                else:
+                    m_score = 0
+                    m_level = "Unknown"
+                trend = "Unassessed"
+            elif attempts_count == 1:
+                latest_pct = Math_pct(mod_atts[-1].score, mod_atts[-1].total)
+                m_score = latest_pct
+                trend = "Baseline Set"
+                if m_score >= 75:
+                    m_level = "Mastered"
+                elif m_score >= 50:
+                    m_level = "Operational"
+                elif m_score > 0:
+                    m_level = "Developing"
+                else:
+                    m_level = "Learning"
+            else:  # attempts_count >= 2
+                latest_pct = Math_pct(mod_atts[-1].score, mod_atts[-1].total)
+                prev_pct = Math_pct(mod_atts[-2].score, mod_atts[-2].total)
+                m_score = round(0.7 * latest_pct + 0.3 * prev_pct)
+                if latest_pct > prev_pct:
+                    trend = "Improving"
+                elif latest_pct == prev_pct:
+                    trend = "Stable"
+                else:
+                    trend = "Needs Attention"
+
+                if m_score >= 75:
+                    m_level = "Mastered"
+                elif m_score >= 50:
+                    m_level = "Operational"
+                elif m_score > 0:
+                    m_level = "Developing"
+                else:
+                    m_level = "Learning"
+
+            competency_mastery.append(
+                CompetencyMasteryItem(
+                    competency=comp_name,
+                    module_id=m.id,
+                    module_title=m.title,
+                    mastery_score=m_score,
+                    mastery_level=m_level,
+                    attempts_evaluated=attempts_count,
+                    recent_trend=trend,
+                    target_section_index=sec_idx,
+                    target_section_title=sec_title,
+                    deep_link=f"/module?id={m.id}&section={sec_idx}",
+                    tutor_prompt=tutor_prompt,
+                )
+            )
+
     return EmployeeSkillStatusResponse(
         overall_skill_score=overall_score,
         total_modules=total_mods,
@@ -691,6 +768,7 @@ async def get_my_skill_progress(
         skills=skill_items,
         summary=summary,
         skill_gaps=skill_gaps,
+        competency_mastery=competency_mastery,
         recommended_action=recommended_action,
         assessment_history=assessment_history,
         recent_activity=recent_activity,
@@ -936,6 +1014,76 @@ async def get_admin_skills_overview(
     )
     rate = round((total_cert / max_possible_certs) * 100) if max_possible_certs > 0 else 0
 
+    # Calculate Workforce Competency Health & lowest performing competency (P3-M5)
+    all_attempts_res = await db.execute(
+        select(QuizAttempt.module_id, QuizAttempt.score, QuizAttempt.total)
+    )
+    all_att_rows = all_attempts_res.all()
+    mod_att_pcts: dict[uuid.UUID, list[float]] = {}
+    for mod_id_val, score, tot in all_att_rows:
+        if tot > 0:
+            mod_att_pcts.setdefault(mod_id_val, []).append((score / tot) * 100.0)
+
+    mod_lookup_res = await db.execute(select(Module))
+    all_mods_dict = {m.id: m.title for m in mod_lookup_res.scalars().all()}
+
+    ADMIN_COMPETENCY_MAP: dict[uuid.UUID, list[str]] = {
+        uuid.UUID("11111111-1111-1111-1111-111111111111"): [
+            "Document Formatting & Standards",
+            "Verification Rules & Expiry Validation",
+            "Mandatory Data Integrity",
+        ],
+        uuid.UUID("11111111-1111-1111-1111-111111111112"): [
+            "Workflow Routing & Sign-off",
+            "SLA Compliance & Escalation",
+        ],
+        uuid.UUID("11111111-1111-1111-1111-111111111113"): [
+            "Phishing Prevention & Incident Response",
+            "PII Protection & Data Privacy",
+        ],
+        uuid.UUID("11111111-1111-1111-1111-111111111114"): [
+            "Archival Retention Policies",
+            "System Audit Trail & Compliance",
+        ],
+    }
+
+    competency_health: list[CompetencyHealthItem] = []
+    lowest_performing_competency: str | None = None
+    lowest_avg: float = 101.0
+
+    for m_id, comp_names in ADMIN_COMPETENCY_MAP.items():
+        m_title = all_mods_dict.get(m_id, "Digital Government Module")
+        pcts = mod_att_pcts.get(m_id, [])
+        if pcts:
+            comp_avg = round(sum(pcts) / len(pcts))
+            mastered_c = sum(1 for p in pcts if p >= 75)
+            dev_c = sum(1 for p in pcts if p < 75)
+        else:
+            comp_avg = 0
+            mastered_c = 0
+            dev_c = 0
+
+        status_str = "Healthy" if comp_avg >= 75 else ("Needs Attention" if comp_avg >= 50 else "Critical")
+
+        for comp_name in comp_names:
+            if comp_avg < lowest_avg:
+                lowest_avg = comp_avg
+                lowest_performing_competency = comp_name
+
+            competency_health.append(
+                CompetencyHealthItem(
+                    competency=comp_name,
+                    module_title=m_title,
+                    average_mastery_pct=comp_avg,
+                    employees_mastered=mastered_c,
+                    employees_developing=dev_c,
+                    status=status_str,
+                )
+            )
+
+    if lowest_performing_competency is None and competency_health:
+        lowest_performing_competency = competency_health[0].competency
+
     return AdminSkillOverviewResponse(
         total_employees=total_emp,
         total_certifications=total_cert,
@@ -943,4 +1091,6 @@ async def get_admin_skills_overview(
         total_modules=total_modules,
         total_quiz_attempts=total_attempts,
         average_quiz_score_pct=avg_score_pct,
+        lowest_performing_competency=lowest_performing_competency,
+        competency_health=competency_health,
     )

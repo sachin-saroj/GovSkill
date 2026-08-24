@@ -162,4 +162,29 @@ describe('QuizPage & Competency Assessment Engine', () => {
     expect(screen.getByText(/Question Navigator:/i)).toBeInTheDocument();
     expect(screen.getByText('2 Unanswered')).toBeInTheDocument();
   });
+
+  it('renders adaptive question selection banner when assessment is tailored', async () => {
+    mockedGet.mockImplementation((url) => {
+      if (url.includes('/modules')) {
+        return Promise.resolve({ data: mockModules });
+      }
+      return Promise.resolve({
+        data: {
+          questions,
+          adaptive_meta: {
+            is_adaptive: true,
+            focus_competencies: ['Document Formatting & Standards'],
+            message: 'Assessment adapted to prioritize focus on: Document Formatting & Standards',
+          },
+        },
+      });
+    });
+
+    render(<QuizPage />);
+
+    expect(await screen.findByText('Adaptive Question Selection Active')).toBeInTheDocument();
+    expect(screen.getByText(/Assessment adapted to prioritize focus on/i)).toBeInTheDocument();
+    expect(screen.getAllByText('Document Formatting & Standards').length).toBeGreaterThan(0);
+  });
 });
+

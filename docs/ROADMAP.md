@@ -12,11 +12,7 @@ This roadmap outlines recommended future work based directly on current implemen
 
 ## Medium-Term Priorities (Feature Enhancements)
 
-1. **User Profile & Account Management**:
-   - Add user password change endpoints and administrator user management options.
-
-2. **Advanced Analytics Dashboard**:
-   - Build a visual dashboard for admins to track system-wide employee skill progress and overall module completion rates.
+- **None**: User profile & password management, Advanced Competency Intelligence (Phase 1), Targeted Learning & AI Remediation (Phase 2), and Adaptive Assessment & Mastery Engine (Phase 3) have all been completed and verified.
 
 ---
 

@@ -21,6 +21,7 @@ import {
   Check,
   Sparkles,
   Loader2,
+  ShieldCheck,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants, scaleInVariants } from '@/lib/motion';
 
@@ -381,6 +382,70 @@ export const AdminDashboardPage: React.FC = () => {
           badgeVariant="saffron"
         />
       </motion.div>
+
+      {/* Workforce Competency Health & Intervention Priority (Phase 3) */}
+      {skillsOverview?.competency_health && skillsOverview.competency_health.length > 0 && (
+        <motion.div variants={fadeUpVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-civic-700" />
+                <h2 className="text-base font-bold text-slate-900">
+                  Workforce Competency Health & Intervention Priority
+                </h2>
+              </div>
+              <p className="text-xs text-slate-500 font-medium">
+                Aggregated mastery telemetry across all local government employee assessment attempts
+              </p>
+            </div>
+            {skillsOverview.lowest_performing_competency && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-900 shrink-0">
+                <Sparkles className="h-3.5 w-3.5 text-amber-700" />
+                <span>Priority Focus: {skillsOverview.lowest_performing_competency}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider bg-slate-50/50">
+                  <th className="py-2.5 px-3">Competency</th>
+                  <th className="py-2.5 px-3">Module</th>
+                  <th className="py-2.5 px-3">Avg Mastery</th>
+                  <th className="py-2.5 px-3 text-center">Mastered (≥75%)</th>
+                  <th className="py-2.5 px-3 text-center">Developing (&lt;75%)</th>
+                  <th className="py-2.5 px-3 text-right">Health Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                {skillsOverview.competency_health.map((item) => (
+                  <tr key={item.competency} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-2.5 px-3 font-bold text-slate-900">{item.competency}</td>
+                    <td className="py-2.5 px-3 text-slate-500">{item.module_title}</td>
+                    <td className="py-2.5 px-3 font-mono font-bold text-slate-900">{item.average_mastery_pct}%</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">{item.employees_mastered}</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-amber-700">{item.employees_developing}</td>
+                    <td className="py-2.5 px-3 text-right">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                          item.status === 'Healthy'
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            : item.status === 'Needs Attention'
+                            ? 'bg-amber-100 text-amber-800 border-amber-300'
+                            : 'bg-rose-100 text-rose-800 border-rose-300'
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+      )}
 
 
 
