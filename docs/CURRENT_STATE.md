@@ -19,6 +19,12 @@ Last Updated:
   - **Comprehensive Assessment History (`AssessmentHistoryTable.tsx`)**: Chronological audit log with attempt numbering, pass/fail status, and attempt-over-attempt growth deltas.
   - **Learning & Assessment Audit Trail (`LearningActivityTimeline.tsx`)**: Chronological timeline collating real curriculum initiation, lesson completion, quiz attempt, score improvement, and certification events.
   - **Scoring Transparency Explainer (`CompetencyOverview.tsx`)**: Interactive modal explaining the 75% threshold, tier standards, and deterministic calculation rules.
+- **Phase 2 Personalized Learning & Assessment Intelligence**:
+  - **Competency & Topic Evidence Model (`backend/app/api/routes/progress.py`)**: Deterministic registry mapping quiz competencies to exact lesson sections (`MODULE_COMPETENCY_SECTION_MAP`), section titles, deep-links, and pre-formulated AI Tutor prompts.
+  - **Targeted Remediation Pathways (`SkillGapsCard.tsx`)**: Direct "Review Section X", "Ask AI Tutor (Remediation)", and "Retake Assessment" action paths on Skill Gap cards.
+  - **Lesson Deep-Linking (`ModulePage.tsx`)**: Support for `?section=X` URL search parameters to auto-select and focus target lesson sections.
+  - **Grounded AI Tutor Remediation Mode (`TutorChatPage.tsx`, `ai_service.py`)**: Dedicated `remediation` mode delivering structured 4-part guidance (Rule Summary, Workplace Scenario, Red Flags, Practice Scenario) with active remediation context banner and prompt starters.
+  - **Post-Quiz Competency Feedback & Remediation (`QuizResultView.tsx`)**: Contextual "Ask AI Tutor" and "Review Lesson" buttons rendered directly next to failed competencies in the assessment result breakdown.
 - **User Authentication**: Role-enforced JWT registration (forces `employee` on public signup), login, admin creation (`/auth/create-admin` & `app/db/seed_admin.py`), and role-based route protection (`employee` vs `admin`).
 - **File Upload Security Pipeline**: Max 5 MB size validation, extension whitelist (`.jpg`, `.jpeg`, `.png`, `.pdf`, `.txt`), MIME type checks, and UUID filename assignment.
 - **PDF Document OCR Processing**: PyMuPDF (`fitz`) rendering pipeline for direct text extraction and scanned PDF page image rendering for Tesseract OCR.
@@ -36,7 +42,7 @@ Last Updated:
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets), domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`), and endpoint rate limiters.
 - **User Password Management**: Admin password reset (`POST /api/admin/users/{user_id}/reset-password`) and self-service password change for authenticated users (`POST /api/auth/change-password`) requiring current password verification.
 - **Admin Skills & Analytics Overview**: Administrative endpoint (`GET /api/progress/admin/skills-overview`) and Admin Dashboard KPI cards computing workforce enrollment, active training modules, total quiz evaluations, average assessment scores, certifications earned, and completion rates.
-- **Automated Testing Suite**: 27 Pytest backend test cases and 43 Vitest frontend test cases across 10 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **Automated Testing Suite**: 27 Pytest backend test cases and 44 Vitest frontend test cases across 10 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Targeted Competency Remediation, Multi-Module AI Tutor Routing & Remediation Mode, Public Citizen Document Lookup, and Employee/Citizen journeys.
 - **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend tests and frontend build on push/PR.
 
 ## Partially Working
@@ -53,5 +59,5 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (27/27 Pytest, 43/43 Vitest) are fully operational.
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (27/27 Pytest, 44/44 Vitest) are fully operational.
 
