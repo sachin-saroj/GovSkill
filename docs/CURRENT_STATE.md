@@ -29,8 +29,9 @@ Last Updated:
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets), domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`), and endpoint rate limiters.
 - **User Password Management**: Admin password reset (`POST /api/admin/users/{user_id}/reset-password`) and self-service password change for authenticated users (`POST /api/auth/change-password`) requiring current password verification.
 - **Admin Skills & Analytics Overview**: Administrative endpoint (`GET /api/progress/admin/skills-overview`) and Admin Dashboard KPI cards computing workforce enrollment, active training modules, total quiz evaluations, average assessment scores, certifications earned, and completion rates.
-- **Automated Testing Suite**: 26 Pytest backend test cases and 36 Vitest frontend test cases covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **Automated Testing Suite**: 26 Pytest backend test cases and 43 Vitest frontend test cases across 10 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Rate Limiting, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
 - **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend tests and frontend build on push/PR.
+
 
 
 ## Partially Working
