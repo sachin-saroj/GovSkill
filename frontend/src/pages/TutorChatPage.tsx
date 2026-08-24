@@ -227,8 +227,11 @@ export const TutorChatPage: React.FC = () => {
             <span className="hidden sm:inline">Reset</span>
           </motion.button>
         </div>
+      </motion.div>
+
       {/* Active Scope Pill */}
       <motion.div variants={fadeUpVariants} className="flex items-center justify-between px-4 py-2 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs text-slate-600 shadow-civic-xs">
+
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
           <span>
