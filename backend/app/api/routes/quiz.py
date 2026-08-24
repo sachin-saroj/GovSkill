@@ -1,14 +1,17 @@
 import uuid
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
 from app.api.routes.modules import get_or_create_default_module
+from app.models.module import Module
 from app.models.progress import UserProgress
 from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
 from app.schemas.quiz import (
+    CompetencyScoreItem,
     QuestionOut,
     QuizQuestionsResponse,
     QuizSubmitRequest,
@@ -30,6 +33,7 @@ SEED_QUESTIONS = [
         "question": "What is the minimum required length for a valid Income Certificate number?",
         "options": ["4 characters", "6 characters", "8 characters", "10 characters"],
         "correct_option_index": 1,
+        "competency": "Document Formatting & Standards",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222202"),
@@ -37,6 +41,7 @@ SEED_QUESTIONS = [
         "question": "Which format must official certificate numbers follow?",
         "options": ["Numeric only", "Alphanumeric", "Special symbols only", "Roman numerals"],
         "correct_option_index": 1,
+        "competency": "Document Formatting & Standards",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222203"),
@@ -49,6 +54,7 @@ SEED_QUESTIONS = [
             "Ignore expiry date",
         ],
         "correct_option_index": 1,
+        "competency": "Verification Rules & Expiry Validation",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222204"),
@@ -61,6 +67,7 @@ SEED_QUESTIONS = [
             "Blood group",
         ],
         "correct_option_index": 0,
+        "competency": "Mandatory Data Integrity",
     },
     # Module 2: Government Portal Operations
     {
@@ -69,6 +76,7 @@ SEED_QUESTIONS = [
         "question": "After how many days without resolution is an application flagged for supervisor escalation?",
         "options": ["3 business days", "5 business days", "7 business days", "14 business days"],
         "correct_option_index": 2,
+        "competency": "SLA Compliance & Escalation",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222206"),
@@ -81,6 +89,7 @@ SEED_QUESTIONS = [
             "Send SMS notification",
         ],
         "correct_option_index": 1,
+        "competency": "Workflow Routing & Sign-off",
     },
     # Module 3: Cybersecurity & Data Privacy Basics
     {
@@ -94,6 +103,7 @@ SEED_QUESTIONS = [
             "Reply with portal password",
         ],
         "correct_option_index": 1,
+        "competency": "Phishing Prevention & Incident Response",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222208"),
@@ -106,6 +116,7 @@ SEED_QUESTIONS = [
             "Printed on paper only",
         ],
         "correct_option_index": 1,
+        "competency": "PII Protection & Data Privacy",
     },
     # Module 4: Digital Record Management
     {
@@ -114,6 +125,7 @@ SEED_QUESTIONS = [
         "question": "How long must Income Certificate records be retained before scheduled archive purging?",
         "options": ["1 year", "3 years", "5 years", "10 years"],
         "correct_option_index": 2,
+        "competency": "Archival Retention Policies",
     },
     {
         "id": uuid.UUID("22222222-2222-2222-2222-222222222210"),
@@ -126,6 +138,7 @@ SEED_QUESTIONS = [
             "Temporary email notes",
         ],
         "correct_option_index": 0,
+        "competency": "System Audit Trail & Compliance",
     },
 ]
 
@@ -142,6 +155,7 @@ async def seed_quiz_questions_if_needed(db: AsyncSession, module_id: uuid.UUID):
                     question=q_data["question"],
                     options=q_data["options"],
                     correct_option_index=q_data["correct_option_index"],
+                    competency=q_data.get("competency"),
                 )
                 db.add(q)
         await db.commit()
@@ -168,6 +182,14 @@ async def get_quiz_questions(
     default_mod = await get_or_create_default_module(db)
     mod_uuid = _resolve_module_id(module_id, default_mod.id)
 
+    # Check module existence
+    mod_result = await db.execute(select(Module).where(Module.id == mod_uuid))
+    if not mod_result.scalar_one_or_none():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": {"code": "MODULE_NOT_FOUND", "message": "Module not found"}},
+        )
+
     await seed_quiz_questions_if_needed(db, mod_uuid)
 
     result = await db.execute(select(QuizQuestion).where(QuizQuestion.module_id == mod_uuid))
@@ -175,7 +197,13 @@ async def get_quiz_questions(
 
     # Never return correct_option_index to client!
     questions_out = [
-        QuestionOut(id=q.id, question=q.question, options=q.options) for q in questions
+        QuestionOut(
+            id=q.id,
+            question=q.question,
+            options=q.options,
+            competency=q.competency,
+        )
+        for q in questions
     ]
     return QuizQuestionsResponse(questions=questions_out)
 
@@ -189,6 +217,15 @@ async def submit_quiz(
 ):
     default_mod = await get_or_create_default_module(db)
     mod_uuid = _resolve_module_id(module_id, default_mod.id)
+
+    # Check module existence
+    mod_result = await db.execute(select(Module).where(Module.id == mod_uuid))
+    mod_obj = mod_result.scalar_one_or_none()
+    if not mod_obj:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": {"code": "MODULE_NOT_FOUND", "message": "Module not found"}},
+        )
 
     await seed_quiz_questions_if_needed(db, mod_uuid)
 
@@ -206,22 +243,99 @@ async def submit_quiz(
             },
         )
 
+    # Deduplicate submitted answers by question_id (keep latest)
+    submitted_map: dict[uuid.UUID, int] = {}
+    for answer in payload.answers:
+        # Cross-module question validation: only consider questions that belong to this module
+        if answer.question_id in questions:
+            submitted_map[answer.question_id] = answer.selected_option_index
+
+    # Calculate overall score strictly server-side
     score = 0
     total = len(questions)
 
-    for answer in payload.answers:
-        q_obj = questions.get(answer.question_id)
-        if q_obj and answer.selected_option_index == q_obj.correct_option_index:
-            score += 1
+    # Calculate competency-level breakdown
+    competency_groups: dict[str, list[QuizQuestion]] = {}
+    for q in questions.values():
+        comp_tag = q.competency or "Core Government Procedures"
+        competency_groups.setdefault(comp_tag, []).append(q)
+
+    competency_breakdown: list[CompetencyScoreItem] = []
+    strengths: list[str] = []
+    weak_areas: list[str] = []
+
+    for comp_tag, q_list in competency_groups.items():
+        comp_score = 0
+        comp_total = len(q_list)
+        for q in q_list:
+            user_opt = submitted_map.get(q.id)
+            if user_opt is not None and user_opt == q.correct_option_index:
+                score += 1
+                comp_score += 1
+
+        comp_pct = round((comp_score / comp_total) * 100) if comp_total > 0 else 0
+        comp_passed = comp_pct >= 75
+        competency_breakdown.append(
+            CompetencyScoreItem(
+                competency=comp_tag,
+                score=comp_score,
+                total=comp_total,
+                percentage=comp_pct,
+                passed=comp_passed,
+            )
+        )
+        if comp_passed:
+            strengths.append(comp_tag)
+        else:
+            weak_areas.append(comp_tag)
+
+    percentage = round((score / total) * 100) if total > 0 else 0
+    passed = percentage >= 75
+
+    # Determine dynamic recommended action
+    if passed:
+        if len(weak_areas) == 0:
+            recommended_action = (
+                f"Mastery achieved in {mod_obj.title}! All competencies passed. "
+                "Your certified status has been updated in My Skills. Proceed to the next module in your roadmap."
+            )
+        else:
+            recommended_action = (
+                f"Passing threshold achieved ({percentage}%)! "
+                f"For full mastery, review {', '.join(weak_areas)} in the lesson materials."
+            )
+    else:
+        if weak_areas:
+            recommended_action = (
+                f"Score ({percentage}%) is below the 75% certification requirement. "
+                f"Prioritize reviewing: {', '.join(weak_areas)}. Retake the assessment when ready."
+            )
+        else:
+            recommended_action = (
+                "Score is below the 75% certification requirement. "
+                "Review the lesson guide thoroughly and retake the assessment."
+            )
 
     # Record attempt in database
+    now_utc = datetime.now(timezone.utc)
     attempt = QuizAttempt(
         user_id=current_user.id,
         module_id=mod_uuid,
         score=score,
         total=total,
+        submitted_at=now_utc,
     )
     db.add(attempt)
+    await db.flush()
+
+    # Get attempt count for this user & module
+    attempt_count_res = await db.execute(
+        select(func.count(QuizAttempt.id)).where(
+            QuizAttempt.user_id == current_user.id,
+            QuizAttempt.module_id == mod_uuid,
+        )
+    )
+    attempt_number = attempt_count_res.scalar() or 1
 
     # Upsert UserProgress for Employee Skill Tracking
     prog_res = await db.execute(
@@ -232,10 +346,8 @@ async def submit_quiz(
     )
     prog = prog_res.scalar_one_or_none()
 
-    is_certified = (total > 0) and ((score / total) >= 0.75)
-
     if not prog:
-        new_status = "certified" if is_certified else "in_progress"
+        new_status = "certified" if passed else "in_progress"
         prog = UserProgress(
             user_id=current_user.id,
             module_id=mod_uuid,
@@ -248,11 +360,26 @@ async def submit_quiz(
     else:
         prog.best_score = max(prog.best_score, score)
         prog.total_questions = total
-        if is_certified:
+        if passed:
             prog.status = "certified"
         elif prog.status == "not_started":
             prog.status = "in_progress"
 
     await db.commit()
 
-    return QuizSubmitResponse(score=score, total=total)
+    return QuizSubmitResponse(
+        score=score,
+        total=total,
+        percentage=percentage,
+        passed=passed,
+        attempt_number=attempt_number,
+        best_score=prog.best_score,
+        status=prog.status,
+        competency_breakdown=competency_breakdown,
+        strengths=strengths,
+        weak_areas=weak_areas,
+        recommended_action=recommended_action,
+        submitted_at=attempt.submitted_at.isoformat()
+        if hasattr(attempt.submitted_at, "isoformat")
+        else str(attempt.submitted_at),
+    )

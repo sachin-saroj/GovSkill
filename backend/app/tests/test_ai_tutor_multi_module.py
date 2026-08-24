@@ -7,7 +7,7 @@ from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
 from app.models.user import User
-from app.services.ai_service import find_relevant_modules
+from app.services.ai_service import find_relevant_modules, score_module_relevance
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -24,19 +24,19 @@ def test_find_relevant_modules_unit():
     dummy_modules = [
         {
             "title": "Digital Document Handling",
-            "content": "Verifying citizen certificates and names.",
+            "content": "# Lesson 1: Verifying Certificates\nVerifying citizen certificates and names.",
         },
         {
             "title": "Government Portal Operations",
-            "content": "Citizen request routing and 7 day SLA escalation.",
+            "content": "# Lesson 1: Workflow\nCitizen request routing and 7 day SLA escalation.",
         },
         {
             "title": "Cybersecurity & Data Privacy Basics",
-            "content": "Phishing prevention, passwords, and MFA security.",
+            "content": "# Lesson 1: Phishing\nPhishing prevention, passwords, and MFA security.",
         },
         {
             "title": "Digital Record Management",
-            "content": "Archival record retention policies for income certificates and audit log tracking.",
+            "content": "# Lesson 1: Archival\nArchival record retention policies for income certificates and audit log tracking.",
         },
     ]
 
@@ -58,9 +58,14 @@ def test_find_relevant_modules_unit():
     )
     assert rec_matched[0]["title"] == "Digital Record Management"
 
+    # Test 4: Score relevance and section extraction
+    score, sections = score_module_relevance("phishing prevention", dummy_modules[2])
+    assert score > 0
+    assert len(sections) >= 1
+
 
 @pytest.mark.asyncio
-async def test_ai_tutor_auto_routing_api():
+async def test_ai_tutor_copilot_pipeline():
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -95,16 +100,61 @@ async def test_ai_tutor_auto_routing_api():
             res_1 = tutor_resp_1.json()
             assert "answer" in res_1
             assert res_1["matched_module_title"] == "Cybersecurity & Data Privacy Basics"
+            assert res_1["grounding_status"] in ("grounded", "fallback")
+            assert len(res_1["suggested_followups"]) >= 2
+            assert len(res_1["source_sections"]) >= 1
 
-            # 2. Ask portal SLA question in Auto mode
+            # 2. Ask portal SLA question in Auto mode with 'procedure' mode
             tutor_resp_2 = await client.post(
                 "/api/tutor/ask",
-                json={"module_id": "auto", "question": "When does SLA escalation trigger?"},
+                json={
+                    "module_id": "auto",
+                    "question": "When does SLA escalation trigger?",
+                    "mode": "procedure",
+                },
                 headers=headers,
             )
             assert tutor_resp_2.status_code == 200
             res_2 = tutor_resp_2.json()
             assert res_2["matched_module_title"] == "Government Portal Operations"
+            assert res_2["mode"] == "procedure"
+            assert "7 business days" in res_2["answer"]
+
+            # 3. Ask question in 'pitfalls' mode
+            tutor_resp_3 = await client.post(
+                "/api/tutor/ask",
+                json={
+                    "module_id": "auto",
+                    "question": "What mistakes should I avoid in digital document handling?",
+                    "mode": "pitfalls",
+                },
+                headers=headers,
+            )
+            assert tutor_resp_3.status_code == 200
+            res_3 = tutor_resp_3.json()
+            assert res_3["matched_module_title"] == "Digital Document Handling"
+            assert res_3["mode"] == "pitfalls"
+
+            # 4. Out-of-scope question refusal (Strict anti-hallucination guardrail)
+            out_of_scope_resp = await client.post(
+                "/api/tutor/ask",
+                json={
+                    "module_id": "auto",
+                    "question": "What is the secret recipe for dark chocolate soufflé in Paris?",
+                },
+                headers=headers,
+            )
+            assert out_of_scope_resp.status_code == 200
+            oos_data = out_of_scope_resp.json()
+            assert oos_data["grounding_status"] == "insufficient_context"
+            assert "cannot be verified from the approved training module" in oos_data["answer"]
+
+            # 5. Unauthorized access check
+            unauth_resp = await client.post(
+                "/api/tutor/ask",
+                json={"module_id": "auto", "question": "Any question"},
+            )
+            assert unauth_resp.status_code == 401
 
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)

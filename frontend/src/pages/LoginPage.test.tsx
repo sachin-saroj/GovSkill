@@ -79,8 +79,8 @@ describe('LoginPage', () => {
     const emailInput = screen.getByLabelText('Official Email Address') as HTMLInputElement;
     const passwordInput = screen.getByLabelText('Password') as HTMLInputElement;
 
-    expect(emailInput.value).toBe('employee@govskill.test');
-    expect(passwordInput.value).toBe('password123');
+    expect(emailInput.value).toBe('employee@govskill.local');
+    expect(passwordInput.value).toBe('Employee123!');
   });
 
   it('registers before logging in when account creation is selected', async () => {

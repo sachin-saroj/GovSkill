@@ -22,6 +22,15 @@ class UserProgress(Base):
     status: Mapped[str] = mapped_column(
         String, default="not_started", nullable=False
     )  # "not_started", "in_progress", "completed", "certified"
+    started_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    last_accessed_section: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
