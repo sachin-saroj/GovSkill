@@ -21,7 +21,13 @@ import {
   Info,
   X,
   FileCode2,
+  Image as ImageIcon,
+  Loader2,
+  RefreshCw,
+  Printer,
 } from 'lucide-react';
+
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 export const CitizenUploadPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,10 +35,17 @@ export const CitizenUploadPage: React.FC = () => {
 
   // --- Upload State ---
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [processingStage, setProcessingStage] = useState<string>('');
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [results, setResults] = useState<ValidationRuleResult[] | null>(null);
+  const [overallStatus, setOverallStatus] = useState<string>('ACTION_REQUIRED');
+  const [passedCount, setPassedCount] = useState<number>(0);
+  const [totalCount, setTotalCount] = useState<number>(4);
+  const [recommendedNextStep, setRecommendedNextStep] = useState<string | null>(null);
+  const [timestamp, setTimestamp] = useState<string | null>(null);
   const [extractedData, setExtractedData] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState(false);
@@ -50,6 +63,15 @@ export const CitizenUploadPage: React.FC = () => {
     }
   }, []);
 
+  // Cleanup object URL preview on unmount/change
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const fetchDocumentById = async (id: string) => {
     if (!id.trim()) {
       setError('Please enter a valid document Reference ID.');
@@ -57,11 +79,17 @@ export const CitizenUploadPage: React.FC = () => {
     }
 
     setIsLoading(true);
+    setProcessingStage('Retrieving document records...');
     setError(null);
     try {
       const res = await api.get<DocumentUploadResponse>(`/documents/${id.trim()}`);
       setDocumentId(res.data.document_id);
       setResults(res.data.validation_results);
+      setOverallStatus(res.data.overall_status || 'ACTION_REQUIRED');
+      setPassedCount(res.data.passed_rules_count ?? res.data.validation_results.filter((r) => r.passed).length);
+      setTotalCount(res.data.total_rules_count ?? res.data.validation_results.length);
+      setRecommendedNextStep(res.data.recommended_next_step || null);
+      setTimestamp(res.data.timestamp || null);
       setExtractedData(res.data.extracted_data);
     } catch (err: any) {
       const msg =
@@ -72,6 +100,7 @@ export const CitizenUploadPage: React.FC = () => {
       setExtractedData(null);
     } finally {
       setIsLoading(false);
+      setProcessingStage('');
     }
   };
 
@@ -83,10 +112,33 @@ export const CitizenUploadPage: React.FC = () => {
     }
   };
 
+  const validateAndSetFile = (selectedFile: File) => {
+    if (selectedFile.size > MAX_FILE_SIZE_BYTES) {
+      setError(`File size (${(selectedFile.size / (1024 * 1024)).toFixed(1)}MB) exceeds the maximum 5MB limit.`);
+      return;
+    }
+
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf', 'text/plain'];
+    if (selectedFile.type && !validTypes.includes(selectedFile.type)) {
+      setError('Unsupported file format. Please upload a JPG, PNG, or PDF file.');
+      return;
+    }
+
+    setFile(selectedFile);
+    setError(null);
+
+    // Create safe thumbnail preview for images
+    if (selectedFile.type.startsWith('image/')) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setError(null);
+      validateAndSetFile(e.target.files[0]);
     }
   };
 
@@ -103,8 +155,7 @@ export const CitizenUploadPage: React.FC = () => {
     e.preventDefault();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
-      setError(null);
+      validateAndSetFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -116,12 +167,14 @@ export const CitizenUploadPage: React.FC = () => {
     }
 
     setIsLoading(true);
+    setProcessingStage('Uploading document to secure processing vault...');
     setError(null);
 
     const formData = new FormData();
     formData.append('file', file);
 
     try {
+      setProcessingStage('Running Tesseract OCR & extracting structured fields...');
       const res = await api.post<DocumentUploadResponse>('/documents/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -130,20 +183,30 @@ export const CitizenUploadPage: React.FC = () => {
 
       setDocumentId(res.data.document_id);
       setResults(res.data.validation_results);
+      setOverallStatus(res.data.overall_status || 'ACTION_REQUIRED');
+      setPassedCount(res.data.passed_rules_count ?? res.data.validation_results.filter((r) => r.passed).length);
+      setTotalCount(res.data.total_rules_count ?? res.data.validation_results.length);
+      setRecommendedNextStep(res.data.recommended_next_step || null);
+      setTimestamp(res.data.timestamp || null);
       setExtractedData(res.data.extracted_data);
       setSearchParams({ id: res.data.document_id });
     } catch (err: any) {
       const msg =
         err.response?.data?.detail?.error?.message ||
-        'Failed to upload and process citizen document.';
+        'Failed to upload and validate citizen document.';
       setError(msg);
     } finally {
       setIsLoading(false);
+      setProcessingStage('');
     }
   };
 
   const handleReset = () => {
     setFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
     setDocumentId(null);
     setResults(null);
     setExtractedData(null);
@@ -194,19 +257,32 @@ export const CitizenUploadPage: React.FC = () => {
             Income Certificate Pre-submission Checker
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
-            Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
+            Upload your Income Certificate before formal submission to verify compliance against statutory format and validity rules (minimum 6-character number, unexpired date, readable applicant name).
           </p>
         </div>
       </div>
 
       {/* Error Alert Box */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5 shadow-civic-xs animate-fade-in">
-          <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-          <div className="space-y-0.5">
-            <p className="font-bold">Verification Error</p>
-            <p className="leading-relaxed">{error}</p>
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start justify-between gap-2.5 shadow-civic-xs animate-fade-in">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-bold">Verification Notice</p>
+              <p className="leading-relaxed">{error}</p>
+            </div>
           </div>
+          {file && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleUpload}
+              className="text-xs shrink-0"
+            >
+              <RefreshCw className="h-3 w-3 mr-1" />
+              <span>Retry</span>
+            </Button>
+          )}
         </div>
       )}
 
@@ -241,7 +317,7 @@ export const CitizenUploadPage: React.FC = () => {
 
       {/* Main 2-Column Responsive Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Upload or Lookup Form (5 cols on lg) */}
+        {/* Left Column: Upload or Lookup Form */}
         <div className="lg:col-span-5 space-y-6">
           {activeTab === 'upload' ? (
             <Card className="space-y-6 bg-white shadow-civic-md border-slate-200" variant="elevated">
@@ -250,7 +326,7 @@ export const CitizenUploadPage: React.FC = () => {
                   Upload Income Certificate
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Select digital scan or clear photograph
+                  Digital scan, photograph, or PDF file
                 </p>
               </div>
 
@@ -294,32 +370,61 @@ export const CitizenUploadPage: React.FC = () => {
                       id="file-upload"
                       aria-label="Choose a file to upload"
                       type="file"
-                      accept="image/png,image/jpeg,application/pdf"
+                      accept="image/png,image/jpeg,application/pdf,text/plain"
                       onChange={handleFileChange}
                       disabled={isLoading}
                       className="hidden"
                     />
                   </label>
 
-                  {/* Selected File Chip */}
+                  {/* Selected File Chip & Image Preview */}
                   {file && (
-                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs animate-fade-in">
-                      <div className="flex items-center gap-2 truncate">
-                        <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
-                        <span className="truncate max-w-[200px]">{file.name}</span>
+                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 space-y-2 shadow-civic-xs animate-fade-in">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 truncate">
+                          {previewUrl ? (
+                            <ImageIcon className="h-4 w-4 text-emerald-600 shrink-0" />
+                          ) : (
+                            <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                          )}
+                          <span className="truncate max-w-[200px]">{file.name}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFile(null);
+                            if (previewUrl) {
+                              URL.revokeObjectURL(previewUrl);
+                              setPreviewUrl(null);
+                            }
+                          }}
+                          disabled={isLoading}
+                          title="Remove file"
+                          className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setFile(null)}
-                        disabled={isLoading}
-                        title="Remove file"
-                        className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
+
+                      {previewUrl && (
+                        <div className="pt-2 border-t border-slate-100 flex justify-center">
+                          <img
+                            src={previewUrl}
+                            alt="Document Preview"
+                            className="max-h-36 rounded-lg object-contain border border-slate-200 shadow-civic-xs"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
+
+                {isLoading && processingStage && (
+                  <div className="p-3.5 rounded-xl bg-civic-50 border border-civic-200 text-xs text-civic-900 flex items-center gap-2.5 shadow-civic-xs animate-fade-in">
+                    <Loader2 className="h-4 w-4 animate-spin text-civic-700 shrink-0" />
+                    <span className="font-medium">{processingStage}</span>
+                  </div>
+                )}
 
                 <Button
                   type="submit"
@@ -337,24 +442,24 @@ export const CitizenUploadPage: React.FC = () => {
               <div className="text-xs text-slate-600 space-y-2 pt-4 border-t border-slate-100">
                 <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-700">
                   <ShieldCheck className="h-3.5 w-3.5 text-civic-700" />
-                  <span>Pre-check Rules Tested:</span>
+                  <span>Pre-check Compliance Rules:</span>
                 </div>
-                <ul className="grid grid-cols-1 gap-1.5 pl-1">
+                <ul className="grid grid-cols-1 gap-1.5 pl-1 text-[11px]">
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span>Name present check</span>
+                    <span><strong>Name present:</strong> Verifies applicant name is clearly readable.</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span>Certificate number format check</span>
+                    <span><strong>Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span>Certificate expiry check</span>
+                    <span><strong>Expiry check:</strong> Confirms certificate date is not expired.</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span>Required fields extraction check</span>
+                    <span><strong>Mandatory extraction:</strong> Confirms all required fields are intact.</span>
                   </li>
                 </ul>
               </div>
@@ -371,7 +476,7 @@ export const CitizenUploadPage: React.FC = () => {
               </div>
 
               <p className="text-xs text-slate-600 leading-relaxed">
-                Enter your document's unique Reference ID to review existing OCR results and validation checks.
+                Enter your document's unique Reference ID to review previous OCR extraction results and deterministic compliance findings.
               </p>
 
               <form onSubmit={handleLookupSubmit} className="space-y-5">
@@ -419,7 +524,7 @@ export const CitizenUploadPage: React.FC = () => {
           )}
         </div>
 
-        {/* Right Column: Reference ID, Extracted Fields, and Validation Results (7 cols on lg) */}
+        {/* Right Column: Reference ID, Extracted Fields, and Validation Results */}
         <div className="lg:col-span-7 space-y-6">
           {/* Reference ID Pill Card */}
           {documentId && (
@@ -439,26 +544,39 @@ export const CitizenUploadPage: React.FC = () => {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleCopyId}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer active:scale-95"
-                >
-                  {copiedId ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600" />
-                      <span className="text-emerald-700 font-bold">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-slate-500" />
-                      <span>Copy ID</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer active:scale-95"
+                    title="Print or Save PDF Summary Report"
+                  >
+                    <Printer className="h-3.5 w-3.5 text-civic-700" />
+                    <span>Print Report</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyId}
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer active:scale-95"
+                  >
+                    {copiedId ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 font-bold">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5 text-slate-500" />
+                        <span>Copy ID</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </Card>
           )}
+
 
           {/* Extracted OCR Fields Card */}
           {extractedData && Object.keys(extractedData).length > 0 && (
@@ -475,7 +593,9 @@ export const CitizenUploadPage: React.FC = () => {
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
                   <dt className="text-slate-500 font-medium">Applicant Name:</dt>
                   <dd className="font-bold text-slate-900 text-sm">
-                    {extractedData.name || (
+                    {extractedData.name ? (
+                      <span>{extractedData.name}</span>
+                    ) : (
                       <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
                         Not detected
                       </span>
@@ -486,7 +606,9 @@ export const CitizenUploadPage: React.FC = () => {
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
                   <dt className="text-slate-500 font-medium">Certificate No:</dt>
                   <dd className="font-bold text-slate-900 text-sm font-mono">
-                    {extractedData.certificate_number || (
+                    {extractedData.certificate_number ? (
+                      <span>{extractedData.certificate_number}</span>
+                    ) : (
                       <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
                         Not detected
                       </span>
@@ -497,7 +619,9 @@ export const CitizenUploadPage: React.FC = () => {
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
                   <dt className="text-slate-500 font-medium">Expiry Date:</dt>
                   <dd className="font-bold text-slate-900 text-sm font-mono">
-                    {extractedData.expiry_date || (
+                    {extractedData.expiry_date ? (
+                      <span>{extractedData.expiry_date}</span>
+                    ) : (
                       <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
                         Not detected
                       </span>
@@ -509,7 +633,16 @@ export const CitizenUploadPage: React.FC = () => {
           )}
 
           {/* Validation Rule Engine Results */}
-          <ValidationResultCard results={results} isLoading={isLoading} error={null} />
+          <ValidationResultCard
+            results={results}
+            overallStatus={overallStatus}
+            passedRulesCount={passedCount}
+            totalRulesCount={totalCount}
+            recommendedNextStep={recommendedNextStep || undefined}
+            timestamp={timestamp || undefined}
+            isLoading={isLoading}
+            error={null}
+          />
         </div>
       </div>
     </div>

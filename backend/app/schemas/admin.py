@@ -30,18 +30,21 @@ class AdminQuestionOut(BaseModel):
     question: str
     options: list[str]
     correct_option_index: int
+    competency: str | None = None
 
 
 class QuestionCreate(BaseModel):
     question: str = Field(min_length=5)
     options: list[str] = Field(min_length=2)
     correct_option_index: int = Field(ge=0)
+    competency: str | None = None
 
 
 class QuestionUpdate(BaseModel):
     question: str | None = Field(default=None, min_length=5)
     options: list[str] | None = Field(default=None, min_length=2)
     correct_option_index: int | None = Field(default=None, ge=0)
+    competency: str | None = None
 
 
 class AdminResetPasswordRequest(BaseModel):

@@ -8,6 +8,7 @@ class QuestionOut(BaseModel):
     id: uuid.UUID
     question: str
     options: list[str]
+    competency: str | None = None
 
 
 class QuizQuestionsResponse(BaseModel):
@@ -23,6 +24,24 @@ class QuizSubmitRequest(BaseModel):
     answers: list[QuizAnswerSubmission]
 
 
+class CompetencyScoreItem(BaseModel):
+    competency: str
+    score: int
+    total: int
+    percentage: int
+    passed: bool
+
+
 class QuizSubmitResponse(BaseModel):
     score: int
     total: int
+    percentage: int
+    passed: bool
+    attempt_number: int
+    best_score: int
+    status: str
+    competency_breakdown: list[CompetencyScoreItem]
+    strengths: list[str]
+    weak_areas: list[str]
+    recommended_action: str
+    submitted_at: str
