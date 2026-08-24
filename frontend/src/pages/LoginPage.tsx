@@ -53,15 +53,16 @@ export const LoginPage: React.FC = () => {
     setError(null);
     setIsRegister(false);
     if (demoRole === 'admin') {
-      setEmail('admin@govskill.test');
-      setPassword('password123');
+      setEmail('admin@govskill.local');
+      setPassword('AdminPass123!');
       setRole('admin');
     } else {
-      setEmail('employee@govskill.test');
-      setPassword('password123');
+      setEmail('employee@govskill.local');
+      setPassword('Employee123!');
       setRole('employee');
     }
   };
+
 
   return (
     <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-slate-50 relative overflow-hidden">

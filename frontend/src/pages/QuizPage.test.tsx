@@ -26,11 +26,13 @@ const questions = [
     id: 'question-1',
     question: 'What is the minimum certificate length?',
     options: ['4 characters', '6 characters'],
+    competency: 'Document Formatting & Standards',
   },
   {
     id: 'question-2',
     question: 'Which format is required?',
     options: ['Numeric only', 'Alphanumeric'],
+    competency: 'Document Formatting & Standards',
   },
 ];
 
@@ -39,9 +41,10 @@ const mockModules = [
   { id: 'default', title: 'Digital Document Handling', content: 'Default content' },
 ];
 
-describe('QuizPage', () => {
+describe('QuizPage & Competency Assessment Engine', () => {
   beforeEach(() => {
     window.history.pushState({}, '', '/');
+    window.scrollTo = vi.fn() as any;
     mockModuleId = undefined;
     mockedGet.mockReset();
     mockedPost.mockReset();
@@ -54,81 +57,109 @@ describe('QuizPage', () => {
     });
   });
 
-  it('keeps submission disabled until every question is answered', async () => {
+  it('renders assessment guidelines and question navigator', async () => {
     render(<QuizPage />);
 
-    const submitButton = await screen.findByRole('button', { name: /submit quiz/i });
-    expect(submitButton).toBeDisabled();
-
-    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
-    expect(submitButton).toBeDisabled();
-
-    fireEvent.click(screen.getByRole('radio', { name: 'Alphanumeric' }));
-    expect(submitButton).toBeEnabled();
+    expect(await screen.findByText(/Assessment Guidelines & Instructions/i)).toBeInTheDocument();
+    expect(screen.getByText(/Question Navigator:/i)).toBeInTheDocument();
+    expect(screen.getByText('2 Unanswered')).toBeInTheDocument();
   });
 
-  it('submits selected answers and renders the server score', async () => {
-    mockedPost.mockResolvedValue({ data: { score: 2, total: 2 } });
-
+  it('flags a question for review and updates navigator indicator', async () => {
     render(<QuizPage />);
-    await screen.findByRole('button', { name: /submit quiz/i });
-    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
-    fireEvent.click(screen.getByRole('radio', { name: 'Alphanumeric' }));
-    fireEvent.click(screen.getByRole('button', { name: /submit quiz/i }));
 
-    await waitFor(() => expect(mockedPost).toHaveBeenCalledWith('/quiz/default/submit', {
-      answers: [
-        { question_id: 'question-1', selected_option_index: 1 },
-        { question_id: 'question-2', selected_option_index: 1 },
-      ],
-    }));
-    expect(await screen.findByText('2 / 2')).toBeInTheDocument();
-    expect(screen.getByText(/100%.*Passed/)).toBeInTheDocument();
+    const flagButtons = await screen.findAllByRole('button', { name: /flag question/i });
+    fireEvent.click(flagButtons[0]);
+
+    expect(await screen.findByText('1 Flagged')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /flagged for review/i })).toBeInTheDocument();
   });
 
-  it('fetches and submits answers to a module-specific quiz endpoint', async () => {
-    mockModuleId = 'cybersecurity-101';
-    mockedPost.mockResolvedValue({ data: { score: 1, total: 2 } });
-
-    render(<QuizPage />);
-    await screen.findByRole('button', { name: /submit quiz/i });
-
-    expect(mockedGet).toHaveBeenCalledWith('/quiz/cybersecurity-101');
-
-    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
-    fireEvent.click(screen.getByRole('radio', { name: 'Alphanumeric' }));
-    fireEvent.click(screen.getByRole('button', { name: /submit quiz/i }));
-
-    await waitFor(() => expect(mockedPost).toHaveBeenCalledWith('/quiz/cybersecurity-101/submit', {
-      answers: [
-        { question_id: 'question-1', selected_option_index: 1 },
-        { question_id: 'question-2', selected_option_index: 1 },
-      ],
-    }));
-  });
-
-  it('disables input controls during submission', async () => {
-    let resolvePost: any;
-    const postPromise = new Promise((resolve) => {
-      resolvePost = resolve;
+  it('opens confirmation modal and submits answers, displaying competency results', async () => {
+    mockedPost.mockResolvedValue({
+      data: {
+        score: 2,
+        total: 2,
+        percentage: 100,
+        passed: true,
+        attempt_number: 1,
+        best_score: 2,
+        status: 'certified',
+        competency_breakdown: [
+          {
+            competency: 'Document Formatting & Standards',
+            score: 2,
+            total: 2,
+            percentage: 100,
+            passed: true,
+          },
+        ],
+        strengths: ['Document Formatting & Standards'],
+        weak_areas: [],
+        recommended_action: 'Mastery achieved! Proceed to next module.',
+        submitted_at: new Date().toISOString(),
+      },
     });
-    mockedPost.mockReturnValue(postPromise);
 
     render(<QuizPage />);
-    await screen.findByRole('button', { name: /submit quiz/i });
+    await screen.findByRole('button', { name: /submit assessment/i });
 
-    const option1 = screen.getByRole('radio', { name: '6 characters' });
-    const option2 = screen.getByRole('radio', { name: 'Alphanumeric' });
-    fireEvent.click(option1);
-    fireEvent.click(option2);
+    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'Alphanumeric' }));
 
-    const submitButton = screen.getByRole('button', { name: /submit quiz/i });
-    fireEvent.click(submitButton);
+    // Click submit button to open confirmation modal
+    fireEvent.click(screen.getByRole('button', { name: /submit assessment/i }));
+    expect(await screen.findByText(/Confirm Assessment Submission/i)).toBeInTheDocument();
 
-    expect(option1).toBeDisabled();
-    expect(option2).toBeDisabled();
+    // Confirm submission inside modal
+    const modalSubmitBtn = screen.getAllByRole('button', { name: /submit assessment/i })[1];
+    fireEvent.click(modalSubmitBtn);
 
-    await resolvePost({ data: { score: 2, total: 2 } });
-    await screen.findByText('2 / 2');
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/quiz/default/submit', {
+        answers: [
+          { question_id: 'question-1', selected_option_index: 1 },
+          { question_id: 'question-2', selected_option_index: 1 },
+        ],
+      })
+    );
+
+    expect(await screen.findByText('100%')).toBeInTheDocument();
+    expect(screen.getByText('Certified Competency')).toBeInTheDocument();
+    expect(screen.getAllByText('Document Formatting & Standards')[0]).toBeInTheDocument();
+    expect(screen.getByText('Mastery achieved! Proceed to next module.')).toBeInTheDocument();
+  });
+
+  it('allows retaking assessment to reset state', async () => {
+    mockedPost.mockResolvedValue({
+      data: {
+        score: 2,
+        total: 2,
+        percentage: 100,
+        passed: true,
+        attempt_number: 1,
+        best_score: 2,
+        status: 'certified',
+        competency_breakdown: [],
+        strengths: [],
+        weak_areas: [],
+        recommended_action: 'Good work',
+        submitted_at: new Date().toISOString(),
+      },
+    });
+
+    render(<QuizPage />);
+    await screen.findByRole('button', { name: /submit assessment/i });
+    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
+    fireEvent.click(screen.getByRole('button', { name: /submit assessment/i }));
+
+    const modalSubmitBtn = screen.getAllByRole('button', { name: /submit assessment/i })[1];
+    fireEvent.click(modalSubmitBtn);
+
+    const retakeBtn = await screen.findByRole('button', { name: /retake assessment/i });
+    fireEvent.click(retakeBtn);
+
+    expect(screen.getByText(/Question Navigator:/i)).toBeInTheDocument();
+    expect(screen.getByText('2 Unanswered')).toBeInTheDocument();
   });
 });

@@ -10,6 +10,8 @@ import {
   Clock,
   Circle,
   ArrowRight,
+  AlertCircle,
+  TrendingUp,
 } from 'lucide-react';
 
 interface SkillModuleCardProps {
@@ -28,6 +30,66 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
   const isInProgress = skill.status === 'in_progress';
   const shouldReduceMotion = useReducedMotion();
 
+  const proficiency = skill.proficiency || (
+    isCertified
+      ? 'Strong'
+      : skill.score_percentage >= 40 || (skill.lessons_completed && !skill.attempts_count)
+      ? 'Developing'
+      : skill.attempts_count && skill.attempts_count > 0
+      ? 'Needs Attention'
+      : 'Not Started'
+  );
+
+  const formatActivityDate = (dateStr?: string) => {
+    if (!dateStr || dateStr === 'No activity' || dateStr === 'Not started') {
+      return 'No activity yet';
+    }
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const getProficiencyBadge = () => {
+    switch (proficiency) {
+      case 'Strong':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+            <span>Strong</span>
+          </span>
+        );
+      case 'Developing':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-civic-50 text-civic-800 border border-civic-300">
+            <TrendingUp className="h-3 w-3 text-civic-700" />
+            <span>Developing</span>
+          </span>
+        );
+      case 'Needs Attention':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
+            <AlertCircle className="h-3 w-3 text-amber-600" />
+            <span>Needs Attention</span>
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+            <Circle className="h-3 w-3 text-slate-400" />
+            <span>Not Started</span>
+          </span>
+        );
+    }
+  };
+
   return (
     <motion.div
       whileHover={shouldReduceMotion ? {} : { y: -3, scale: 1.01 }}
@@ -38,51 +100,48 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
         variant="default"
       >
         <div className="space-y-4">
-          {/* Status Badge & Header */}
+          {/* Status Badges & Header */}
           <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Training Module
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Core Skill
+                </span>
+                {getProficiencyBadge()}
+              </div>
               <h3 className="text-base font-bold text-slate-900 tracking-tight leading-snug">
                 {skill.module_title}
               </h3>
             </div>
 
-            {isCertified && (
+            {isCertified ? (
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 shrink-0 shadow-civic-xs">
                 <Award className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Certified</span>
               </span>
-            )}
-
-            {isCompleted && (
+            ) : isCompleted ? (
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-civic-50 text-civic-800 border border-civic-300 shrink-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-civic-700" />
                 <span>Lessons Done</span>
               </span>
-            )}
-
-            {isInProgress && (
+            ) : isInProgress ? (
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-saffron-50 text-saffron-900 border border-saffron-300 shrink-0">
                 <Clock className="h-3.5 w-3.5 text-saffron-600" />
                 <span>In Progress</span>
               </span>
-            )}
-
-            {skill.status === 'not_started' && (
+            ) : (
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
                 <Circle className="h-3.5 w-3.5 text-slate-400" />
-                <span>Not Started</span>
+                <span>Pending</span>
               </span>
             )}
           </div>
 
-          {/* Progress Indicators Box */}
+          {/* Competency Evidence & Metrics Box */}
           <div className="space-y-3.5 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
             {/* Lesson Completion Toggle */}
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-700">Lessons Read:</span>
+              <span className="font-semibold text-slate-700">Curriculum Lessons:</span>
               <motion.button
                 type="button"
                 whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
@@ -98,14 +157,22 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
               </motion.button>
             </div>
 
-            {/* Quiz Score Summary */}
+            {/* Assessment Score Summary */}
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-700">Best Quiz Score:</span>
-              <span className="font-bold text-civic-900 font-mono">
-                {skill.total_questions > 0
-                  ? `${skill.best_score} / ${skill.total_questions} (${skill.score_percentage}%)`
-                  : 'No quiz taken'}
-              </span>
+              <span className="font-semibold text-slate-700">Best Assessment:</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-civic-900 font-mono">
+                  {skill.total_questions > 0
+                    ? `${skill.best_score} / ${skill.total_questions} (${skill.score_percentage}%)`
+                    : 'Not attempted'}
+                </span>
+                {typeof skill.score_improvement_delta === 'number' && skill.score_improvement_delta > 0 && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <TrendingUp className="h-3 w-3 text-emerald-600" />
+                    <span>+{skill.score_improvement_delta}%</span>
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Graphical Progress Bar */}
@@ -122,6 +189,16 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
                     : 'bg-slate-300'
                 }`}
               />
+            </div>
+
+            {/* Assessment Attempts & Activity Metadata */}
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-200/60">
+              <span>
+                {skill.attempts_count && skill.attempts_count > 0
+                  ? `${skill.attempts_count} assessment attempt${skill.attempts_count === 1 ? '' : 's'}`
+                  : '0 attempts taken'}
+              </span>
+              <span>Last activity: {formatActivityDate(skill.last_activity_at || skill.updated_at)}</span>
             </div>
           </div>
         </div>
@@ -165,3 +242,4 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
 };
 
 export default SkillModuleCard;
+

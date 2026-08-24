@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
-import { Module, EmployeeSkillStatusResponse } from '@/types';
+import { Module, EmployeeSkillStatusResponse, EmployeeSkillItem } from '@/types';
 import ModuleSidebar from '@/components/learning/ModuleSidebar';
 import LessonReader from '@/components/learning/LessonReader';
 import { EmptyState, ErrorAlert } from '@/components/ui';
@@ -14,6 +14,8 @@ export const ModulePage: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
   const [completedModuleIds, setCompletedModuleIds] = useState<Set<string>>(new Set());
+  const [skillProgressMap, setSkillProgressMap] = useState<Record<string, EmployeeSkillItem>>({});
+  const [currentSectionIndex, setCurrentSectionIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isMarkingComplete, setIsMarkingComplete] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,21 +26,25 @@ export const ModulePage: React.FC = () => {
     try {
       const res = await api.get<EmployeeSkillStatusResponse>('/progress/my-skills');
       const completedSet = new Set<string>();
+      const progMap: Record<string, EmployeeSkillItem> = {};
       res.data.skills.forEach((s) => {
+        progMap[s.module_id] = s;
         if (s.lessons_completed) {
           completedSet.add(s.module_id);
         }
       });
-      setCompletedModuleIds(completedSet);
+      setCompletedModuleIds((prev) => new Set([...prev, ...completedSet]));
+      setSkillProgressMap((prev) => ({ ...prev, ...progMap }));
+      return progMap;
     } catch {
-      // Non-blocking progress sync
+      return {};
     }
   };
 
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const [modRes] = await Promise.all([
+        const [modRes, progMap] = await Promise.all([
           api.get<Module[]>('/modules'),
           fetchSkillProgress(),
         ]);
@@ -46,7 +52,12 @@ export const ModulePage: React.FC = () => {
         if (modRes.data.length > 0) {
           const paramId = searchParams.get('id') || searchParams.get('moduleId');
           const targetMod = paramId ? modRes.data.find((m) => m.id === paramId) : null;
-          setSelectedModule(targetMod || modRes.data[0]);
+          const initialMod = targetMod || modRes.data[0];
+          setSelectedModule(initialMod);
+
+          // Resume last accessed section if stored on server
+          const savedSection = progMap[initialMod.id]?.last_accessed_section ?? 0;
+          setCurrentSectionIndex(savedSection);
         }
       } catch (err: any) {
         const msg = err.response?.data?.detail?.error?.message || 'Failed to load module content';
@@ -64,6 +75,30 @@ export const ModulePage: React.FC = () => {
       setSelectedModule(target);
       setSearchParams({ id: target.id });
       setStatusMessage(null);
+      // Resume last accessed section for the target module
+      const savedSection = skillProgressMap[target.id]?.last_accessed_section ?? 0;
+      setCurrentSectionIndex(savedSection);
+    }
+  };
+
+  const handleSectionChange = async (index: number) => {
+    setCurrentSectionIndex(index);
+    if (!selectedModule) return;
+
+    // Sync section access to backend for persistence & resume
+    try {
+      await api.post(`/progress/modules/${selectedModule.id}/access-section`, {
+        section_index: index,
+      });
+      setSkillProgressMap((prev) => ({
+        ...prev,
+        [selectedModule.id]: {
+          ...(prev[selectedModule.id] || {}),
+          last_accessed_section: index,
+        } as EmployeeSkillItem,
+      }));
+    } catch {
+      // Non-blocking sync
     }
   };
 
@@ -73,8 +108,12 @@ export const ModulePage: React.FC = () => {
     setIsMarkingComplete(true);
     setStatusMessage(null);
     try {
-      await api.post(`/progress/modules/${selectedModule.id}/complete-lessons`);
+      const res = await api.post<EmployeeSkillItem>(`/progress/modules/${selectedModule.id}/complete-lessons`);
       setCompletedModuleIds((prev) => new Set([...prev, selectedModule.id]));
+      setSkillProgressMap((prev) => ({
+        ...prev,
+        [selectedModule.id]: res.data,
+      }));
       setStatusMessage('Lesson progress recorded! Competency status updated.');
       fetchSkillProgress();
     } catch (err: any) {
@@ -115,6 +154,7 @@ export const ModulePage: React.FC = () => {
   }
 
   const isCurrentCompleted = selectedModule ? completedModuleIds.has(selectedModule.id) : false;
+  const currentProg = selectedModule ? skillProgressMap[selectedModule.id] : undefined;
 
   return (
     <motion.div
@@ -168,6 +208,10 @@ export const ModulePage: React.FC = () => {
               isCurrentCompleted={isCurrentCompleted}
               isMarkingComplete={isMarkingComplete}
               onCompleteLessons={handleCompleteLessons}
+              currentSectionIndex={currentSectionIndex}
+              onSectionChange={handleSectionChange}
+              completedAt={currentProg?.completed_at}
+              startedAt={currentProg?.started_at}
             />
           )}
         </motion.div>

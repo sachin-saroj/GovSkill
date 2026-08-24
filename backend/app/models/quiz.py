@@ -17,6 +17,7 @@ class QuizQuestion(Base):
     options: Mapped[list[Any]] = mapped_column(JSON, nullable=False)
 
     correct_option_index: Mapped[int] = mapped_column(Integer, nullable=False)
+    competency: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     module = relationship("Module", backref="questions")
 

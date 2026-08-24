@@ -2,12 +2,15 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { QuizQuestion } from '@/types';
 import Card from '@/components/ui/Card';
+import { Flag, Award } from 'lucide-react';
 
 interface QuizCardProps {
   question: QuizQuestion;
   questionIndex: number;
   selectedOption: number | null;
   onSelectOption: (optionIndex: number) => void;
+  isFlagged?: boolean;
+  onToggleFlag?: () => void;
   disabled?: boolean;
 }
 
@@ -18,28 +21,58 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   questionIndex,
   selectedOption,
   onSelectOption,
+  isFlagged = false,
+  onToggleFlag,
   disabled = false,
 }) => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <Card
-      className={`border-slate-200 shadow-civic-sm p-6 sm:p-7 space-y-5 bg-white rounded-3xl transition-all ${
+      id={`question-card-${questionIndex}`}
+      className={`border-slate-200 shadow-civic-sm p-6 sm:p-7 space-y-4 bg-white rounded-3xl transition-all ${
         disabled ? 'opacity-70' : ''
-      }`}
+      } ${isFlagged ? 'ring-2 ring-amber-400 border-amber-300' : ''}`}
     >
-      {/* Question Header */}
-      <div className="flex items-start gap-3.5">
-        <span className="h-8 w-8 rounded-xl bg-civic-100 text-civic-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-civic-xs">
-          {questionIndex + 1}
-        </span>
-        <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug tracking-tight">
-          {question.question}
-        </h3>
+      {/* Question Header & Action Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="h-7 w-7 rounded-xl bg-civic-100 text-civic-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-civic-xs">
+            {questionIndex + 1}
+          </span>
+          {question.competency && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
+              <Award className="h-3 w-3 text-civic-700" />
+              <span>{question.competency}</span>
+            </span>
+          )}
+        </div>
+
+        {onToggleFlag && (
+          <button
+            type="button"
+            onClick={onToggleFlag}
+            disabled={disabled}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+              isFlagged
+                ? 'bg-amber-100 text-amber-800 border-amber-300 shadow-civic-xs'
+                : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+            }`}
+          >
+            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-amber-700 fill-amber-700' : 'text-slate-400'}`} />
+            <span>{isFlagged ? 'Flagged for Review' : 'Flag Question'}</span>
+          </button>
+        )}
       </div>
 
+      {/* Question Text */}
+      <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug tracking-tight">
+        {question.question}
+      </h3>
+
       {/* Answer Options Grid */}
-      <div className="space-y-3 pt-1 pl-0 sm:pl-11">
+      <div className="space-y-3 pt-1">
+
         {question.options.map((option, idx) => {
           const isSelected = selectedOption === idx;
           const letter = OPTION_LETTERS[idx] || String.fromCharCode(65 + idx);

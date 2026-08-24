@@ -1,20 +1,31 @@
-import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import React, { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Module } from '@/types';
 import Card from '@/components/ui/Card';
+import ScenarioCallout from './ScenarioCallout';
+import SectionSelfCheck from './SectionSelfCheck';
 import {
   CheckCircle2,
   Sparkles,
   Loader2,
-  BookOpen,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  Bot,
+  Award,
+  Target,
+  ArrowRight,
 } from 'lucide-react';
-import { fadeUpVariants, staggerContainerVariants } from '@/lib/motion';
 
 interface LessonReaderProps {
   module: Module;
   isCurrentCompleted: boolean;
   isMarkingComplete: boolean;
   onCompleteLessons: () => void;
+  currentSectionIndex: number;
+  onSectionChange: (index: number) => void;
+  completedAt?: string;
+  startedAt?: string;
 }
 
 export const LessonReader: React.FC<LessonReaderProps> = ({
@@ -22,105 +33,286 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
   isCurrentCompleted,
   isMarkingComplete,
   onCompleteLessons,
+  currentSectionIndex,
+  onSectionChange,
+  completedAt,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
 
-  const sections = module.content
-    .split('# ')
-    .filter(Boolean)
-    .map((section) => {
-      const lines = section.trim().split('\n');
-      const title = lines[0];
-      const body = lines.slice(1).join('\n');
-      return { title, body };
-    });
+  const navigate = useNavigate();
+
+  const sections = useMemo(() => {
+    return module.content
+      .split('# ')
+      .filter(Boolean)
+      .map((section) => {
+        const lines = section.trim().split('\n');
+        const rawTitle = lines[0].trim();
+        const body = lines.slice(1).join('\n').trim();
+        const displayTitle = rawTitle.replace(/^Lesson\s+\d+:\s*/i, '');
+        return { rawTitle, displayTitle, body };
+      });
+  }, [module.content]);
+
+  const totalSections = Math.max(sections.length, 1);
+  const safeIndex = Math.min(Math.max(currentSectionIndex, 0), totalSections - 1);
+  const activeSection = sections[safeIndex] || {
+    rawTitle: 'General Overview',
+    displayTitle: 'General Overview',
+    body: module.content,
+  };
+
+  // Calculate estimated reading time for current section (~180 wpm)
+  const readingTimeMinutes = useMemo(() => {
+    const words = (activeSection.body + ' ' + activeSection.displayTitle).split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 150));
+  }, [activeSection]);
+
+  // Section completion progress
+  const progressPercent = Math.round(((safeIndex + 1) / totalSections) * 100);
+
+  // Derive learning objective
+  const learningObjective = useMemo(() => {
+    const titleLower = activeSection.displayTitle.toLowerCase();
+    if (titleLower.includes('checklist') || titleLower.includes('verification')) {
+      return 'Master statutory verification criteria and standard document validation standards.';
+    }
+    if (titleLower.includes('error') || titleLower.includes('prevention')) {
+      return 'Identify common data discrepancies and apply procedural controls to avoid audit errors.';
+    }
+    if (titleLower.includes('security') || titleLower.includes('privacy') || titleLower.includes('network')) {
+      return 'Uphold citizen PII confidentiality, workstation security, and statutory compliance.';
+    }
+    if (titleLower.includes('sla') || titleLower.includes('escalation')) {
+      return 'Track citizen service turnaround times and execute timely supervisor escalation workflows.';
+    }
+    if (titleLower.includes('archival') || titleLower.includes('retention')) {
+      return 'Apply standardized archival metadata tags and statutory document retention schedules.';
+    }
+    return `Understand standard operational protocols and official workflows for ${activeSection.displayTitle}.`;
+  }, [activeSection.displayTitle]);
+
+  const handleAskTutor = () => {
+    const promptText = `Regarding ${module.title} (${activeSection.rawTitle}): Can you explain the practical steps and verification rules for this section?`;
+    navigate(`/tutor?module=${module.id}&prompt=${encodeURIComponent(promptText)}`);
+  };
+
+  const handleNextSection = () => {
+    if (safeIndex < totalSections - 1) {
+      onSectionChange(safeIndex + 1);
+    }
+  };
+
+  const handlePrevSection = () => {
+    if (safeIndex > 0) {
+      onSectionChange(safeIndex - 1);
+    }
+  };
 
   return (
-    <Card className="bg-white border-slate-200 shadow-civic-md p-6 sm:p-8 space-y-8 rounded-3xl" variant="elevated">
-      {/* Top Section Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-civic-800">
-          <BookOpen className="h-4 w-4 text-civic-700" />
-          <span>Curriculum Content</span>
+    <Card className="bg-white border-slate-200 shadow-civic-md p-6 sm:p-8 space-y-6" variant="elevated">
+      {/* 1. Header Toolbar & Progress Metrics */}
+      <div className="space-y-3 pb-5 border-b border-slate-200">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-1 rounded-md bg-civic-100 text-civic-900 font-bold text-[11px] uppercase tracking-wider">
+              Section {safeIndex + 1} of {totalSections}
+            </span>
+            <span className="inline-flex items-center gap-1 text-slate-500 font-medium text-[11px]">
+              <Clock className="h-3.5 w-3.5 text-slate-400" />
+              <span>~{readingTimeMinutes} min read</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isCurrentCompleted ? (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Lessons Completed</span>
+              </span>
+            ) : (
+              <span className="text-[11px] font-semibold text-slate-500">
+                {progressPercent}% curriculum explored
+              </span>
+            )}
+          </div>
         </div>
-        <span className="text-xs text-slate-500 font-medium">
-          {sections.length} Official Lessons
-        </span>
+
+        {/* Progress Bar Strip */}
+        <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-300 ${
+              isCurrentCompleted ? 'bg-emerald-600' : 'bg-civic-700'
+            }`}
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+
+        {/* Section Jump Tabs */}
+        <div className="flex items-center gap-1.5 pt-1 overflow-x-auto pb-1 scrollbar-none">
+          {sections.map((sec, idx) => {
+            const isCurrent = idx === safeIndex;
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => onSectionChange(idx)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  isCurrent
+                    ? 'bg-civic-900 text-white shadow-civic-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {idx + 1}. {sec.displayTitle}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Lesson Sections Grid / Content */}
-      <motion.div
-        variants={staggerContainerVariants}
-        initial="hidden"
-        animate="visible"
-        key={module.id}
-        className="space-y-8 text-slate-900"
-      >
-        {sections.map((section, idx) => (
-          <motion.div
-            variants={fadeUpVariants}
-            key={idx}
-            className="border-b border-slate-200/80 pb-8 last:border-0 last:pb-0 space-y-3"
-          >
-            <div className="flex items-start gap-3">
-              <span className="h-7 w-7 rounded-lg bg-civic-100 text-civic-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-civic-xs">
-                {idx + 1}
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold text-civic-900 tracking-tight leading-snug">
-                {section.title}
-              </h2>
-            </div>
-            <div className="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line pl-10 font-normal">
-              {section.body}
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+      {/* 2. Operational Learning Objective Box */}
+      <div className="rounded-xl bg-civic-50/80 border border-civic-200/80 p-4 space-y-1.5 shadow-civic-xs">
+        <div className="flex items-center gap-2 text-civic-900 font-bold text-xs">
+          <Target className="h-4 w-4 text-civic-700 shrink-0" />
+          <span>Operational Learning Objective</span>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed pl-6">
+          {learningObjective}
+        </p>
+      </div>
 
-      {/* Bottom Lesson Completion Control Bar */}
-      <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-xs text-slate-600">
-          {isCurrentCompleted ? (
-            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-xl border border-emerald-200 shadow-civic-xs">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              <span>Lessons Completed</span>
-            </span>
-          ) : (
-            <span className="text-slate-500 font-medium">
-              Finished reading? Mark lessons completed to update your skill dashboard.
-            </span>
-          )}
+      {/* 3. Section Title & Core Procedural Guidance */}
+      <div className="space-y-4 pt-1">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-civic-950 tracking-tight leading-snug">
+            {activeSection.rawTitle}
+          </h2>
+
+          {/* Contextual Ask Tutor Button */}
+          <button
+            type="button"
+            onClick={handleAskTutor}
+            className="shrink-0 hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-civic-800 hover:text-civic-950 border border-slate-200 hover:border-civic-300 text-xs font-bold transition-all cursor-pointer shadow-civic-xs"
+            title="Ask AI Tutor about this specific section"
+          >
+            <Bot className="h-3.5 w-3.5 text-civic-700" />
+            <span>Ask Tutor About Section</span>
+          </button>
         </div>
 
-        <motion.button
+        {/* Procedural Text Body */}
+        <div className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line space-y-3 font-normal">
+          {activeSection.body}
+        </div>
+      </div>
+
+      {/* 4. Practical Scenario & Common Mistakes Callout */}
+      <ScenarioCallout
+        moduleTitle={module.title}
+        sectionIndex={safeIndex}
+        sectionTitle={activeSection.rawTitle}
+      />
+
+      {/* 5. Interactive Section Understanding Check */}
+      <SectionSelfCheck
+        moduleTitle={module.title}
+        sectionIndex={safeIndex}
+        sectionTitle={activeSection.rawTitle}
+      />
+
+      {/* Mobile Ask Tutor CTA */}
+      <div className="block sm:hidden">
+        <button
           type="button"
-          whileHover={shouldReduceMotion || isCurrentCompleted ? {} : { scale: 1.03 }}
-          whileTap={shouldReduceMotion || isCurrentCompleted ? {} : { scale: 0.96 }}
-          onClick={onCompleteLessons}
-          disabled={isMarkingComplete || isCurrentCompleted}
-          className={`px-5 py-2.5 text-xs font-bold rounded-xl flex items-center gap-2 transition-all shadow-civic-xs ${
-            isCurrentCompleted
-              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-default'
-              : 'bg-civic-800 text-white hover:bg-civic-900 cursor-pointer'
-          }`}
+          onClick={handleAskTutor}
+          className="w-full flex items-center justify-center gap-2 p-2.5 rounded-lg bg-blue-50 text-civic-900 border border-civic-200 text-xs font-bold cursor-pointer"
         >
-          {isMarkingComplete ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Saving Progress...</span>
-            </>
-          ) : isCurrentCompleted ? (
-            <>
-              <CheckCircle2 className="h-4 w-4 text-emerald-700" />
-              <span>Completed</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4 text-saffron-400" />
-              <span>Mark Lessons as Completed</span>
-            </>
-          )}
-        </motion.button>
+          <Bot className="h-4 w-4 text-civic-700" />
+          <span>Ask AI Tutor About This Section</span>
+        </button>
+      </div>
+
+
+      {/* 6. Navigation Controls & Completion Action */}
+      <div className="pt-6 border-t border-slate-200 space-y-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Previous / Next Buttons */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={handlePrevSection}
+              disabled={safeIndex === 0}
+              className="flex-1 sm:flex-initial px-4 py-2 text-xs font-bold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-civic-xs"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span>Previous Section</span>
+            </button>
+
+            {safeIndex < totalSections - 1 && (
+              <button
+                type="button"
+                onClick={handleNextSection}
+                className="flex-1 sm:flex-initial px-4 py-2 text-xs font-bold rounded-lg bg-civic-800 hover:bg-civic-900 text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-civic-xs"
+              >
+                <span>Next Section</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Mark Complete / Completed State */}
+          <div className="w-full sm:w-auto flex items-center justify-end">
+            <button
+              type="button"
+              onClick={onCompleteLessons}
+              disabled={isMarkingComplete || isCurrentCompleted}
+              className={`w-full sm:w-auto px-5 py-2.5 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all shadow-civic-xs ${
+                isCurrentCompleted
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-default'
+                  : 'bg-civic-800 text-white hover:bg-civic-900 active:scale-95 cursor-pointer'
+              }`}
+            >
+              {isMarkingComplete ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Saving Completion...</span>
+                </>
+              ) : isCurrentCompleted ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                  <span>Lessons Completed {completedAt ? `(${new Date(completedAt).toLocaleDateString()})` : ''}</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 text-saffron-400" />
+                  <span>Mark All Lessons Completed</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Recommended Next Action Callout (After completing or on last section) */}
+        {isCurrentCompleted && (
+          <div className="rounded-xl bg-emerald-50/80 border border-emerald-200 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-1.5 text-emerald-900 font-bold text-xs">
+                <Award className="h-4 w-4 text-emerald-700" />
+                <span>Next Step: Validate Your Competency</span>
+              </div>
+              <p className="text-[11px] text-emerald-800 font-medium">
+                You have completed the official curriculum. Take the scored assessment to earn your verified credential.
+              </p>
+            </div>
+
+            <Link
+              to={`/quiz/${module.id}`}
+              className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 shadow-civic-xs"
+            >
+              <span>Take Scored Quiz</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
       </div>
     </Card>
   );

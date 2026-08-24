@@ -201,6 +201,7 @@ async def create_quiz_question(
         question=q_in.question,
         options=q_in.options,
         correct_option_index=q_in.correct_option_index,
+        competency=q_in.competency,
     )
     db.add(q)
     await db.commit()
@@ -238,6 +239,8 @@ async def update_quiz_question(
         q.options = q_in.options
     if q_in.correct_option_index is not None:
         q.correct_option_index = q_in.correct_option_index
+    if q_in.competency is not None:
+        q.competency = q_in.competency
 
     if q.correct_option_index >= len(q.options):
         raise HTTPException(

@@ -10,6 +10,8 @@ import {
   ShieldCheck,
   AlertTriangle,
   Info,
+  Clock,
+  ArrowRight,
 } from 'lucide-react';
 import { ValidationRuleResult } from '@/types';
 import Card from '@/components/ui/Card';
@@ -18,12 +20,22 @@ import { fadeUpVariants, staggerContainerVariants } from '@/lib/motion';
 
 interface ValidationResultCardProps {
   results: ValidationRuleResult[] | null;
+  overallStatus?: string;
+  passedRulesCount?: number;
+  totalRulesCount?: number;
+  recommendedNextStep?: string;
+  timestamp?: string;
   isLoading: boolean;
   error?: string | null;
 }
 
 export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
   results,
+  overallStatus,
+  passedRulesCount,
+  totalRulesCount,
+  recommendedNextStep,
+  timestamp,
   isLoading,
   error,
 }) => {
@@ -83,15 +95,16 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
         </div>
         <h4 className="text-sm font-bold text-slate-800">No Document Verified Yet</h4>
         <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-          No document uploaded yet. Upload an Income Certificate above to run validation rules.
+          Upload an Income Certificate above to run automated pre-submission compliance checks.
         </p>
       </Card>
     );
   }
 
-  const allPassed = results.every((r) => r.passed);
-  const passedCount = results.filter((r) => r.passed).length;
-  const failedCount = results.length - passedCount;
+  const allPassed = overallStatus ? overallStatus === 'PASSED' : results.every((r) => r.passed);
+  const passedCount = passedRulesCount ?? results.filter((r) => r.passed).length;
+  const totalCount = totalRulesCount ?? results.length;
+  const failedCount = totalCount - passedCount;
 
   return (
     <motion.div
@@ -109,7 +122,7 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
               : 'bg-amber-50/80 border-amber-300 shadow-civic-md'
           }`}
         >
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div className="flex items-start gap-3.5">
               <motion.div
                 initial={shouldReduceMotion ? {} : { scale: 0.8 }}
@@ -121,22 +134,26 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
               >
                 {allPassed ? <ShieldCheck className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
               </motion.div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-slate-900">
-                    {allPassed ? 'Pre-Submission Verification: PASSED' : 'Pre-Submission Notice: CORRECTIONS NEEDED'}
-                  </h3>
-                </div>
-                <p className="text-xs text-slate-700 mt-1 leading-relaxed">
-                  {allPassed
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900">
+                  {allPassed ? 'Pre-Submission Verification: PASSED' : 'Pre-Submission Notice: CORRECTIONS NEEDED'}
+                </h3>
+                <p className="text-xs text-slate-700 leading-relaxed">
+                  {recommendedNextStep || (allPassed
                     ? `All ${results.length} compliance rules passed successfully. This document meets standard submission requirements.`
-                    : `${failedCount} of ${results.length} checks failed. Review the AI guidance below before visiting the administrative office.`}
+                    : `${failedCount} of ${results.length} checks failed. Review the AI guidance and corrective actions below before formal submission.`)}
                 </p>
+                {timestamp && (
+                  <span className="inline-flex items-center gap-1 text-[11px] text-slate-500 pt-1">
+                    <Clock className="h-3 w-3" />
+                    <span>Verified at: {new Date(timestamp).toLocaleString()}</span>
+                  </span>
+                )}
               </div>
             </div>
 
-            <Badge variant={allPassed ? 'success' : 'warning'} size="md">
-              {passedCount}/{results.length} Rules Passed
+            <Badge variant={allPassed ? 'success' : 'warning'} size="md" className="shrink-0">
+              {passedCount}/{totalCount} Rules Passed
             </Badge>
           </div>
         </Card>
@@ -146,13 +163,12 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
       <motion.div variants={fadeUpVariants} className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-            Rule Engine Results ({results.length} Checks)
+            Compliance Rules Checklist ({results.length} Checks)
           </h4>
-          <span className="text-[11px] text-slate-400 font-medium">Deterministic Evaluation</span>
+          <span className="text-[11px] text-slate-400 font-medium">100% Deterministic Evaluation</span>
         </div>
 
         {results.map((rule) => {
-          const hasExplanation = !!rule.explanation;
           const isExpanded = expandedRule === rule.ruleName;
 
           return (
@@ -161,26 +177,37 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
               className={`p-4 border rounded-2xl transition-all duration-150 ${
                 rule.passed
                   ? 'border-slate-200 bg-white hover:border-emerald-200 shadow-civic-xs'
-                  : 'border-red-200 bg-red-50/20 hover:border-red-300 shadow-civic-xs'
+                  : 'border-amber-300 bg-amber-50/30 hover:border-amber-400 shadow-civic-xs'
               }`}
             >
               <button
                 type="button"
-                disabled={!hasExplanation}
                 onClick={() => setExpandedRule(isExpanded ? null : rule.ruleName)}
-                className={`flex w-full items-center justify-between text-left gap-3 ${
-                  hasExplanation ? 'cursor-pointer' : 'cursor-default'
-                }`}
+                className="flex w-full items-start justify-between text-left gap-3 cursor-pointer"
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-start gap-2.5 min-w-0">
                   {rule.passed ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                   ) : (
-                    <XCircle className="h-4 w-4 text-red-600 shrink-0" />
+                    <XCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                   )}
-                  <span className="font-semibold text-xs sm:text-sm text-slate-900 truncate">
-                    {rule.ruleName}
-                  </span>
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs sm:text-sm text-slate-900">
+                        {rule.ruleName}
+                      </span>
+                      {rule.severity === 'critical' && !rule.passed && (
+                        <span className="text-[10px] uppercase font-bold text-red-700 bg-red-100 px-1.5 py-0.2 rounded border border-red-200">
+                          Critical
+                        </span>
+                      )}
+                    </div>
+                    {rule.reason && (
+                      <p className="text-xs text-slate-600 leading-snug">
+                        {rule.reason}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -188,34 +215,46 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                       rule.passed
                         ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-red-100 text-red-800'
+                        : 'bg-amber-100 text-amber-900 border border-amber-300'
                     }`}
                   >
-                    {rule.passed ? 'Passed' : 'Failed'}
+                    {rule.passed ? 'Passed' : 'Action Needed'}
                   </span>
-                  {hasExplanation && (
-                    <span className="text-slate-400 hover:text-slate-600">
-                      {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    </span>
-                  )}
+                  <span className="text-slate-400">
+                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </span>
                 </div>
               </button>
 
-              {/* AI Explanation Accordion with AnimatePresence */}
+              {/* Recommended Action & AI Explanation Accordion with AnimatePresence */}
               <AnimatePresence>
-                {isExpanded && rule.explanation && (
+                {isExpanded && (
                   <motion.div
                     initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 pt-3 border-t border-slate-200 text-xs text-slate-700 bg-slate-50 p-3.5 rounded-xl space-y-1.5 shadow-civic-xs">
-                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-civic-800 uppercase tracking-wide">
-                        <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
-                        <span>AI Explanation & Guidance:</span>
-                      </div>
-                      <p className="leading-relaxed text-slate-700 pl-5">{rule.explanation}</p>
+                    <div className="mt-3 pt-3 border-t border-slate-200 text-xs space-y-2.5">
+                      {rule.recommended_action && (
+                        <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2 text-slate-700 shadow-civic-xs">
+                          <ArrowRight className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
+                          <div>
+                            <span className="font-bold text-slate-900 block">Recommended Action:</span>
+                            <p className="leading-relaxed text-slate-600">{rule.recommended_action}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {rule.explanation && (
+                        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 space-y-1 shadow-civic-xs">
+                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-civic-800 uppercase tracking-wide">
+                            <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
+                            <span>AI Plain-Language Guidance:</span>
+                          </div>
+                          <p className="leading-relaxed text-slate-700 pl-5">{rule.explanation}</p>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -227,5 +266,6 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
     </motion.div>
   );
 };
+
 
 export default ValidationResultCard;

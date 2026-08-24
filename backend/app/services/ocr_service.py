@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 from PIL import Image, ImageEnhance
 import pytesseract
 
@@ -22,20 +23,20 @@ if os.name == "nt":
 
 
 def _preprocess_image(img: Image.Image) -> Image.Image:
-    """Enhances image quality for better OCR results."""
+    """Enhances image quality for optimal OCR text extraction."""
     # Convert to grayscale
     img = img.convert("L")
-    # Increase contrast
+    # Boost contrast (2.0x)
     enhancer = ImageEnhance.Contrast(img)
     img = enhancer.enhance(2.0)
-    # Basic binarization thresholding
+    # Binarization thresholding
     img = img.point(lambda x: 0 if x < 140 else 255, "1")
     return img
 
 
 def _extract_pdf_text(file_path: str) -> str:
     """
-    Extracts raw text from PDF files using PyMuPDF (direct text extraction + OCR fallback).
+    Extracts text from PDF files using PyMuPDF (direct text extraction + OCR fallback).
     """
     if not fitz:
         return ""
@@ -65,7 +66,8 @@ def _extract_pdf_text(file_path: str) -> str:
 
 def extract_raw_text(file_path: str) -> str:
     """
-    Extracts raw text from an uploaded file (images, PDFs, text samples).
+    STAGE 1: RAW OCR
+    Extracts verbatim raw text from an uploaded file (images, PDFs, text samples).
     """
     ext = os.path.splitext(file_path)[1].lower()
 
@@ -82,8 +84,7 @@ def extract_raw_text(file_path: str) -> str:
         text = pytesseract.image_to_string(image)
         if text and text.strip():
             return text.strip()
-    except Exception as e:
-        print(f"Error processing image {file_path}: {e}")
+    except Exception:
         pass
 
     # 3. Fallback to reading plain text / sample files
@@ -95,15 +96,30 @@ def extract_raw_text(file_path: str) -> str:
 
 
 def _normalize_date(date_str: str) -> str | None:
+    """Normalizes various textual/numerical date formats to ISO YYYY-MM-DD."""
+    if not date_str or not date_str.strip():
+        return None
+
     date_str = date_str.strip()
+
     # YYYY-MM-DD format
     if re.match(r"^\d{4}-\d{2}-\d{2}$", date_str):
-        return date_str
+        try:
+            datetime.strptime(date_str, "%Y-%m-%d")
+            return date_str
+        except ValueError:
+            return None
+
     # DD/MM/YYYY or DD-MM-YYYY format
     m = re.match(r"^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$", date_str)
     if m:
         day, month, year = m.groups()
-        return f"{year}-{int(month):02d}-{int(day):02d}"
+        try:
+            iso_candidate = f"{year}-{int(month):02d}-{int(day):02d}"
+            datetime.strptime(iso_candidate, "%Y-%m-%d")
+            return iso_candidate
+        except ValueError:
+            return None
 
     # Textual dates like "31st Dec 2025" or "Dec 31, 2025"
     m_text = re.search(
@@ -128,7 +144,12 @@ def _normalize_date(date_str: str) -> str | None:
             "dec",
         ]
         month_idx = months.index(month_str.lower()[:3]) + 1
-        return f"{year}-{month_idx:02d}-{int(day):02d}"
+        try:
+            iso_candidate = f"{year}-{month_idx:02d}-{int(day):02d}"
+            datetime.strptime(iso_candidate, "%Y-%m-%d")
+            return iso_candidate
+        except ValueError:
+            return None
 
     m_text_rev = re.search(
         r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(\d{4})",
@@ -152,14 +173,17 @@ def _normalize_date(date_str: str) -> str | None:
             "dec",
         ]
         month_idx = months.index(month_str.lower()[:3]) + 1
-        return f"{year}-{month_idx:02d}-{int(day):02d}"
+        try:
+            iso_candidate = f"{year}-{month_idx:02d}-{int(day):02d}"
+            datetime.strptime(iso_candidate, "%Y-%m-%d")
+            return iso_candidate
+        except ValueError:
+            return None
 
     # Year formats like "2024-25" -> Assume validity until end of financial year March 31, 2025
     m_year = re.search(r"(\d{4})-(\d{2})", date_str)
     if m_year:
         year_start, year_end_suffix = m_year.groups()
-        # if year is 2024, year_end_suffix is 25
-        # Expiry is 2025-03-31
         year_end = year_start[:2] + year_end_suffix
         return f"{year_end}-03-31"
 
@@ -168,7 +192,9 @@ def _normalize_date(date_str: str) -> str | None:
 
 def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
     """
+    STAGE 2: NORMALIZATION
     Extracts structured fields (name, certificate_number, expiry_date) from raw OCR text.
+    Normalizes candidate fields without silently transforming ambiguous/corrupt data.
     """
     data: dict[str, str | None] = {
         "name": None,
@@ -176,10 +202,10 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
         "expiry_date": None,
     }
 
-    if not raw_text:
+    if not raw_text or not raw_text.strip():
         return data
 
-    # 1. Extract Name
+    # 1. Extract and Normalize Name
     name_patterns = [
         r"(?:Name\s*of\s*Applicant|Applicant\s*Name|Holder\s*Name|Applicant|Holder|Name)\s*[:|-]\s*([A-Za-z\s.]+)",
         r"(?:Shri|Smt|Kumari|Mr|Mrs|Ms)\.?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)",
@@ -190,18 +216,19 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
         name_match = re.search(pat, raw_text, re.IGNORECASE)
         if name_match:
             candidate = name_match.group(1).split("\n")[0].strip()
-            # Cleanup noise words
+            # Strip noise words
             candidate = re.sub(
                 r"\b(?:is|has|been|verified|certified|son|daughter|wife|of)\b.*$",
                 "",
                 candidate,
                 flags=re.IGNORECASE,
             ).strip()
-            if len(candidate) >= 2:
+            # Reject if candidate is unreadable symbols or single character
+            if len(candidate) >= 2 and re.search(r"[A-Za-z]{2,}", candidate):
                 data["name"] = candidate
                 break
 
-    # 2. Extract Certificate Number
+    # 2. Extract and Normalize Certificate Number
     cert_patterns = [
         r"(?:Income\s*Certificate\s*(?:No|Number|#)|Certificate\s*(?:No|Number|#)|Cert\s*(?:No|#))\s*[:|-|#]\s*([A-Za-z0-9/-]+)",
         r"\b(INC[A-Za-z0-9/-]{3,})\b",
@@ -217,11 +244,13 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
                 "OFFICE",
                 "GOVERNMENT",
                 "APPLICANT",
+                "CERTIFICATE",
+                "INCOME",
             ]:
                 data["certificate_number"] = cert_val
                 break
 
-    # 3. Extract Expiry Date
+    # 3. Extract and Normalize Expiry Date
     date_patterns = [
         r"(?:Expiry\s*Date|Valid\s*Until|Valid\s*Thru|Valid\s*Upto|Expires|Validity)\s*[:|-]?\s*(\d{4}-\d{2}-\d{2}|\d{1,2}[/.-]\d{1,2}[/.-]\d{4})",
         r"(?:Expiry\s*Date|Valid\s*Until|Valid\s*Thru|Valid\s*Upto|Expires|Validity)\s*[:|-]?\s*(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4}|[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?[,]?\s+\d{4})",
