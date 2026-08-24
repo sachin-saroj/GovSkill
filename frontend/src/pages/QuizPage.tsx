@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
 import { QuizQuestion, Module } from '@/types';
@@ -13,10 +14,12 @@ import {
   Loader2,
   HelpCircle,
 } from 'lucide-react';
+import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const QuizPage: React.FC = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
   const activeModuleId = moduleId || 'default';
+  const shouldReduceMotion = useReducedMotion();
 
   const [modules, setModules] = useState<Module[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -148,9 +151,14 @@ export const QuizPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6 animate-fade-in">
+    <motion.div
+      variants={staggerContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6"
+    >
       {/* Header Banner & Module Switcher */}
-      <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={fadeUpVariants} className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
             <Award className="h-4 w-4 text-emerald-600" />
@@ -163,7 +171,7 @@ export const QuizPage: React.FC = () => {
         </div>
 
         {modules.length > 1 && (
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 shrink-0 shadow-civic-xs">
+          <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 shrink-0 shadow-civic-xs">
             <label htmlFor="quiz-module-select" className="block text-[10px] uppercase font-bold text-slate-600 mb-1.5 tracking-wider">
               Switch Quiz Module:
             </label>
@@ -175,7 +183,7 @@ export const QuizPage: React.FC = () => {
                 setResult(null);
                 navigate(`/quiz/${e.target.value}`);
               }}
-              className="w-full px-3 py-1.5 text-xs font-semibold text-slate-900 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
+              className="w-full px-3 py-1.5 text-xs font-semibold text-slate-900 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
             >
               {modules.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -185,23 +193,25 @@ export const QuizPage: React.FC = () => {
             </select>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Answer Progress Meter */}
-      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-civic-xs space-y-2">
+      <motion.div variants={fadeUpVariants} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-civic-xs space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="font-bold text-slate-800">Progress:</span>
           <span className="font-medium text-slate-600">
             {answeredCount} of {questions.length} answered ({progressPct}%)
           </span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-          <div
-            className="h-2 bg-civic-800 rounded-full transition-all duration-300"
-            style={{ width: `${progressPct}%` }}
+        <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+          <motion.div
+            initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="h-2.5 bg-civic-800 rounded-full"
           />
         </div>
-      </div>
+      </motion.div>
 
       {error && (
         <ErrorAlert
@@ -212,7 +222,7 @@ export const QuizPage: React.FC = () => {
       )}
 
       {/* Questions Stack */}
-      <div className="space-y-4">
+      <motion.div variants={fadeUpVariants} className="space-y-4">
         {questions.map((q, idx) => (
           <QuizCard
             key={q.id}
@@ -223,32 +233,37 @@ export const QuizPage: React.FC = () => {
             disabled={isSubmitting}
           />
         ))}
-      </div>
+      </motion.div>
 
       {/* Bottom Submit Control Bar */}
-      <div className="flex justify-between items-center pt-5 border-t border-slate-200">
+      <motion.div variants={fadeUpVariants} className="flex justify-between items-center pt-5 border-t border-slate-200">
         <span className="text-xs font-medium text-slate-500">
           Answered {answeredCount} of {questions.length} questions
         </span>
-        <Button
-          onClick={handleSubmitQuiz}
-          disabled={isSubmitting || answeredCount < questions.length}
-          className="px-6 py-2.5 shadow-civic-sm"
+        <motion.div
+          whileHover={shouldReduceMotion || isSubmitting || answeredCount < questions.length ? {} : { scale: 1.03 }}
+          whileTap={shouldReduceMotion || isSubmitting || answeredCount < questions.length ? {} : { scale: 0.96 }}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
-              <span>Evaluating Score...</span>
-            </>
-          ) : (
-            <>
-              <CheckCircle2 className="h-4 w-4 mr-1.5" />
-              <span>Submit Quiz</span>
-            </>
-          )}
-        </Button>
-      </div>
-    </div>
+          <Button
+            onClick={handleSubmitQuiz}
+            disabled={isSubmitting || answeredCount < questions.length}
+            className="px-6 py-2.5 shadow-civic-sm cursor-pointer"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
+                <span>Evaluating Score...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                <span>Submit Quiz</span>
+              </>
+            )}
+          </Button>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

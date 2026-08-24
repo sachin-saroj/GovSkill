@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
 import { DocumentUploadResponse, ValidationRuleResult } from '@/types';
 import Card from '@/components/ui/Card';
@@ -22,10 +23,12 @@ import {
   X,
   FileCode2,
 } from 'lucide-react';
+import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const CitizenUploadPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'upload' | 'lookup'>('upload');
+  const shouldReduceMotion = useReducedMotion();
 
   // --- Upload State ---
   const [file, setFile] = useState<File | null>(null);
@@ -161,57 +164,71 @@ export const CitizenUploadPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+    <motion.div
+      variants={staggerContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8"
+    >
       {/* Top Civic Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-civic-sm p-6 sm:p-8 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
-          <div className="flex items-center gap-2.5">
-            <span className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-civic-xs">
-              <FileCheck className="h-4 w-4 text-emerald-700" />
-            </span>
-            <div>
-              <span className="font-bold text-xs uppercase tracking-wider text-emerald-800 block">
-                GovAssist Citizen Self-Service Portal
+      <motion.div variants={fadeUpVariants}>
+        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-civic-md p-6 sm:p-8 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <span className="h-9 w-9 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-civic-xs">
+                <FileCheck className="h-5 w-5 text-emerald-700" />
               </span>
-              <span className="text-[11px] text-slate-500 font-medium">
-                Official Revenue & Taluk Document Verification Protocol
-              </span>
+              <div>
+                <span className="font-bold text-xs uppercase tracking-wider text-emerald-800 block">
+                  GovAssist Citizen Self-Service Portal
+                </span>
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Official Revenue & Taluk Document Verification Protocol
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Badge variant="success" size="sm" dot>
+                100% Deterministic Engine
+              </Badge>
+              <Badge variant="info" size="sm">
+                Zero Login Required
+              </Badge>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Badge variant="success" size="sm" dot>
-              100% Deterministic Engine
-            </Badge>
-            <Badge variant="info" size="sm">
-              Zero Login Required
-            </Badge>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Income Certificate Pre-submission Checker
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+              Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
+            </p>
           </div>
         </div>
+      </motion.div>
 
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Income Certificate Pre-submission Checker
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
-            Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
-          </p>
-        </div>
-      </div>
-
-      {/* Error Alert Box */}
-      {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5 shadow-civic-xs animate-fade-in">
-          <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-          <div className="space-y-0.5">
-            <p className="font-bold">Verification Error</p>
-            <p className="leading-relaxed">{error}</p>
-          </div>
-        </div>
-      )}
+      {/* Error Alert Box with AnimatePresence */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
+            className="p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5 shadow-civic-xs"
+          >
+            <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-bold">Verification Error</p>
+              <p className="leading-relaxed">{error}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Tab Navigation */}
-      <div className="flex border-b border-slate-200 gap-4 sm:gap-8">
+      <motion.div variants={fadeUpVariants} className="flex border-b border-slate-200 gap-4 sm:gap-8">
         <button
           type="button"
           onClick={() => setActiveTab('upload')}
@@ -237,14 +254,14 @@ export const CitizenUploadPage: React.FC = () => {
           <Search className="h-4 w-4 text-civic-700" />
           <span>Lookup by Reference ID</span>
         </button>
-      </div>
+      </motion.div>
 
       {/* Main 2-Column Responsive Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Upload or Lookup Form (5 cols on lg) */}
-        <div className="lg:col-span-5 space-y-6">
+        <motion.div variants={fadeUpVariants} className="lg:col-span-5 space-y-6">
           {activeTab === 'upload' ? (
-            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200" variant="elevated">
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-3xl" variant="elevated">
               <div className="pb-3 border-b border-slate-100">
                 <h2 className="text-base font-bold text-slate-900 tracking-tight">
                   Upload Income Certificate
@@ -260,7 +277,7 @@ export const CitizenUploadPage: React.FC = () => {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
+                  className={`border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center transition-all duration-200 ${
                     isLoading
                       ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
                       : isDragging
@@ -301,36 +318,48 @@ export const CitizenUploadPage: React.FC = () => {
                     />
                   </label>
 
-                  {/* Selected File Chip */}
-                  {file && (
-                    <div className="mt-4 p-3 bg-white rounded-xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs animate-fade-in">
-                      <div className="flex items-center gap-2 truncate">
-                        <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
-                        <span className="truncate max-w-[200px]">{file.name}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setFile(null)}
-                        disabled={isLoading}
-                        title="Remove file"
-                        className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
+                  {/* Selected File Chip with AnimatePresence */}
+                  <AnimatePresence>
+                    {file && (
+                      <motion.div
+                        initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
+                        className="mt-4 p-3 bg-white rounded-2xl border border-emerald-200 text-xs font-semibold text-slate-900 flex items-center justify-between gap-2 shadow-civic-xs"
                       >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  )}
+                        <div className="flex items-center gap-2 truncate">
+                          <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                          <span className="truncate max-w-[200px]">{file.name}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setFile(null)}
+                          disabled={isLoading}
+                          title="Remove file"
+                          className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
-                  size="lg"
-                  disabled={isLoading || !file}
-                  isLoading={isLoading}
-                  variant="primary"
+                <motion.div
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.015 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.985 }}
                 >
-                  {isLoading ? 'Processing Document...' : 'Run Pre-check Validation'}
-                </Button>
+                  <Button
+                    type="submit"
+                    className="w-full font-semibold shadow-civic-sm cursor-pointer"
+                    size="lg"
+                    disabled={isLoading || !file}
+                    isLoading={isLoading}
+                    variant="primary"
+                  >
+                    {isLoading ? 'Processing Document...' : 'Run Pre-check Validation'}
+                  </Button>
+                </motion.div>
               </form>
 
               {/* Pre-check Rules Tested Guide */}
@@ -360,7 +389,7 @@ export const CitizenUploadPage: React.FC = () => {
               </div>
             </Card>
           ) : (
-            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200" variant="elevated">
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-3xl" variant="elevated">
               <div className="pb-3 border-b border-slate-100">
                 <h2 className="text-base font-bold text-slate-900 tracking-tight">
                   Lookup Previous Pre-check
@@ -385,19 +414,24 @@ export const CitizenUploadPage: React.FC = () => {
                   leftIcon={<Search className="h-4 w-4" />}
                 />
 
-                <Button
-                  type="submit"
-                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
-                  size="lg"
-                  disabled={isLoading || !lookupId.trim()}
-                  isLoading={isLoading}
-                  variant="primary"
+                <motion.div
+                  whileHover={shouldReduceMotion ? {} : { scale: 1.015 }}
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.985 }}
                 >
-                  {isLoading ? 'Retrieving Document...' : 'Lookup Reference ID'}
-                </Button>
+                  <Button
+                    type="submit"
+                    className="w-full font-semibold shadow-civic-sm cursor-pointer"
+                    size="lg"
+                    disabled={isLoading || !lookupId.trim()}
+                    isLoading={isLoading}
+                    variant="primary"
+                  >
+                    {isLoading ? 'Retrieving Document...' : 'Lookup Reference ID'}
+                  </Button>
+                </motion.div>
               </form>
 
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-2">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-2 shadow-civic-xs">
                 <Info className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
                 <span>Reference IDs are generated automatically on upload and can be shared or reviewed at any time.</span>
               </div>
@@ -406,113 +440,144 @@ export const CitizenUploadPage: React.FC = () => {
 
           {/* Reset Flow Button */}
           {results && (
-            <div className="pt-2">
+            <motion.div
+              initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="pt-2"
+            >
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
+                className="w-full py-2.5 px-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
               >
                 <RotateCcw className="h-3.5 w-3.5 text-civic-700" />
                 <span>Pre-check Another Document</span>
               </button>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {/* Right Column: Reference ID, Extracted Fields, and Validation Results (7 cols on lg) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Reference ID Pill Card */}
-          {documentId && (
-            <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
-                    <Tag className="h-4 w-4 text-saffron-400" />
+        <motion.div variants={fadeUpVariants} className="lg:col-span-7 space-y-6">
+          {/* Reference ID Pill Card with AnimatePresence */}
+          <AnimatePresence>
+            {documentId && (
+              <motion.div
+                initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
+              >
+                <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs rounded-2xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
+                        <Tag className="h-4 w-4 text-saffron-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-civic-900 block">
+                          Document Reference ID:
+                        </span>
+                        <span className="font-mono text-xs font-semibold text-slate-800 truncate block">
+                          {documentId}
+                        </span>
+                      </div>
+                    </div>
+
+                    <motion.button
+                      type="button"
+                      whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+                      whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
+                      onClick={handleCopyId}
+                      className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                    >
+                      {copiedId ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-600" />
+                          <span className="text-emerald-700 font-bold">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5 text-slate-500" />
+                          <span>Copy ID</span>
+                        </>
+                      )}
+                    </motion.button>
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-civic-900 block">
-                      Document Reference ID:
-                    </span>
-                    <span className="font-mono text-xs font-semibold text-slate-800 truncate block">
-                      {documentId}
-                    </span>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Extracted OCR Fields Card with AnimatePresence */}
+          <AnimatePresence>
+            {extractedData && Object.keys(extractedData).length > 0 && (
+              <motion.div
+                initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
+              >
+                <Card className="bg-white border-slate-200 p-5 sm:p-6 shadow-civic-sm space-y-3.5 rounded-3xl">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <FileCode2 className="h-4 w-4 text-civic-700" />
+                      <h3 className="text-sm font-bold text-slate-900">Extracted Data Fields</h3>
+                    </div>
+                    <span className="text-[11px] font-medium text-slate-400">Tesseract OCR Pipeline</span>
                   </div>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={handleCopyId}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer active:scale-95"
-                >
-                  {copiedId ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600" />
-                      <span className="text-emerald-700 font-bold">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-slate-500" />
-                      <span>Copy ID</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </Card>
-          )}
+                  <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs pt-1">
+                    <motion.div
+                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
+                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
+                    >
+                      <dt className="text-slate-500 font-medium">Applicant Name:</dt>
+                      <dd className="font-bold text-slate-900 text-sm">
+                        {extractedData.name || (
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                            Not detected
+                          </span>
+                        )}
+                      </dd>
+                    </motion.div>
 
-          {/* Extracted OCR Fields Card */}
-          {extractedData && Object.keys(extractedData).length > 0 && (
-            <Card className="bg-white border-slate-200 p-5 shadow-civic-sm space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div className="flex items-center gap-2">
-                  <FileCode2 className="h-4 w-4 text-civic-700" />
-                  <h3 className="text-sm font-bold text-slate-900">Extracted Data Fields</h3>
-                </div>
-                <span className="text-[11px] font-medium text-slate-400">Tesseract OCR Pipeline</span>
-              </div>
+                    <motion.div
+                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
+                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
+                    >
+                      <dt className="text-slate-500 font-medium">Certificate No:</dt>
+                      <dd className="font-bold text-slate-900 text-sm font-mono">
+                        {extractedData.certificate_number || (
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                            Not detected
+                          </span>
+                        )}
+                      </dd>
+                    </motion.div>
 
-              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-                  <dt className="text-slate-500 font-medium">Applicant Name:</dt>
-                  <dd className="font-bold text-slate-900 text-sm">
-                    {extractedData.name || (
-                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
-                        Not detected
-                      </span>
-                    )}
-                  </dd>
-                </div>
-
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-                  <dt className="text-slate-500 font-medium">Certificate No:</dt>
-                  <dd className="font-bold text-slate-900 text-sm font-mono">
-                    {extractedData.certificate_number || (
-                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
-                        Not detected
-                      </span>
-                    )}
-                  </dd>
-                </div>
-
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1">
-                  <dt className="text-slate-500 font-medium">Expiry Date:</dt>
-                  <dd className="font-bold text-slate-900 text-sm font-mono">
-                    {extractedData.expiry_date || (
-                      <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
-                        Not detected
-                      </span>
-                    )}
-                  </dd>
-                </div>
-              </dl>
-            </Card>
-          )}
+                    <motion.div
+                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
+                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
+                    >
+                      <dt className="text-slate-500 font-medium">Expiry Date:</dt>
+                      <dd className="font-bold text-slate-900 text-sm font-mono">
+                        {extractedData.expiry_date || (
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                            Not detected
+                          </span>
+                        )}
+                      </dd>
+                    </motion.div>
+                  </dl>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Validation Rule Engine Results */}
           <ValidationResultCard results={results} isLoading={isLoading} error={null} />
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

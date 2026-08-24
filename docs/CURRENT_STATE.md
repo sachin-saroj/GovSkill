@@ -1,10 +1,16 @@
 # CURRENT STATE
 
 Last Updated:
-2026-08-18
+2026-08-23
 
 ## Working
 
+- **Reference-Driven Visual Redesign & 3D Layered Landing Experience**: Complete aesthetic and motion overhaul inspired by modern digital public infrastructure and design showcases (Superdesign, Watermelon UI, getdesign.md):
+  - **Refined Civic Design Tokens (`tailwind.config.js`, `src/index.css`)**: Deep midnight navy (`#071322`, `#0B192C`, `#133E87`), Radiant Saffron (`#D97706`), Verification Emerald (`#059669`), hardware-accelerated 3D transform layers (`transform-gpu`, `perspective-1200`, `translate-z-*`), and dark grid patterns (`bg-civic-dark-pattern`).
+  - **Multi-Plane 3D Hero Showcase (`HeroVisual.tsx`)**: Isometric depth layout separating the live DPI telemetry base ($Z: 0\text{px}$), GovAssist citizen OCR extraction stream ($Z: 24\text{px}$), GovSkill grounded AI dialogue ($Z: 32\text{px}$), and floating foreground trust badges ($Z: 48\text{px}$) with isolated, non-wobbling mouse parallax.
+  - **Interactive Dual-Track Dynamic Architecture (`EcosystemVisual.tsx`)**: Dynamic visual clearly delineating Track 1 (GovAssist: Upload $\rightarrow$ OCR $\rightarrow$ 4 Deterministic Rules $\rightarrow$ AI Guidance) and Track 2 (GovSkill: Curriculum $\rightarrow$ Grounded AI Tutor $\rightarrow$ Server Quiz $\rightarrow$ Governance Telemetry), featuring flowing glowing SVG packet paths and auto-tour progress.
+  - **Tactile 3D Tilt Cards (`InteractiveTiltCard.tsx`)**: Dynamic specular sheen powered by `useMotionTemplate` and isolated spring physics with zero hover jitter or CSS transition conflicts.
+  - **Shared Motion Engine (`src/lib/motion.ts`)**: Standardized spring physics tokens (`springTactile`, `springSmooth`, `springHero`, `viewportOnce`) and comprehensive `prefers-reduced-motion` compliance.
 - **User Authentication**: Role-enforced JWT registration (forces `employee` on public signup), login, admin creation (`/auth/create-admin` & `app/db/seed_admin.py`), and role-based route protection (`employee` vs `admin`).
 - **File Upload Security Pipeline**: Max 5 MB size validation, extension whitelist (`.jpg`, `.jpeg`, `.png`, `.pdf`, `.txt`), MIME type checks, and UUID filename assignment.
 - **PDF Document OCR Processing**: PyMuPDF (`fitz`) rendering pipeline for direct text extraction and scanned PDF page image rendering for Tesseract OCR.
@@ -23,12 +29,12 @@ Last Updated:
 - **Security Hardening**: Mandatory `SECRET_KEY` validation (prevents fallback to hardcoded secrets) and domain-restricted CORS origins (`settings.ALLOWED_ORIGINS`).
 - **User Password Management**: Admin password reset (`POST /api/admin/users/{user_id}/reset-password`) and self-service password change for authenticated users (`POST /api/auth/change-password`) requiring current password verification.
 - **Admin Skills & Analytics Overview**: Administrative endpoint (`GET /api/progress/admin/skills-overview`) and Admin Dashboard KPI cards computing workforce enrollment, active training modules, total quiz evaluations, average assessment scores, certifications earned, and completion rates.
-- **Automated Testing Suite**: 24 Pytest unit/integration test cases covering Auth Security, Password Management, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
+- **Automated Testing Suite**: 26 Pytest backend test cases and 36 Vitest frontend test cases covering Landing Page interactive motion & 3D tilt, Auth Security, Upload Security, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking, Multi-Module AI Tutor Routing, Public Citizen Document Lookup, and Employee/Citizen journeys.
 - **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend tests and frontend build on push/PR.
 
 ## Partially Working
 
-- **None**: All core phases 1-7 (security pipelines, testing, CMS, skill tracking, multi-module AI routing, and OCR pre-checker enhancements) are fully functional.
+- **None**: All core phases 1-7 (security pipelines, testing, CMS, skill tracking, multi-module AI routing, OCR pre-checker enhancements, and Batch 9A/9B motion polish) are fully functional.
 
 ## Not Implemented
 
@@ -40,11 +46,5 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (24/24 passed) are fully operational.
-
-
-
-
-
-
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and Pytest test suite (26/26 passed) are fully operational.
 

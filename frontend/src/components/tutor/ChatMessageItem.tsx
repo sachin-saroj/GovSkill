@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Module } from '@/types';
 import { Bot, User, Tag, ArrowRight } from 'lucide-react';
 
@@ -21,9 +22,15 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   matchedModule,
 }) => {
   const isUser = msg.sender === 'user';
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className={`flex gap-3 animate-fade-in ${isUser ? 'justify-end' : 'justify-start'}`}>
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+      className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
+    >
       {!isUser && (
         <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs mt-0.5">
           <Bot className="h-4 w-4 text-saffron-400" />
@@ -73,7 +80,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           <User className="h-4 w-4 text-slate-200" />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
