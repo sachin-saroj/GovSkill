@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { SkillGapItem } from '@/types';
 import Card from '@/components/ui/Card';
-import { AlertCircle, ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { AlertCircle, ArrowRight, CheckCircle2, ShieldAlert, Target } from 'lucide-react';
 
 interface SkillGapsCardProps {
   gaps: SkillGapItem[];
@@ -18,10 +18,10 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-bold text-emerald-950">
-              No Critical Skill Gaps Detected
+              No Operational Skill Gaps Detected
             </h3>
             <p className="text-xs text-emerald-800 leading-relaxed">
-              All active training areas meet standard operational proficiency requirements. Keep up regular practice to maintain certification standards.
+              All active training competencies meet or exceed the mandatory 75% certification standard. Maintain regular review to stay operationally ready.
             </p>
           </div>
         </div>
@@ -44,6 +44,9 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {gaps.map((gap) => {
           const isNeedsAttention = gap.proficiency === 'Needs Attention';
+          const target = gap.target_threshold ?? 75;
+          const current = gap.current_score_pct ?? 0;
+          const gapPct = gap.gap_percentage ?? Math.max(0, target - current);
 
           return (
             <Card
@@ -54,7 +57,7 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
                   : 'border-slate-200 bg-white'
               }`}
             >
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <h4 className="text-sm font-bold text-slate-900 leading-snug">
                     {gap.skill}
@@ -69,6 +72,31 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
                     <AlertCircle className="h-3 w-3" />
                     <span>{gap.proficiency}</span>
                   </span>
+                </div>
+
+                {/* Score vs Target Progress Meter */}
+                <div className="space-y-1 bg-white p-2.5 rounded-lg border border-slate-200/80">
+                  <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                    <span className="flex items-center gap-1 font-semibold text-slate-700">
+                      <Target className="h-3 w-3 text-civic-600" />
+                      Target Standard: {target}%
+                    </span>
+                    <span className="text-amber-900 font-bold">
+                      Gap: {gapPct}% ({current}% current)
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden relative">
+                    <div
+                      className="h-2 bg-amber-500 rounded-full"
+                      style={{ width: `${Math.min(100, current)}%` }}
+                    />
+                    {/* Target threshold marker at 75% */}
+                    <div
+                      className="absolute top-0 bottom-0 w-0.5 bg-slate-400 z-10"
+                      style={{ left: `${target}%` }}
+                      title={`Certification target: ${target}%`}
+                    />
+                  </div>
                 </div>
 
                 <div className="text-xs space-y-1.5 bg-white/80 p-3 rounded-lg border border-slate-200/70">

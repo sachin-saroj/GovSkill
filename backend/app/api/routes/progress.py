@@ -99,6 +99,20 @@ async def get_my_skill_progress(
         else:
             proficiency = "Not Started"
 
+        # Calculate deterministic module readiness state
+        if p_status == "certified" or pct >= 75:
+            readiness_state = "Certified"
+        elif pct >= 50:
+            readiness_state = "Operational"
+        elif attempts_count > 0 and pct < 50:
+            readiness_state = "Needs Improvement"
+        elif lessons_comp:
+            readiness_state = "Assessment Pending"
+        elif p_status == "in_progress" or (prog and prog.last_accessed_section > 0):
+            readiness_state = "In Progress"
+        else:
+            readiness_state = "Not Started"
+
         # Determine last activity timestamp
         if mod_attempts:
             last_att = mod_attempts[-1]
@@ -133,6 +147,7 @@ async def get_my_skill_progress(
                 total_questions=t_questions,
                 score_percentage=pct,
                 status=p_status,
+                readiness_state=readiness_state,
                 updated_at=updated_str,
                 proficiency=proficiency,
                 attempts_count=attempts_count,
@@ -156,7 +171,6 @@ async def get_my_skill_progress(
                 ),
             )
         )
-
 
     total_mods = len(modules)
     overall_score = round((certified_count / total_mods) * 100) if total_mods > 0 else 0
@@ -185,6 +199,64 @@ async def get_my_skill_progress(
     else:
         readiness_level = "Initial Onboarding"
 
+    # Strongest and Weakest Competency Analysis
+    attempted_skills = [s for s in skill_items if s.attempts_count > 0 or s.lessons_completed]
+    strongest_comp: str | None = None
+    weakest_comp: str | None = None
+
+    if attempted_skills:
+        # Highest score
+        sorted_by_score = sorted(
+            attempted_skills, key=lambda s: (s.score_percentage, 1 if s.status == "certified" else 0), reverse=True
+        )
+        if sorted_by_score[0].score_percentage > 0 or sorted_by_score[0].status == "certified":
+            top_s = sorted_by_score[0]
+            strongest_comp = f"{top_s.module_title} ({top_s.score_percentage}%)"
+
+        # Weakest score among non-certified or lowest scoring
+        uncertified_attempted = [s for s in attempted_skills if s.status != "certified"]
+        if uncertified_attempted:
+            lowest_s = sorted(uncertified_attempted, key=lambda s: s.score_percentage)[0]
+            weakest_comp = f"{lowest_s.module_title} ({lowest_s.score_percentage}%)"
+        elif any(s.score_percentage < 100 for s in attempted_skills):
+            lowest_s = sorted(attempted_skills, key=lambda s: s.score_percentage)[0]
+            if lowest_s.score_percentage < 100:
+                weakest_comp = f"{lowest_s.module_title} ({lowest_s.score_percentage}%)"
+
+    # Average Assessment Score
+    if user_attempts:
+        valid_scores = [Math_pct(a.score, a.total) for a in user_attempts if a.total > 0]
+        avg_score = round(sum(valid_scores) / len(valid_scores)) if valid_scores else 0
+    else:
+        avg_score = 0
+
+    readiness_criteria = [
+        "Passing Standard: 75% or higher on end-of-module assessment to earn verified certification.",
+        "Initial Onboarding (0-24%): Getting started with assigned departmental curriculum.",
+        "Developing Competency (25-49%): At least 1 module certified or multiple lessons completed.",
+        "Substantial Readiness (50-74%): At least 50% of required local government modules certified.",
+        "Full Operational Readiness (75-100%): All prescribed administrative skill modules certified.",
+    ]
+
+    if overall_score == 100:
+        readiness_explanation = (
+            "You have achieved verified certification across all 4 operational modules. Full administrative compliance certified."
+        )
+    elif overall_score >= 50:
+        readiness_explanation = (
+            f"You have certified {certified_count} of {total_mods} modules ({overall_score}%). "
+            f"Complete the remaining {modules_remaining_count} module{'s' if modules_remaining_count > 1 else ''} to achieve Full Operational Readiness."
+        )
+    elif overall_score > 0 or modules_completed_count > 0:
+        readiness_explanation = (
+            f"You have completed {modules_completed_count} curriculum guide{'s' if modules_completed_count > 1 else ''} and certified {certified_count}. "
+            "Attempt assessments to progress toward Substantial Readiness."
+        )
+    else:
+        readiness_explanation = (
+            "You are currently at the Initial Onboarding stage. Begin your assigned curriculum to build foundational digital competencies."
+        )
+
     summary = CompetencySummary(
         overall_score=overall_score,
         modules_completed=modules_completed_count,
@@ -193,12 +265,18 @@ async def get_my_skill_progress(
         modules_remaining=modules_remaining_count,
         learning_status=learning_status,
         readiness_level=readiness_level,
+        strongest_competency=strongest_comp,
+        weakest_competency=weakest_comp,
+        average_assessment_score=avg_score,
+        readiness_criteria=readiness_criteria,
+        readiness_explanation=readiness_explanation,
     )
 
     # Identify Skill Gaps
     skill_gaps: list[SkillGapItem] = []
     for s in skill_items:
         if s.status != "certified":
+            gap_pct = max(0, 75 - s.score_percentage)
             if s.attempts_count > 0 and s.score_percentage < 75:
                 gap_prof = "Needs Attention" if s.score_percentage < 50 else "Developing"
                 skill_gaps.append(
@@ -207,8 +285,10 @@ async def get_my_skill_progress(
                         skill=s.module_title,
                         proficiency=gap_prof,
                         current_score_pct=s.score_percentage,
-                        evidence=f"Scored {s.score_percentage}% ({s.best_score}/{s.total_questions}) on assessment — 75% score required for certification.",
-                        recommended_action="Review lesson notes and retake assessment to achieve verified certification.",
+                        target_threshold=75,
+                        gap_percentage=gap_pct,
+                        evidence=f"Scored {s.score_percentage}% ({s.best_score}/{s.total_questions}) on assessment — 75% required for certification (gap: {gap_pct}%).",
+                        recommended_action="Review lesson notes and retake assessment to clear the competency gap.",
                     )
                 )
             elif s.lessons_completed and s.attempts_count == 0:
@@ -218,8 +298,10 @@ async def get_my_skill_progress(
                         skill=s.module_title,
                         proficiency="Developing",
                         current_score_pct=0,
+                        target_threshold=75,
+                        gap_percentage=75,
                         evidence="Lesson curriculum completed, but mandatory certification assessment has not been attempted.",
-                        recommended_action="Take the module assessment to demonstrate digital competency.",
+                        recommended_action="Take the module assessment to achieve verified certification.",
                     )
                 )
             elif not s.lessons_completed and s.status == "in_progress":
@@ -229,8 +311,23 @@ async def get_my_skill_progress(
                         skill=s.module_title,
                         proficiency="Needs Attention",
                         current_score_pct=0,
-                        evidence="Module started but official lesson reading is not yet completed.",
+                        target_threshold=75,
+                        gap_percentage=75,
+                        evidence=f"Module started (Section {s.last_accessed_section + 1}), but official lesson reading is not completed.",
                         recommended_action="Read official lesson guidelines and mark curriculum as completed.",
+                    )
+                )
+            elif s.status == "not_started":
+                skill_gaps.append(
+                    SkillGapItem(
+                        module_id=s.module_id,
+                        skill=s.module_title,
+                        proficiency="Developing",
+                        current_score_pct=0,
+                        target_threshold=75,
+                        gap_percentage=75,
+                        evidence="Curriculum has not been started.",
+                        recommended_action="Begin reading official module guidelines.",
                     )
                 )
 
@@ -308,20 +405,33 @@ async def get_my_skill_progress(
             link="/progress",
         )
 
-    # Assessment History (most recent first)
+    # Assessment History (most recent first) with attempt numbering and improvement deltas
     assessment_history: list[AssessmentHistoryItem] = []
-    # Build attempt number index per module
-    mod_attempt_counter: dict[uuid.UUID, int] = {}
+    # Build attempt number index and history per module
+    mod_attempts_history: dict[uuid.UUID, list[QuizAttempt]] = {}
     attempt_num_map: dict[uuid.UUID, int] = {}
+    improvement_map: dict[uuid.UUID, int | None] = {}
+
     for att in user_attempts:  # user_attempts are in asc order
-        count = mod_attempt_counter.get(att.module_id, 0) + 1
-        mod_attempt_counter[att.module_id] = count
-        attempt_num_map[att.id] = count
+        prev_list = mod_attempts_history.get(att.module_id, [])
+        attempt_num = len(prev_list) + 1
+        attempt_num_map[att.id] = attempt_num
+
+        if prev_list:
+            prev_att = prev_list[-1]
+            prev_pct = Math_pct(prev_att.score, prev_att.total)
+            curr_pct = Math_pct(att.score, att.total)
+            improvement_map[att.id] = curr_pct - prev_pct
+        else:
+            improvement_map[att.id] = None
+
+        mod_attempts_history.setdefault(att.module_id, []).append(att)
 
     for att in reversed(user_attempts):
         score_pct = Math_pct(att.score, att.total)
         passed = (att.total > 0) and ((att.score / att.total) >= 0.75)
         att_num = attempt_num_map.get(att.id, 1)
+        improvement = improvement_map.get(att.id)
         sub_str = (
             att.submitted_at.isoformat()
             if hasattr(att.submitted_at, "isoformat")
@@ -337,6 +447,7 @@ async def get_my_skill_progress(
                 score_percentage=score_pct,
                 attempt_number=att_num,
                 passed=passed,
+                improvement_from_previous=improvement,
                 submitted_at=sub_str,
             )
         )
@@ -344,11 +455,50 @@ async def get_my_skill_progress(
     # Learning Activity Timeline (Collated chronological events)
     raw_activities: list[dict] = []
 
+    # Activity from lesson start and completion
+    for prog in user_progress_list:
+        m_title = mod_map.get(prog.module_id, "Training Module")
+        if prog.started_at:
+            raw_activities.append(
+                {
+                    "dt": prog.started_at,
+                    "item": LearningActivityItem(
+                        activity_type="lesson_started",
+                        title="Curriculum Initiated",
+                        module_title=m_title,
+                        timestamp=(
+                            prog.started_at.isoformat()
+                            if hasattr(prog.started_at, "isoformat")
+                            else str(prog.started_at)
+                        ),
+                        detail=f"Began reading official guidelines for {m_title}.",
+                    ),
+                }
+            )
+        if prog.lessons_completed and prog.completed_at:
+            raw_activities.append(
+                {
+                    "dt": prog.completed_at,
+                    "item": LearningActivityItem(
+                        activity_type="lesson_completed",
+                        title="Lessons Completed",
+                        module_title=m_title,
+                        timestamp=(
+                            prog.completed_at.isoformat()
+                            if hasattr(prog.completed_at, "isoformat")
+                            else str(prog.completed_at)
+                        ),
+                        detail=f"Completed all prescribed lesson sections for {m_title}.",
+                    ),
+                }
+            )
+
     # Activity from quiz attempts
     for att in user_attempts:
         score_pct = Math_pct(att.score, att.total)
         passed = (att.total > 0) and ((att.score / att.total) >= 0.75)
         m_title = mod_map.get(att.module_id, "Training Module")
+        improvement = improvement_map.get(att.id)
 
         if passed:
             raw_activities.append(
@@ -364,6 +514,23 @@ async def get_my_skill_progress(
                             else str(att.submitted_at)
                         ),
                         detail=f"Scored {score_pct}% ({att.score}/{att.total}) on assessment.",
+                    ),
+                }
+            )
+        elif improvement is not None and improvement > 0:
+            raw_activities.append(
+                {
+                    "dt": att.submitted_at,
+                    "item": LearningActivityItem(
+                        activity_type="quiz_improved",
+                        title="Assessment Score Improved",
+                        module_title=m_title,
+                        timestamp=(
+                            att.submitted_at.isoformat()
+                            if hasattr(att.submitted_at, "isoformat")
+                            else str(att.submitted_at)
+                        ),
+                        detail=f"Score improved by +{improvement}% to {score_pct}% ({att.score}/{att.total}).",
                     ),
                 }
             )
@@ -385,30 +552,9 @@ async def get_my_skill_progress(
                 }
             )
 
-    # Activity from lesson completion
-    for prog in user_progress_list:
-        if prog.lessons_completed and prog.updated_at:
-            m_title = mod_map.get(prog.module_id, "Training Module")
-            raw_activities.append(
-                {
-                    "dt": prog.updated_at,
-                    "item": LearningActivityItem(
-                        activity_type="lesson_completed",
-                        title="Lessons Completed",
-                        module_title=m_title,
-                        timestamp=(
-                            prog.updated_at.isoformat()
-                            if hasattr(prog.updated_at, "isoformat")
-                            else str(prog.updated_at)
-                        ),
-                        detail=f"Completed official lesson guidelines for {m_title}.",
-                    ),
-                }
-            )
-
-    # Sort descending by datetime, cap to 10 items
+    # Sort descending by datetime, cap to 15 items
     raw_activities.sort(key=lambda x: x["dt"], reverse=True)
-    recent_activity = [a["item"] for a in raw_activities[:10]]
+    recent_activity = [a["item"] for a in raw_activities[:15]]
 
     return EmployeeSkillStatusResponse(
         overall_skill_score=overall_score,
@@ -486,6 +632,20 @@ async def record_section_access(
         )
     )
 
+    # Calculate deterministic module readiness state
+    if prog.status == "certified" or pct >= 75:
+        readiness_state = "Certified"
+    elif pct >= 50:
+        readiness_state = "Operational"
+    elif prog.best_score > 0 and pct < 50:
+        readiness_state = "Needs Improvement"
+    elif prog.lessons_completed:
+        readiness_state = "Assessment Pending"
+    elif prog.status == "in_progress" or prog.last_accessed_section > 0:
+        readiness_state = "In Progress"
+    else:
+        readiness_state = "Not Started"
+
     return EmployeeSkillItem(
         module_id=module.id,
         module_title=module.title,
@@ -494,6 +654,7 @@ async def record_section_access(
         total_questions=prog.total_questions,
         score_percentage=pct,
         status=prog.status,
+        readiness_state=readiness_state,
         updated_at=prog.updated_at.isoformat()
         if hasattr(prog.updated_at, "isoformat")
         else str(prog.updated_at),
@@ -576,6 +737,20 @@ async def mark_module_lessons_completed(
         else str(prog.updated_at)
     )
 
+    # Calculate deterministic module readiness state
+    if prog.status == "certified" or pct >= 75:
+        readiness_state = "Certified"
+    elif pct >= 50:
+        readiness_state = "Operational"
+    elif prog.best_score > 0 and pct < 50:
+        readiness_state = "Needs Improvement"
+    elif prog.lessons_completed:
+        readiness_state = "Assessment Pending"
+    elif prog.status == "in_progress" or prog.last_accessed_section > 0:
+        readiness_state = "In Progress"
+    else:
+        readiness_state = "Not Started"
+
     return EmployeeSkillItem(
         module_id=module.id,
         module_title=module.title,
@@ -584,6 +759,7 @@ async def mark_module_lessons_completed(
         total_questions=prog.total_questions,
         score_percentage=pct,
         status=prog.status,
+        readiness_state=readiness_state,
         updated_at=updated_str,
         proficiency=proficiency,
         last_accessed_section=prog.last_accessed_section,

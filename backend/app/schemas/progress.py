@@ -12,6 +12,7 @@ class EmployeeSkillItem(BaseModel):
     total_questions: int
     score_percentage: int
     status: str  # "not_started", "in_progress", "completed", "certified"
+    readiness_state: str = "Not Started"  # "Not Started", "In Progress", "Assessment Pending", "Needs Improvement", "Operational", "Certified"
     updated_at: str
     proficiency: str = "Not Started"  # "Strong", "Developing", "Needs Attention", "Not Started"
     attempts_count: int = 0
@@ -21,7 +22,6 @@ class EmployeeSkillItem(BaseModel):
     last_accessed_section: int = 0
     started_at: str | None = None
     completed_at: str | None = None
-
 
 
 class UpdateSectionProgressRequest(BaseModel):
@@ -36,6 +36,11 @@ class CompetencySummary(BaseModel):
     modules_remaining: int
     learning_status: str
     readiness_level: str
+    strongest_competency: str | None = None
+    weakest_competency: str | None = None
+    average_assessment_score: int = 0
+    readiness_criteria: list[str] = []
+    readiness_explanation: str = ""
 
 
 class SkillGapItem(BaseModel):
@@ -43,12 +48,14 @@ class SkillGapItem(BaseModel):
     skill: str
     proficiency: str  # "Needs Attention", "Developing"
     current_score_pct: int
+    target_threshold: int = 75
+    gap_percentage: int = 0
     evidence: str
     recommended_action: str
 
 
 class NextActionRecommendation(BaseModel):
-    action_type: str  # "read_lesson", "take_quiz", "retake_quiz", "all_certified"
+    action_type: str  # "read_lesson", "take_quiz", "retake_quiz", "start_training", "all_certified"
     module_id: uuid.UUID | None = None
     module_title: str | None = None
     title: str
@@ -66,11 +73,12 @@ class AssessmentHistoryItem(BaseModel):
     score_percentage: int
     attempt_number: int
     passed: bool
+    improvement_from_previous: int | None = None
     submitted_at: str
 
 
 class LearningActivityItem(BaseModel):
-    activity_type: str  # "certification", "quiz_attempt", "lesson_completed"
+    activity_type: str  # "certification", "quiz_attempt", "quiz_improved", "lesson_completed", "lesson_started"
     title: str
     module_title: str
     timestamp: str

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AssessmentHistoryItem } from '@/types';
 import Card from '@/components/ui/Card';
-import { History, Award, AlertCircle, FileQuestion } from 'lucide-react';
+import { History, Award, AlertCircle, FileQuestion, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface AssessmentHistoryTableProps {
   history: AssessmentHistoryItem[];
@@ -60,41 +60,70 @@ export const AssessmentHistoryTable: React.FC<AssessmentHistoryTableProps> = ({ 
                   <th scope="col" className="px-4 py-3">Module</th>
                   <th scope="col" className="px-4 py-3">Attempt</th>
                   <th scope="col" className="px-4 py-3 text-center">Score</th>
+                  <th scope="col" className="px-4 py-3 text-center">Growth Delta</th>
                   <th scope="col" className="px-4 py-3 text-right">Result</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium">
-                {history.map((item) => (
-                  <tr key={item.attempt_id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-4 py-3 text-slate-500 whitespace-nowrap font-mono text-[11px]">
-                      {formatDate(item.submitted_at)}
-                    </td>
-                    <td className="px-4 py-3 text-slate-900 font-semibold max-w-[240px] truncate">
-                      {item.module_title}
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      <span className="inline-block px-2 py-0.5 rounded bg-slate-100 text-[11px] font-mono">
-                        #{item.attempt_number}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-center font-mono font-bold text-slate-900">
-                      {item.score} / {item.total} ({item.score_percentage}%)
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      {item.passed ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
-                          <Award className="h-3 w-3 text-emerald-600" />
-                          <span>Passed (Certified)</span>
+                {history.map((item) => {
+                  const delta = item.improvement_from_previous;
+
+                  return (
+                    <tr key={item.attempt_id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="px-4 py-3 text-slate-500 whitespace-nowrap font-mono text-[11px]">
+                        {formatDate(item.submitted_at)}
+                      </td>
+                      <td className="px-4 py-3 text-slate-900 font-semibold max-w-[220px] truncate">
+                        {item.module_title}
+                      </td>
+                      <td className="px-4 py-3 text-slate-600">
+                        <span className="inline-block px-2 py-0.5 rounded bg-slate-100 text-[11px] font-mono font-semibold">
+                          #{item.attempt_number}
                         </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
-                          <AlertCircle className="h-3 w-3 text-amber-600" />
-                          <span>Below Threshold</span>
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-4 py-3 text-center font-mono font-bold text-slate-900">
+                        {item.score} / {item.total} ({item.score_percentage}%)
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {delta !== undefined && delta !== null ? (
+                          delta > 0 ? (
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 font-mono">
+                              <TrendingUp className="h-3 w-3 text-emerald-600" />
+                              <span>+{delta}%</span>
+                            </span>
+                          ) : delta < 0 ? (
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-300 font-mono">
+                              <TrendingDown className="h-3 w-3 text-amber-600" />
+                              <span>{delta}%</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-600 font-mono">
+                              <Minus className="h-3 w-3 text-slate-400" />
+                              <span>0%</span>
+                            </span>
+                          )
+                        ) : (
+                          <span className="text-[11px] text-slate-400 font-medium">
+                            Initial Attempt
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {item.passed ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+                            <Award className="h-3 w-3 text-emerald-600" />
+                            <span>Passed (&ge;75%)</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
+                            <AlertCircle className="h-3 w-3 text-amber-600" />
+                            <span>Below 75% Standard</span>
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

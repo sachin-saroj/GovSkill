@@ -1,7 +1,22 @@
-import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { Sparkles, Award, CheckCircle2, Shield, User, Clock, CheckCheck, Target } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import {
+  Sparkles,
+  Award,
+  CheckCircle2,
+  Shield,
+  User,
+  Clock,
+  CheckCheck,
+  Target,
+  Info,
+  TrendingUp,
+  AlertCircle,
+  X,
+  BookOpen,
+} from 'lucide-react';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import { CompetencySummary } from '@/types';
 import { fadeUpVariants } from '@/lib/motion';
 
@@ -22,6 +37,7 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
   summary,
 }) => {
   const shouldReduceMotion = useReducedMotion();
+  const [showCalculationModal, setShowCalculationModal] = useState(false);
 
   const readinessLevel = summary?.readiness_level || (
     overallScore === 100
@@ -43,6 +59,10 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
 
   const modulesCompleted = summary?.modules_completed ?? certifiedCount;
   const modulesRemaining = summary?.modules_remaining ?? Math.max(0, totalCount - certifiedCount);
+  const strongest = summary?.strongest_competency;
+  const weakest = summary?.weakest_competency;
+  const avgScore = summary?.average_assessment_score ?? 0;
+  const explanation = summary?.readiness_explanation;
 
   return (
     <motion.div variants={fadeUpVariants} className="space-y-6">
@@ -53,9 +73,20 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-xs font-semibold text-saffron-400 backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-saffron-400" />
-              <span>Competency Intelligence Dashboard</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-xs font-semibold text-saffron-400 backdrop-blur-sm">
+                <Sparkles className="h-3.5 w-3.5 text-saffron-400" />
+                <span>Competency Intelligence Dashboard</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCalculationModal(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-civic-900/90 hover:bg-civic-800 border border-civic-700/80 text-[11px] font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
+                title="View how operational scores and readiness tiers are calculated"
+              >
+                <Info className="h-3 w-3 text-civic-400" />
+                <span>How is this calculated?</span>
+              </button>
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
@@ -63,10 +94,11 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Real-time competency assessment, verified certifications, and targeted learning recommendations for local government personnel.
+              {explanation ||
+                'Real-time competency assessment, verified certifications, and targeted learning recommendations for local government personnel.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-300">
+            <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs text-slate-300">
               <div className="flex items-center gap-1.5 bg-civic-950/80 px-3 py-1 rounded-lg border border-civic-800">
                 <User className="h-3.5 w-3.5 text-slate-400" />
                 <span className="font-semibold text-slate-200">Local Office Staff</span>
@@ -80,6 +112,29 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
                 <span className="font-semibold">{readinessLevel}</span>
               </div>
             </div>
+
+            {/* Competency Insights Strip (Strongest / Weakest) */}
+            {(strongest || weakest || avgScore > 0) && (
+              <div className="flex flex-wrap items-center gap-2 pt-2 text-xs">
+                {strongest && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-950/80 border border-emerald-800/80 text-emerald-300">
+                    <TrendingUp className="h-3 w-3 text-emerald-400" />
+                    <span><strong className="text-white font-semibold">Strongest:</strong> {strongest}</span>
+                  </div>
+                )}
+                {weakest && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-950/80 border border-amber-800/80 text-amber-300">
+                    <AlertCircle className="h-3 w-3 text-amber-400" />
+                    <span><strong className="text-white font-semibold">Priority Focus:</strong> {weakest}</span>
+                  </div>
+                )}
+                {avgScore > 0 && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-civic-950/80 border border-civic-800 text-slate-300">
+                    <span><strong className="text-white font-semibold">Avg Score:</strong> {avgScore}%</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Metric Scorecard Widget */}
@@ -89,7 +144,7 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
           >
             <div className="flex items-center justify-between gap-2 mb-1">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Overall Competency
+                Operational Score
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-civic-800 text-saffron-300 border border-civic-700">
                 {learningStatus}
@@ -157,10 +212,97 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
           </div>
           <div className="min-w-0">
             <p className="font-bold text-xs text-slate-900 truncate">{readinessLevel}</p>
-            <p className="text-[11px] text-slate-500 font-medium pt-0.5">Readiness Status</p>
+            <p className="text-[11px] text-slate-500 font-medium pt-0.5">Readiness Tier</p>
           </div>
         </Card>
       </div>
+
+      {/* Transparent Calculation Explainer Modal */}
+      <AnimatePresence>
+        {showCalculationModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-civic-100 text-civic-800">
+                    <Info className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-base">Competency Scoring Standards</h3>
+                    <p className="text-xs text-slate-500">How your operational readiness is calculated</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowCalculationModal(false)}
+                  className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
+                <div className="p-3 bg-civic-50 rounded-xl border border-civic-100 space-y-1">
+                  <p className="font-bold text-civic-900 flex items-center gap-1.5 text-xs">
+                    <Award className="h-4 w-4 text-civic-700" />
+                    Certification Threshold: 75%
+                  </p>
+                  <p className="text-slate-600">
+                    To earn a verified operational credential for any module, staff must achieve 75% or higher on the server-evaluated end-of-module assessment.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-1.5">
+                    <Target className="h-4 w-4 text-civic-700" />
+                    Readiness Tiers
+                  </h4>
+                  <ul className="space-y-2">
+                    <li className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                      <strong className="text-slate-900 block">Initial Onboarding (0–24%)</strong>
+                      Staff has enrolled and is beginning curriculum reading.
+                    </li>
+                    <li className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                      <strong className="text-slate-900 block">Developing Competency (25–49%)</strong>
+                      At least one core module certified or multiple curriculum lessons completed.
+                    </li>
+                    <li className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                      <strong className="text-slate-900 block">Substantial Readiness (50–74%)</strong>
+                      At least 50% of local government administrative skills certified.
+                    </li>
+                    <li className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200/80">
+                      <strong className="text-emerald-900 block">Full Operational Readiness (75–100%)</strong>
+                      All prescribed government skills certified and compliant with administrative standards.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/60 flex items-start gap-2">
+                  <BookOpen className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" />
+                  <p className="text-amber-900">
+                    <strong>Zero-Guessing Guarantee:</strong> All competency metrics, gap percentages, and score deltas are computed deterministically from stored assessment attempts.
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCalculationModal(false)}
+                  className="text-xs"
+                >
+                  Close Explainer
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

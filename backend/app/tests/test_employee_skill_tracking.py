@@ -71,9 +71,15 @@ async def test_employee_skill_tracking_pipeline():
             assert data["overall_skill_score"] == 0
             assert data["certified_modules"] == 0
             assert len(data["skills"]) >= 4
+            assert data["skills"][0]["readiness_state"] == "Not Started"
             assert data["summary"]["learning_status"] == "Getting Started"
             assert data["summary"]["readiness_level"] == "Initial Onboarding"
             assert data["summary"]["modules_remaining"] == data["total_modules"]
+            assert data["summary"]["strongest_competency"] is None
+            assert data["summary"]["weakest_competency"] is None
+            assert data["summary"]["average_assessment_score"] == 0
+            assert len(data["summary"]["readiness_criteria"]) >= 4
+            assert "Initial Onboarding" in data["summary"]["readiness_explanation"]
             assert data["recommended_action"]["action_type"] in ("start_training", "read_lesson")
             assert len(data["assessment_history"]) == 0
 
@@ -90,6 +96,7 @@ async def test_employee_skill_tracking_pipeline():
             assert sec_data["last_accessed_section"] == 2
             assert sec_data["started_at"] is not None
             assert sec_data["status"] == "in_progress"
+            assert sec_data["readiness_state"] == "In Progress"
 
             # Verify invalid module ID and unauthorized access
             bad_uuid_resp = await client.post(
@@ -120,18 +127,21 @@ async def test_employee_skill_tracking_pipeline():
             comp_data = complete_resp.json()
             assert comp_data["lessons_completed"] is True
             assert comp_data["status"] == "in_progress"
+            assert comp_data["readiness_state"] == "Assessment Pending"
             assert comp_data["completed_at"] is not None
             assert comp_data["started_at"] is not None
 
             # 3. Check progress after lesson completion:
-            # Recommended action should now be "take_quiz" for module 1, activity timeline has 1 item
+            # Recommended action should now be "take_quiz" for module 1, activity timeline has 2 items (start + complete)
             after_lesson = await client.get("/api/progress/my-skills", headers=emp1_headers)
             assert after_lesson.status_code == 200
             al_data = after_lesson.json()
             assert al_data["recommended_action"]["action_type"] == "take_quiz"
             assert al_data["recommended_action"]["module_id"] == module_1_id
-            assert len(al_data["recent_activity"]) == 1
-            assert al_data["recent_activity"][0]["activity_type"] == "lesson_completed"
+            assert len(al_data["recent_activity"]) >= 2
+            act_types = [a["activity_type"] for a in al_data["recent_activity"]]
+            assert "lesson_completed" in act_types
+            assert "lesson_started" in act_types
 
             # 4. Submit failing quiz attempt (0% correct)
             quiz_get = await client.get(f"/api/quiz/{module_1_id}", headers=emp1_headers)
@@ -157,11 +167,15 @@ async def test_employee_skill_tracking_pipeline():
             assert len(fp_data["skill_gaps"]) >= 1
             gap = next(g for g in fp_data["skill_gaps"] if g["module_id"] == module_1_id)
             assert gap["proficiency"] == "Needs Attention"
+            assert gap["target_threshold"] == 75
+            assert gap["gap_percentage"] == 75
             assert "required for certification" in gap["evidence"]
             assert fp_data["recommended_action"]["action_type"] == "retake_quiz"
             assert len(fp_data["assessment_history"]) == 1
             assert fp_data["assessment_history"][0]["passed"] is False
             assert fp_data["assessment_history"][0]["attempt_number"] == 1
+            assert fp_data["assessment_history"][0]["improvement_from_previous"] is None
+            assert fp_data["summary"]["weakest_competency"] is not None
 
             # 6. Submit passing quiz for module 1 (100% correct)
             admin_q = await client.get(
@@ -188,9 +202,13 @@ async def test_employee_skill_tracking_pipeline():
             assert u_data["certified_modules"] == 1
             assert u_data["overall_skill_score"] >= 25
             assert u_data["summary"]["certified_modules"] == 1
+            assert u_data["summary"]["strongest_competency"] is not None
+            assert "100%" in u_data["summary"]["strongest_competency"]
+            assert u_data["summary"]["average_assessment_score"] == 50  # (0 + 100) / 2 = 50%
 
             target_skill = next(s for s in u_data["skills"] if s["module_id"] == module_1_id)
             assert target_skill["status"] == "certified"
+            assert target_skill["readiness_state"] == "Certified"
             assert target_skill["proficiency"] == "Strong"
             assert target_skill["lessons_completed"] is True
             assert target_skill["score_percentage"] == 100
@@ -200,6 +218,7 @@ async def test_employee_skill_tracking_pipeline():
             assert len(u_data["assessment_history"]) == 2
             assert u_data["assessment_history"][0]["attempt_number"] == 2
             assert u_data["assessment_history"][0]["passed"] is True
+            assert u_data["assessment_history"][0]["improvement_from_previous"] == 100
             assert u_data["assessment_history"][1]["attempt_number"] == 1
             assert u_data["assessment_history"][1]["passed"] is False
 
@@ -228,6 +247,90 @@ async def test_employee_skill_tracking_pipeline():
             assert overview_data["total_employees"] == 2
             assert overview_data["total_certifications"] == 1
             assert overview_data["total_quiz_attempts"] == 2
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_competency_intelligence_multi_attempt_deltas_and_readiness_transitions():
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with async_session_test() as session:
+            emp = User(
+                email="delta_tester@gov.in",
+                password_hash=get_password_hash("pass12345"),
+                role="employee",
+            )
+            session.add(emp)
+            await session.commit()
+
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            login = await client.post(
+                "/api/auth/login", json={"email": "delta_tester@gov.in", "password": "pass12345"}
+            )
+            auth_headers = {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+            # Fetch modules
+            init_prog = await client.get("/api/progress/my-skills", headers=auth_headers)
+            mod_id = init_prog.json()["skills"][0]["module_id"]
+
+            quiz_res = await client.get(f"/api/quiz/{mod_id}", headers=auth_headers)
+            questions = quiz_res.json()["questions"]
+            assert len(questions) == 4
+
+            # Attempt 1: 0% correct (0/4)
+            wrong_answers = [{"question_id": q["id"], "selected_option_index": 99} for q in questions]
+            att1_res = await client.post(
+                f"/api/quiz/{mod_id}/submit",
+                json={"answers": wrong_answers},
+                headers=auth_headers,
+            )
+            assert att1_res.status_code == 200
+
+            p1 = await client.get("/api/progress/my-skills", headers=auth_headers)
+            p1_data = p1.json()
+            assert p1_data["skills"][0]["readiness_state"] == "Needs Improvement"
+            assert len(p1_data["assessment_history"]) == 1
+            assert p1_data["assessment_history"][0]["improvement_from_previous"] is None
+
+            # Attempt 2: 50% correct (2/4) - Operational readiness state
+            # Question 1 & 2 correct answer index is 1 in seed questions
+            half_answers = [
+                {"question_id": questions[0]["id"], "selected_option_index": 1},
+                {"question_id": questions[1]["id"], "selected_option_index": 1},
+                {"question_id": questions[2]["id"], "selected_option_index": 99},
+                {"question_id": questions[3]["id"], "selected_option_index": 99},
+            ]
+            att2_res = await client.post(
+                f"/api/quiz/{mod_id}/submit",
+                json={"answers": half_answers},
+                headers=auth_headers,
+            )
+            assert att2_res.status_code == 200
+            assert att2_res.json()["score"] == 2
+
+            p2 = await client.get("/api/progress/my-skills", headers=auth_headers)
+            p2_data = p2.json()
+            assert p2_data["skills"][0]["readiness_state"] == "Operational"
+            assert p2_data["skills"][0]["score_percentage"] == 50
+            assert p2_data["skills"][0]["score_improvement_delta"] == 50
+            assert len(p2_data["assessment_history"]) == 2
+            # Latest attempt (Attempt #2) shows +50% improvement over Attempt #1
+            assert p2_data["assessment_history"][0]["attempt_number"] == 2
+            assert p2_data["assessment_history"][0]["improvement_from_previous"] == 50
+
+            # Activity timeline contains quiz_improved event
+            act_improved = next(
+                (a for a in p2_data["recent_activity"] if a["activity_type"] == "quiz_improved"), None
+            )
+            assert act_improved is not None
+            assert "+50%" in act_improved["detail"]
 
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)

@@ -159,17 +159,26 @@ describe('ProgressDashboardPage', () => {
     // 4. Core Skill Cards
     expect(screen.getAllByText('Cybersecurity Basics').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Digital Record Management').length).toBeGreaterThan(0);
-    expect(screen.getByText('Strong')).toBeInTheDocument();
 
     // 5. Assessment History Table
     expect(screen.getByText('Assessment Attempt History')).toBeInTheDocument();
-    expect(screen.getByText('Passed (Certified)')).toBeInTheDocument();
+    expect(screen.getByText(/Passed/i)).toBeInTheDocument();
 
     // 6. Recent Learning Activity
-    expect(screen.getByText('Recent Learning Activity')).toBeInTheDocument();
+    expect(screen.getByText('Learning & Assessment Audit Trail')).toBeInTheDocument();
     expect(screen.getByText('Certification Standard Achieved')).toBeInTheDocument();
 
-    // 7. Certificate modal interaction
+    // 7. Calculation Explainer Modal
+    const explainerBtn = screen.getByRole('button', { name: /how is this calculated/i });
+    expect(explainerBtn).toBeInTheDocument();
+    fireEvent.click(explainerBtn);
+    expect(await screen.findByText('Competency Scoring Standards')).toBeInTheDocument();
+    expect(screen.getByText(/Certification Threshold: 75%/i)).toBeInTheDocument();
+
+    const closeExplainer = screen.getByRole('button', { name: /close explainer/i });
+    fireEvent.click(closeExplainer);
+
+    // 8. Certificate modal interaction
     const certButton = screen.getByRole('button', { name: /certificate/i });
     expect(certButton).toBeInTheDocument();
     fireEvent.click(certButton);

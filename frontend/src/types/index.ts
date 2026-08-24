@@ -74,6 +74,7 @@ export interface EmployeeSkillItem {
   total_questions: number;
   score_percentage: number;
   status: 'not_started' | 'in_progress' | 'completed' | 'certified';
+  readiness_state?: 'Not Started' | 'In Progress' | 'Assessment Pending' | 'Needs Improvement' | 'Operational' | 'Certified' | string;
   updated_at: string;
   proficiency?: 'Strong' | 'Developing' | 'Needs Attention' | 'Not Started';
   attempts_count?: number;
@@ -85,7 +86,6 @@ export interface EmployeeSkillItem {
   completed_at?: string;
 }
 
-
 export interface CompetencySummary {
   overall_score: number;
   modules_completed: number;
@@ -94,6 +94,11 @@ export interface CompetencySummary {
   modules_remaining: number;
   learning_status: string;
   readiness_level: string;
+  strongest_competency?: string | null;
+  weakest_competency?: string | null;
+  average_assessment_score?: number;
+  readiness_criteria?: string[];
+  readiness_explanation?: string;
 }
 
 export interface SkillGapItem {
@@ -101,6 +106,8 @@ export interface SkillGapItem {
   skill: string;
   proficiency: 'Needs Attention' | 'Developing' | string;
   current_score_pct: number;
+  target_threshold?: number;
+  gap_percentage?: number;
   evidence: string;
   recommended_action: string;
 }
@@ -124,11 +131,12 @@ export interface AssessmentHistoryItem {
   score_percentage: number;
   attempt_number: number;
   passed: boolean;
+  improvement_from_previous?: number | null;
   submitted_at: string;
 }
 
 export interface LearningActivityItem {
-  activity_type: 'certification' | 'quiz_attempt' | 'lesson_completed' | string;
+  activity_type: 'certification' | 'quiz_attempt' | 'quiz_improved' | 'lesson_completed' | 'lesson_started' | string;
   title: string;
   module_title: string;
   timestamp: string;
