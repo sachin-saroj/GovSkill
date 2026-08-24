@@ -144,7 +144,7 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
           >
             <div className="flex items-center justify-between gap-2 mb-1">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Operational Score
+                Certification Coverage
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-civic-800 text-saffron-300 border border-civic-700">
                 {learningStatus}
@@ -165,11 +165,18 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
                 className="h-2.5 bg-gradient-to-r from-emerald-500 to-civic-400 rounded-full"
               />
             </div>
-            <p className="text-[11px] text-slate-400">
-              {modulesRemaining > 0
-                ? `${modulesRemaining} module${modulesRemaining === 1 ? '' : 's'} remaining for 100% certification`
-                : 'All curriculum standards met'}
-            </p>
+            <div className="flex items-center justify-between text-[11px] text-slate-400">
+              <span>
+                {modulesRemaining > 0
+                  ? `${modulesRemaining} module${modulesRemaining === 1 ? '' : 's'} remaining`
+                  : 'All modules certified'}
+              </span>
+              {avgScore > 0 && (
+                <span className="font-mono text-slate-300">
+                  Avg: {avgScore}%
+                </span>
+              )}
+            </div>
           </motion.div>
         </div>
       </div>
