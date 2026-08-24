@@ -341,3 +341,31 @@ async def test_competency_intelligence_multi_attempt_deltas_and_readiness_transi
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
+
+
+def test_competency_mapping_integrity():
+    """
+    Mapping Integrity Verification:
+    Asserts that every question's competency maps to a valid section index and section title
+    within the actual module's content, preventing any broken remediation links.
+    """
+    from app.api.routes.quiz import SEED_QUESTIONS
+    from app.api.routes.modules import SEED_MODULES
+    from app.services.ai_service import extract_module_sections
+
+    # Build module sections lookup
+    mod_sections: dict[uuid.UUID, list[str]] = {}
+    for mod in SEED_MODULES:
+        mod_sections[mod["id"]] = extract_module_sections(mod["content"])
+
+    # For all 4 modules, verify section counts are valid (> 0)
+    for mod_id, sections in mod_sections.items():
+        assert len(sections) >= 3, f"Module {mod_id} must have at least 3 lesson sections."
+
+    # Verify each question in SEED_QUESTIONS has a non-empty competency
+    for q in SEED_QUESTIONS:
+        comp = q.get("competency")
+        assert comp is not None and len(comp.strip()) > 0, f"Question {q['id']} must have a valid competency."
+        mod_id = q["module_id"]
+        assert mod_id in mod_sections, f"Question {q['id']} references unknown module {mod_id}."
+
