@@ -242,4 +242,3 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
 };
 
 export default SkillModuleCard;
-

@@ -259,4 +259,3 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
 };
 
 export default QuizResultView;
-

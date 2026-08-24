@@ -166,4 +166,3 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
 };
 
 export default CompetencyOverview;
-
