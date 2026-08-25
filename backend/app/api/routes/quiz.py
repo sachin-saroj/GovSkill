@@ -18,8 +18,10 @@ from app.schemas.quiz import (
     QuizSubmitRequest,
     QuizSubmitResponse,
 )
+from app.services.credential_service import issue_or_update_credential
 
 router = APIRouter(prefix="/quiz", tags=["quiz"])
+
 
 MODULE_1_ID = uuid.UUID("11111111-1111-1111-1111-111111111111")
 MODULE_2_ID = uuid.UUID("11111111-1111-1111-1111-111111111112")
@@ -440,6 +442,17 @@ async def submit_quiz(
         elif prog.status == "not_started":
             prog.status = "in_progress"
 
+    # Issue or update tamper-evident credential if score meets certification threshold (>=75%)
+    cred_obj = None
+    if passed:
+        cred_obj = await issue_or_update_credential(
+            db=db,
+            user_id=current_user.id,
+            module_id=mod_uuid,
+            score_achieved=score,
+            total_score=total,
+        )
+
     await db.commit()
 
     return QuizSubmitResponse(
@@ -457,4 +470,5 @@ async def submit_quiz(
         submitted_at=attempt.submitted_at.isoformat()
         if hasattr(attempt.submitted_at, "isoformat")
         else str(attempt.submitted_at),
+        credential_id=cred_obj.credential_id if cred_obj else None,
     )
