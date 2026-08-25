@@ -53,3 +53,4 @@ class QuizSubmitResponse(BaseModel):
     weak_areas: list[str]
     recommended_action: str
     submitted_at: str
+    credential_id: str | None = None
