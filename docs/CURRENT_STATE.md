@@ -53,7 +53,19 @@ Last Updated:
   - **Dynamic Admin Competency Health (`progress.py`)**: Replaced static seed UUID maps with dynamic database module and question competency discovery for workforce health telemetry and employee mastery paths.
   - **Unassessed Competency Handling (`progress.py`, `AdminDashboardPage.tsx`)**: Modules with 0 attempts are cleanly marked `Unassessed` with neutral slate badge styling, preventing unassessed competencies from incorrectly skewing `lowest_performing_competency`.
   - **CI & Lint Gate Hardening (`ci.yml`, `progress.py`)**: Resolved PEP 8 / typing imports (`calc_percentage`, `typing.Any`) and added automated `ruff check .` and frontend test execution to GitHub Actions CI workflow.
-- **Automated Testing Suite**: 33 Pytest backend test cases and 45 Vitest frontend test cases across 11 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Proxy-Aware Rate Limiting & Anti-Spoofing, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Targeted Competency Remediation, Dynamic Admin Competency Health & Unassessed Handling, Multi-Module AI Tutor Routing & Remediation Mode, Public Citizen Document Lookup, 70/30 Recency-Weighted Competency Mastery, Adaptive Quiz Question Ordering, and Employee/Citizen journeys.
+- **Phase 4 Milestone 1 (Backend Credential Data Model + Cryptographic Signing + Quiz Issuance Hook)**:
+  - **Relational Credential Model (`backend/app/models/credential.py`)**: `credentials` table with UUID primary key, `user_id` foreign key, `module_id` foreign key, unique human-readable `credential_id` (`GS-CERT-YYYY-<HEX>`), `issued_at` timestamp, `score_achieved`, `total_score`, `percentage`, `verification_hash`, and `signature`.
+  - **Cryptographic Credential Service (`backend/app/services/credential_service.py`)**: Deterministic HMAC-SHA256 payload canonicalization (`canonicalize_credential_payload`) and tamper-evident signing/verification (`sign_credential`, `verify_credential_signature`, `generate_credential_id`).
+  - **Atomic Quiz Certification Issuance (`backend/app/api/routes/quiz.py`)**: Automatically creates or updates cryptographic credentials upon scoring $\ge 75\%$ in module quiz evaluations, linking certified progress directly to tamper-evident credentials.
+- **Phase 4 Milestone 2 (Governance & Verification APIs + Telemetry + Verification Portal)**:
+  - **Public Credential Verification API (`GET /api/credentials/verify/{credential_id}`)**: Rate-limited (30 req/min) verification endpoint validating HMAC-SHA256 integrity, masking recipient PII (`S***** S****`), and returning official certificate metadata.
+  - **Employee My-Credentials API (`GET /api/credentials/my-credentials`)**: Authenticated endpoint returning all verified digital credentials earned by the employee.
+  - **Workforce Compliance Audit Export (`GET /api/admin/reports/export?format=csv|json`)**: Administrative export generating downloadable audit reports in structured JSON or streaming CSV attachment (`govskill_workforce_compliance_report.csv`).
+  - **GovAssist Citizen Pre-Submission Defect Telemetry (`GET /api/admin/governance/citizen-telemetry`)**: Administrative telemetry endpoint calculating total submissions, pass rates, and failure distributions across all 4 deterministic validation rules.
+  - **Public Verification Portal (`PublicVerificationPage.tsx`, `/verify/:credentialId`)**: Standalone verification page featuring certificate lookup, HMAC validation badge, printable official receipt card, and security audit trail.
+  - **Employee Digital Credentials Card (`ProgressDashboardPage.tsx`)**: Card section displaying earned certificates with direct verification links and copyable credential IDs.
+  - **Workforce Governance & Telemetry Dashboard (`AdminDashboardPage.tsx`)**: Administrative tab providing real-time compliance metrics, CSV/JSON audit exports, and 4-rule citizen document defect analytics.
+- **Automated Testing Suite**: 38 Pytest backend test cases and 48 Vitest frontend test cases across 11 test suites covering Landing Page interactive motion & 3D tilt, Auth Security, Password Management, Upload Security, Proxy-Aware Rate Limiting & Anti-Spoofing, Physical Document Fixtures (PDF/PNG) & OCR, Quiz Evaluation, Security/Operability, Admin CMS CRUD, Employee Skill Tracking with Multi-Attempt Deltas & Readiness Transitions, Targeted Competency Remediation, Dynamic Admin Competency Health & Unassessed Handling, Multi-Module AI Tutor Routing & Remediation Mode, Public Citizen Document Lookup, 70/30 Recency-Weighted Competency Mastery, Adaptive Quiz Question Ordering, Relational Credential Models & HMAC Verification, Public Verification API, Admin Compliance Export (CSV/JSON), Citizen Defect Telemetry, and Employee/Citizen journeys.
 - **Containerization & CI/CD Pipeline**: Dockerfiles, `docker-compose.yml`, `nginx.conf`, and `.github/workflows/ci.yml` executing backend ruff linting, Pytest test suite, and frontend build + tests on push/PR.
 
 
@@ -71,5 +83,5 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (30/30 Pytest, 45/45 Vitest) are fully operational.
+- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (38/38 Pytest, 48/48 Vitest) are fully operational.
 
