@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/api';
-import { EmployeeSkillStatusResponse, EmployeeSkillItem } from '@/types';
+import { EmployeeSkillStatusResponse, EmployeeSkillItem, EmployeeCredentialItem, EmployeeCredentialsResponse } from '@/types';
 import CertificateModal from '@/components/certificate/CertificateModal';
 import CompetencyOverview from '@/components/progress/CompetencyOverview';
 import RecommendedActionCard from '@/components/progress/RecommendedActionCard';
@@ -12,12 +12,13 @@ import CompetencyMasteryCard from '@/components/progress/CompetencyMasteryCard';
 import AssessmentHistoryTable from '@/components/progress/AssessmentHistoryTable';
 import LearningActivityTimeline from '@/components/progress/LearningActivityTimeline';
 import { EmptyState, ErrorAlert } from '@/components/ui';
-import { Loader2, RefreshCw, BookOpen, Layers } from 'lucide-react';
+import { Loader2, RefreshCw, BookOpen, Layers, Award, ShieldCheck, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const ProgressDashboardPage: React.FC = () => {
   const { user } = useAuth();
   const [data, setData] = useState<EmployeeSkillStatusResponse | null>(null);
+  const [credentials, setCredentials] = useState<EmployeeCredentialItem[]>([]);
   const [selectedCertSkill, setSelectedCertSkill] = useState<EmployeeSkillItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +28,12 @@ export const ProgressDashboardPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await api.get<EmployeeSkillStatusResponse>('/progress/my-skills');
-      setData(res.data);
+      const [skillRes, credRes] = await Promise.all([
+        api.get<EmployeeSkillStatusResponse>('/progress/my-skills'),
+        api.get<EmployeeCredentialsResponse>('/credentials/my-credentials').catch(() => ({ data: { credentials: [], total_count: 0 } })),
+      ]);
+      setData(skillRes.data);
+      setCredentials(credRes.data.credentials || []);
     } catch (err: any) {
       setError(err.response?.data?.detail?.error?.message || 'Failed to load skill progress');
     } finally {
@@ -159,7 +164,76 @@ export const ProgressDashboardPage: React.FC = () => {
         )}
       </motion.div>
 
-      {/* 5. Assessment History & Learning Activity Timeline Grid */}
+      {/* 5. Official Digital Credentials Section */}
+      {credentials.length > 0 && (
+        <motion.div variants={fadeUpVariants} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-civic-100 text-civic-800">
+                <Award className="h-4 w-4" />
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                Official Digital Credentials
+              </h2>
+            </div>
+            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              {credentials.length} Cryptographically Signed
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {credentials.map((cred) => (
+              <div
+                key={cred.credential_id}
+                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-civic-xs flex flex-col justify-between gap-4"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-civic-700 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200 font-mono">
+                      <ShieldCheck className="h-3 w-3 text-emerald-600" />
+                      {cred.credential_id}
+                    </span>
+                    <span className="text-xs font-bold text-emerald-700">
+                      Score: {cred.percentage}%
+                    </span>
+                  </div>
+
+                  <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                    {cred.module_title}
+                  </h3>
+
+                  <p className="text-[11px] text-slate-500">
+                    Issued on {new Date(cred.issued_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Signature Verified
+                  </span>
+
+                  <a
+                    href={`/verify/${cred.credential_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-xl border border-civic-200 transition-colors"
+                  >
+                    <span>Verify Online</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* 6. Assessment History & Learning Activity Timeline Grid */}
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
         <div className="lg:col-span-2">
           <AssessmentHistoryTable history={data?.assessment_history || []} />

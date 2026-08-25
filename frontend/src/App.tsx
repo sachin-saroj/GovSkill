@@ -11,6 +11,7 @@ import TutorChatPage from '@/pages/TutorChatPage';
 import QuizPage from '@/pages/QuizPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import CitizenUploadPage from '@/pages/CitizenUploadPage';
+import PublicVerificationPage from '@/pages/PublicVerificationPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({
   children,
@@ -97,6 +98,8 @@ export const AppContent: React.FC = () => {
             }
           />
           <Route path="/citizen" element={<CitizenUploadPage />} />
+          <Route path="/verify/:credentialId" element={<PublicVerificationPage />} />
+          <Route path="/verify" element={<PublicVerificationPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
