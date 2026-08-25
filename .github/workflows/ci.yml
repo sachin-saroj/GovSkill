@@ -28,12 +28,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
+      - name: Run ruff lint check
+        working-directory: backend
+        run: ruff check .
+
       - name: Run pytest
         working-directory: backend
         run: pytest
 
   frontend:
-    name: Frontend Build
+    name: Frontend Build & Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -49,6 +53,10 @@ jobs:
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm test
 
       - name: Build frontend
         working-directory: frontend

@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +9,7 @@ from app.api.deps import get_current_admin_user, get_current_user, get_db
 from app.api.routes.modules import seed_all_default_modules
 from app.models.module import Module
 from app.models.progress import UserProgress
-from app.models.quiz import QuizAttempt
+from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
 from app.schemas.progress import (
     AdminSkillOverviewResponse,
@@ -27,7 +28,7 @@ from app.schemas.progress import (
 router = APIRouter(prefix="/progress", tags=["progress"])
 
 
-def Math_pct(score: int, total: int) -> int:
+def calc_percentage(score: int, total: int) -> int:
     if total <= 0:
         return 0
     return round((score / total) * 100)
@@ -40,6 +41,13 @@ async def get_my_skill_progress(
 ):
     modules = await seed_all_default_modules(db)
     mod_map = {m.id: m.title for m in modules}
+
+    # Fetch all questions to discover dynamic competencies per module
+    questions_res = await db.execute(select(QuizQuestion))
+    all_db_questions = questions_res.scalars().all()
+    mod_questions_map: dict[uuid.UUID, list[QuizQuestion]] = {}
+    for q in all_db_questions:
+        mod_questions_map.setdefault(q.module_id, []).append(q)
 
     # Fetch user progress records
     prog_result = await db.execute(
@@ -89,7 +97,7 @@ async def get_my_skill_progress(
         if p_status == "certified":
             certified_count += 1
 
-        pct = Math_pct(b_score, t_questions)
+        pct = calc_percentage(b_score, t_questions)
 
         # Calculate proficiency level
         if p_status == "certified" or pct >= 75:
@@ -134,7 +142,7 @@ async def get_my_skill_progress(
 
         initial_score = mod_attempts[0].score if mod_attempts else None
         if len(mod_attempts) >= 2:
-            first_pct = Math_pct(mod_attempts[0].score, mod_attempts[0].total)
+            first_pct = calc_percentage(mod_attempts[0].score, mod_attempts[0].total)
             growth = pct - first_pct
             improvement_delta = growth if growth > 0 else 0
         else:
@@ -227,7 +235,7 @@ async def get_my_skill_progress(
 
     # Average Assessment Score
     if user_attempts:
-        valid_scores = [Math_pct(a.score, a.total) for a in user_attempts if a.total > 0]
+        valid_scores = [calc_percentage(a.score, a.total) for a in user_attempts if a.total > 0]
         avg_score = round(sum(valid_scores) / len(valid_scores)) if valid_scores else 0
     else:
         avg_score = 0
@@ -365,16 +373,28 @@ async def get_my_skill_progress(
         if s.status != "certified":
             gap_pct = max(0, 75 - s.score_percentage)
             mod_meta = MODULE_COMPETENCY_SECTION_MAP.get(s.module_id, {})
+            if not mod_meta:
+                q_list = mod_questions_map.get(s.module_id, [])
+                comps = list(dict.fromkeys(q.competency for q in q_list if q.competency))
+                if comps:
+                    mod_meta = {
+                        c: {
+                            "section_index": 0,
+                            "section_title": f"Lesson 1: {s.module_title}",
+                            "tutor_prompt": f"Can you explain {c} for {s.module_title}?",
+                        }
+                        for c in comps
+                    }
             def_meta = mod_meta.get("default", {
-                "competency": "Core Procedures",
+                "competency": next((k for k in mod_meta.keys() if k != "default"), f"{s.module_title} Standards"),
                 "section_index": 0,
-                "section_title": "Lesson 1: Introduction",
+                "section_title": f"Lesson 1: {s.module_title}",
                 "tutor_prompt": f"Can you explain the core concepts and procedures for {s.module_title}?",
             })
 
             target_comp = def_meta.get("competency", "Core Operating Procedures")
             target_sec_idx = def_meta.get("section_index", 0)
-            target_sec_title = def_meta.get("section_title", "Lesson 1: Core Guidelines")
+            target_sec_title = def_meta.get("section_title", f"Lesson 1: {s.module_title}")
             tutor_prompt = def_meta.get("tutor_prompt", f"Explain key requirements for {s.module_title}.")
 
             # If user has attempt history with < 75%, prioritize the module's key weak competency
@@ -384,8 +404,8 @@ async def get_my_skill_progress(
                 keys = [k for k in mod_meta.keys() if k != "default"]
                 if keys:
                     target_comp = keys[0]
-                    target_sec_idx = mod_meta[target_comp].get("section_index", 1)
-                    target_sec_title = mod_meta[target_comp].get("section_title", "Lesson 2")
+                    target_sec_idx = mod_meta[target_comp].get("section_index", 0)
+                    target_sec_title = mod_meta[target_comp].get("section_title", f"Lesson 1: {s.module_title}")
                     tutor_prompt = mod_meta[target_comp].get("tutor_prompt", tutor_prompt)
 
                 skill_gaps.append(
@@ -549,8 +569,8 @@ async def get_my_skill_progress(
 
         if prev_list:
             prev_att = prev_list[-1]
-            prev_pct = Math_pct(prev_att.score, prev_att.total)
-            curr_pct = Math_pct(att.score, att.total)
+            prev_pct = calc_percentage(prev_att.score, prev_att.total)
+            curr_pct = calc_percentage(att.score, att.total)
             improvement_map[att.id] = curr_pct - prev_pct
         else:
             improvement_map[att.id] = None
@@ -558,7 +578,7 @@ async def get_my_skill_progress(
         mod_attempts_history.setdefault(att.module_id, []).append(att)
 
     for att in reversed(user_attempts):
-        score_pct = Math_pct(att.score, att.total)
+        score_pct = calc_percentage(att.score, att.total)
         passed = (att.total > 0) and ((att.score / att.total) >= 0.75)
         att_num = attempt_num_map.get(att.id, 1)
         improvement = improvement_map.get(att.id)
@@ -625,7 +645,7 @@ async def get_my_skill_progress(
 
     # Activity from quiz attempts
     for att in user_attempts:
-        score_pct = Math_pct(att.score, att.total)
+        score_pct = calc_percentage(att.score, att.total)
         passed = (att.total > 0) and ((att.score / att.total) >= 0.75)
         m_title = mod_map.get(att.module_id, "Training Module")
         improvement = improvement_map.get(att.id)
@@ -690,6 +710,27 @@ async def get_my_skill_progress(
     competency_mastery: list[CompetencyMasteryItem] = []
     for m in modules:
         mod_meta_dict = MODULE_COMPETENCY_SECTION_MAP.get(m.id, {})
+        if not mod_meta_dict:
+            q_list = mod_questions_map.get(m.id, [])
+            comps = list(dict.fromkeys(q.competency for q in q_list if q.competency))
+            if comps:
+                mod_meta_dict = {
+                    c: {
+                        "section_index": 0,
+                        "section_title": f"Lesson 1: {m.title}",
+                        "tutor_prompt": f"Can you explain {c} for {m.title}?",
+                    }
+                    for c in comps
+                }
+            else:
+                mod_meta_dict = {
+                    f"{m.title} Core Procedures": {
+                        "section_index": 0,
+                        "section_title": f"Lesson 1: {m.title}",
+                        "tutor_prompt": f"Can you explain the core concepts and procedures for {m.title}?",
+                    }
+                }
+
         mod_atts = mod_attempts_history.get(m.id, [])  # ascending order
         attempts_count = len(mod_atts)
         prog = progress_map.get(m.id)
@@ -714,7 +755,7 @@ async def get_my_skill_progress(
                     m_level = "Unknown"
                 trend = "Unassessed"
             elif attempts_count == 1:
-                latest_pct = Math_pct(mod_atts[-1].score, mod_atts[-1].total)
+                latest_pct = calc_percentage(mod_atts[-1].score, mod_atts[-1].total)
                 m_score = latest_pct
                 trend = "Baseline Set"
                 if m_score >= 75:
@@ -726,8 +767,8 @@ async def get_my_skill_progress(
                 else:
                     m_level = "Learning"
             else:  # attempts_count >= 2
-                latest_pct = Math_pct(mod_atts[-1].score, mod_atts[-1].total)
-                prev_pct = Math_pct(mod_atts[-2].score, mod_atts[-2].total)
+                latest_pct = calc_percentage(mod_atts[-1].score, mod_atts[-1].total)
+                prev_pct = calc_percentage(mod_atts[-2].score, mod_atts[-2].total)
                 m_score = round(0.7 * latest_pct + 0.3 * prev_pct)
                 if latest_pct > prev_pct:
                     trend = "Improving"
@@ -827,7 +868,7 @@ async def record_section_access(
     await db.commit()
     await db.refresh(prog)
 
-    pct = Math_pct(prog.best_score, prog.total_questions)
+    pct = calc_percentage(prog.best_score, prog.total_questions)
     proficiency = (
         "Strong"
         if (prog.status == "certified" or pct >= 75)
@@ -927,7 +968,7 @@ async def mark_module_lessons_completed(
     await db.commit()
     await db.refresh(prog)
 
-    pct = Math_pct(prog.best_score, prog.total_questions)
+    pct = calc_percentage(prog.best_score, prog.total_questions)
     proficiency = (
         "Strong"
         if (prog.status == "certified" or pct >= 75)
@@ -983,6 +1024,7 @@ async def get_admin_skills_overview(
     db: AsyncSession = Depends(get_db),
     admin_user: User = Depends(get_current_admin_user),
 ):
+    await seed_all_default_modules(db)
     emp_stmt = select(func.count(User.id)).where(User.role == "employee")
     emp_res = await db.execute(emp_stmt)
     total_emp = emp_res.scalar() or 0
@@ -1014,7 +1056,7 @@ async def get_admin_skills_overview(
     )
     rate = round((total_cert / max_possible_certs) * 100) if max_possible_certs > 0 else 0
 
-    # Calculate Workforce Competency Health & lowest performing competency (P3-M5)
+    # Calculate Workforce Competency Health & lowest performing competency (P3-M5, dynamic & unassessed-aware)
     all_attempts_res = await db.execute(
         select(QuizAttempt.module_id, QuizAttempt.score, QuizAttempt.total)
     )
@@ -1025,9 +1067,18 @@ async def get_admin_skills_overview(
             mod_att_pcts.setdefault(mod_id_val, []).append((score / tot) * 100.0)
 
     mod_lookup_res = await db.execute(select(Module))
-    all_mods_dict = {m.id: m.title for m in mod_lookup_res.scalars().all()}
+    all_mods = mod_lookup_res.scalars().all()
 
-    ADMIN_COMPETENCY_MAP: dict[uuid.UUID, list[str]] = {
+    questions_res = await db.execute(select(QuizQuestion.module_id, QuizQuestion.competency))
+    mod_questions_rows = questions_res.all()
+    mod_competencies_db: dict[uuid.UUID, list[str]] = {}
+    for q_mod_id, q_comp in mod_questions_rows:
+        if q_comp:
+            comp_list = mod_competencies_db.setdefault(q_mod_id, [])
+            if q_comp not in comp_list:
+                comp_list.append(q_comp)
+
+    SEED_COMPETENCY_MAP: dict[uuid.UUID, list[str]] = {
         uuid.UUID("11111111-1111-1111-1111-111111111111"): [
             "Document Formatting & Standards",
             "Verification Rules & Expiry Validation",
@@ -1051,38 +1102,58 @@ async def get_admin_skills_overview(
     lowest_performing_competency: str | None = None
     lowest_avg: float = 101.0
 
-    for m_id, comp_names in ADMIN_COMPETENCY_MAP.items():
-        m_title = all_mods_dict.get(m_id, "Digital Government Module")
+    for m in all_mods:
+        m_id = m.id
+        m_title = m.title
+        if m_id in SEED_COMPETENCY_MAP:
+            comp_names = list(SEED_COMPETENCY_MAP[m_id])
+            for c in mod_competencies_db.get(m_id, []):
+                if c not in comp_names:
+                    comp_names.append(c)
+        elif m_id in mod_competencies_db and mod_competencies_db[m_id]:
+            comp_names = mod_competencies_db[m_id]
+        else:
+            comp_names = [f"{m_title} Core Competencies"]
+
         pcts = mod_att_pcts.get(m_id, [])
         if pcts:
             comp_avg = round(sum(pcts) / len(pcts))
             mastered_c = sum(1 for p in pcts if p >= 75)
             dev_c = sum(1 for p in pcts if p < 75)
+            status_str = "Healthy" if comp_avg >= 75 else ("Needs Attention" if comp_avg >= 50 else "Critical")
+
+            for comp_name in comp_names:
+                if comp_avg < lowest_avg:
+                    lowest_avg = comp_avg
+                    lowest_performing_competency = comp_name
+
+                competency_health.append(
+                    CompetencyHealthItem(
+                        competency=comp_name,
+                        module_title=m_title,
+                        average_mastery_pct=comp_avg,
+                        employees_mastered=mastered_c,
+                        employees_developing=dev_c,
+                        status=status_str,
+                    )
+                )
         else:
             comp_avg = 0
             mastered_c = 0
             dev_c = 0
+            status_str = "Unassessed"
 
-        status_str = "Healthy" if comp_avg >= 75 else ("Needs Attention" if comp_avg >= 50 else "Critical")
-
-        for comp_name in comp_names:
-            if comp_avg < lowest_avg:
-                lowest_avg = comp_avg
-                lowest_performing_competency = comp_name
-
-            competency_health.append(
-                CompetencyHealthItem(
-                    competency=comp_name,
-                    module_title=m_title,
-                    average_mastery_pct=comp_avg,
-                    employees_mastered=mastered_c,
-                    employees_developing=dev_c,
-                    status=status_str,
+            for comp_name in comp_names:
+                competency_health.append(
+                    CompetencyHealthItem(
+                        competency=comp_name,
+                        module_title=m_title,
+                        average_mastery_pct=comp_avg,
+                        employees_mastered=mastered_c,
+                        employees_developing=dev_c,
+                        status=status_str,
+                    )
                 )
-            )
-
-    if lowest_performing_competency is None and competency_health:
-        lowest_performing_competency = competency_health[0].competency
 
     return AdminSkillOverviewResponse(
         total_employees=total_emp,
