@@ -143,7 +143,15 @@ describe('ProgressDashboardPage', () => {
     window.history.pushState({}, '', '/');
     mockedGet.mockReset();
     mockedPost.mockReset();
-    mockedGet.mockResolvedValue({ data: mockCompetencyData });
+    mockedGet.mockImplementation((url: string) => {
+      if (url === '/progress/my-skills') {
+        return Promise.resolve({ data: mockCompetencyData });
+      }
+      if (url === '/credentials/my-credentials') {
+        return Promise.resolve({ data: { credentials: [], total_count: 0 } });
+      }
+      return Promise.resolve({ data: mockCompetencyData });
+    });
   });
 
   it('shows a loading spinner while fetching skill data', () => {
@@ -231,6 +239,7 @@ describe('ProgressDashboardPage', () => {
   });
 
   it('calls the lesson-complete endpoint and refreshes data when toggle button is clicked', async () => {
+    let callCount = 0;
     const updatedData = {
       ...mockCompetencyData,
       skills: mockCompetencyData.skills.map((s) =>
@@ -239,9 +248,16 @@ describe('ProgressDashboardPage', () => {
           : s
       ),
     };
-    mockedGet
-      .mockResolvedValueOnce({ data: mockCompetencyData })
-      .mockResolvedValueOnce({ data: updatedData });
+    mockedGet.mockImplementation((url: string) => {
+      if (url === '/progress/my-skills') {
+        callCount++;
+        return Promise.resolve({ data: callCount === 1 ? mockCompetencyData : updatedData });
+      }
+      if (url === '/credentials/my-credentials') {
+        return Promise.resolve({ data: { credentials: [], total_count: 0 } });
+      }
+      return Promise.resolve({ data: {} });
+    });
     mockedPost.mockResolvedValue({});
 
     renderPage();

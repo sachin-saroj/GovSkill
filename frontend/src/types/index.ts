@@ -238,4 +238,78 @@ export interface TutorAskResponse {
   mode?: string;
 }
 
+export interface CredentialVerificationResponse {
+  valid: boolean;
+  credential_id: string;
+  module_id: string;
+  module_title: string;
+  issued_at: string;
+  recipient_masked: string;
+  score_achieved: number;
+  total_score: number;
+  percentage: number;
+  verification_hash: string;
+}
+
+export interface EmployeeCredentialItem {
+  credential_id: string;
+  module_id: string;
+  module_title: string;
+  score_achieved: number;
+  total_score: number;
+  percentage: number;
+  issued_at: string;
+  verification_hash: string;
+  is_valid: boolean;
+}
+
+export interface EmployeeCredentialsResponse {
+  credentials: EmployeeCredentialItem[];
+  total_count: number;
+}
+
+export interface CitizenDefectRuleItem {
+  rule_name: string;
+  field: string;
+  failure_count: number;
+  failure_rate_pct: number;
+  severity: string;
+}
+
+export interface CitizenTelemetryResponse {
+  total_submissions: number;
+  passed_count: number;
+  action_required_count: number;
+  pass_rate_pct: number;
+  defects_by_rule: CitizenDefectRuleItem[];
+  recent_inspections: Array<{
+    document_id: string;
+    uploaded_at: string;
+    overall_status: string;
+    failed_rules: string[];
+    extracted_name?: string | null;
+  }>;
+}
+
+export interface ComplianceReportItem {
+  employee_email: string;
+  department: string;
+  module_title: string;
+  progress_status: string;
+  best_score: number;
+  total_score: number;
+  percentage: number;
+  certified: boolean;
+  credential_id?: string | null;
+  certified_date?: string | null;
+}
+
+export interface ComplianceReportResponse {
+  generated_at: string;
+  total_records: number;
+  total_certified_count: number;
+  compliance_rate_pct: number;
+  records: ComplianceReportItem[];
+}
+
 

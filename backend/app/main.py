@@ -3,7 +3,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import admin, auth, documents, modules, progress, quiz, tutor
+from app.api.routes import (
+    admin,
+    auth,
+    credentials,
+    documents,
+    modules,
+    progress,
+    quiz,
+    reports,
+    tutor,
+)
 from app.core.config import settings
 
 app = FastAPI(
@@ -39,6 +49,8 @@ app.include_router(quiz.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(documents.router, prefix=settings.API_V1_STR)
 app.include_router(progress.router, prefix=settings.API_V1_STR)
+app.include_router(credentials.router, prefix=settings.API_V1_STR)
+app.include_router(reports.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/health", tags=["health"])

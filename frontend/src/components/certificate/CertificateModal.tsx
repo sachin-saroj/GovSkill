@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Award, X, Printer, CheckCircle2 } from 'lucide-react';
+import { Shield, Award, X, Printer, CheckCircle2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface CertificateModalProps {
@@ -12,6 +12,7 @@ interface CertificateModalProps {
   bestScore: number;
   totalQuestions: number;
   completedDate?: string;
+  credentialId?: string;
 }
 
 export const CertificateModal: React.FC<CertificateModalProps> = ({
@@ -24,10 +25,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
   bestScore,
   totalQuestions,
   completedDate,
+  credentialId,
 }) => {
   if (!isOpen) return null;
 
-  const certificateId = `GS-CERT-${moduleId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+  const certificateId = credentialId || `GS-CERT-${moduleId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
   const issueDate = completedDate
     ? new Date(completedDate).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -120,13 +122,22 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             {/* Signature & Date Footer */}
-            <div className="flex justify-between items-end pt-4 border-t border-[#E2E6EB] text-xs text-[#5A6472]">
-              <div className="text-left">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 pt-4 border-t border-[#E2E6EB] text-xs text-[#5A6472]">
+              <div className="text-left space-y-1">
                 <span className="block text-[10px] uppercase font-semibold">Credential ID</span>
                 <span className="font-mono text-[11px] font-bold text-[#1A1F2B]">{certificateId}</span>
+                <a
+                  href={`/verify/${certificateId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1E4D8C] hover:underline print:hidden"
+                >
+                  <span>Verify Authenticity Online</span>
+                  <ExternalLink className="h-2.5 w-2.5" />
+                </a>
               </div>
 
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <span className="block text-[10px] uppercase font-semibold">Date of Issuance</span>
                 <span className="font-semibold text-[#1A1F2B]">{issueDate}</span>
               </div>
