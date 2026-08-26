@@ -175,7 +175,7 @@ describe('CounterSlipModal', () => {
     printSpy.mockRestore();
   });
 
-  it('calls onClose when close button is clicked and when Escape key is pressed', () => {
+  it('calls onClose when close button is clicked, when Escape key is pressed, and when backdrop is clicked', () => {
     const handleClose = vi.fn();
 
     render(
@@ -193,5 +193,24 @@ describe('CounterSlipModal', () => {
 
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(handleClose).toHaveBeenCalledTimes(2);
+
+    const backdrop = screen.getByTestId('counter-slip-backdrop');
+    fireEvent.click(backdrop);
+    expect(handleClose).toHaveBeenCalledTimes(3);
+  });
+
+  it('handles missing extracted data gracefully with Not Detected fallbacks', () => {
+    render(
+      <CounterSlipModal
+        isOpen={true}
+        onClose={vi.fn()}
+        documentId="doc-fallback-test"
+        extractedData={null}
+        validationResults={mockFailedRules}
+      />
+    );
+
+    expect(screen.getAllByText('Not Detected')).toHaveLength(3);
+    expect(screen.getByText('doc-fallback-test')).toBeInTheDocument();
   });
 });

@@ -95,7 +95,15 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/70 backdrop-blur-sm print:p-0 print:static print:bg-white print:backdrop-blur-none">
+      <div
+        data-testid="counter-slip-backdrop"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/70 backdrop-blur-sm print:p-0 print:static print:bg-white print:backdrop-blur-none"
+      >
         <motion.div
           variants={scaleInVariants}
           initial={shouldReduceMotion ? {} : 'hidden'}
