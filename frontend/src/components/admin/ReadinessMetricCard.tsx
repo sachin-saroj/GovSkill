@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import Card from '@/components/ui/Card';
 import { LucideIcon } from 'lucide-react';
 
@@ -24,8 +23,6 @@ export const ReadinessMetricCard: React.FC<ReadinessMetricCardProps> = ({
   badgeText,
   badgeVariant = 'civic',
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   const badgeClasses = {
     emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200',
     civic: 'bg-civic-50 text-civic-800 border-civic-200',

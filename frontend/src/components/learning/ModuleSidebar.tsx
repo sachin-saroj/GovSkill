@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
 import { Module } from '@/types';
 import Card from '@/components/ui/Card';
 import {
@@ -25,8 +24,6 @@ export const ModuleSidebar: React.FC<ModuleSidebarProps> = ({
   completedModuleIds,
   onSelectModule,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <div className="space-y-6">
       {/* Module Curriculum Navigation Card */}

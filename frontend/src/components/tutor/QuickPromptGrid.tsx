@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
 interface QuickPromptGridProps {
@@ -13,8 +12,6 @@ export const QuickPromptGrid: React.FC<QuickPromptGridProps> = ({
   onSelectPrompt,
   disabled = false,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <div className="space-y-2.5">
       <div className="flex items-center gap-1.5 text-slate-500">

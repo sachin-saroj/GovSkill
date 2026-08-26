@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { LayoutDashboard, RefreshCw, Sparkles, ShieldCheck } from 'lucide-react';
 import { fadeUpVariants } from '@/lib/motion';
 
@@ -12,8 +12,6 @@ export const GovernanceOverview: React.FC<GovernanceOverviewProps> = ({
   onRefresh,
   isRefreshing,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <motion.div
       variants={fadeUpVariants}

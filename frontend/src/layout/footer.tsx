@@ -15,15 +15,15 @@ export const Footer: React.FC = () => {
           {/* Brand & Purpose */}
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-civic-800 text-white flex items-center justify-center border border-civic-700">
+              <div className="h-8 w-8 rounded-civic-md bg-civic-800 text-white flex items-center justify-center border border-civic-700">
                 <Shield className="h-4 w-4 text-saffron-400" />
               </div>
-              <span className="font-bold text-lg text-white tracking-tight">GovSkill</span>
+              <span className="font-semibold text-section-heading text-white tracking-tight">GovSkill</span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-caption text-slate-400 leading-relaxed font-normal">
               Unified digital capability and document pre-verification ecosystem for local government officers, administrative departments, and citizen self-service.
             </p>
-            <div className="flex items-center gap-2 text-[11px] text-slate-400">
+            <div className="flex items-center gap-2 text-micro text-slate-400 font-medium">
               <Lock className="h-3.5 w-3.5 text-emerald-400" />
               <span>Deterministic Rule Verification Engine</span>
             </div>
@@ -31,10 +31,10 @@ export const Footer: React.FC = () => {
 
           {/* Employee Modules */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-100">
+            <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-100">
               Employee Training
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-caption font-normal">
               <li>
                 <Link to="/progress" className="hover:text-white flex items-center gap-1.5 transition-colors">
                   <Award className="h-3.5 w-3.5 text-saffron-500" />
@@ -64,17 +64,17 @@ export const Footer: React.FC = () => {
 
           {/* Citizen Pre-check & Verification */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-100">
+            <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-100">
               GovAssist Citizen Hub
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-caption">
               <li>
-                <Link to="/citizen" className="text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1.5 transition-colors">
+                <Link to="/citizen" className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors">
                   <FileCheck className="h-3.5 w-3.5" />
                   <span>Income Certificate Pre-Check</span>
                 </Link>
               </li>
-              <li className="text-[11px] text-slate-400 pt-1 leading-relaxed">
+              <li className="text-caption text-slate-400 pt-1 leading-relaxed font-normal">
                 Pre-submission OCR and 4-rule compliance engine checks format, validity period, issuing authority, and seal clarity before physical submission.
               </li>
             </ul>
@@ -82,19 +82,19 @@ export const Footer: React.FC = () => {
 
           {/* Standards & Transparency */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-100">
+            <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-100">
               System Governance
             </h4>
-            <div className="bg-civic-900/80 rounded-lg p-3 border border-civic-800 text-xs space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-200">
+            <div className="bg-civic-900/80 rounded-civic-md p-3 border border-civic-800 text-caption space-y-1.5 font-normal">
+              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
                 <span>Rule Execution</span>
                 <span className="text-emerald-400">100% Deterministic</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-200">
+              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
                 <span>AI Layer Scope</span>
                 <span className="text-civic-300">Grounded Explanations</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-200">
+              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
                 <span>Citizen Data</span>
                 <span className="text-slate-400">Isolated & Transient</span>
               </div>
@@ -103,7 +103,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Strip */}
-        <div className="mt-8 pt-6 border-t border-civic-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
+        <div className="mt-8 pt-6 border-t border-civic-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-caption text-slate-500 font-normal">
           <p>© {currentYear} GovSkill Initiative • Local Administration Digital Services Platform</p>
           <p className="flex items-center gap-3">
             <span>Confidential & Secure Local Governance Stack</span>
