@@ -12,6 +12,7 @@ import {
   Info,
   Clock,
   ArrowRight,
+  FileCheck2,
 } from 'lucide-react';
 import { ValidationRuleResult } from '@/types';
 import Card from '@/components/ui/Card';
@@ -27,6 +28,7 @@ interface ValidationResultCardProps {
   timestamp?: string;
   isLoading: boolean;
   error?: string | null;
+  onGenerateSlip?: () => void;
 }
 
 export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
@@ -38,6 +40,7 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
   timestamp,
   isLoading,
   error,
+  onGenerateSlip,
 }) => {
   const [expandedRule, setExpandedRule] = useState<string | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -148,6 +151,23 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     <Clock className="h-3 w-3" />
                     <span>Verified at: {new Date(timestamp).toLocaleString()}</span>
                   </span>
+                )}
+
+                {onGenerateSlip && (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={onGenerateSlip}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-civic-xs cursor-pointer active:scale-95 ${
+                        allPassed
+                          ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                          : 'bg-amber-700 hover:bg-amber-800 text-white'
+                      }`}
+                    >
+                      <FileCheck2 className="h-3.5 w-3.5" />
+                      <span>View & Print Pre-Submission Counter Slip</span>
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
