@@ -30,18 +30,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   return (
     <Card
       id={`question-card-${questionIndex}`}
-      className={`border-slate-200 shadow-civic-sm p-6 sm:p-7 space-y-4 bg-white rounded-3xl transition-all ${
+      className={`border-slate-200 shadow-civic-sm p-6 space-y-4 bg-white rounded-civic-xl transition-all ${
         disabled ? 'opacity-70' : ''
       } ${isFlagged ? 'ring-2 ring-amber-400 border-amber-300' : ''}`}
     >
       {/* Question Header & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <span className="h-7 w-7 rounded-xl bg-civic-100 text-civic-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-civic-xs">
+          <span className="h-7 w-7 rounded-civic-md bg-civic-100 text-civic-900 flex items-center justify-center font-semibold text-caption shrink-0 shadow-civic-xs">
             {questionIndex + 1}
           </span>
           {question.competency && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
+            <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
               <Award className="h-3 w-3 text-civic-700" />
               <span>{question.competency}</span>
             </span>
@@ -53,7 +53,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             type="button"
             onClick={onToggleFlag}
             disabled={disabled}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-caption font-semibold rounded-civic-md border transition-all cursor-pointer ${
               isFlagged
                 ? 'bg-amber-100 text-amber-800 border-amber-300 shadow-civic-xs'
                 : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
@@ -66,13 +66,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
       </div>
 
       {/* Question Text */}
-      <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug tracking-tight">
+      <h3 className="text-section-heading font-semibold text-slate-900 leading-snug tracking-tight">
         {question.question}
       </h3>
 
       {/* Answer Options Grid */}
       <div className="space-y-3 pt-1">
-
         {question.options.map((option, idx) => {
           const isSelected = selectedOption === idx;
           const letter = OPTION_LETTERS[idx] || String.fromCharCode(65 + idx);
@@ -80,9 +79,9 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           return (
             <motion.label
               key={idx}
-              whileHover={shouldReduceMotion || disabled ? {} : { scale: 1.01, x: 2 }}
-              whileTap={shouldReduceMotion || disabled ? {} : { scale: 0.99 }}
-              className={`flex items-center gap-3.5 p-4 rounded-2xl border transition-all duration-150 shadow-civic-xs ${
+              whileHover={shouldReduceMotion || disabled ? {} : { scale: 1.005, x: 2 }}
+              whileTap={shouldReduceMotion || disabled ? {} : { scale: 0.995 }}
+              className={`flex items-center gap-3.5 p-4 rounded-civic-md border transition-all duration-150 shadow-civic-xs ${
                 disabled
                   ? 'border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed'
                   : isSelected
@@ -101,15 +100,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({
               />
               <span
                 aria-hidden="true"
-                className={`h-6 w-6 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
+                className={`h-6 w-6 rounded-civic-sm flex items-center justify-center text-micro font-semibold shrink-0 transition-colors ${
                   isSelected
-                    ? 'bg-civic-800 text-white'
+                    ? 'bg-civic-900 text-white'
                     : 'bg-slate-100 text-slate-600'
                 }`}
               >
                 {letter}
               </span>
-              <span className="text-xs sm:text-sm font-medium leading-relaxed">
+              <span className="text-caption font-medium leading-relaxed">
                 {option}
               </span>
             </motion.label>

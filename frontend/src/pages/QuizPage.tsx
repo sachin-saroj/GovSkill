@@ -207,26 +207,26 @@ export const QuizPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6"
+      className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* Header Banner & Module Switcher */}
       <motion.div variants={fadeUpVariants} className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
+          <div className="flex items-center gap-2 text-emerald-700 font-semibold text-caption">
             <Award className="h-4 w-4 text-emerald-600" />
             <span>Official Competency Assessment</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
             {moduleTitle} Assessment
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-caption text-slate-500">
             Passing threshold is 75%. Server-side scored with competency-level feedback.
           </p>
         </div>
 
         {modules.length > 1 && (
-          <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 shrink-0 shadow-civic-xs">
-            <label htmlFor="quiz-module-select" className="block text-[10px] uppercase font-bold text-slate-600 mb-1.5 tracking-wider">
+          <div className="bg-slate-50 p-3 rounded-civic-xl border border-slate-200 shrink-0 shadow-civic-xs">
+            <label htmlFor="quiz-module-select" className="block text-micro font-semibold uppercase text-slate-600 mb-1.5 tracking-wider">
               Switch Assessment:
             </label>
             <select
@@ -238,7 +238,7 @@ export const QuizPage: React.FC = () => {
                 setResult(null);
                 navigate(`/quiz/${e.target.value}`);
               }}
-              className="w-full px-3 py-1.5 text-xs font-semibold text-slate-900 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
+              className="w-full px-3 py-1.5 text-caption font-semibold text-slate-900 bg-white border border-slate-300 rounded-civic-md focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
             >
               {modules.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -254,27 +254,27 @@ export const QuizPage: React.FC = () => {
       {adaptiveMeta?.is_adaptive && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-4 rounded-2xl bg-gradient-to-r from-civic-50 via-indigo-50/60 to-white border border-civic-200/90 shadow-2xs space-y-2"
+          className="p-6 rounded-civic-xl bg-gradient-to-r from-civic-50 via-indigo-50/60 to-white border border-civic-200/90 shadow-civic-xs space-y-2"
         >
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 font-bold text-civic-900 text-xs">
+            <div className="flex items-center gap-2 font-semibold text-civic-900 text-caption">
               <Sparkles className="h-4 w-4 text-civic-700" />
               <span>Adaptive Question Selection Active</span>
             </div>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-civic-700 text-white tracking-wide uppercase">
+            <span className="px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-800 text-white">
               Targeted Remediation
             </span>
           </div>
-          <p className="text-xs text-slate-700 font-medium leading-relaxed">
+          <p className="text-body text-slate-700 font-normal leading-relaxed">
             {adaptiveMeta.message}
           </p>
           {adaptiveMeta.focus_competencies.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-bold text-slate-500">Priority Competencies:</span>
+              <span className="text-caption font-semibold text-slate-500">Priority Competencies:</span>
               {adaptiveMeta.focus_competencies.map((comp) => (
                 <span
                   key={comp}
-                  className="px-2.5 py-0.5 rounded-lg text-[11px] font-bold bg-white border border-civic-200 text-civic-800 shadow-2xs"
+                  className="px-2.5 py-0.5 rounded-civic-md text-caption font-semibold bg-white border border-civic-200 text-civic-800 shadow-civic-xs"
                 >
                   {comp}
                 </span>
@@ -285,12 +285,12 @@ export const QuizPage: React.FC = () => {
       )}
 
       {/* Instructions & Assessment Rules Bar */}
-      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2">
-        <div className="flex items-center gap-2 font-bold text-slate-900">
+      <div className="p-6 rounded-civic-xl bg-slate-50 border border-slate-200 text-caption text-slate-700 space-y-2">
+        <div className="flex items-center gap-2 font-semibold text-slate-900 text-caption">
           <ShieldCheck className="h-4 w-4 text-civic-700" />
           <span>Assessment Guidelines & Instructions:</span>
         </div>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-600 pl-6 list-disc">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-slate-600 pl-6 list-disc">
           <li>Answer all {questions.length} questions to maximize your competency score.</li>
           <li>A score of 75% or higher grants official module certification.</li>
           <li>You can flag questions to review before final submission.</li>
@@ -308,19 +308,19 @@ export const QuizPage: React.FC = () => {
       />
 
       {/* Answer Progress Meter */}
-      <motion.div variants={fadeUpVariants} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-civic-xs space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-bold text-slate-800">Completion Progress:</span>
+      <motion.div variants={fadeUpVariants} className="bg-slate-50 p-4 rounded-civic-xl border border-slate-200 shadow-civic-xs space-y-2">
+        <div className="flex items-center justify-between text-caption">
+          <span className="font-semibold text-slate-800">Completion Progress:</span>
           <span className="font-medium text-slate-600">
             {answeredCount} of {questions.length} answered ({progressPct}%)
           </span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+        <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
           <motion.div
             initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
             animate={{ width: `${progressPct}%` }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="h-2.5 bg-civic-800 rounded-full"
+            className="h-2 bg-civic-800 rounded-full"
           />
         </div>
       </motion.div>
@@ -334,7 +334,7 @@ export const QuizPage: React.FC = () => {
       )}
 
       {/* Questions Stack */}
-      <motion.div variants={fadeUpVariants} className="space-y-4">
+      <motion.div variants={fadeUpVariants} className="space-y-6">
         {questions.map((q, idx) => (
           <QuizCard
             key={q.id}
@@ -350,8 +350,8 @@ export const QuizPage: React.FC = () => {
       </motion.div>
 
       {/* Bottom Submit Control Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-5 border-t border-slate-200">
-        <div className="flex items-center gap-3 text-xs text-slate-500">
+      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 border-t border-slate-200">
+        <div className="flex items-center gap-3 text-caption text-slate-500">
           <span>{answeredCount} of {questions.length} answered</span>
           {flaggedCount > 0 && (
             <span className="text-amber-800 font-semibold flex items-center gap-1">
@@ -362,40 +362,33 @@ export const QuizPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <motion.div whileHover={shouldReduceMotion ? {} : { scale: 1.03 }} whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate(`/module?id=${activeModuleId}`)}
-              className="text-xs shadow-civic-xs cursor-pointer"
-            >
-              <BookOpen className="h-3.5 w-3.5 mr-1.5" />
-              <span>Review Lesson</span>
-            </Button>
-          </motion.div>
-
-          <motion.div
-            whileHover={shouldReduceMotion || isSubmitting ? {} : { scale: 1.03 }}
-            whileTap={shouldReduceMotion || isSubmitting ? {} : { scale: 0.96 }}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => navigate(`/module?id=${activeModuleId}`)}
           >
-            <Button
-              onClick={handleOpenSubmitModal}
-              disabled={isSubmitting}
-              className="px-6 py-2.5 shadow-civic-sm text-xs cursor-pointer"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
-                  <span>Evaluating...</span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                  <span>Submit Assessment</span>
-                </>
-              )}
-            </Button>
-          </motion.div>
+            <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+            <span>Review Lesson</span>
+          </Button>
+
+          <Button
+            onClick={handleOpenSubmitModal}
+            disabled={isSubmitting}
+            size="sm"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
+                <span>Evaluating...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                <span>Submit Assessment</span>
+              </>
+            )}
+          </Button>
         </div>
       </motion.div>
 
