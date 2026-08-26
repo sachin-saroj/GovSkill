@@ -224,6 +224,50 @@ describe('ProgressDashboardPage', () => {
     expect(screen.getByText('employee@govskill.test')).toBeInTheDocument();
   });
 
+  it('renders official digital credentials with real cryptographic IDs and opens certificate modal', async () => {
+    const mockCredentialsList = [
+      {
+        credential_id: 'GS-CERT-2026-ABCD1234',
+        user_id: 'user-1',
+        module_id: 'cybersecurity-101',
+        module_title: 'Cybersecurity Basics',
+        score_achieved: 4,
+        total_score: 5,
+        percentage: 80,
+        issued_at: '2026-08-20T10:00:00Z',
+      },
+    ];
+
+    mockedGet.mockImplementation((url: string) => {
+      if (url === '/progress/my-skills') {
+        return Promise.resolve({ data: mockCompetencyData });
+      }
+      if (url === '/credentials/my-credentials') {
+        return Promise.resolve({ data: { credentials: mockCredentialsList, total_count: 1 } });
+      }
+      return Promise.resolve({ data: mockCompetencyData });
+    });
+
+    renderPage();
+
+    // Verify Official Digital Credentials section
+    expect(await screen.findByText('Official Digital Credentials')).toBeInTheDocument();
+    expect(screen.getByText('1 Cryptographically Signed')).toBeInTheDocument();
+    expect(screen.getByText('GS-CERT-2026-ABCD1234')).toBeInTheDocument();
+
+    // Click View Certificate from the digital credentials card
+    const viewCertButtons = screen.getAllByRole('button', { name: /view certificate/i });
+    expect(viewCertButtons.length).toBeGreaterThan(0);
+    fireEvent.click(viewCertButtons[0]);
+
+    expect(await screen.findByText('Certificate of Digital Competency')).toBeInTheDocument();
+    expect(screen.getAllByText('GS-CERT-2026-ABCD1234').length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByRole('link', { name: /verify authenticity online/i })).toHaveAttribute(
+      'href',
+      '/verify/GS-CERT-2026-ABCD1234'
+    );
+  });
+
   it('renders empty state when no modules are assigned', async () => {
     mockedGet.mockResolvedValueOnce({
       data: {

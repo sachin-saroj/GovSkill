@@ -20,6 +20,7 @@ export const ProgressDashboardPage: React.FC = () => {
   const [data, setData] = useState<EmployeeSkillStatusResponse | null>(null);
   const [credentials, setCredentials] = useState<EmployeeCredentialItem[]>([]);
   const [selectedCertSkill, setSelectedCertSkill] = useState<EmployeeSkillItem | null>(null);
+  const [selectedCredentialForModal, setSelectedCredentialForModal] = useState<EmployeeCredentialItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -211,21 +212,32 @@ export const ProgressDashboardPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                <div className="flex flex-wrap items-center justify-between pt-3 border-t border-slate-100 gap-2">
                   <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Signature Verified
                   </span>
 
-                  <a
-                    href={`/verify/${cred.credential_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-xl border border-civic-200 transition-colors"
-                  >
-                    <span>Verify Online</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCredentialForModal(cred)}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer"
+                    >
+                      <Award className="h-3 w-3 text-civic-700" />
+                      <span>View Certificate</span>
+                    </button>
+
+                    <a
+                      href={`/verify/${cred.credential_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-xl border border-civic-200 transition-colors"
+                    >
+                      <span>Verify Online</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
@@ -243,7 +255,7 @@ export const ProgressDashboardPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Certificate Modal */}
+      {/* Certificate Modal for Skill Module Card */}
       {selectedCertSkill && (
         <CertificateModal
           isOpen={!!selectedCertSkill}
@@ -255,6 +267,25 @@ export const ProgressDashboardPage: React.FC = () => {
           bestScore={selectedCertSkill.best_score}
           totalQuestions={selectedCertSkill.total_questions}
           completedDate={selectedCertSkill.updated_at}
+          credentialId={
+            credentials.find((c) => c.module_id === selectedCertSkill.module_id)?.credential_id
+          }
+        />
+      )}
+
+      {/* Certificate Modal for Digital Credentials Section */}
+      {selectedCredentialForModal && (
+        <CertificateModal
+          isOpen={!!selectedCredentialForModal}
+          onClose={() => setSelectedCredentialForModal(null)}
+          employeeEmail={user?.email || 'employee@office.gov'}
+          moduleTitle={selectedCredentialForModal.module_title}
+          moduleId={selectedCredentialForModal.module_id}
+          scorePercentage={selectedCredentialForModal.percentage}
+          bestScore={selectedCredentialForModal.score_achieved}
+          totalQuestions={selectedCredentialForModal.total_score}
+          completedDate={selectedCredentialForModal.issued_at}
+          credentialId={selectedCredentialForModal.credential_id}
         />
       )}
     </motion.div>

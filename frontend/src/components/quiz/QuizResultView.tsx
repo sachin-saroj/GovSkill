@@ -24,6 +24,7 @@ interface QuizResultViewProps {
   onRetake: () => void;
   onGoToProgress: () => void;
   onGoToLessons: () => void;
+  onViewCertificate?: () => void;
 }
 
 export const QuizResultView: React.FC<QuizResultViewProps> = ({
@@ -32,6 +33,7 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
   onRetake,
   onGoToProgress,
   onGoToLessons,
+  onViewCertificate,
 }) => {
   const shouldReduceMotion = useReducedMotion();
 
@@ -87,7 +89,7 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
         {/* Score & Certification Card */}
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-2xl bg-slate-50 border border-slate-200 max-w-md mx-auto shadow-civic-xs space-y-3"
+          className="p-6 rounded-2xl bg-slate-50 border border-slate-200 max-w-md mx-auto shadow-civic-xs space-y-4"
         >
           <div className="flex items-center justify-between text-xs text-slate-500 border-b border-slate-200 pb-2">
             <span>Score: <strong>{score} of {total}</strong></span>
@@ -119,6 +121,23 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
               <span>Best Score: {best_score}/{total} ({bestPercentage}%)</span>
             </span>
           </div>
+
+          {passed && onViewCertificate && (
+            <motion.div
+              whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
+              className="pt-2 border-t border-slate-200/80"
+            >
+              <button
+                type="button"
+                onClick={onViewCertificate}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-xs font-bold rounded-xl shadow-civic-xs transition-all cursor-pointer"
+              >
+                <Award className="h-4 w-4 text-emerald-100" />
+                <span>View & Print Official Certificate</span>
+              </button>
+            </motion.div>
+          )}
         </motion.div>
       </Card>
 
