@@ -87,6 +87,14 @@ export default {
         sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["JetBrains Mono", "Fira Code", "Consolas", "monospace"],
       },
+      fontSize: {
+        hero: ["32px", { lineHeight: "1.15", fontWeight: "600" }],
+        "page-title": ["26px", { lineHeight: "1.2", fontWeight: "600" }],
+        "section-heading": ["19px", { lineHeight: "1.3", fontWeight: "600" }],
+        body: ["15px", { lineHeight: "1.5", fontWeight: "400" }],
+        caption: ["13px", { lineHeight: "1.4", fontWeight: "500" }],
+        micro: ["12px", { lineHeight: "1.3", fontWeight: "600", letterSpacing: "0.05em" }],
+      },
       boxShadow: {
         "civic-xs": "0 1px 2px 0 rgba(7, 19, 34, 0.04)",
         "civic-sm": "0 1px 3px 0 rgba(7, 19, 34, 0.06), 0 1px 2px -1px rgba(7, 19, 34, 0.04)",

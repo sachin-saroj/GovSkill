@@ -70,7 +70,7 @@ export const HeroVisual: React.FC = () => {
           rotateY: shouldReduceMotion ? 0 : rotateY,
           transformStyle: 'preserve-3d',
         }}
-        className="relative bg-slate-950/95 border border-slate-800/90 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl backdrop-blur-2xl overflow-hidden"
+        className="relative bg-slate-950/95 border border-slate-800/90 rounded-civic-2xl p-6 sm:p-8 shadow-civic-xl backdrop-blur-2xl overflow-hidden"
       >
         {/* Ambient Depth Glows */}
         <div className="absolute inset-0 bg-civic-dark-pattern opacity-30 pointer-events-none" />
@@ -88,18 +88,18 @@ export const HeroVisual: React.FC = () => {
           className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800/80"
         >
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-900/90 border border-slate-700/80 text-[11px] font-mono text-slate-200 shadow-civic-xs">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-civic-md bg-slate-900/90 border border-slate-700/80 text-micro font-mono text-slate-200 shadow-civic-xs">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>DPI Platform Engine • Live</span>
             </div>
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
+            <div className="hidden sm:flex items-center gap-1.5 text-caption text-slate-400">
               <Database className="h-3.5 w-3.5 text-civic-400" />
               <span>PostgreSQL • Tesseract OCR • Gemini 2.5 Flash</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-slate-300 bg-slate-900/80 px-3 py-1 rounded-xl border border-slate-700/70 shadow-civic-xs">
+            <span className="text-micro font-semibold text-slate-300 bg-slate-900/80 px-3 py-1 rounded-civic-md border border-slate-700/70 shadow-civic-xs">
               National Governance Standards
             </span>
           </div>
@@ -115,32 +115,32 @@ export const HeroVisual: React.FC = () => {
               transform: shouldReduceMotion ? 'none' : 'translateZ(24px)',
               transformStyle: 'preserve-3d',
             }}
-            className="lg:col-span-6 bg-slate-900/90 border border-emerald-500/40 rounded-3xl p-5 sm:p-6 shadow-civic-xl relative flex flex-col justify-between"
+            className="lg:col-span-6 bg-slate-900/90 border border-emerald-500/40 rounded-civic-xl p-6 shadow-civic-xl relative flex flex-col justify-between"
           >
             <div>
               {/* Stream Header */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-civic-xs">
+                  <div className="h-9 w-9 rounded-civic-md bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-civic-xs">
                     <FileCheck className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-white tracking-wide block">
+                    <span className="text-caption font-semibold text-white tracking-wide block">
                       GovAssist Citizen Stream
                     </span>
-                    <p className="text-[10px] text-emerald-400 font-mono">
+                    <p className="text-micro text-emerald-400 font-mono">
                       Income Certificate Pre-Check
                     </p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-civic-xs">
+                <span className="text-micro font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-civic-xs">
                   4/4 Rules Passed
                 </span>
               </div>
 
               {/* Simulated OCR Extraction Summary */}
               <div className="space-y-3 pt-4">
-                <div className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1.5 font-mono text-[11px]">
+                <div className="p-3 rounded-civic-md bg-slate-950/80 border border-slate-800 space-y-1 font-mono text-caption">
                   <div className="flex justify-between text-slate-400">
                     <span>Applicant Name:</span>
                     <span className="text-white font-semibold">Prakash R. Sharma</span>
@@ -201,33 +201,33 @@ export const HeroVisual: React.FC = () => {
               transform: shouldReduceMotion ? 'none' : 'translateZ(32px)',
               transformStyle: 'preserve-3d',
             }}
-            className="lg:col-span-6 bg-slate-900/90 border border-civic-500/40 rounded-3xl p-5 sm:p-6 shadow-civic-xl relative flex flex-col justify-between"
+            className="lg:col-span-6 bg-slate-900/90 border border-civic-500/40 rounded-civic-xl p-6 shadow-civic-xl relative flex flex-col justify-between"
           >
             <div>
               {/* Stream Header */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 rounded-xl bg-civic-500/20 border border-civic-500/40 flex items-center justify-center text-civic-300 shadow-civic-xs">
+                  <div className="h-9 w-9 rounded-civic-md bg-civic-500/20 border border-civic-500/40 flex items-center justify-center text-civic-300 shadow-civic-xs">
                     <Bot className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-white tracking-wide block">
+                    <span className="text-caption font-semibold text-white tracking-wide block">
                       GovSkill Grounded AI Tutor
                     </span>
-                    <p className="text-[10px] text-civic-400 font-mono">
+                    <p className="text-micro text-civic-400 font-mono">
                       Module Bounded • Zero Hallucination
                     </p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-civic-500/20 text-civic-200 border border-civic-500/40 shadow-civic-xs">
+                <span className="text-micro font-semibold px-2.5 py-1 rounded-full bg-civic-500/20 text-civic-200 border border-civic-500/40 shadow-civic-xs">
                   Grounded AI 2.5 Flash
                 </span>
               </div>
 
               {/* Simulated Live Dialogue */}
               <div className="space-y-3 pt-4">
-                <div className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 text-[11px] space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="p-3 rounded-civic-md bg-slate-950/80 border border-slate-800 text-caption space-y-1">
+                  <span className="text-micro font-semibold uppercase tracking-wider text-slate-400">
                     Officer Query:
                   </span>
                   <p className="text-slate-200 italic font-medium">
@@ -235,16 +235,16 @@ export const HeroVisual: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-civic-950/70 border border-civic-800/70 text-[11px] space-y-1.5 text-slate-200">
-                  <div className="flex items-center gap-1.5 text-saffron-400 font-bold text-[10px]">
+                <div className="p-3.5 rounded-civic-md bg-civic-950/70 border border-civic-800/70 text-caption space-y-1.5 text-slate-200">
+                  <div className="flex items-center gap-1.5 text-saffron-400 font-semibold text-caption">
                     <Sparkles className="h-3.5 w-3.5 text-saffron-400" />
                     <span>Module 1 Grounded Answer:</span>
                   </div>
                   <p className="leading-relaxed">
                     "Under Revenue Manual §12, rural income certificates require the official seal of the Tehsildar with active digital signature registration."
                   </p>
-                  <div className="pt-1 flex items-center gap-2 text-[10px] text-slate-400">
-                    <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 font-mono">
+                  <div className="pt-1 flex items-center gap-2 text-micro text-slate-400">
+                    <span className="px-2 py-0.5 rounded-civic-sm bg-slate-800 text-slate-300 border border-slate-700 font-mono">
                       Source: Module 1.4
                     </span>
                     <span className="text-emerald-400 font-semibold">Citation Verified</span>
@@ -253,14 +253,14 @@ export const HeroVisual: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5 text-saffron-400 font-bold">
+            <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between text-caption">
+              <div className="flex items-center gap-1.5 text-saffron-400 font-semibold">
                 <Award className="h-4 w-4" />
                 <span>Server-Scored Quiz: 100%</span>
               </div>
               <Link
                 to="/module"
-                className="text-civic-300 hover:text-white font-bold flex items-center gap-1 transition-colors"
+                className="text-civic-300 hover:text-white font-semibold flex items-center gap-1 transition-colors"
               >
                 <span>Curriculum</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -277,35 +277,35 @@ export const HeroVisual: React.FC = () => {
             transform: shouldReduceMotion ? 'none' : 'translateZ(48px)',
             transformStyle: 'preserve-3d',
           }}
-          className="relative z-20 grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-6"
+          className="relative z-20 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6"
         >
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/95 border border-emerald-500/40 text-white shadow-civic-lg backdrop-blur-md">
-            <div className="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 p-4 rounded-civic-xl bg-slate-900/95 border border-emerald-500/40 text-white shadow-civic-lg backdrop-blur-md">
+            <div className="h-8 w-8 rounded-civic-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
               <Lock className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">100% Deterministic</p>
-              <p className="text-[11px] text-slate-400">Zero AI validation hallucination</p>
+              <p className="text-caption font-semibold text-white">100% Deterministic</p>
+              <p className="text-caption text-slate-400">Zero AI validation hallucination</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/95 border border-blue-500/40 text-white shadow-civic-lg backdrop-blur-md">
-            <div className="h-8 w-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 p-4 rounded-civic-xl bg-slate-900/95 border border-blue-500/40 text-white shadow-civic-lg backdrop-blur-md">
+            <div className="h-8 w-8 rounded-civic-md bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
               <Bot className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Grounded Gemini 2.5</p>
-              <p className="text-[11px] text-slate-400">Strictly bounded module context</p>
+              <p className="text-caption font-semibold text-white">Grounded Gemini 2.5</p>
+              <p className="text-caption text-slate-400">Strictly bounded module context</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/95 border border-saffron-500/40 text-white shadow-civic-lg backdrop-blur-md">
-            <div className="h-8 w-8 rounded-xl bg-saffron-500/20 text-saffron-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 p-4 rounded-civic-xl bg-slate-900/95 border border-saffron-500/40 text-white shadow-civic-lg backdrop-blur-md">
+            <div className="h-8 w-8 rounded-civic-md bg-saffron-500/20 text-saffron-400 flex items-center justify-center shrink-0">
               <Shield className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-white">Server-Scored Quiz</p>
-              <p className="text-[11px] text-slate-400">Tamper-proof qualifications</p>
+              <p className="text-caption font-semibold text-white">Server-Scored Quiz</p>
+              <p className="text-caption text-slate-400">Tamper-proof qualifications</p>
             </div>
           </div>
         </motion.div>

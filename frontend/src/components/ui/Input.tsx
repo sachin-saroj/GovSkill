@@ -22,9 +22,9 @@ export const Input: React.FC<InputProps> = ({
   const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
   return (
-    <div className="w-full space-y-1.5">
+    <div className="w-full space-y-1">
       {label && (
-        <label htmlFor={inputId} className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
+        <label htmlFor={inputId} className="block text-caption font-semibold text-civic-900 tracking-wide">
           {label}
         </label>
       )}
@@ -37,7 +37,7 @@ export const Input: React.FC<InputProps> = ({
         <input
           id={inputId}
           disabled={disabled}
-          className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 disabled:bg-slate-100 disabled:cursor-not-allowed ${
+          className={`w-full rounded-civic-md border bg-white px-4 py-2.5 text-body text-slate-900 placeholder-slate-400 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-civic-800/20 focus:border-civic-800 disabled:bg-slate-100 disabled:cursor-not-allowed ${
             leftIcon ? 'pl-9' : ''
           } ${rightIcon ? 'pr-9' : ''} ${
             error
@@ -52,8 +52,8 @@ export const Input: React.FC<InputProps> = ({
           </span>
         )}
       </div>
-      {error && <p className="text-xs font-medium text-red-600 animate-fade-in">{error}</p>}
-      {!error && helperText && <p className="text-xs text-slate-500">{helperText}</p>}
+      {error && <p className="text-caption font-medium text-red-600 animate-fade-in">{error}</p>}
+      {!error && helperText && <p className="text-caption font-medium text-civic-500">{helperText}</p>}
     </div>
   );
 };

@@ -44,13 +44,13 @@ export const Badge: React.FC<BadgeProps> = ({
   const currentStyle = styles[variant] || styles.info;
 
   const sizeStyles = {
-    sm: 'px-2 py-0.5 text-[11px] gap-1',
-    md: 'px-2.5 py-1 text-xs gap-1.5',
+    sm: 'px-2 py-0.5 text-micro gap-1',
+    md: 'px-2.5 py-1 text-micro gap-1.5',
   };
 
   return (
     <span
-      className={`inline-flex items-center font-medium rounded-full ${sizeStyles[size]} ${currentStyle.bg} ${className}`}
+      className={`inline-flex items-center text-micro font-semibold uppercase tracking-wider rounded-full ${sizeStyles[size]} ${currentStyle.bg} ${className}`}
       {...props}
     >
       {dot && <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${currentStyle.dot}`} />}

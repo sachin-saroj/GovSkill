@@ -3,7 +3,7 @@ import React from 'react';
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'elevated' | 'interactive' | 'subtle';
+  variant?: 'default' | 'elevated' | 'interactive' | 'subtle' | 'feature';
   noPadding?: boolean;
 }
 
@@ -15,18 +15,19 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    default: 'bg-white border border-slate-200/90 shadow-civic-xs',
-    elevated: 'bg-white border border-slate-200 shadow-civic-md',
+    default: 'bg-white border border-slate-200/90 shadow-civic-xs rounded-civic-xl',
+    feature: 'bg-white border border-slate-200 shadow-civic-sm rounded-civic-2xl',
+    elevated: 'bg-white border border-slate-200 shadow-civic-md rounded-civic-xl',
     interactive:
-      'bg-white border border-slate-200 shadow-civic-xs hover:shadow-civic-md hover:border-civic-300 transition-all duration-200 cursor-pointer',
-    subtle: 'bg-slate-50/70 border border-slate-200/80 shadow-none',
+      'bg-white border border-slate-200 shadow-civic-xs hover:shadow-civic-md hover:border-civic-300 transition-all duration-200 cursor-pointer rounded-civic-xl',
+    subtle: 'bg-slate-50 border border-slate-200/80 shadow-none rounded-civic-xl',
   };
 
-  const paddingStyle = noPadding ? '' : 'p-6';
+  const paddingStyle = noPadding ? '' : variant === 'feature' ? 'p-8' : 'p-6';
 
   return (
     <div
-      className={`rounded-xl ${variantStyles[variant]} ${paddingStyle} ${className}`}
+      className={`${variantStyles[variant]} ${paddingStyle} ${className}`}
       {...props}
     >
       {children}
@@ -39,7 +40,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className = '',
   ...props
 }) => (
-  <div className={`flex flex-col space-y-1.5 pb-4 border-b border-slate-100 ${className}`} {...props}>
+  <div className={`flex flex-col space-y-1 pb-4 border-b border-slate-100 ${className}`} {...props}>
     {children}
   </div>
 );
@@ -49,7 +50,7 @@ export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
   className = '',
   ...props
 }) => (
-  <h3 className={`text-base sm:text-lg font-semibold text-slate-900 tracking-tight ${className}`} {...props}>
+  <h3 className={`text-section-heading font-semibold text-civic-900 tracking-tight ${className}`} {...props}>
     {children}
   </h3>
 );
@@ -59,7 +60,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
   className = '',
   ...props
 }) => (
-  <p className={`text-xs sm:text-sm text-slate-500 ${className}`} {...props}>
+  <p className={`text-caption font-medium text-civic-500 ${className}`} {...props}>
     {children}
   </p>
 );

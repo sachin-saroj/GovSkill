@@ -74,7 +74,7 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
     return (
       <div
         ref={cardRef}
-        className={`relative rounded-3xl ${className}`}
+        className={`relative rounded-civic-2xl ${className}`}
         onClick={onClick}
       >
         {children}
@@ -101,7 +101,7 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-        className={`relative overflow-hidden rounded-3xl ${
+        className={`relative overflow-hidden rounded-civic-2xl ${
           isHovered ? 'shadow-civic-xl' : 'shadow-civic-md'
         } ${className}`}
       >
