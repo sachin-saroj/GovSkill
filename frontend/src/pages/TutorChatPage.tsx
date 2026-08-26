@@ -179,28 +179,28 @@ export const TutorChatPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6"
+      className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* Header Banner */}
       <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-5 gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-civic-800 font-bold text-xs">
+          <div className="flex items-center gap-2 text-civic-800 font-semibold text-caption">
             <Sparkles className="h-4 w-4 text-saffron-500" />
             <span>Government Training Copilot</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
             Administrative Assistant & Copilot
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-caption text-slate-500 font-normal">
             Answers are strictly grounded in approved government training modules with zero policy fabrication.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Module Scope Selector */}
-          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-2xl border border-slate-200 shrink-0 shadow-civic-xs">
+          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-civic-md border border-slate-200 shrink-0 shadow-civic-xs">
             <BookOpen className="h-4 w-4 text-civic-700" />
-            <label htmlFor="context-select" className="text-xs font-bold text-slate-600">
+            <label htmlFor="context-select" className="text-caption font-semibold text-slate-600">
               Scope:
             </label>
             <select
@@ -208,7 +208,7 @@ export const TutorChatPage: React.FC = () => {
               value={selectedModuleId}
               onChange={(e) => setSelectedModuleId(e.target.value)}
               disabled={isLoading}
-              className="text-xs font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="text-caption font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <option value="auto">Auto-Detect Relevant Module ✨</option>
               {modules.map((mod) => (
@@ -219,29 +219,27 @@ export const TutorChatPage: React.FC = () => {
             </select>
           </div>
 
-          <motion.button
+          <button
             type="button"
-            whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
             onClick={handleResetChat}
             title="Reset conversation"
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 text-caption font-semibold text-slate-600 border border-slate-200 rounded-civic-md hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Reset</span>
-          </motion.button>
+          </button>
         </div>
       </motion.div>
 
       {/* Active Scope Pill */}
-      <motion.div variants={fadeUpVariants} className="flex items-center justify-between px-4 py-2 rounded-2xl bg-slate-100/80 border border-slate-200 text-xs text-slate-600 shadow-civic-xs">
+      <motion.div variants={fadeUpVariants} className="flex items-center justify-between px-4 py-2.5 rounded-civic-xl bg-slate-100/80 border border-slate-200 text-caption text-slate-600 shadow-civic-xs">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
           <span>
-            <strong>Active Copilot Scope:</strong> {activeModuleTitle}
+            <strong className="font-semibold text-slate-900">Active Copilot Scope:</strong> {activeModuleTitle}
           </span>
         </div>
-        <span className="text-[11px] text-slate-500 font-medium hidden sm:inline">
+        <span className="text-micro font-semibold uppercase tracking-wider text-slate-500 hidden sm:inline">
           Anti-hallucination verified
         </span>
       </motion.div>
@@ -250,17 +248,17 @@ export const TutorChatPage: React.FC = () => {
       {incomingCompetency && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-4 rounded-2xl bg-saffron-50 border border-saffron-300/80 text-xs text-saffron-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-civic-xs"
+          className="p-6 rounded-civic-xl bg-saffron-50 border border-saffron-300/80 text-caption text-saffron-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-civic-xs"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-saffron-100 text-saffron-800 shrink-0">
-              <Sparkles className="h-4 w-4 text-saffron-600" />
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-civic-md bg-saffron-100 text-saffron-800 shrink-0">
+              <Sparkles className="h-5 w-5 text-saffron-600" />
             </div>
             <div>
-              <div className="font-bold text-saffron-900">
+              <div className="font-semibold text-section-heading text-saffron-900">
                 Targeted Remediation Active: {incomingCompetency}
               </div>
-              <p className="text-[11px] text-saffron-800">
+              <p className="text-caption text-saffron-800 font-normal">
                 Grounded guidance tailored to resolve this specific operational skill gap.
               </p>
             </div>
@@ -276,7 +274,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-2.5 py-1 rounded-lg bg-white border border-saffron-300 text-[11px] font-bold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60"
+              className="px-3 py-1.5 rounded-civic-md bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs"
             >
               Practice Scenario
             </button>
@@ -289,7 +287,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-2.5 py-1 rounded-lg bg-white border border-saffron-300 text-[11px] font-bold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60"
+              className="px-3 py-1.5 rounded-civic-md bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs"
             >
               Red Flags
             </button>
@@ -304,7 +302,7 @@ export const TutorChatPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-2xl bg-red-50 border border-red-300 text-xs text-red-700 flex items-center justify-between gap-2 shadow-civic-xs"
+            className="p-4 rounded-civic-xl bg-red-50 border border-red-300 text-caption text-red-700 flex items-center justify-between gap-2 shadow-civic-xs"
           >
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
@@ -314,7 +312,7 @@ export const TutorChatPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleRetryLast}
-                className="flex items-center gap-1 px-2.5 py-1 bg-white border border-red-300 text-red-800 rounded-lg font-bold hover:bg-red-50 text-[11px] cursor-pointer"
+                className="flex items-center gap-1 px-2.5 py-1 bg-white border border-red-300 text-red-800 rounded-civic-md font-semibold hover:bg-red-50 text-caption cursor-pointer shadow-civic-xs"
               >
                 <RefreshCw className="h-3 w-3" />
                 <span>Retry</span>
@@ -335,7 +333,7 @@ export const TutorChatPage: React.FC = () => {
 
       {/* Chat Messages Workspace */}
       <motion.div variants={fadeUpVariants}>
-        <Card className="min-h-[460px] flex flex-col justify-between p-6 bg-slate-50/50 border-slate-200 shadow-civic-sm rounded-3xl">
+        <Card className="min-h-[460px] flex flex-col justify-between p-6 sm:p-8 bg-slate-50/50 border-slate-200 shadow-civic-sm rounded-civic-xl">
           <div className="space-y-4 overflow-y-auto max-h-[520px] pr-2 mb-4">
             {messages.map((msg) => (
               <ChatMessageItem
@@ -354,14 +352,14 @@ export const TutorChatPage: React.FC = () => {
                   initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
-                  className="flex gap-3 items-center text-slate-600 text-xs"
+                  className="flex gap-3 items-center text-slate-600 text-caption"
                 >
-                  <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
+                  <div className="h-8 w-8 rounded-civic-md bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
                     <Bot className="h-4 w-4 text-saffron-400" />
                   </div>
-                  <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl shadow-civic-xs">
+                  <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-civic-xl shadow-civic-xs">
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
-                    <span className="font-medium text-slate-700">
+                    <span className="font-medium text-slate-700 text-caption">
                       Verifying question against official training curriculum...
                     </span>
                   </div>
@@ -373,27 +371,23 @@ export const TutorChatPage: React.FC = () => {
           </div>
 
           {/* Input Form Bar */}
-          <form onSubmit={handleSendMessage} className="flex gap-2.5 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 p-4 rounded-b-3xl">
+          <form onSubmit={handleSendMessage} className="flex gap-3 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-4 rounded-b-civic-xl">
             <Input
               placeholder="Ask about verification rules, SLA timelines, cybersecurity standards..."
               value={inputQuestion}
               onChange={(e) => setInputQuestion(e.target.value)}
               disabled={isLoading}
-              className="flex-1 text-xs sm:text-sm bg-slate-50 border-slate-200 focus:bg-white rounded-xl"
+              className="flex-1 text-caption bg-slate-50 border-slate-200 focus:bg-white rounded-civic-md"
             />
-            <motion.div
-              whileHover={shouldReduceMotion || isLoading || !inputQuestion.trim() ? {} : { scale: 1.02 }}
-              whileTap={shouldReduceMotion || isLoading || !inputQuestion.trim() ? {} : { scale: 0.97 }}
+            <Button
+              type="submit"
+              size="md"
+              disabled={isLoading || !inputQuestion.trim()}
+              className="px-5 shadow-civic-xs shrink-0 cursor-pointer"
             >
-              <Button
-                type="submit"
-                disabled={isLoading || !inputQuestion.trim()}
-                className="px-5 shadow-civic-xs shrink-0 cursor-pointer"
-              >
-                <Send className="h-4 w-4 mr-1.5" />
-                <span>Send</span>
-              </Button>
-            </motion.div>
+              <Send className="h-4 w-4 mr-1.5" />
+              <span>Send</span>
+            </Button>
           </form>
         </Card>
       </motion.div>

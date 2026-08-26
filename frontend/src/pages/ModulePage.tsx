@@ -165,22 +165,22 @@ export const ModulePage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* Header Banner */}
       <motion.div variants={fadeUpVariants}>
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-civic-950 via-civic-900 to-civic-800 p-6 sm:p-8 text-white shadow-civic-xl border border-civic-800">
+        <div className="relative overflow-hidden rounded-civic-2xl bg-gradient-to-r from-civic-950 via-civic-900 to-civic-800 p-8 text-white shadow-civic-xl border border-civic-800">
           <div className="relative z-10 space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-xs font-semibold text-slate-200 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-micro font-semibold uppercase tracking-wider text-slate-200 backdrop-blur-sm">
               <BookOpen className="h-3.5 w-3.5 text-saffron-400" />
               <span>Core Employee Training Module</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            <h1 className="text-page-title font-semibold tracking-tight text-white leading-tight">
               {selectedModule?.title || 'Digital Document Handling'}
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+            <p className="text-body text-slate-300 leading-relaxed max-w-2xl font-normal">
               Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
             </p>
           </div>
@@ -194,7 +194,7 @@ export const ModulePage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs font-semibold text-emerald-800 flex items-center gap-2 shadow-civic-xs"
+            className="p-4 rounded-civic-xl bg-emerald-50 border border-emerald-300 text-caption font-semibold text-emerald-800 flex items-center gap-2 shadow-civic-xs"
           >
             <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>{statusMessage}</span>

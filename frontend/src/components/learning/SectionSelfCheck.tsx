@@ -152,9 +152,9 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
   const isCorrect = selectedOption === checkItem.correctIndex;
 
   return (
-    <div className="rounded-xl border border-civic-200 bg-gradient-to-br from-civic-50/70 to-slate-50 p-5 space-y-4 shadow-civic-xs">
+    <div className="rounded-civic-xl border border-civic-200 bg-gradient-to-br from-civic-50/70 to-slate-50 p-5 space-y-4 shadow-civic-xs">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-civic-900 font-bold text-xs uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-civic-900 font-semibold text-caption uppercase tracking-wider">
           <HelpCircle className="h-4 w-4 text-civic-700" />
           <span>Quick Understanding Check</span>
         </div>
@@ -162,7 +162,7 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-civic-800 font-semibold cursor-pointer"
+            className="flex items-center gap-1 text-caption text-slate-500 hover:text-civic-800 font-semibold cursor-pointer"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Try Again</span>
@@ -170,7 +170,7 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
         )}
       </div>
 
-      <p className="text-xs sm:text-sm font-semibold text-slate-900">
+      <p className="text-caption font-semibold text-slate-900">
         {checkItem.question}
       </p>
 
@@ -195,7 +195,7 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={isSubmitted}
-              className={`w-full text-left px-3.5 py-2.5 rounded-lg border text-xs transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default`}
+              className={`w-full text-left px-3.5 py-2.5 rounded-civic-md border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default`}
             >
               <span className="leading-snug">{option}</span>
               {isSubmitted && idx === checkItem.correctIndex && (
@@ -212,16 +212,16 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
       {/* Feedback Alert */}
       {isSubmitted && (
         <div
-          className={`p-3 rounded-lg border text-xs leading-relaxed animate-fade-in ${
+          className={`p-3 rounded-civic-md border text-caption leading-relaxed animate-fade-in ${
             isCorrect
               ? 'bg-emerald-50/90 border-emerald-300 text-emerald-900'
               : 'bg-amber-50/90 border-amber-300 text-amber-900'
           }`}
         >
-          <p className="font-bold mb-0.5">
+          <p className="font-semibold mb-0.5">
             {isCorrect ? '✓ Correct Understanding!' : '⚠ Concept Clarification:'}
           </p>
-          <p className="text-[11px] font-normal">{checkItem.explanation}</p>
+          <p className="text-caption font-normal">{checkItem.explanation}</p>
         </div>
       )}
     </div>
