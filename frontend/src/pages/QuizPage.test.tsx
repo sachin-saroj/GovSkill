@@ -18,6 +18,16 @@ vi.mock('react-router-dom', () => ({
   useParams: () => ({ moduleId: mockModuleId }),
 }));
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: { id: 'user-1', email: 'employee@govskill.test', role: 'employee' },
+    token: 'test-token',
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
+
 const mockedGet = vi.mocked(api.get);
 const mockedPost = vi.mocked(api.post);
 
@@ -185,6 +195,46 @@ describe('QuizPage & Competency Assessment Engine', () => {
     expect(await screen.findByText('Adaptive Question Selection Active')).toBeInTheDocument();
     expect(screen.getByText(/Assessment adapted to prioritize focus on/i)).toBeInTheDocument();
     expect(screen.getAllByText('Document Formatting & Standards').length).toBeGreaterThan(0);
+  });
+
+  it('renders View Official Certificate button on passing assessment and opens certificate modal', async () => {
+    mockedPost.mockResolvedValue({
+      data: {
+        score: 2,
+        total: 2,
+        percentage: 100,
+        passed: true,
+        attempt_number: 1,
+        best_score: 2,
+        status: 'certified',
+        credential_id: 'GS-CERT-2026-QUIZ9999',
+        competency_breakdown: [],
+        strengths: ['Document Formatting & Standards'],
+        weak_areas: [],
+        recommended_action: 'Mastery achieved!',
+        submitted_at: '2026-08-26T12:00:00Z',
+      },
+    });
+
+    render(<QuizPage />);
+    await screen.findByRole('button', { name: /submit assessment/i });
+    fireEvent.click(screen.getByRole('radio', { name: '6 characters' }));
+    fireEvent.click(screen.getByRole('button', { name: /submit assessment/i }));
+
+    const modalSubmitBtn = screen.getAllByRole('button', { name: /submit assessment/i })[1];
+    fireEvent.click(modalSubmitBtn);
+
+    const viewCertBtn = await screen.findByRole('button', { name: /view & print official certificate/i });
+    expect(viewCertBtn).toBeInTheDocument();
+
+    fireEvent.click(viewCertBtn);
+
+    expect(await screen.findByText('Certificate of Digital Competency')).toBeInTheDocument();
+    expect(screen.getByText('GS-CERT-2026-QUIZ9999')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /verify authenticity online/i })).toHaveAttribute(
+      'href',
+      '/verify/GS-CERT-2026-QUIZ9999'
+    );
   });
 });
 

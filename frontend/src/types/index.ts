@@ -76,6 +76,7 @@ export interface QuizSubmitResponse {
   weak_areas: string[];
   recommended_action: string;
   submitted_at: string;
+  credential_id?: string | null;
 }
 
 export interface EmployeeSkillItem {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
 import api from '@/lib/api';
 import { getApiErrorMessage } from '@/lib/apiError';
 import { QuizQuestion, Module, QuizSubmitResponse, AdaptiveMeta } from '@/types';
@@ -8,6 +9,7 @@ import QuizCard from '@/components/quiz/QuizCard';
 import QuizNavigator from '@/components/quiz/QuizNavigator';
 import QuizSubmitModal from '@/components/quiz/QuizSubmitModal';
 import QuizResultView from '@/components/quiz/QuizResultView';
+import CertificateModal from '@/components/certificate/CertificateModal';
 import Button from '@/components/ui/Button';
 import { EmptyState, ErrorAlert } from '@/components/ui';
 import {
@@ -23,6 +25,7 @@ import {
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const QuizPage: React.FC = () => {
+  const { user } = useAuth();
   const { moduleId } = useParams<{ moduleId: string }>();
   const activeModuleId = moduleId || 'default';
   const shouldReduceMotion = useReducedMotion();
@@ -33,6 +36,7 @@ export const QuizPage: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [flaggedQuestions, setFlaggedQuestions] = useState<Record<string, boolean>>({});
   const [result, setResult] = useState<QuizSubmitResponse | null>(null);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -170,13 +174,31 @@ export const QuizPage: React.FC = () => {
 
   if (result) {
     return (
-      <QuizResultView
-        result={result}
-        moduleTitle={moduleTitle}
-        onRetake={handleRetake}
-        onGoToProgress={() => navigate('/progress')}
-        onGoToLessons={() => navigate(`/module?id=${activeModuleId}`)}
-      />
+      <>
+        <QuizResultView
+          result={result}
+          moduleTitle={moduleTitle}
+          onRetake={handleRetake}
+          onGoToProgress={() => navigate('/progress')}
+          onGoToLessons={() => navigate(`/module?id=${activeModuleId}`)}
+          onViewCertificate={() => setIsCertificateModalOpen(true)}
+        />
+
+        {isCertificateModalOpen && (
+          <CertificateModal
+            isOpen={isCertificateModalOpen}
+            onClose={() => setIsCertificateModalOpen(false)}
+            employeeEmail={user?.email || 'employee@office.gov'}
+            moduleTitle={moduleTitle}
+            moduleId={activeModuleId}
+            scorePercentage={result.percentage}
+            bestScore={result.best_score}
+            totalQuestions={result.total}
+            completedDate={result.submitted_at}
+            credentialId={result.credential_id || undefined}
+          />
+        )}
+      </>
     );
   }
 

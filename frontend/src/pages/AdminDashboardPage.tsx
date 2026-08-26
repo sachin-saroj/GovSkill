@@ -7,12 +7,14 @@ import {
   AdminQuizQuestion,
   AdminSkillOverviewResponse,
   CitizenTelemetryResponse,
+  ComplianceReportResponse,
 } from '@/types';
 import Card from '@/components/ui/Card';
 import GovernanceOverview from '@/components/admin/GovernanceOverview';
 import ReadinessMetricCard from '@/components/admin/ReadinessMetricCard';
 import CompetencyInsights from '@/components/admin/CompetencyInsights';
 import EmployeeReadinessTable from '@/components/admin/EmployeeReadinessTable';
+import GovernanceDashboard from '@/components/admin/GovernanceDashboard';
 import {
   LayoutDashboard,
   Users,
@@ -28,10 +30,6 @@ import {
   Sparkles,
   Loader2,
   ShieldCheck,
-  Download,
-  FileSpreadsheet,
-  FileJson,
-  Activity,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants, scaleInVariants } from '@/lib/motion';
 
@@ -73,19 +71,37 @@ export const AdminDashboardPage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // --- Governance & Citizen Telemetry State ---
+  // --- Governance, Compliance & Citizen Telemetry State ---
+  const [complianceReport, setComplianceReport] = useState<ComplianceReportResponse | null>(null);
+  const [isLoadingCompliance, setIsLoadingCompliance] = useState(false);
+  const [complianceError, setComplianceError] = useState<string | null>(null);
   const [citizenTelemetry, setCitizenTelemetry] = useState<CitizenTelemetryResponse | null>(null);
   const [isLoadingTelemetry, setIsLoadingTelemetry] = useState(false);
+  const [telemetryError, setTelemetryError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState<'csv' | 'json' | null>(null);
 
   // --- Fetch Methods ---
+  const fetchComplianceReport = async () => {
+    setIsLoadingCompliance(true);
+    setComplianceError(null);
+    try {
+      const res = await api.get<ComplianceReportResponse>('/admin/reports/export?format=json');
+      setComplianceReport(res.data);
+    } catch (err: any) {
+      setComplianceError(err.response?.data?.detail?.error?.message || 'Failed to load workforce compliance ledger');
+    } finally {
+      setIsLoadingCompliance(false);
+    }
+  };
+
   const fetchCitizenTelemetry = async () => {
     setIsLoadingTelemetry(true);
+    setTelemetryError(null);
     try {
       const res = await api.get<CitizenTelemetryResponse>('/admin/governance/citizen-telemetry');
       setCitizenTelemetry(res.data);
     } catch (err: any) {
-      console.warn('Failed to load citizen telemetry', err);
+      setTelemetryError(err.response?.data?.detail?.error?.message || 'Failed to load citizen defect telemetry');
     } finally {
       setIsLoadingTelemetry(false);
     }
@@ -121,6 +137,7 @@ export const AdminDashboardPage: React.FC = () => {
       setIsExporting(null);
     }
   };
+
   const fetchSkillsOverview = async () => {
     setIsLoadingOverview(true);
     try {
@@ -180,6 +197,7 @@ export const AdminDashboardPage: React.FC = () => {
         fetchAttempts(),
         fetchModules(),
         fetchSkillsOverview(),
+        fetchComplianceReport(),
         fetchCitizenTelemetry(),
         selectedModuleId ? fetchQuestions(selectedModuleId) : Promise.resolve(),
       ]);
@@ -191,6 +209,7 @@ export const AdminDashboardPage: React.FC = () => {
   useEffect(() => {
     fetchModules();
     fetchSkillsOverview();
+    fetchComplianceReport();
     fetchCitizenTelemetry();
   }, []);
 
@@ -768,238 +787,17 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* TAB 4: WORKFORCE GOVERNANCE & TELEMETRY */}
       {activeTab === 'governance' && (
-        <motion.div variants={fadeUpVariants} className="space-y-8">
-          {/* Section 1: Official Compliance Audit Export */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-civic-xs space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-              <div className="space-y-1 max-w-xl">
-                <div className="flex items-center gap-2 text-xs font-bold text-civic-700 uppercase tracking-wider">
-                  <FileSpreadsheet className="h-4 w-4" />
-                  <span>Statutory Compliance & Audit</span>
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900">
-                  Workforce Certification Audit Export
-                </h3>
-                <p className="text-xs text-slate-600">
-                  Generate structured audit trails of all enrolled employees, completion status, evaluation scores, and cryptographic credential verification IDs.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  disabled={isExporting !== null}
-                  onClick={() => handleExportReport('csv')}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-civic-800 hover:bg-civic-900 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-civic-xs transition-all cursor-pointer"
-                >
-                  {isExporting === 'csv' ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4" />
-                  )}
-                  <span>Export Audit (CSV)</span>
-                </button>
-
-                <button
-                  type="button"
-                  disabled={isExporting !== null}
-                  onClick={() => handleExportReport('json')}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-800 text-xs font-bold rounded-xl border border-slate-300 transition-all cursor-pointer"
-                >
-                  {isExporting === 'json' ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <FileJson className="h-4 w-4" />
-                  )}
-                  <span>Export JSON</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Compliance Statistics Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-slate-500 font-semibold uppercase text-[10px]">Workforce Size</span>
-                <p className="text-lg font-bold text-slate-900">{skillsOverview?.total_employees ?? 0} Officers</p>
-                <span className="text-[10px] text-slate-400">Enrolled in active training</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-slate-500 font-semibold uppercase text-[10px]">Verified Credentials</span>
-                <p className="text-lg font-bold text-emerald-700">{skillsOverview?.total_certifications ?? 0} Certificates</p>
-                <span className="text-[10px] text-slate-400">≥ 75% evaluation threshold</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-slate-500 font-semibold uppercase text-[10px]">Overall Compliance</span>
-                <p className="text-lg font-bold text-civic-800">{skillsOverview?.overall_certification_rate ?? 0}%</p>
-                <span className="text-[10px] text-slate-400">Total workforce coverage</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: GovAssist Citizen Pre-Submission Defect Telemetry */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-civic-xs space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
-                  <Activity className="h-4 w-4" />
-                  <span>Citizen Self-Service Intelligence</span>
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900">
-                  GovAssist Pre-Check Defect Telemetry
-                </h3>
-                <p className="text-xs text-slate-600">
-                  Real-time analytics on citizen document quality and defect patterns across the 4 deterministic pre-submission rules.
-                </p>
-              </div>
-
-              {citizenTelemetry && (
-                <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 text-xs font-bold text-emerald-800">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>{citizenTelemetry.pass_rate_pct}% First-Pass Rate</span>
-                </div>
-              )}
-            </div>
-
-            {isLoadingTelemetry ? (
-              <div className="flex items-center justify-center py-10 gap-2 text-slate-500 text-xs">
-                <Loader2 className="h-5 w-5 animate-spin text-civic-700" />
-                <span>Loading citizen defect telemetry...</span>
-              </div>
-            ) : citizenTelemetry ? (
-              <div className="space-y-6">
-                {/* Metrics Summary */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="text-slate-500 font-semibold uppercase text-[10px]">Total Pre-Checks</span>
-                    <p className="text-xl font-bold text-slate-900">{citizenTelemetry.total_submissions}</p>
-                    <span className="text-[10px] text-slate-400">Documents evaluated</span>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 space-y-1">
-                    <span className="text-emerald-700 font-semibold uppercase text-[10px]">Passed Ready for Filing</span>
-                    <p className="text-xl font-bold text-emerald-700">{citizenTelemetry.passed_count}</p>
-                    <span className="text-[10px] text-emerald-600">100% compliant submissions</span>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-100 space-y-1">
-                    <span className="text-amber-800 font-semibold uppercase text-[10px]">Action Required / Rectified</span>
-                    <p className="text-xl font-bold text-amber-700">{citizenTelemetry.action_required_count}</p>
-                    <span className="text-[10px] text-amber-600">Defects caught pre-filing</span>
-                  </div>
-                </div>
-
-                {/* 4-Rule Defect Breakdown */}
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">
-                    Defect Rates by Validation Rule
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {citizenTelemetry.defects_by_rule.map((rule) => (
-                      <div
-                        key={rule.rule_name}
-                        className="p-4 rounded-2xl border border-slate-100 bg-slate-50/60 space-y-2"
-                      >
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-slate-800">{rule.rule_name}</span>
-                          <span className="font-mono text-xs font-bold text-rose-700">
-                            {rule.failure_count} failures ({rule.failure_rate_pct}%)
-                          </span>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all ${
-                              rule.failure_count === 0 ? 'bg-emerald-500' : 'bg-rose-500'
-                            }`}
-                            style={{ width: `${Math.min(100, Math.max(rule.failure_rate_pct, rule.failure_count > 0 ? 8 : 0))}%` }}
-                          />
-                        </div>
-
-                        <div className="flex items-center justify-between text-[10px] text-slate-400">
-                          <span>Target Field: <code className="font-mono text-slate-600">{rule.field}</code></span>
-                          <span className="font-semibold text-slate-500">Severity: Critical</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Recent Pre-Check Inspection Logs */}
-                {citizenTelemetry.recent_inspections.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">
-                      Recent Pre-Submission Inspections
-                    </h4>
-
-                    <div className="overflow-x-auto rounded-2xl border border-slate-200">
-                      <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-50 border-b border-slate-200 text-slate-600">
-                          <tr>
-                            <th className="px-4 py-3 font-semibold">Document ID</th>
-                            <th className="px-4 py-3 font-semibold">Detected Applicant</th>
-                            <th className="px-4 py-3 font-semibold">Pre-Check Status</th>
-                            <th className="px-4 py-3 font-semibold">Identified Defects</th>
-                            <th className="px-4 py-3 font-semibold text-right">Timestamp</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                          {citizenTelemetry.recent_inspections.map((doc) => (
-                            <tr key={doc.document_id} className="hover:bg-slate-50/50">
-                              <td className="px-4 py-3 font-mono text-[11px] text-slate-600">
-                                {doc.document_id.slice(0, 8)}...
-                              </td>
-                              <td className="px-4 py-3 font-medium text-slate-900">
-                                {doc.extracted_name || 'Unidentified Scan'}
-                              </td>
-                              <td className="px-4 py-3">
-                                <span
-                                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                                    doc.overall_status === 'PASSED'
-                                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                      : 'bg-amber-100 text-amber-800 border-amber-300'
-                                  }`}
-                                >
-                                  {doc.overall_status}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 text-[11px] text-slate-600">
-                                {doc.failed_rules.length > 0 ? (
-                                  <span className="text-rose-700 font-medium">
-                                    {doc.failed_rules.join(', ')}
-                                  </span>
-                                ) : (
-                                  <span className="text-emerald-700 font-semibold">
-                                    All 4 checks compliant
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-3 text-right text-slate-400 font-mono text-[11px]">
-                                {new Date(doc.uploaded_at).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-6 text-xs text-slate-400">
-                No citizen pre-submission records recorded yet.
-              </div>
-            )}
-          </div>
-        </motion.div>
+        <GovernanceDashboard
+          skillsOverview={skillsOverview}
+          complianceReport={complianceReport}
+          citizenTelemetry={citizenTelemetry}
+          isLoadingCompliance={isLoadingCompliance}
+          isLoadingTelemetry={isLoadingTelemetry}
+          complianceError={complianceError}
+          telemetryError={telemetryError}
+          isExporting={isExporting}
+          onExport={handleExportReport}
+        />
       )}
 
       {/* MODULE MODAL with AnimatePresence */}
