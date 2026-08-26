@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Badge from '@/components/ui/Badge';
 import ValidationResultCard from '@/components/document/ValidationResultCard';
+import CounterSlipModal from '@/components/citizen/CounterSlipModal';
 import {
   FileText,
   UploadCloud,
@@ -25,7 +26,7 @@ import {
   Image as ImageIcon,
   Loader2,
   RefreshCw,
-  Printer,
+  FileCheck2,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
@@ -52,6 +53,7 @@ export const CitizenUploadPage: React.FC = () => {
   const [extractedData, setExtractedData] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState(false);
+  const [isCounterSlipOpen, setIsCounterSlipOpen] = useState(false);
 
   // --- Lookup State ---
   const [lookupId, setLookupId] = useState<string>('');
@@ -594,12 +596,12 @@ export const CitizenUploadPage: React.FC = () => {
                         type="button"
                         whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
                         whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
-                        onClick={() => window.print()}
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
-                        title="Print or Save PDF Summary Report"
+                        onClick={() => setIsCounterSlipOpen(true)}
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-civic-900 bg-white border border-civic-300 hover:border-civic-700 rounded-xl hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                        title="Generate Official Pre-Submission Counter Slip"
                       >
-                        <Printer className="h-3.5 w-3.5 text-civic-700" />
-                        <span>Print Report</span>
+                        <FileCheck2 className="h-3.5 w-3.5 text-civic-700" />
+                        <span>Pre-submission Counter Slip</span>
                       </motion.button>
 
                       <motion.button
@@ -709,9 +711,26 @@ export const CitizenUploadPage: React.FC = () => {
             timestamp={timestamp || undefined}
             isLoading={isLoading}
             error={null}
+            onGenerateSlip={documentId && results ? () => setIsCounterSlipOpen(true) : undefined}
           />
         </motion.div>
       </div>
+
+      {/* Pre-Submission Counter Slip Modal */}
+      {documentId && results && (
+        <CounterSlipModal
+          isOpen={isCounterSlipOpen}
+          onClose={() => setIsCounterSlipOpen(false)}
+          documentId={documentId}
+          overallStatus={overallStatus}
+          extractedData={extractedData}
+          validationResults={results}
+          passedCount={passedCount}
+          totalCount={totalCount}
+          timestamp={timestamp}
+          recommendedNextStep={recommendedNextStep}
+        />
+      )}
     </motion.div>
   );
 };
