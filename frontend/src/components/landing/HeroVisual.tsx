@@ -161,19 +161,19 @@ export const HeroVisual: React.FC = () => {
 
                 {/* 4 Deterministic Rule Indicators */}
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 p-2 rounded-civic-md bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-micro">
                     <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">Name Present</span>
                   </div>
-                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 p-2 rounded-civic-md bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-micro">
                     <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">Number Format</span>
                   </div>
-                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 p-2 rounded-civic-md bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-micro">
                     <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">Date Validity</span>
                   </div>
-                  <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 p-2 rounded-civic-md bg-emerald-950/40 border border-emerald-800/50 text-emerald-200 text-micro">
                     <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">Required Fields</span>
                   </div>

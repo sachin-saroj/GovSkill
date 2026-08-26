@@ -334,7 +334,7 @@ export const EcosystemVisual: React.FC = () => {
             </button>
 
             {tourStatus === 'playing' && (
-              <span className="flex items-center gap-1.5 text-[11px] text-saffron-400 font-medium">
+              <span className="flex items-center gap-1.5 text-micro text-saffron-400 font-semibold">
                 <Sparkles className="h-3 w-3 animate-spin" />
                 <span className="hidden sm:inline">Advancing sequence</span>
               </span>
@@ -343,12 +343,12 @@ export const EcosystemVisual: React.FC = () => {
         </div>
 
         {/* Dual Track Labels */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 text-[11px] font-bold pointer-events-none">
-          <div className="flex items-center gap-2 text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-800/40 w-fit">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 text-micro font-semibold pointer-events-none">
+          <div className="flex items-center gap-2 text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-civic-md border border-emerald-800/40 w-fit">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Track 1: GovAssist Citizen Pre-Submission Verification</span>
           </div>
-          <div className="flex items-center gap-2 text-civic-300 bg-civic-950/40 px-3 py-1.5 rounded-xl border border-civic-800/40 w-fit md:ml-auto">
+          <div className="flex items-center gap-2 text-civic-300 bg-civic-950/40 px-3 py-1.5 rounded-civic-md border border-civic-800/40 w-fit md:ml-auto">
             <span className="h-2 w-2 rounded-full bg-civic-400 animate-pulse" />
             <span>Track 2: GovSkill Employee Learning & Governance Telemetry</span>
           </div>
@@ -519,7 +519,7 @@ export const EcosystemVisual: React.FC = () => {
                             {node.title}
                           </span>
                           <span
-                            className={`text-[9px] block font-mono ${
+                            className={`text-micro block font-mono ${
                               isSelected ? 'text-slate-500 font-medium' : 'text-slate-500'
                             }`}
                           >
@@ -544,7 +544,7 @@ export const EcosystemVisual: React.FC = () => {
         </div>
 
         {/* Legend Bar */}
-        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pt-3 text-[11px] text-slate-400 border-t border-slate-800/80">
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 pt-3 text-micro text-slate-400 border-t border-slate-800/80">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-400" /> Citizen Track (GovAssist)
@@ -559,7 +559,7 @@ export const EcosystemVisual: React.FC = () => {
             </span>
           </div>
 
-          <span className="text-slate-400 font-mono text-[10px]">
+          <span className="text-slate-400 font-mono text-micro">
             Click any node or start the automated tour
           </span>
         </div>
@@ -578,20 +578,20 @@ export const EcosystemVisual: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${activeNode.badgeColor}`}>
+                <span className={`text-micro font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${activeNode.badgeColor}`}>
                   {activeNode.category}
                 </span>
-                <span className="text-xs text-slate-500 font-medium">Architecture Deep-Dive</span>
+                <span className="text-caption text-slate-500 font-medium">Architecture Deep-Dive</span>
               </div>
-              <h4 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <h4 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
                 {activeNode.title}
                 <Zap className="h-4 w-4 text-saffron-500" />
               </h4>
-              <p className="text-xs text-slate-600 font-medium">{activeNode.tagline}</p>
+              <p className="text-caption text-slate-600 font-medium">{activeNode.tagline}</p>
             </div>
 
             <div className="bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-right shrink-0 shadow-civic-xs">
-              <p className="text-[10px] uppercase font-bold text-slate-400">{activeNode.metrics.label}</p>
+              <p className="text-micro uppercase font-bold text-slate-400">{activeNode.metrics.label}</p>
               <p className="text-sm font-extrabold text-civic-800 font-mono">{activeNode.metrics.value}</p>
             </div>
           </div>
@@ -600,7 +600,7 @@ export const EcosystemVisual: React.FC = () => {
             {activeNode.details.map((detail, index) => (
               <li
                 key={index}
-                className="flex items-start gap-2.5 text-xs text-slate-700 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-civic-xs leading-relaxed"
+                className="flex items-start gap-2.5 text-caption text-slate-700 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-civic-xs leading-relaxed"
               >
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>{detail}</span>
