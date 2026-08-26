@@ -233,21 +233,21 @@ export const CitizenUploadPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* Top Civic Header Banner */}
       <motion.div variants={fadeUpVariants}>
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-civic-md p-6 sm:p-8 space-y-4">
+        <div className="bg-white rounded-civic-2xl border border-slate-200/90 shadow-civic-md p-6 sm:p-8 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2.5">
-              <span className="h-9 w-9 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-civic-xs">
+              <span className="h-9 w-9 rounded-civic-md bg-emerald-100 text-emerald-800 flex items-center justify-center font-semibold shadow-civic-xs">
                 <FileCheck className="h-5 w-5 text-emerald-700" />
               </span>
               <div>
-                <span className="font-bold text-xs uppercase tracking-wider text-emerald-800 block">
+                <span className="font-semibold text-micro uppercase tracking-wider text-emerald-800 block">
                   GovAssist Citizen Self-Service Portal
                 </span>
-                <span className="text-[11px] text-slate-500 font-medium">
+                <span className="text-caption text-slate-500 font-medium">
                   Official Revenue & Taluk Document Verification Protocol
                 </span>
               </div>
@@ -264,10 +264,10 @@ export const CitizenUploadPage: React.FC = () => {
           </div>
 
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
               Income Certificate Pre-submission Checker
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+            <p className="text-body text-slate-600 mt-1 max-w-3xl leading-relaxed font-normal">
               Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
             </p>
           </div>
@@ -281,13 +281,13 @@ export const CitizenUploadPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start justify-between gap-2.5 shadow-civic-xs"
+            className="p-4 rounded-civic-xl bg-red-50 border border-red-200 text-caption text-red-700 flex items-start justify-between gap-2.5 shadow-civic-xs"
           >
             <div className="flex items-start gap-2.5">
               <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
               <div className="space-y-0.5">
-                <p className="font-bold">Verification Notice</p>
-                <p className="leading-relaxed">{error}</p>
+                <p className="font-semibold">Verification Notice</p>
+                <p className="leading-relaxed font-normal">{error}</p>
               </div>
             </div>
             {file && (
@@ -295,7 +295,7 @@ export const CitizenUploadPage: React.FC = () => {
                 size="sm"
                 variant="outline"
                 onClick={handleUpload}
-                className="text-xs shrink-0"
+                className="text-caption shrink-0"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 <span>Retry</span>
@@ -305,13 +305,12 @@ export const CitizenUploadPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-
       {/* Tab Navigation */}
       <motion.div variants={fadeUpVariants} className="flex border-b border-slate-200 gap-4 sm:gap-8">
         <button
           type="button"
           onClick={() => setActiveTab('upload')}
-          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'upload'
               ? 'border-civic-800 text-civic-900'
               : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
@@ -324,7 +323,7 @@ export const CitizenUploadPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('lookup')}
-          className={`pb-3.5 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'lookup'
               ? 'border-civic-800 text-civic-900'
               : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
@@ -340,12 +339,12 @@ export const CitizenUploadPage: React.FC = () => {
         {/* Left Column: Upload or Lookup Form (5 cols on lg) */}
         <motion.div variants={fadeUpVariants} className="lg:col-span-5 space-y-6">
           {activeTab === 'upload' ? (
-            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-3xl" variant="elevated">
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-civic-xl p-6 sm:p-8" variant="elevated">
               <div className="pb-3 border-b border-slate-100">
-                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
                   Upload Income Certificate
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-caption text-slate-500 mt-0.5 font-normal">
                   Digital scan, photograph, or PDF file
                 </p>
               </div>
@@ -356,7 +355,7 @@ export const CitizenUploadPage: React.FC = () => {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-3xl p-6 sm:p-8 text-center transition-all duration-200 ${
+                  className={`border-2 border-dashed rounded-civic-xl p-6 sm:p-8 text-center transition-all duration-200 ${
                     isLoading
                       ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
                       : isDragging
@@ -366,7 +365,7 @@ export const CitizenUploadPage: React.FC = () => {
                       : 'border-slate-300 bg-slate-50/70 hover:border-civic-700 hover:bg-white'
                   }`}
                 >
-                  <div className="h-12 w-12 rounded-2xl bg-white shadow-civic-xs text-civic-700 mx-auto mb-3 flex items-center justify-center border border-slate-200">
+                  <div className="h-12 w-12 rounded-civic-md bg-white shadow-civic-xs text-civic-700 mx-auto mb-3 flex items-center justify-center border border-slate-200">
                     <UploadCloud className="h-6 w-6 text-civic-700" />
                   </div>
 
@@ -375,7 +374,7 @@ export const CitizenUploadPage: React.FC = () => {
                     className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
                   >
                     <span
-                      className={`text-sm font-bold block ${
+                      className={`text-caption font-semibold block ${
                         isLoading
                           ? 'text-slate-400 no-underline'
                           : 'text-civic-800 hover:text-civic-900 hover:underline'
@@ -383,7 +382,7 @@ export const CitizenUploadPage: React.FC = () => {
                     >
                       Choose a file to upload
                     </span>
-                    <span className="text-xs text-slate-500 block mt-1.5 font-medium">
+                    <span className="text-caption text-slate-500 block mt-1.5 font-normal">
                       Supports PNG, JPG, or PDF (Max 5MB)
                     </span>
                     <input
@@ -404,7 +403,7 @@ export const CitizenUploadPage: React.FC = () => {
                         initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
-                        className="mt-4 p-3 bg-white rounded-2xl border border-emerald-200 text-xs font-semibold text-slate-900 space-y-2 shadow-civic-xs"
+                        className="mt-4 p-3.5 bg-white rounded-civic-lg border border-emerald-200 text-caption font-semibold text-slate-900 space-y-2 shadow-civic-xs"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 truncate">
@@ -426,7 +425,7 @@ export const CitizenUploadPage: React.FC = () => {
                             }}
                             disabled={isLoading}
                             title="Remove file"
-                            className="text-slate-400 hover:text-red-600 p-1 rounded-md transition-colors cursor-pointer"
+                            className="text-slate-400 hover:text-red-600 p-1 rounded-civic-sm transition-colors cursor-pointer"
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>
@@ -437,7 +436,7 @@ export const CitizenUploadPage: React.FC = () => {
                             <img
                               src={previewUrl}
                               alt="Document Preview"
-                              className="max-h-36 rounded-lg object-contain border border-slate-200 shadow-civic-xs"
+                              className="max-h-36 rounded-civic-md object-contain border border-slate-200 shadow-civic-xs"
                             />
                           </div>
                         )}
@@ -447,67 +446,62 @@ export const CitizenUploadPage: React.FC = () => {
                 </div>
 
                 {isLoading && processingStage && (
-                  <div className="p-3.5 rounded-2xl bg-civic-50 border border-civic-200 text-xs text-civic-900 flex items-center gap-2.5 shadow-civic-xs">
+                  <div className="p-3.5 rounded-civic-md bg-civic-50 border border-civic-200 text-caption text-civic-900 flex items-center gap-2.5 shadow-civic-xs">
                     <Loader2 className="h-4 w-4 animate-spin text-civic-700 shrink-0" />
                     <span className="font-medium">{processingStage}</span>
                   </div>
                 )}
 
-                <motion.div
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.015 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.985 }}
+                <Button
+                  type="submit"
+                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
+                  size="md"
+                  disabled={isLoading || !file}
+                  isLoading={isLoading}
+                  variant="primary"
                 >
-                  <Button
-                    type="submit"
-                    className="w-full font-semibold shadow-civic-sm cursor-pointer"
-                    size="lg"
-                    disabled={isLoading || !file}
-                    isLoading={isLoading}
-                    variant="primary"
-                  >
-                    {isLoading ? 'Processing Document...' : 'Run Pre-check Validation'}
-                  </Button>
-                </motion.div>
+                  {isLoading ? 'Processing Document...' : 'Run Pre-check Validation'}
+                </Button>
               </form>
 
-
               {/* Pre-check Rules Tested Guide */}
-              <div className="text-xs text-slate-600 space-y-2 pt-4 border-t border-slate-100">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+              <div className="text-caption text-slate-600 space-y-2 pt-4 border-t border-slate-100 font-normal">
+                <div className="flex items-center gap-1.5 text-micro font-semibold uppercase tracking-wider text-slate-700">
                   <ShieldCheck className="h-3.5 w-3.5 text-civic-700" />
                   <span>Pre-check Compliance Rules:</span>
                 </div>
-                <ul className="grid grid-cols-1 gap-1.5 pl-1 text-[11px]">
+                <ul className="grid grid-cols-1 gap-1.5 pl-1 text-caption">
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong>Name present:</strong> Verifies applicant name is clearly readable.</span>
+                    <span><strong className="font-semibold">Name present:</strong> Verifies applicant name is clearly readable.</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong>Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
+                    <span><strong className="font-semibold">Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong>Expiry check:</strong> Confirms certificate date is not expired.</span>
+                    <span><strong className="font-semibold">Expiry check:</strong> Confirms certificate date is not expired.</span>
                   </li>
                   <li className="flex items-center gap-2 text-slate-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong>Mandatory extraction:</strong> Confirms all required fields are intact.</span>
+                    <span><strong className="font-semibold">Mandatory extraction:</strong> Confirms all required fields are intact.</span>
                   </li>
                 </ul>
-              </div>            </Card>
+              </div>
+            </Card>
           ) : (
-            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-3xl" variant="elevated">
+            <Card className="space-y-6 bg-white shadow-civic-md border-slate-200 rounded-civic-xl p-6 sm:p-8" variant="elevated">
               <div className="pb-3 border-b border-slate-100">
-                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
                   Lookup Previous Pre-check
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-caption text-slate-500 mt-0.5 font-normal">
                   Retrieve existing document OCR & validation report
                 </p>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-caption text-slate-600 leading-relaxed font-normal">
                 Enter your document's unique Reference ID to review previous OCR extraction results and deterministic compliance findings.
               </p>
               <form onSubmit={handleLookupSubmit} className="space-y-5">
@@ -521,25 +515,19 @@ export const CitizenUploadPage: React.FC = () => {
                   leftIcon={<Search className="h-4 w-4" />}
                 />
 
-                <motion.div
-
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.015 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.985 }}
+                <Button
+                  type="submit"
+                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
+                  size="md"
+                  disabled={isLoading || !lookupId.trim()}
+                  isLoading={isLoading}
+                  variant="primary"
                 >
-                  <Button
-                    type="submit"
-                    className="w-full font-semibold shadow-civic-sm cursor-pointer"
-                    size="lg"
-                    disabled={isLoading || !lookupId.trim()}
-                    isLoading={isLoading}
-                    variant="primary"
-                  >
-                    {isLoading ? 'Retrieving Document...' : 'Lookup Reference ID'}
-                  </Button>
-                </motion.div>
+                  {isLoading ? 'Retrieving Document...' : 'Lookup Reference ID'}
+                </Button>
               </form>
 
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-2 shadow-civic-xs">
+              <div className="p-3.5 rounded-civic-md bg-slate-50 border border-slate-200 text-caption text-slate-600 flex items-start gap-2 shadow-civic-xs font-normal">
                 <Info className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
                 <span>Reference IDs are generated automatically on upload and can be shared or reviewed at any time.</span>
               </div>
@@ -556,7 +544,7 @@ export const CitizenUploadPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full py-2.5 px-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
+                className="w-full py-2.5 px-4 rounded-civic-md border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-caption transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
               >
                 <RotateCcw className="h-3.5 w-3.5 text-civic-700" />
                 <span>Pre-check Another Document</span>
@@ -575,46 +563,42 @@ export const CitizenUploadPage: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
               >
-                <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs rounded-2xl">
+                <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs rounded-civic-xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="h-8 w-8 rounded-xl bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
+                      <div className="h-8 w-8 rounded-civic-md bg-civic-800 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
                         <Tag className="h-4 w-4 text-saffron-400" />
                       </div>
                       <div className="min-w-0">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-civic-900 block">
+                        <span className="text-micro font-semibold uppercase tracking-wider text-civic-900 block">
                           Document Reference ID:
                         </span>
-                        <span className="font-mono text-xs font-semibold text-slate-800 truncate block">
+                        <span className="font-mono text-caption font-semibold text-slate-800 truncate block">
                           {documentId}
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <motion.button
+                      <button
                         type="button"
-                        whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                        whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
                         onClick={() => setIsCounterSlipOpen(true)}
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-civic-900 bg-white border border-civic-300 hover:border-civic-700 rounded-xl hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-caption font-semibold text-civic-900 bg-white border border-civic-300 hover:border-civic-700 rounded-civic-md hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
                         title="Generate Official Pre-Submission Counter Slip"
                       >
                         <FileCheck2 className="h-3.5 w-3.5 text-civic-700" />
                         <span>Pre-submission Counter Slip</span>
-                      </motion.button>
+                      </button>
 
-                      <motion.button
+                      <button
                         type="button"
-                        whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                        whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
                         onClick={handleCopyId}
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-civic-900 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-caption font-semibold text-civic-900 bg-white border border-slate-200 rounded-civic-md hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
                       >
                         {copiedId ? (
                           <>
                             <Check className="h-3.5 w-3.5 text-emerald-600" />
-                            <span className="text-emerald-700 font-bold">Copied</span>
+                            <span className="text-emerald-700 font-semibold">Copied</span>
                           </>
                         ) : (
                           <>
@@ -622,7 +606,7 @@ export const CitizenUploadPage: React.FC = () => {
                             <span>Copy ID</span>
                           </>
                         )}
-                      </motion.button>
+                      </button>
                     </div>
                   </div>
                 </Card>
@@ -638,63 +622,54 @@ export const CitizenUploadPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
               >
-                <Card className="bg-white border-slate-200 p-5 sm:p-6 shadow-civic-sm space-y-3.5 rounded-3xl">
+                <Card className="bg-white border-slate-200 p-6 shadow-civic-sm space-y-3.5 rounded-civic-xl">
                   <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
                     <div className="flex items-center gap-2">
                       <FileCode2 className="h-4 w-4 text-civic-700" />
-                      <h3 className="text-sm font-bold text-slate-900">Extracted Data Fields</h3>
+                      <h3 className="text-section-heading font-semibold text-slate-900">Extracted Data Fields</h3>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-400">Tesseract OCR Pipeline</span>
+                    <span className="text-caption font-normal text-slate-400">Tesseract OCR Pipeline</span>
                   </div>
 
-                  <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs pt-1">
-                    <motion.div
-                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
-                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
-                    >
-                      <dt className="text-slate-500 font-medium">Applicant Name:</dt>
-                      <dd className="font-bold text-slate-900 text-sm">
+                  <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-caption pt-1">
+                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
+                      <dt className="text-slate-500 font-normal">Applicant Name:</dt>
+                      <dd className="font-semibold text-slate-900 text-caption">
                         {extractedData.name ? (
                           <span>{extractedData.name}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-civic-sm text-micro font-semibold">
                             Not detected
                           </span>
                         )}
                       </dd>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
-                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
-                    >
-                      <dt className="text-slate-500 font-medium">Certificate No:</dt>
-                      <dd className="font-bold text-slate-900 text-sm font-mono">
+                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
+                      <dt className="text-slate-500 font-normal">Certificate No:</dt>
+                      <dd className="font-semibold text-slate-900 text-caption font-mono">
                         {extractedData.certificate_number ? (
                           <span>{extractedData.certificate_number}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-civic-sm text-micro font-semibold">
                             Not detected
                           </span>
                         )}
                       </dd>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                      whileHover={shouldReduceMotion ? {} : { y: -2 }}
-                      className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1 transition-all"
-                    >
-                      <dt className="text-slate-500 font-medium">Expiry Date:</dt>
-                      <dd className="font-bold text-slate-900 text-sm font-mono">
+                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
+                      <dt className="text-slate-500 font-normal">Expiry Date:</dt>
+                      <dd className="font-semibold text-slate-900 text-caption font-mono">
                         {extractedData.expiry_date ? (
                           <span>{extractedData.expiry_date}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-civic-sm text-micro font-semibold">
                             Not detected
                           </span>
                         )}
                       </dd>
-                    </motion.div>
+                    </div>
                   </dl>
                 </Card>
               </motion.div>
