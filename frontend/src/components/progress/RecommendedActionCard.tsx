@@ -48,7 +48,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
 
   return (
     <Card
-      className={`p-5 border shadow-civic-sm transition-all duration-200 ${
+      className={`p-6 border shadow-civic-sm transition-all duration-200 rounded-civic-xl ${
         isAllCertified
           ? 'bg-emerald-50/40 border-emerald-200'
           : isHighPriority
@@ -59,7 +59,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           <div
-            className={`p-3 rounded-xl shrink-0 ${
+            className={`p-3 rounded-civic-md shrink-0 ${
               isAllCertified
                 ? 'bg-emerald-100'
                 : isHighPriority
@@ -73,7 +73,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                className={`text-micro font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                   isAllCertified
                     ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                     : isHighPriority
@@ -84,15 +84,15 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
                 {isAllCertified ? 'Curriculum Complete' : 'Recommended Next Action'}
               </span>
               {isHighPriority && (
-                <span className="text-[10px] font-bold text-amber-700">• High Priority</span>
+                <span className="text-caption font-semibold text-amber-700">• High Priority</span>
               )}
             </div>
 
-            <h3 className="text-base font-bold text-slate-900 tracking-tight">
+            <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
               {recommendation.title}
             </h3>
 
-            <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">
+            <p className="text-body text-slate-600 leading-relaxed max-w-2xl font-normal">
               {recommendation.description}
             </p>
           </div>
@@ -101,11 +101,11 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
         <div className="shrink-0 flex items-center justify-end">
           <Link
             to={recommendation.link}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-civic-xs active:scale-95 cursor-pointer ${
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-civic-md text-caption font-semibold transition-all shadow-civic-xs active:scale-98 cursor-pointer ${
               isAllCertified
                 ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
                 : isHighPriority
-                ? 'bg-civic-800 hover:bg-civic-900 text-white'
+                ? 'bg-civic-900 hover:bg-civic-800 text-white'
                 : 'bg-slate-800 hover:bg-slate-900 text-white'
             }`}
           >

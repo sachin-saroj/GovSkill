@@ -85,7 +85,7 @@ export const ProgressDashboardPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12"
     >
       {/* 1. Competency Overview Banner & Metrics */}
       <CompetencyOverview
@@ -121,24 +121,24 @@ export const ProgressDashboardPage: React.FC = () => {
       {/* 5. Core Skill Modules Breakdown */}
       <motion.div variants={fadeUpVariants} className="space-y-4 pt-2">
         <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-civic-700" />
-              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
                 Assigned Competency Curriculum
               </h2>
             </div>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-caption text-slate-500 font-medium">
               Official administrative digital skill curriculum for local government operations
             </p>
           </div>
 
           <motion.button
             type="button"
-            whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-            whileTap={shouldReduceMotion ? {} : { scale: 0.96 }}
+            whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             onClick={fetchSkillProgress}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-slate-700 bg-white border border-slate-200 rounded-civic-md hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5 text-civic-700" />
             <span>Refresh</span>
@@ -170,40 +170,40 @@ export const ProgressDashboardPage: React.FC = () => {
         <motion.div variants={fadeUpVariants} className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-civic-100 text-civic-800">
+              <div className="p-1.5 rounded-civic-md bg-civic-100 text-civic-800">
                 <Award className="h-4 w-4" />
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              <h2 className="text-section-heading font-semibold text-slate-900">
                 Official Digital Credentials
               </h2>
             </div>
-            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+            <span className="text-micro font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
               {credentials.length} Cryptographically Signed
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {credentials.map((cred) => (
               <div
                 key={cred.credential_id}
-                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-civic-xs flex flex-col justify-between gap-4"
+                className="bg-white p-6 rounded-civic-xl border border-slate-200 shadow-civic-xs flex flex-col justify-between gap-4"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-civic-700 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200 font-mono">
+                    <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-civic-700 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200 font-mono">
                       <ShieldCheck className="h-3 w-3 text-emerald-600" />
                       {cred.credential_id}
                     </span>
-                    <span className="text-xs font-bold text-emerald-700">
+                    <span className="text-caption font-semibold text-emerald-700">
                       Score: {cred.percentage}%
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                  <h3 className="text-section-heading font-semibold text-slate-900 leading-snug">
                     {cred.module_title}
                   </h3>
 
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-caption text-slate-500 font-medium">
                     Issued on {new Date(cred.issued_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
@@ -212,8 +212,8 @@ export const ProgressDashboardPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between pt-3 border-t border-slate-100 gap-2">
-                  <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
+                <div className="flex flex-wrap items-center justify-between pt-4 border-t border-slate-100 gap-2">
+                  <span className="inline-flex items-center gap-1 text-caption text-emerald-700 font-semibold">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Signature Verified
                   </span>
@@ -222,9 +222,9 @@ export const ProgressDashboardPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCredentialForModal(cred)}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-civic-md border border-slate-200 transition-colors cursor-pointer"
                     >
-                      <Award className="h-3 w-3 text-civic-700" />
+                      <Award className="h-3.5 w-3.5 text-civic-700" />
                       <span>View Certificate</span>
                     </button>
 
@@ -232,10 +232,10 @@ export const ProgressDashboardPage: React.FC = () => {
                       href={`/verify/${cred.credential_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-bold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-xl border border-civic-200 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-civic-md border border-civic-200 transition-colors"
                     >
                       <span>Verify Online</span>
-                      <ExternalLink className="h-3 w-3" />
+                      <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   </div>
                 </div>
