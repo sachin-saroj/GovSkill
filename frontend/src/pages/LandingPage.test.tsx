@@ -84,6 +84,23 @@ describe('LandingPage', () => {
     ).toBeInTheDocument();
   });
 
+  it('animates only paths connected to the selected architecture node', () => {
+    renderLanding();
+
+    expect(document.getElementById('path-ocr-rule')).toHaveClass('svg-flow-path');
+    expect(document.getElementById('path-rule-ai')).toHaveClass('svg-flow-path');
+    expect(document.getElementById('path-upload-ocr')).not.toHaveClass('svg-flow-path');
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /Inspect Citizen Document Pre-Check architecture node/i,
+      })
+    );
+
+    expect(document.getElementById('path-upload-ocr')).toHaveClass('svg-flow-path');
+    expect(document.getElementById('path-ocr-rule')).not.toHaveClass('svg-flow-path');
+  });
+
   it('toggles interactive tour play/pause state', () => {
     renderLanding();
 

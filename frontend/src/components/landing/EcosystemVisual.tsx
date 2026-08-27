@@ -15,6 +15,7 @@ import {
   BookOpen,
   FileCode2,
 } from 'lucide-react';
+import { springTactile } from '@/lib/motion';
 
 interface ArchitectureNode {
   id: string;
@@ -191,11 +192,52 @@ const TOUR_ORDER = [
 
 type TourStatus = 'idle' | 'playing' | 'paused' | 'completed';
 
+interface FlowPathProps {
+  id: string;
+  d: string;
+  active: boolean;
+  activeStroke: string;
+  inactiveStroke: string;
+  reducedMotion: boolean;
+}
+
+const FlowPath: React.FC<FlowPathProps> = ({
+  id,
+  d,
+  active,
+  activeStroke,
+  inactiveStroke,
+  reducedMotion,
+}) => (
+  <path
+    id={id}
+    d={d}
+    stroke={active ? activeStroke : inactiveStroke}
+    strokeWidth={active ? 3.5 : 2}
+    opacity={active ? 1 : 0.25}
+    filter={active ? 'url(#stream-glow)' : undefined}
+    className={active && !reducedMotion ? 'svg-flow-path' : undefined}
+    style={{ pointerEvents: 'none' }}
+  />
+);
+
 export const EcosystemVisual: React.FC = () => {
   const [activeNodeId, setActiveNodeId] = useState<string>('deterministic-rules');
   const [tourStatus, setTourStatus] = useState<TourStatus>('idle');
   const [tourProgress, setTourProgress] = useState<number>(0);
+  const [canHover, setCanHover] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
+    if (!mediaQuery) return;
+
+    const updateHoverCapability = () => setCanHover(mediaQuery.matches);
+    updateHoverCapability();
+    mediaQuery.addEventListener?.('change', updateHoverCapability);
+
+    return () => mediaQuery.removeEventListener?.('change', updateHoverCapability);
+  }, []);
 
   const activeNodeRef = useRef(activeNodeId);
   activeNodeRef.current = activeNodeId;
@@ -279,6 +321,10 @@ export const EcosystemVisual: React.FC = () => {
     return activeNode.connectedPaths.includes(pathId);
   };
 
+  const canAnimate = !shouldReduceMotion;
+  const tourButtonHoverClasses = canHover ? 'hover:bg-slate-700 hover:text-white' : '';
+  const nodeHoverClasses = canHover ? 'hover:bg-slate-800 hover:border-slate-500' : '';
+
   return (
     <div className="w-full bg-white rounded-3xl border border-slate-200/90 shadow-civic-xl overflow-hidden flex flex-col">
       {/* Top Architecture Diagram Canvas */}
@@ -297,14 +343,17 @@ export const EcosystemVisual: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
+            <motion.button
               type="button"
               onClick={handleToggleTour}
               aria-label={tourStatus === 'playing' ? 'Pause architecture tour' : 'Play architecture tour'}
+              whileHover={canHover && canAnimate ? { scale: 1.015 } : undefined}
+              whileTap={canAnimate ? { scale: 0.98 } : undefined}
+              transition={springTactile}
               className={`relative overflow-hidden flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border shadow-civic-xs cursor-pointer select-none transition-colors ${
                 tourStatus === 'playing'
                   ? 'bg-saffron-500 text-slate-950 border-saffron-400 font-bold shadow-lg shadow-saffron-500/20'
-                  : 'bg-slate-800/90 text-slate-200 border-slate-700 hover:bg-slate-700 hover:text-white'
+                  : `bg-slate-800/90 text-slate-200 border-slate-700 ${tourButtonHoverClasses}`
               }`}
             >
               {tourStatus === 'playing' ? (
@@ -331,11 +380,11 @@ export const EcosystemVisual: React.FC = () => {
                   style={{ width: `${Math.min(100, Math.max(0, tourProgress))}%` }}
                 />
               )}
-            </button>
+            </motion.button>
 
             {tourStatus === 'playing' && (
               <span className="flex items-center gap-1.5 text-[11px] text-saffron-400 font-medium">
-                <Sparkles className="h-3 w-3 animate-spin" />
+                <Sparkles className={`h-3 w-3 ${canAnimate ? 'animate-spin' : ''}`} />
                 <span className="hidden sm:inline">Advancing sequence</span>
               </span>
             )}
@@ -345,11 +394,11 @@ export const EcosystemVisual: React.FC = () => {
         {/* Dual Track Labels */}
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 text-[11px] font-bold pointer-events-none">
           <div className="flex items-center gap-2 text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-800/40 w-fit">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className={`h-2 w-2 rounded-full bg-emerald-400 ${canAnimate ? 'animate-pulse' : ''}`} />
             <span>Track 1: GovAssist Citizen Pre-Submission Verification</span>
           </div>
           <div className="flex items-center gap-2 text-civic-300 bg-civic-950/40 px-3 py-1.5 rounded-xl border border-civic-800/40 w-fit md:ml-auto">
-            <span className="h-2 w-2 rounded-full bg-civic-400 animate-pulse" />
+            <span className={`h-2 w-2 rounded-full bg-civic-400 ${canAnimate ? 'animate-pulse' : ''}`} />
             <span>Track 2: GovSkill Employee Learning & Governance Telemetry</span>
           </div>
         </div>
@@ -392,76 +441,64 @@ export const EcosystemVisual: React.FC = () => {
 
             {/* Track 1 Paths (Citizen: Y=100) */}
             {/* Path 1: Upload (140) -> OCR (380) */}
-            <path
+            <FlowPath
               id="path-upload-ocr"
               d="M 140 100 L 380 100"
-              stroke={isPathActive('path-upload-ocr') ? 'url(#emerald-stream)' : '#065F46'}
-              strokeWidth={isPathActive('path-upload-ocr') ? 3.5 : 2}
-              opacity={isPathActive('path-upload-ocr') ? 1 : 0.25}
-              filter={isPathActive('path-upload-ocr') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-upload-ocr')}
+              activeStroke="url(#emerald-stream)"
+              inactiveStroke="#065F46"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Path 2: OCR (380) -> Rules (620) */}
-            <path
+            <FlowPath
               id="path-ocr-rule"
               d="M 380 100 L 620 100"
-              stroke={isPathActive('path-ocr-rule') ? 'url(#emerald-stream)' : '#065F46'}
-              strokeWidth={isPathActive('path-ocr-rule') ? 3.5 : 2}
-              opacity={isPathActive('path-ocr-rule') ? 1 : 0.25}
-              filter={isPathActive('path-ocr-rule') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-ocr-rule')}
+              activeStroke="url(#emerald-stream)"
+              inactiveStroke="#065F46"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Path 3: Rules (620) -> AI Explanation (860) */}
-            <path
+            <FlowPath
               id="path-rule-ai"
               d="M 620 100 L 860 100"
-              stroke={isPathActive('path-rule-ai') ? 'url(#blue-stream)' : '#1E40AF'}
-              strokeWidth={isPathActive('path-rule-ai') ? 3.5 : 2}
-              opacity={isPathActive('path-rule-ai') ? 1 : 0.25}
-              filter={isPathActive('path-rule-ai') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-rule-ai')}
+              activeStroke="url(#blue-stream)"
+              inactiveStroke="#1E40AF"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Track 2 Paths (Employee: Y=260) */}
             {/* Path 4: Curriculum (180) -> Tutor (440) */}
-            <path
+            <FlowPath
               id="path-curriculum-tutor"
               d="M 180 260 L 440 260"
-              stroke={isPathActive('path-curriculum-tutor') ? 'url(#blue-stream)' : '#1E40AF'}
-              strokeWidth={isPathActive('path-curriculum-tutor') ? 3.5 : 2}
-              opacity={isPathActive('path-curriculum-tutor') ? 1 : 0.25}
-              filter={isPathActive('path-curriculum-tutor') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-curriculum-tutor')}
+              activeStroke="url(#blue-stream)"
+              inactiveStroke="#1E40AF"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Path 5: Tutor (440) -> Quiz (700) */}
-            <path
+            <FlowPath
               id="path-tutor-quiz"
               d="M 440 260 L 700 260"
-              stroke={isPathActive('path-tutor-quiz') ? 'url(#saffron-stream)' : '#9A3412'}
-              strokeWidth={isPathActive('path-tutor-quiz') ? 3.5 : 2}
-              opacity={isPathActive('path-tutor-quiz') ? 1 : 0.25}
-              filter={isPathActive('path-tutor-quiz') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-tutor-quiz')}
+              activeStroke="url(#saffron-stream)"
+              inactiveStroke="#9A3412"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Path 6: Quiz (700) -> Supervisor Telemetry (920) */}
-            <path
+            <FlowPath
               id="path-quiz-telemetry"
               d="M 700 260 L 920 260"
-              stroke={isPathActive('path-quiz-telemetry') ? 'url(#purple-stream)' : '#581C87'}
-              strokeWidth={isPathActive('path-quiz-telemetry') ? 3.5 : 2}
-              opacity={isPathActive('path-quiz-telemetry') ? 1 : 0.25}
-              filter={isPathActive('path-quiz-telemetry') ? 'url(#stream-glow)' : undefined}
-              className={shouldReduceMotion ? undefined : 'svg-flow-path'}
-              style={{ pointerEvents: 'none' }}
+              active={isPathActive('path-quiz-telemetry')}
+              activeStroke="url(#purple-stream)"
+              inactiveStroke="#581C87"
+              reducedMotion={Boolean(shouldReduceMotion)}
             />
 
             {/* Central Anchor Dot for Deterministic Rule Hub */}
@@ -495,13 +532,13 @@ export const EcosystemVisual: React.FC = () => {
                       onClick={() => handleSelectNode(node.id)}
                       aria-label={`Inspect ${node.title} architecture node`}
                       aria-selected={isSelected}
-                      whileHover={shouldReduceMotion ? {} : { scale: 1.02, y: -2 }}
-                      whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                      whileHover={canHover && canAnimate ? { scale: 1.02, y: -2 } : undefined}
+                      whileTap={canAnimate ? { scale: 0.98 } : undefined}
+                      transition={springTactile}
                       className={`p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron-400 select-none ${
                         isSelected
                           ? 'bg-white text-slate-900 border-saffron-400 ring-4 ring-saffron-400/30 z-30 shadow-2xl'
-                          : 'bg-slate-900/95 hover:bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500 z-10 shadow-civic-md'
+                          : `bg-slate-900/95 text-slate-300 border-slate-700 z-10 shadow-civic-md ${nodeHoverClasses}`
                       }`}
                     >
                       <div className="flex items-center gap-2 whitespace-nowrap">
@@ -531,7 +568,7 @@ export const EcosystemVisual: React.FC = () => {
                       {/* Active Status Indicator Dot */}
                       {isSelected && (
                         <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5" aria-hidden="true">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-saffron-400 opacity-75" />
+                          <span className={`${canAnimate ? 'animate-ping' : ''} absolute inline-flex h-full w-full rounded-full bg-saffron-400 opacity-75`} />
                           <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-saffron-500 border-2 border-white" />
                         </span>
                       )}
