@@ -1,12 +1,23 @@
+import plugin from 'tailwindcss/plugin';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {
+        // Civic Infrastructure Official Color Tokens
+        ink: "#1B2A4A",      // Primary, authority, headers/nav/primary CTA
+        marigold: "#D98E2A", // Civic accent, secondary CTA, highlights
+        paper: "#F7F5F0",    // Background, letterhead paper tone
+        seal: "#A63D40",     // Official stamps, live/active badge accents
+        
         // High-End Civic & National Digital Infrastructure Color Palette
         civic: {
           950: "#071322", // Deepest midnight navy
@@ -78,14 +89,23 @@ export default {
         },
         appbg: "#F8FAFC",
         textPrimary: "#0F172A",
-        textSecondary: "#475569",
+        textSecondary: "#3D4451",
         textMuted: "#64748B",
         appBorder: "#E2E8F0",
         appBorderStrong: "#CBD5E1",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
-        mono: ["JetBrains Mono", "Fira Code", "Consolas", "monospace"],
+        display: ["Fraunces", "Georgia", "serif"],
+        body: ['"IBM Plex Sans"', "Inter", "system-ui", "sans-serif"],
+        sans: ['"IBM Plex Sans"', "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        mono: ['"IBM Plex Mono"', "JetBrains Mono", "Fira Code", "Consolas", "monospace"],
+      },
+      perspective: {
+        800: "800px",
+        1000: "1000px",
+        1200: "1200px",
+        1500: "1500px",
+        2000: "2000px",
       },
       boxShadow: {
         "civic-xs": "0 1px 2px 0 rgba(7, 19, 34, 0.04)",
@@ -96,6 +116,7 @@ export default {
         "civic-glow-blue": "0 0 25px -5px rgba(59, 130, 246, 0.25)",
         "civic-glow-emerald": "0 0 25px -5px rgba(16, 185, 129, 0.25)",
         "civic-glow-saffron": "0 0 25px -5px rgba(245, 158, 11, 0.25)",
+        "civic-stamp": "0 0 0 2px #A63D40, inset 0 0 0 1px #A63D40",
       },
       borderRadius: {
         "civic-sm": "0.375rem",
@@ -131,5 +152,25 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function({ addUtilities }) {
+      addUtilities({
+        '.preserve-3d': {
+          'transform-style': 'preserve-3d',
+        },
+        '.backface-hidden': {
+          'backface-visibility': 'hidden',
+        },
+        '.perspective-1000': {
+          perspective: '1000px',
+        },
+        '.perspective-1500': {
+          perspective: '1500px',
+        },
+        '.perspective-2000': {
+          perspective: '2000px',
+        },
+      });
+    }),
+  ],
 };

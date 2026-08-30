@@ -7,6 +7,7 @@ import {
   useMotionTemplate,
   useReducedMotion,
 } from 'framer-motion';
+import { useFinePointer, springDepth, springTactile } from '@/lib/motion';
 
 interface InteractiveTiltCardProps {
   children: React.ReactNode;
@@ -17,10 +18,16 @@ interface InteractiveTiltCardProps {
   onClick?: () => void;
 }
 
+/**
+ * InteractiveTiltCard — Cursor-driven 3D tilt card component.
+ * Cursor effects are strictly gated behind useFinePointer().
+ * Touch screens and reduced motion users receive an entirely static fallback.
+ * Transform effects remain strictly local to this individual card.
+ */
 export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   children,
   className = '',
-  maxTilt = 5,
+  maxTilt = 4,
   perspective = 1000,
   showSheen = true,
   onClick,
@@ -28,15 +35,15 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const isFinePointer = useFinePointer();
 
   // Raw normalized mouse coordinates [-0.5, 0.5]
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Smooth, non-jittery spring physics
-  const springConfig = { damping: 24, stiffness: 220, mass: 0.5 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
+  // Smooth, non-jittery spring physics using standardized preset
+  const smoothX = useSpring(mouseX, springDepth);
+  const smoothY = useSpring(mouseY, springDepth);
 
   // Derive tilt angles (rotateX maps to Y-movement, rotateY maps to X-movement)
   const rotateX = useTransform(smoothY, [-0.5, 0.5], [maxTilt, -maxTilt]);
@@ -45,10 +52,10 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   // Derive specular sheen percentages (0% to 100%)
   const sheenX = useTransform(smoothX, [-0.5, 0.5], [10, 90]);
   const sheenY = useTransform(smoothY, [-0.5, 0.5], [10, 90]);
-  const sheenBackground = useMotionTemplate`radial-gradient(circle 260px at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.2), transparent 75%)`;
+  const sheenBackground = useMotionTemplate`radial-gradient(circle 280px at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.18), transparent 75%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (shouldReduceMotion || !cardRef.current) return;
+    if (shouldReduceMotion || !isFinePointer || !cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
@@ -61,7 +68,9 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
   };
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    if (isFinePointer && !shouldReduceMotion) {
+      setIsHovered(true);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -70,11 +79,12 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
     mouseY.set(0);
   };
 
-  if (shouldReduceMotion) {
+  // On touch / coarse pointer devices or reduced motion, render clean static container
+  if (shouldReduceMotion || !isFinePointer) {
     return (
       <div
         ref={cardRef}
-        className={`relative rounded-3xl ${className}`}
+        className={`relative ${className}`}
         onClick={onClick}
       >
         {children}
@@ -100,8 +110,8 @@ export const InteractiveTiltCard: React.FC<InteractiveTiltCardProps> = ({
         }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-        className={`relative overflow-hidden rounded-3xl ${
+        transition={springTactile}
+        className={`relative overflow-hidden ${
           isHovered ? 'shadow-civic-xl' : 'shadow-civic-md'
         } ${className}`}
       >

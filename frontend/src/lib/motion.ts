@@ -1,4 +1,43 @@
+import { useState, useEffect } from 'react';
 import { Variants, Transition } from 'framer-motion';
+
+/**
+ * Hook to check if the current device supports fine pointer (mouse/trackpad)
+ * and hover states. Gates all cursor-driven 3D tilt, parallax, and magnetic effects.
+ * Non-fine-pointer devices (touch screens) receive a clean, static fallback.
+ */
+export function useFinePointer(): boolean {
+  const [isFinePointer, setIsFinePointer] = useState<boolean>(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return true; // Default fallback for SSR / non-browser test environments
+    }
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const updatePointer = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsFinePointer(e.matches);
+    };
+
+    // Initial check
+    setIsFinePointer(mediaQuery.matches);
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', updatePointer);
+      return () => mediaQuery.removeEventListener('change', updatePointer);
+    } else if (typeof (mediaQuery as any).addListener === 'function') {
+      (mediaQuery as any).addListener(updatePointer);
+      return () => (mediaQuery as any).removeListener(updatePointer);
+    }
+  }, []);
+
+  return isFinePointer;
+}
 
 /**
  * Standardized spring physics configurations for tactile civic UI elements.
@@ -6,7 +45,13 @@ import { Variants, Transition } from 'framer-motion';
 export const springTactile: Transition = {
   type: 'spring',
   stiffness: 400,
-  damping: 28,
+  damping: 30,
+};
+
+export const springDepth: Transition = {
+  type: 'spring',
+  stiffness: 220,
+  damping: 26,
 };
 
 export const springSmooth: Transition = {
@@ -26,6 +71,26 @@ export const springHero: Transition = {
   stiffness: 150,
   damping: 22,
   mass: 0.8,
+};
+
+/**
+ * Scroll reveal variants with depth
+ */
+export const fadeUpReveal: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: springDepth,
+  },
+};
+
+export const fadeUpRevealReduced: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.2 },
+  },
 };
 
 /**

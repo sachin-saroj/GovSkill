@@ -34,17 +34,17 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-civic-xs">
+    <header className="sticky top-0 z-50 bg-white shadow-civic-xs font-body">
       {/* Official Civic Top Bar */}
-      <div className="bg-civic-950 text-slate-300 text-[11px] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-civic-900">
+      <div className="bg-ink text-slate-300 text-[11px] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-saffron-500 animate-pulse" />
+          <div className="flex items-center gap-2 font-mono">
+            <span className="inline-block w-2 h-2 rounded-full bg-marigold animate-pulse" />
             <span className="font-medium tracking-wide uppercase text-slate-200">
               National Digital Public Infrastructure • Local Governance Platform
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-slate-400">
+          <div className="hidden sm:flex items-center gap-4 text-slate-400 font-mono text-[10px]">
             <span className="hover:text-slate-200 transition-colors">GovSkill v1.0</span>
             <span className="text-slate-600">|</span>
             <span className="flex items-center gap-1 text-emerald-400">
@@ -56,22 +56,22 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="border-b border-slate-200/90 bg-white/95 backdrop-blur-md">
+      <div className="border-b border-stone-200/90 bg-white/95 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Brand Logo */}
             <div className="flex items-center gap-8">
               <Link
                 to="/"
-                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-civic-700 rounded-lg p-1"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-ink rounded-lg p-1"
               >
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-civic-800 to-civic-950 text-white flex items-center justify-center shadow-civic-sm group-hover:scale-105 transition-transform duration-200">
-                  <Shield className="h-5 w-5 text-saffron-400" />
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-ink to-slate-900 text-white flex items-center justify-center shadow-civic-sm group-hover:scale-105 transition-transform duration-200 border border-slate-700">
+                  <Shield className="h-5 w-5 text-marigold" />
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-xl tracking-tight text-civic-950">GovSkill</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-civic-100 text-civic-800">
+                    <span className="font-bold text-xl tracking-tight text-ink font-display">GovSkill</span>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200/60 font-mono">
                       Portal
                     </span>
                   </div>
@@ -89,11 +89,11 @@ export const Header: React.FC = () => {
                       to="/progress"
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                         isActive('/progress')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-amber-50 text-ink border border-amber-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-ink hover:bg-paper'
                       }`}
                     >
-                      <Sparkles className="h-4 w-4 text-saffron-600" />
+                      <Sparkles className="h-4 w-4 text-marigold" />
                       <span>My Skills</span>
                     </Link>
 
@@ -101,11 +101,11 @@ export const Header: React.FC = () => {
                       to="/module"
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                         isActive('/module')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-amber-50 text-ink border border-amber-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-ink hover:bg-paper'
                       }`}
                     >
-                      <BookOpen className="h-4 w-4 text-civic-700" />
+                      <BookOpen className="h-4 w-4 text-ink" />
                       <span>Lessons</span>
                     </Link>
 
@@ -113,11 +113,11 @@ export const Header: React.FC = () => {
                       to="/tutor"
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                         isActive('/tutor')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-amber-50 text-ink border border-amber-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-ink hover:bg-paper'
                       }`}
                     >
-                      <Bot className="h-4 w-4 text-civic-600" />
+                      <Bot className="h-4 w-4 text-blue-600" />
                       <span>AI Tutor</span>
                     </Link>
 
@@ -125,11 +125,11 @@ export const Header: React.FC = () => {
                       to="/quiz"
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                         isActive('/quiz')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-amber-50 text-ink border border-amber-200/80 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-ink hover:bg-paper'
                       }`}
                     >
-                      <Award className="h-4 w-4 text-saffron-600" />
+                      <Award className="h-4 w-4 text-marigold" />
                       <span>Quiz</span>
                     </Link>
 
@@ -138,11 +138,11 @@ export const Header: React.FC = () => {
                         to="/admin"
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                           isActive('/admin')
-                            ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                            : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                            ? 'bg-amber-50 text-ink border border-amber-200/80 shadow-civic-xs'
+                            : 'text-slate-600 hover:text-ink hover:bg-paper'
                         }`}
                       >
-                        <LayoutDashboard className="h-4 w-4 text-civic-700" />
+                        <LayoutDashboard className="h-4 w-4 text-purple-700" />
                         <span>Admin Dashboard</span>
                       </Link>
                     )}
@@ -158,30 +158,30 @@ export const Header: React.FC = () => {
                 to="/citizen"
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 ${
                   isActive('/citizen')
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-civic-xs'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-800'
+                    ? 'bg-emerald-50 text-emerald-900 border-emerald-300 shadow-civic-xs'
+                    : 'bg-paper text-slate-700 border-stone-200 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-900'
                 }`}
               >
                 <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>GovAssist Pre-Check</span>
-                <span className="text-[10px] bg-emerald-600 text-white px-1.5 py-0.2 rounded font-medium">
+                <span className="text-[10px] bg-emerald-700 text-white px-1.5 py-0.2 rounded font-medium">
                   Citizen
                 </span>
               </Link>
 
-              <div className="h-5 w-px bg-slate-200" />
+              <div className="h-5 w-px bg-stone-200" />
 
               {user ? (
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
-                    <div className="h-6 w-6 rounded-full bg-civic-800 text-white flex items-center justify-center text-[10px] font-bold">
+                  <div className="flex items-center gap-2.5 bg-paper border border-stone-200 px-3 py-1.5 rounded-lg">
+                    <div className="h-6 w-6 rounded-full bg-ink text-white flex items-center justify-center text-[10px] font-bold">
                       <User className="h-3.5 w-3.5" />
                     </div>
                     <div className="text-left">
-                      <p className="text-xs font-semibold text-slate-900 leading-tight max-w-[140px] truncate">
+                      <p className="text-xs font-semibold text-ink leading-tight max-w-[140px] truncate">
                         {user.email}
                       </p>
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-civic-700">
+                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-marigold font-mono">
                         {user.role}
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export const Header: React.FC = () => {
                   <button
                     onClick={handleLogout}
                     title="Sign Out"
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors cursor-pointer"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     <span className="hidden xl:inline">Logout</span>
@@ -198,7 +198,7 @@ export const Header: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="rounded-lg bg-civic-800 px-4 py-2 text-xs font-semibold text-white shadow-civic-sm hover:bg-civic-900 transition-all active:scale-95"
+                  className="rounded-lg bg-ink px-4 py-2 text-xs font-semibold text-white shadow-civic-sm hover:bg-slate-900 transition-all"
                 >
                   Officer Login
                 </Link>
@@ -209,7 +209,7 @@ export const Header: React.FC = () => {
             <div className="flex lg:hidden items-center gap-2">
               <Link
                 to="/citizen"
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200"
               >
                 <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>GovAssist</span>
@@ -217,7 +217,7 @@ export const Header: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-slate-600 hover:text-civic-900 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                className="p-2 text-slate-600 hover:text-ink rounded-lg border border-stone-200 hover:bg-paper transition-colors"
                 aria-label="Toggle navigation menu"
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -227,10 +227,10 @@ export const Header: React.FC = () => {
 
           {/* Mobile Dropdown Navigation */}
           {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-slate-200 space-y-3 animate-slide-up">
+            <div className="lg:hidden py-4 border-t border-stone-200 space-y-3 animate-slide-up bg-white">
               {user && (
                 <div className="space-y-1">
-                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono">
                     Employee Training
                   </div>
                   <Link
@@ -238,11 +238,11 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/progress')
-                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
-                        : 'text-slate-600 hover:bg-slate-50'
+                        ? 'bg-amber-50 text-ink font-semibold border border-amber-200/80'
+                        : 'text-slate-600 hover:bg-paper'
                     }`}
                   >
-                    <Sparkles className="h-4 w-4 text-saffron-600" />
+                    <Sparkles className="h-4 w-4 text-marigold" />
                     <span>My Skills & Progress</span>
                   </Link>
 
@@ -251,11 +251,11 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/module')
-                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
-                        : 'text-slate-600 hover:bg-slate-50'
+                        ? 'bg-amber-50 text-ink font-semibold border border-amber-200/80'
+                        : 'text-slate-600 hover:bg-paper'
                     }`}
                   >
-                    <BookOpen className="h-4 w-4 text-civic-700" />
+                    <BookOpen className="h-4 w-4 text-ink" />
                     <span>Lessons & Curriculum</span>
                   </Link>
 
@@ -264,11 +264,11 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/tutor')
-                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
-                        : 'text-slate-600 hover:bg-slate-50'
+                        ? 'bg-amber-50 text-ink font-semibold border border-amber-200/80'
+                        : 'text-slate-600 hover:bg-paper'
                     }`}
                   >
-                    <Bot className="h-4 w-4 text-civic-600" />
+                    <Bot className="h-4 w-4 text-blue-600" />
                     <span>AI Tutor Assistance</span>
                   </Link>
 
@@ -277,11 +277,11 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                       isActive('/quiz')
-                        ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
-                        : 'text-slate-600 hover:bg-slate-50'
+                        ? 'bg-amber-50 text-ink font-semibold border border-amber-200/80'
+                        : 'text-slate-600 hover:bg-paper'
                     }`}
                   >
-                    <Award className="h-4 w-4 text-saffron-600" />
+                    <Award className="h-4 w-4 text-marigold" />
                     <span>Module Certification Quiz</span>
                   </Link>
 
@@ -291,11 +291,11 @@ export const Header: React.FC = () => {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
                         isActive('/admin')
-                          ? 'bg-civic-50 text-civic-800 font-semibold border border-civic-200/80'
-                          : 'text-slate-600 hover:bg-slate-50'
+                          ? 'bg-amber-50 text-ink font-semibold border border-amber-200/80'
+                          : 'text-slate-600 hover:bg-paper'
                       }`}
                     >
-                      <LayoutDashboard className="h-4 w-4 text-civic-700" />
+                      <LayoutDashboard className="h-4 w-4 text-purple-700" />
                       <span>Admin Management Dashboard</span>
                     </Link>
                   )}
@@ -303,7 +303,7 @@ export const Header: React.FC = () => {
               )}
 
               <div className="space-y-1">
-                <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono">
                   Citizen Services
                 </div>
                 <Link
@@ -311,8 +311,8 @@ export const Header: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium ${
                     isActive('/citizen')
-                      ? 'bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200'
-                      : 'text-slate-700 hover:bg-slate-50'
+                      ? 'bg-emerald-50 text-emerald-900 font-semibold border border-emerald-200'
+                      : 'text-slate-700 hover:bg-paper'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -323,16 +323,16 @@ export const Header: React.FC = () => {
                 </Link>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex items-center justify-between px-3">
+              <div className="pt-3 border-t border-stone-200 flex items-center justify-between px-3">
                 {user ? (
                   <>
                     <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-full bg-civic-800 text-white flex items-center justify-center text-xs font-bold">
+                      <div className="h-7 w-7 rounded-full bg-ink text-white flex items-center justify-center text-xs font-bold">
                         <User className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-slate-900">{user.email}</p>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-civic-700">
+                        <p className="text-xs font-semibold text-ink">{user.email}</p>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-marigold font-mono">
                           {user.role}
                         </span>
                       </div>
@@ -349,7 +349,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 bg-civic-800 text-white rounded-lg text-sm font-semibold shadow-civic-sm"
+                    className="w-full text-center py-2.5 bg-ink text-white rounded-lg text-sm font-semibold shadow-civic-sm"
                   >
                     Officer Sign In
                   </Link>

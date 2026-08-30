@@ -1,8 +1,10 @@
 import React from 'react';
+import { motion, useReducedMotion, HTMLMotionProps } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { springTactile } from '@/lib/motion';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost' | 'saffron';
+  variant?: 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost' | 'saffron' | 'ink' | 'marigold';
   size?: 'sm' | 'md' | 'lg' | 'icon';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -20,8 +22,12 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const isDisabled = disabled || isLoading;
+
+  // Single transform owner: No CSS active:scale-* classes. Framer Motion handles tactile scaling exclusively.
   const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+    'inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none';
 
   const variants = {
     primary:
@@ -36,6 +42,10 @@ export const Button: React.FC<ButtonProps> = ({
       'bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 focus-visible:ring-civic-700',
     saffron:
       'bg-saffron-600 text-white hover:bg-saffron-700 active:bg-saffron-800 focus-visible:ring-saffron-600 shadow-civic-sm',
+    ink:
+      'bg-ink text-white hover:bg-slate-900 active:bg-black focus-visible:ring-ink shadow-civic-sm',
+    marigold:
+      'bg-marigold text-white hover:bg-amber-600 active:bg-amber-700 focus-visible:ring-marigold shadow-civic-sm',
   };
 
   const sizes = {
@@ -46,10 +56,13 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button
+    <motion.button
+      whileHover={isDisabled || shouldReduceMotion ? undefined : { scale: 1.01 }}
+      whileTap={isDisabled || shouldReduceMotion ? undefined : { scale: 0.98 }}
+      transition={springTactile}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      disabled={disabled || isLoading}
-      {...props}
+      disabled={isDisabled}
+      {...(props as HTMLMotionProps<'button'>)}
     >
       {isLoading ? (
         <>
@@ -63,7 +76,7 @@ export const Button: React.FC<ButtonProps> = ({
           {rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
         </>
       )}
-    </button>
+    </motion.button>
   );
 };
 

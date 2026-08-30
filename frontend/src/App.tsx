@@ -11,6 +11,7 @@ import TutorChatPage from '@/pages/TutorChatPage';
 import QuizPage from '@/pages/QuizPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import CitizenUploadPage from '@/pages/CitizenUploadPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({
   children,
@@ -42,7 +43,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
 export const AppContent: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-paper text-slate-900 font-body">
       <Header />
       <main className="flex-1 flex flex-col">
         <Routes>
@@ -97,7 +98,7 @@ export const AppContent: React.FC = () => {
             }
           />
           <Route path="/citizen" element={<CitizenUploadPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />

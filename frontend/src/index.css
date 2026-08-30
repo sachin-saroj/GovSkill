@@ -4,13 +4,17 @@
 
 @layer base {
   :root {
+    --civic-ink: #1B2A4A;
+    --civic-marigold: #D98E2A;
+    --civic-paper: #F7F5F0;
+    --civic-seal: #A63D40;
     --civic-navy: #0B192C;
     --civic-blue: #1E4D8C;
     --civic-blue-hover: #163A6B;
     --civic-saffron: #D97706;
     --civic-emerald: #059669;
     --civic-crimson: #DC2626;
-    --civic-bg: #F8FAFC;
+    --civic-bg: #F7F5F0;
     --civic-surface: #FFFFFF;
     --civic-border: #E2E8F0;
     --civic-border-strong: #CBD5E1;
@@ -20,24 +24,26 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #F8FAFC;
-    color: #0F172A;
+    font-family: 'IBM Plex Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #F7F5F0;
+    color: #1B2A4A;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #DBEAFE;
-    color: #0B192C;
+    background-color: #FEF3C7;
+    color: #1B2A4A;
   }
 
   :focus-visible {
-    outline: 2px solid #1E4D8C;
+    outline: 2px solid #1B2A4A;
     outline-offset: 2px;
   }
 
@@ -54,9 +60,9 @@
 }
 
 @layer components {
-  /* Civic Grid Backgrounds */
+  /* Civic Grid Backgrounds & Vignette */
   .bg-civic-pattern {
-    background-color: #F8FAFC;
+    background-color: #F7F5F0;
     background-image: radial-gradient(#CBD5E1 0.75px, transparent 0.75px);
     background-size: 24px 24px;
   }
@@ -67,7 +73,7 @@
   }
 
   .bg-civic-gradient {
-    background: linear-gradient(135deg, #071322 0%, #0B192C 50%, #133E87 100%);
+    background: linear-gradient(135deg, #071322 0%, #1B2A4A 50%, #133E87 100%);
   }
 
   .bg-civic-card {
@@ -77,10 +83,14 @@
   }
 
   .civic-focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]/25 focus:border-[#1E4D8C];
+    @apply focus:outline-none focus:ring-2 focus:ring-[#1B2A4A]/25 focus:border-[#1B2A4A];
   }
 
-  /* Animated SVG Flow Keyframes */
+  .depth-vignette {
+    box-shadow: inset 0 0 100px rgba(7, 19, 34, 0.45);
+  }
+
+  /* Animated SVG Flow Keyframes — ONLY for active flow paths */
   .svg-flow-path {
     stroke-dasharray: 8 8;
     animation: flowDash 2.5s linear infinite;
@@ -120,6 +130,14 @@
 
   .perspective-1200 {
     perspective: 1200px;
+  }
+
+  .perspective-1500 {
+    perspective: 1500px;
+  }
+
+  .perspective-2000 {
+    perspective: 2000px;
   }
 
   .preserve-3d {
