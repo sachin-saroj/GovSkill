@@ -129,7 +129,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                 onClick={handlePrint}
                 variant="primary"
                 size="sm"
-                className="flex items-center gap-1.5 shadow-civic-xs text-caption font-semibold cursor-pointer"
+                className="flex items-center gap-1.5 shadow-civic-xs text-caption font-semibold cursor-pointer rounded-full min-h-[40px] px-4"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>Print / Save PDF Slip</span>
@@ -226,13 +226,13 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
               className={`p-6 rounded-civic-xl border-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                 isPassed
                   ? 'bg-emerald-50 border-emerald-400 text-emerald-950 print:bg-white print:border-emerald-700'
-                  : 'bg-amber-50 border-amber-400 text-amber-950 print:bg-white print:border-amber-700'
+                  : 'bg-saffron-50 border-saffron-400 text-saffron-950 print:bg-white print:border-saffron-700'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`h-10 w-10 rounded-civic-md flex items-center justify-center shrink-0 font-semibold ${
-                    isPassed ? 'bg-emerald-600 text-white' : 'bg-amber-600 text-white'
+                  className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 font-semibold ${
+                    isPassed ? 'bg-emerald-600 text-white' : 'bg-saffron-600 text-white'
                   }`}
                 >
                   {isPassed ? <ShieldCheck className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
@@ -282,7 +282,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                     {validationResults.map((rule) => (
                       <tr
                         key={rule.ruleName}
-                        className={rule.passed ? 'bg-white' : 'bg-amber-50/40 font-medium'}
+                        className={rule.passed ? 'bg-white' : 'bg-saffron-50/40 font-medium'}
                       >
                         <td className="px-3.5 py-2.5 font-semibold text-slate-900 whitespace-nowrap">
                           {rule.ruleName}
@@ -292,7 +292,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                             className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
                               rule.passed
                                 ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                : 'bg-rose-100 text-rose-800 border-rose-300'
+                                : 'bg-saffron-100 text-saffron-900 border-saffron-300'
                             }`}
                           >
                             {rule.passed ? 'PASSED' : 'ACTION REQUIRED'}

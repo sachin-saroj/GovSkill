@@ -476,8 +476,8 @@ export const AdminDashboardPage: React.FC = () => {
               </p>
             </div>
             {skillsOverview.lowest_performing_competency && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-civic-md bg-amber-50 border border-amber-200 text-caption font-semibold text-amber-900 shrink-0">
-                <Sparkles className="h-3.5 w-3.5 text-amber-700" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-saffron-50 border border-saffron-200 text-caption font-semibold text-saffron-900 shrink-0">
+                <Sparkles className="h-3.5 w-3.5 text-saffron-700" />
                 <span>Priority Focus: {skillsOverview.lowest_performing_competency}</span>
               </div>
             )}
@@ -502,14 +502,14 @@ export const AdminDashboardPage: React.FC = () => {
                     <td className="py-2.5 px-3 text-slate-500">{item.module_title}</td>
                     <td className="py-2.5 px-3 font-mono font-semibold text-slate-900">{item.average_mastery_pct}%</td>
                     <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">{item.employees_mastered}</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-amber-700">{item.employees_developing}</td>
+                    <td className="py-2.5 px-3 text-center font-semibold text-saffron-700">{item.employees_developing}</td>
                     <td className="py-2.5 px-3 text-right">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
                           item.status === 'Healthy'
                             ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                             : item.status === 'Needs Attention'
-                            ? 'bg-amber-100 text-amber-800 border-amber-300'
+                            ? 'bg-saffron-100 text-saffron-800 border-saffron-300'
                             : item.status === 'Unassessed'
                             ? 'bg-slate-100 text-slate-700 border-slate-300'
                             : 'bg-rose-100 text-rose-800 border-rose-300'
@@ -526,15 +526,15 @@ export const AdminDashboardPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Navigation Tabs */}
-      <motion.div variants={fadeUpVariants} className="flex border-b border-slate-200 gap-8">
+      {/* Navigation Tabs (Pills) */}
+      <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-full border border-slate-200 w-fit">
         <button
           type="button"
           onClick={() => setActiveTab('attempts')}
-          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'attempts'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900'
+              ? 'bg-civic-900 text-white shadow-civic-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -544,10 +544,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('modules')}
-          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'modules'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900'
+              ? 'bg-civic-900 text-white shadow-civic-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
           }`}
         >
           <BookOpen className="h-4 w-4" />
@@ -557,10 +557,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('questions')}
-          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'questions'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900'
+              ? 'bg-civic-900 text-white shadow-civic-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
           }`}
         >
           <HelpCircle className="h-4 w-4" />
@@ -570,13 +570,13 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('governance')}
-          className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'governance'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900'
+              ? 'bg-civic-900 text-white shadow-civic-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
           }`}
         >
-          <ShieldCheck className="h-4 w-4 text-emerald-600" />
+          <ShieldCheck className="h-4 w-4 text-emerald-500" />
           <span>Workforce Governance & Telemetry</span>
         </button>
       </motion.div>
@@ -620,7 +620,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenModuleModal()}
-              className="flex items-center gap-1.5 px-4 py-2 bg-civic-800 text-white text-caption font-semibold rounded-civic-md hover:bg-civic-900 transition-all shadow-civic-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-civic-900 text-white text-caption font-semibold rounded-full hover:bg-civic-800 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
             >
               <Plus className="h-4 w-4" />
               <span>Create New Module</span>
@@ -631,14 +631,14 @@ export const AdminDashboardPage: React.FC = () => {
             {modules.map((mod) => (
               <div key={mod.id}>
                 <Card
-                  className="p-6 flex flex-col justify-between space-y-4 border-slate-200 shadow-civic-sm bg-white hover:shadow-civic-md transition-all rounded-civic-xl"
+                  className="p-6 flex flex-col justify-between space-y-4 border-slate-200 shadow-civic-xs bg-white hover:shadow-civic-sm transition-all rounded-civic-xl"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
                         {mod.title}
                       </h3>
-                      <span className="text-micro font-mono bg-slate-100 px-2 py-0.5 rounded-civic-sm text-slate-600 border border-slate-200 shrink-0">
+                      <span className="text-micro font-mono bg-slate-100 px-2.5 py-0.5 rounded-full text-slate-600 border border-slate-200 shrink-0">
                         {mod.id.substring(0, 8)}...
                       </span>
                     </div>
@@ -684,7 +684,7 @@ export const AdminDashboardPage: React.FC = () => {
                 id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
-                className="px-3.5 py-1.5 text-caption font-semibold text-slate-900 border border-slate-300 rounded-civic-md bg-white focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
+                className="px-4 py-2 text-caption font-semibold text-slate-900 border border-slate-300 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer min-h-[40px]"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -697,7 +697,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenQuestionModal()}
-              className="flex items-center gap-1.5 px-4 py-2 bg-civic-800 text-white text-caption font-semibold rounded-civic-md hover:bg-civic-900 transition-all shadow-civic-xs cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-civic-900 text-white text-caption font-semibold rounded-full hover:bg-civic-800 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
             >
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
@@ -716,7 +716,7 @@ export const AdminDashboardPage: React.FC = () => {
           ) : (
             <div className="space-y-4">
               {questions.map((q, qIdx) => (
-                <Card key={q.id} className="p-6 space-y-3.5 border-slate-200 shadow-civic-sm bg-white rounded-civic-xl">
+                <Card key={q.id} className="p-6 space-y-3.5 border-slate-200 shadow-civic-xs bg-white rounded-civic-xl">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-2.5">
                       <span className="font-semibold text-civic-800 text-caption mt-0.5">Q{qIdx + 1}.</span>
@@ -808,7 +808,7 @@ export const AdminDashboardPage: React.FC = () => {
                   type="button"
                   onClick={() => setIsModuleModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-slate-100 rounded-civic-md text-slate-500 cursor-pointer"
+                  className="p-1 hover:bg-slate-100 rounded-full text-slate-500 cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -822,7 +822,7 @@ export const AdminDashboardPage: React.FC = () => {
                     required
                     value={moduleFormTitle}
                     onChange={(e) => setModuleFormTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 text-caption border border-slate-300 rounded-civic-md focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-caption border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
                     placeholder="e.g. Cybersecurity Basics"
                   />
                 </div>
@@ -834,7 +834,7 @@ export const AdminDashboardPage: React.FC = () => {
                     rows={8}
                     value={moduleFormContent}
                     onChange={(e) => setModuleFormContent(e.target.value)}
-                    className="w-full px-3.5 py-2 text-caption font-mono border border-slate-300 rounded-civic-md focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none font-normal"
+                    className="w-full px-3.5 py-2.5 text-caption font-mono border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none font-normal"
                     placeholder="# Lesson 1: Overview..."
                   />
                 </div>
@@ -843,13 +843,13 @@ export const AdminDashboardPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsModuleModalOpen(false)}
-                    className="px-4 py-2 text-caption font-semibold text-slate-600 border border-slate-300 rounded-civic-md hover:bg-slate-50 cursor-pointer"
+                    className="px-5 py-2.5 text-caption font-semibold text-slate-700 border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-caption font-semibold text-white bg-civic-800 rounded-civic-md hover:bg-civic-900 shadow-civic-xs cursor-pointer"
+                    className="px-5 py-2.5 text-caption font-semibold text-white bg-civic-900 rounded-full hover:bg-civic-800 shadow-civic-xs cursor-pointer min-h-[40px]"
                   >
                     Save Module
                   </button>
@@ -879,7 +879,7 @@ export const AdminDashboardPage: React.FC = () => {
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-slate-100 rounded-civic-md text-slate-500 cursor-pointer"
+                  className="p-1 hover:bg-slate-100 rounded-full text-slate-500 cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -893,7 +893,7 @@ export const AdminDashboardPage: React.FC = () => {
                     required
                     value={qText}
                     onChange={(e) => setQText(e.target.value)}
-                    className="w-full px-3.5 py-2 text-caption border border-slate-300 rounded-civic-md focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-caption border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
                     placeholder="e.g. What is the minimum certificate number length?"
                   />
                 </div>
@@ -919,7 +919,7 @@ export const AdminDashboardPage: React.FC = () => {
                           updated[idx] = e.target.value;
                           setQOptions(updated);
                         }}
-                        className="w-full px-3 py-1.5 text-caption border border-slate-300 rounded-civic-md focus:outline-none focus:ring-2 focus:ring-civic-700/20"
+                        className="w-full px-3.5 py-2 text-caption border border-slate-300 rounded-civic-lg focus:outline-none focus:ring-2 focus:ring-civic-700/20"
                         placeholder={`Option ${String.fromCharCode(65 + idx)}${idx >= 2 ? ' (Optional)' : ''}`}
                       />
                     </div>
@@ -930,13 +930,13 @@ export const AdminDashboardPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsQuestionModalOpen(false)}
-                    className="px-4 py-2 text-caption font-semibold text-slate-600 border border-slate-300 rounded-civic-md hover:bg-slate-50 cursor-pointer"
+                    className="px-5 py-2.5 text-caption font-semibold text-slate-700 border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-caption font-semibold text-white bg-civic-800 rounded-civic-md hover:bg-civic-900 shadow-civic-xs cursor-pointer"
+                    className="px-5 py-2.5 text-caption font-semibold text-white bg-civic-900 rounded-full hover:bg-civic-800 shadow-civic-xs cursor-pointer min-h-[40px]"
                   >
                     Save Question
                   </button>

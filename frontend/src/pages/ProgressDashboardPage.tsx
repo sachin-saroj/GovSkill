@@ -85,9 +85,9 @@ export const ProgressDashboardPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12"
+      className="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-10"
     >
-      {/* 1. Competency Overview Banner & Metrics */}
+      {/* 1. Page Header & Competency Hero */}
       <CompetencyOverview
         userEmail={user?.email}
         userRole={user?.role}
@@ -97,29 +97,15 @@ export const ProgressDashboardPage: React.FC = () => {
         summary={data?.summary}
       />
 
-      {/* 2. Recommended Next Action Callout */}
+      {/* 2. Next Best Action Callout */}
       {data?.recommended_action && (
         <motion.div variants={fadeUpVariants}>
           <RecommendedActionCard recommendation={data.recommended_action} />
         </motion.div>
       )}
 
-      {/* 3. Skill Gaps & Targeted Interventions */}
-      {data?.skill_gaps && (
-        <motion.div variants={fadeUpVariants}>
-          <SkillGapsCard gaps={data.skill_gaps} />
-        </motion.div>
-      )}
-
-      {/* 4. Competency Mastery Breakdown (Phase 3) */}
-      {data?.competency_mastery && data.competency_mastery.length > 0 && (
-        <motion.div variants={fadeUpVariants}>
-          <CompetencyMasteryCard masteryList={data.competency_mastery} />
-        </motion.div>
-      )}
-
-      {/* 5. Core Skill Modules Breakdown */}
-      <motion.div variants={fadeUpVariants} className="space-y-4 pt-2">
+      {/* 3. Core Assigned Curriculum Module Grid */}
+      <motion.div variants={fadeUpVariants} className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -138,7 +124,7 @@ export const ProgressDashboardPage: React.FC = () => {
             whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
             whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             onClick={fetchSkillProgress}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-slate-700 bg-white border border-slate-200 rounded-civic-md hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5 text-civic-700" />
             <span>Refresh</span>
@@ -165,12 +151,26 @@ export const ProgressDashboardPage: React.FC = () => {
         )}
       </motion.div>
 
-      {/* 5. Official Digital Credentials Section */}
+      {/* 4. Skill Gaps & Targeted Interventions */}
+      {data?.skill_gaps && (
+        <motion.div variants={fadeUpVariants}>
+          <SkillGapsCard gaps={data.skill_gaps} />
+        </motion.div>
+      )}
+
+      {/* 5. Competency Mastery Breakdown */}
+      {data?.competency_mastery && data.competency_mastery.length > 0 && (
+        <motion.div variants={fadeUpVariants}>
+          <CompetencyMasteryCard masteryList={data.competency_mastery} />
+        </motion.div>
+      )}
+
+      {/* 6. Official Digital Credentials Section */}
       {credentials.length > 0 && (
         <motion.div variants={fadeUpVariants} className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-civic-md bg-civic-100 text-civic-800">
+              <div className="p-1.5 rounded-full bg-civic-100 text-civic-800">
                 <Award className="h-4 w-4" />
               </div>
               <h2 className="text-section-heading font-semibold text-slate-900">
@@ -186,7 +186,7 @@ export const ProgressDashboardPage: React.FC = () => {
             {credentials.map((cred) => (
               <div
                 key={cred.credential_id}
-                className="bg-white p-6 rounded-civic-xl border border-slate-200 shadow-civic-xs flex flex-col justify-between gap-4"
+                className="bg-white p-6 sm:p-8 rounded-civic-xl border border-slate-200 shadow-civic-xs flex flex-col justify-between gap-4"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -194,7 +194,7 @@ export const ProgressDashboardPage: React.FC = () => {
                       <ShieldCheck className="h-3 w-3 text-emerald-600" />
                       {cred.credential_id}
                     </span>
-                    <span className="text-caption font-semibold text-emerald-700">
+                    <span className="text-caption font-semibold text-emerald-700 font-mono">
                       Score: {cred.percentage}%
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export const ProgressDashboardPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCredentialForModal(cred)}
-                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-civic-md border border-slate-200 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-full border border-slate-200 transition-colors cursor-pointer shadow-civic-xs"
                     >
                       <Award className="h-3.5 w-3.5 text-civic-700" />
                       <span>View Certificate</span>
@@ -232,7 +232,7 @@ export const ProgressDashboardPage: React.FC = () => {
                       href={`/verify/${cred.credential_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3 py-1.5 rounded-civic-md border border-civic-200 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-civic-700 hover:text-civic-900 bg-civic-50 hover:bg-civic-100 px-3.5 py-1.5 rounded-full border border-civic-200 transition-colors shadow-civic-xs"
                     >
                       <span>Verify Online</span>
                       <ExternalLink className="h-3.5 w-3.5" />
@@ -245,7 +245,7 @@ export const ProgressDashboardPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* 6. Assessment History & Learning Activity Timeline Grid */}
+      {/* 7. Lower Page: Assessment History & Learning Activity Timeline */}
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
         <div className="lg:col-span-2">
           <AssessmentHistoryTable history={data?.assessment_history || []} />

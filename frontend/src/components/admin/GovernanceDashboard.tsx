@@ -77,13 +77,13 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
               type="button"
               disabled={isExporting !== null}
               onClick={() => onExport('csv')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-civic-800 hover:bg-civic-900 disabled:opacity-50 text-white text-caption font-semibold rounded-civic-md shadow-civic-xs transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-800 text-caption font-semibold rounded-full border border-slate-300 shadow-civic-xs transition-all cursor-pointer min-h-[40px]"
               title="Export Workforce Compliance Report as CSV"
             >
               {isExporting === 'csv' ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-civic-700" />
               ) : (
-                <Download className="h-4 w-4" />
+                <Download className="h-4 w-4 text-civic-700" />
               )}
               <span>Export Audit (CSV)</span>
             </button>
@@ -92,13 +92,13 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
               type="button"
               disabled={isExporting !== null}
               onClick={() => onExport('json')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-800 text-caption font-semibold rounded-civic-md border border-slate-300 transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-800 text-caption font-semibold rounded-full border border-slate-300 shadow-civic-xs transition-all cursor-pointer min-h-[40px]"
               title="Export Full Compliance Audit Trail as JSON"
             >
               {isExporting === 'json' ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-civic-700" />
               ) : (
-                <FileJson className="h-4 w-4" />
+                <FileJson className="h-4 w-4 text-civic-700" />
               )}
               <span>Export JSON</span>
             </button>
@@ -115,15 +115,15 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
 
         {/* Compliance Statistics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-caption">
-          <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
+          <div className="p-5 rounded-civic-xl bg-slate-50 border border-slate-200 space-y-1 shadow-civic-xs">
             <span className="text-slate-500 font-semibold uppercase text-micro flex items-center gap-1">
               <Users className="h-3 w-3 text-slate-400" /> Workforce Size
             </span>
             <p className="text-page-title font-semibold text-slate-900 font-mono">{totalEmployees} Officers</p>
-            <span className="text-caption text-slate-400 font-normal">Enrolled in active training</span>
+            <span className="text-caption text-slate-500 font-normal">Enrolled in active training</span>
           </div>
 
-          <div className="p-4 rounded-civic-xl bg-emerald-50/50 border border-emerald-100 space-y-1">
+          <div className="p-5 rounded-civic-xl bg-emerald-50/50 border border-emerald-200 space-y-1 shadow-civic-xs">
             <span className="text-emerald-800 font-semibold uppercase text-micro flex items-center gap-1">
               <Award className="h-3 w-3 text-emerald-600" /> Verified Credentials
             </span>
@@ -131,26 +131,26 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
             <span className="text-caption text-emerald-600 font-normal">≥ 75% evaluation threshold</span>
           </div>
 
-          <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
+          <div className="p-5 rounded-civic-xl bg-slate-50 border border-slate-200 space-y-1 shadow-civic-xs">
             <span className="text-slate-500 font-semibold uppercase text-micro flex items-center gap-1">
               <ShieldCheck className="h-3 w-3 text-civic-700" /> Overall Compliance
             </span>
             <p className="text-page-title font-semibold text-civic-800 font-mono">{overallComplianceRate}%</p>
-            <span className="text-caption text-slate-400 font-normal">Workforce certification coverage</span>
+            <span className="text-caption text-slate-500 font-normal">Workforce certification coverage</span>
           </div>
 
-          <div className="p-4 rounded-civic-xl bg-amber-50/50 border border-amber-100 space-y-1">
-            <span className="text-amber-800 font-semibold uppercase text-micro flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3 text-amber-600" /> Attention Required
+          <div className="p-5 rounded-civic-xl bg-saffron-50/50 border border-saffron-200 space-y-1 shadow-civic-xs">
+            <span className="text-saffron-800 font-semibold uppercase text-micro flex items-center gap-1">
+              <AlertTriangle className="h-3 w-3 text-saffron-600" /> Attention Required
             </span>
-            <p className="text-page-title font-semibold text-amber-700 font-mono">{uncertifiedRecords} Modules</p>
-            <span className="text-caption text-amber-600 font-normal">Pending certification / review</span>
+            <p className="text-page-title font-semibold text-saffron-700 font-mono">{uncertifiedRecords} Modules</p>
+            <span className="text-caption text-saffron-600 font-normal">Pending certification / review</span>
           </div>
         </div>
 
         {/* Live Compliance Records Preview */}
         {isLoadingCompliance ? (
-          <div className="flex items-center justify-center py-8 gap-2 text-slate-500 text-caption">
+          <div className="flex items-center justify-center py-8 gap-2 text-slate-500 text-caption font-normal">
             <Loader2 className="h-4 w-4 animate-spin text-civic-700" />
             <span>Loading compliance records...</span>
           </div>
@@ -165,7 +165,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
               </span>
             </div>
 
-            <div className="overflow-x-auto rounded-civic-xl border border-slate-200">
+            <div className="overflow-x-auto rounded-civic-xl border border-slate-200 shadow-civic-xs">
               <table className="w-full text-left text-caption">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold text-micro uppercase tracking-wider">
                   <tr>
@@ -190,11 +190,11 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-micro font-semibold border ${
                             r.certified
                               ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                               : r.progress_status === 'in_progress'
-                              ? 'bg-amber-100 text-amber-800 border-amber-300'
+                              ? 'bg-saffron-100 text-saffron-800 border-saffron-300'
                               : 'bg-slate-100 text-slate-700 border-slate-300'
                           }`}
                         >
@@ -212,7 +212,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                             <ExternalLink className="h-3 w-3" />
                           </Link>
                         ) : (
-                          <span className="text-slate-400 italic">Not Certified</span>
+                          <span className="text-slate-400 italic font-normal">Not Certified</span>
                         )}
                       </td>
                     </tr>
@@ -267,7 +267,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
         )}
 
         {isLoadingTelemetry ? (
-          <div className="flex items-center justify-center py-10 gap-2 text-slate-500 text-caption">
+          <div className="flex items-center justify-center py-10 gap-2 text-slate-500 text-caption font-normal">
             <Loader2 className="h-5 w-5 animate-spin text-civic-700" />
             <span>Loading citizen defect telemetry...</span>
           </div>
@@ -275,22 +275,22 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
           <div className="space-y-6">
             {/* Metrics Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
+              <div className="p-5 rounded-civic-xl bg-slate-50 border border-slate-200 space-y-1 shadow-civic-xs">
                 <span className="text-slate-500 font-semibold uppercase text-micro">Total Pre-Checks</span>
                 <p className="text-page-title font-semibold text-slate-900 font-mono">{citizenTelemetry.total_submissions}</p>
-                <span className="text-caption text-slate-400 font-normal">Documents evaluated</span>
+                <span className="text-caption text-slate-500 font-normal">Documents evaluated</span>
               </div>
 
-              <div className="p-4 rounded-civic-xl bg-emerald-50/60 border border-emerald-100 space-y-1">
+              <div className="p-5 rounded-civic-xl bg-emerald-50/60 border border-emerald-200 space-y-1 shadow-civic-xs">
                 <span className="text-emerald-700 font-semibold uppercase text-micro">Passed Ready for Filing</span>
                 <p className="text-page-title font-semibold text-emerald-700 font-mono">{citizenTelemetry.passed_count}</p>
                 <span className="text-caption text-emerald-600 font-normal">100% compliant submissions</span>
               </div>
 
-              <div className="p-4 rounded-civic-xl bg-amber-50/60 border border-amber-100 space-y-1">
-                <span className="text-amber-800 font-semibold uppercase text-micro">Action Required / Rectified</span>
-                <p className="text-page-title font-semibold text-amber-700 font-mono">{citizenTelemetry.action_required_count}</p>
-                <span className="text-caption text-amber-600 font-normal">Defects caught pre-filing</span>
+              <div className="p-5 rounded-civic-xl bg-saffron-50/60 border border-saffron-200 space-y-1 shadow-civic-xs">
+                <span className="text-saffron-800 font-semibold uppercase text-micro">Action Required / Rectified</span>
+                <p className="text-page-title font-semibold text-saffron-700 font-mono">{citizenTelemetry.action_required_count}</p>
+                <span className="text-caption text-saffron-600 font-normal">Defects caught pre-filing</span>
               </div>
             </div>
 
@@ -300,14 +300,14 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                 <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-700">
                   Deterministic Rule Failure Distribution
                 </h4>
-                <span className="text-caption text-slate-400 font-normal">4 Core Validation Rules</span>
+                <span className="text-caption text-slate-500 font-normal">4 Core Validation Rules</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {citizenTelemetry.defects_by_rule.map((rule) => (
                   <div
                     key={rule.rule_name}
-                    className="p-4 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2.5"
+                    className="p-5 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2.5 shadow-civic-xs"
                   >
                     <div className="flex items-center justify-between text-caption">
                       <span className="font-semibold text-slate-900">{rule.rule_name}</span>
@@ -330,7 +330,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
 
                     <div className="flex items-center justify-between text-caption text-slate-500 font-normal">
                       <span>Target Field: <code className="font-mono text-slate-700 font-semibold">{rule.field}</code></span>
-                      <span className="font-semibold uppercase tracking-wider text-micro px-2 py-0.5 rounded-civic-sm bg-slate-200 text-slate-700">
+                      <span className="font-semibold uppercase tracking-wider text-micro px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
                         {rule.severity}
                       </span>
                     </div>
@@ -346,7 +346,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                   Recent Pre-Submission Inspections
                 </h4>
 
-                <div className="overflow-x-auto rounded-civic-xl border border-slate-200">
+                <div className="overflow-x-auto rounded-civic-xl border border-slate-200 shadow-civic-xs">
                   <table className="w-full text-left text-caption">
                     <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold text-micro uppercase tracking-wider">
                       <tr>
@@ -375,10 +375,10 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                           </td>
                           <td className="px-4 py-3 text-center">
                             <span
-                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-micro font-semibold border ${
                                 doc.overall_status === 'PASSED'
                                   ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                  : 'bg-amber-100 text-amber-800 border-amber-300'
+                                  : 'bg-saffron-100 text-saffron-800 border-saffron-300'
                               }`}
                             >
                               {doc.overall_status}

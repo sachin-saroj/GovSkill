@@ -63,15 +63,15 @@ export const Header: React.FC = () => {
             <div className="flex items-center gap-8">
               <Link
                 to="/"
-                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-civic-700 rounded-civic-md p-1"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-civic-800 rounded-full p-1"
               >
-                <div className="h-10 w-10 rounded-civic-xl bg-gradient-to-br from-civic-800 to-civic-950 text-white flex items-center justify-center shadow-civic-sm group-hover:scale-105 transition-transform duration-200">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-civic-800 to-civic-950 text-white flex items-center justify-center shadow-civic-xs group-hover:scale-105 transition-transform duration-200">
                   <Shield className="h-5 w-5 text-saffron-400" />
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5">
                     <span className="font-semibold text-section-heading tracking-tight text-civic-950">GovSkill</span>
-                    <span className="text-micro uppercase font-semibold tracking-wider px-1.5 py-0.5 rounded-civic-sm bg-civic-100 text-civic-800">
+                    <span className="text-micro uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full bg-civic-100 text-civic-800">
                       Portal
                     </span>
                   </div>
@@ -87,62 +87,62 @@ export const Header: React.FC = () => {
                   <>
                     <Link
                       to="/progress"
-                      className={`flex items-center gap-2 px-3 py-2 rounded-civic-md text-caption font-semibold transition-all duration-150 ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 ${
                         isActive('/progress')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-civic-50 text-civic-900 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-900 hover:bg-slate-50 font-medium'
                       }`}
                     >
-                      <Sparkles className="h-4 w-4 text-saffron-600" />
+                      <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
                       <span>My Skills</span>
                     </Link>
 
                     <Link
                       to="/module"
-                      className={`flex items-center gap-2 px-3 py-2 rounded-civic-md text-caption font-semibold transition-all duration-150 ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 ${
                         isActive('/module')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-civic-50 text-civic-900 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-900 hover:bg-slate-50 font-medium'
                       }`}
                     >
-                      <BookOpen className="h-4 w-4 text-civic-700" />
+                      <BookOpen className="h-3.5 w-3.5 text-civic-700" />
                       <span>Lessons</span>
                     </Link>
 
                     <Link
                       to="/tutor"
-                      className={`flex items-center gap-2 px-3 py-2 rounded-civic-md text-caption font-semibold transition-all duration-150 ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 ${
                         isActive('/tutor')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-civic-50 text-civic-900 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-900 hover:bg-slate-50 font-medium'
                       }`}
                     >
-                      <Bot className="h-4 w-4 text-civic-600" />
+                      <Bot className="h-3.5 w-3.5 text-civic-700" />
                       <span>AI Tutor</span>
                     </Link>
 
                     <Link
                       to="/quiz"
-                      className={`flex items-center gap-2 px-3 py-2 rounded-civic-md text-caption font-semibold transition-all duration-150 ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 ${
                         isActive('/quiz')
-                          ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                          : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                          ? 'bg-civic-50 text-civic-900 shadow-civic-xs'
+                          : 'text-slate-600 hover:text-civic-900 hover:bg-slate-50 font-medium'
                       }`}
                     >
-                      <Award className="h-4 w-4 text-saffron-600" />
+                      <Award className="h-3.5 w-3.5 text-saffron-600" />
                       <span>Quiz</span>
                     </Link>
 
                     {user.role === 'admin' && (
                       <Link
                         to="/admin"
-                        className={`flex items-center gap-2 px-3 py-2 rounded-civic-md text-caption font-semibold transition-all duration-150 ${
+                        className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold transition-all duration-150 ${
                           isActive('/admin')
-                            ? 'bg-civic-50 text-civic-800 border border-civic-200/80 shadow-civic-xs'
-                            : 'text-slate-600 hover:text-civic-800 hover:bg-slate-50'
+                            ? 'bg-civic-50 text-civic-900 shadow-civic-xs'
+                            : 'text-slate-600 hover:text-civic-900 hover:bg-slate-50 font-medium'
                         }`}
                       >
-                        <LayoutDashboard className="h-4 w-4 text-civic-700" />
+                        <LayoutDashboard className="h-3.5 w-3.5 text-civic-700" />
                         <span>Admin Dashboard</span>
                       </Link>
                     )}
@@ -156,7 +156,7 @@ export const Header: React.FC = () => {
               {/* GovAssist Citizen Shortcut Pill */}
               <Link
                 to="/citizen"
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-civic-md text-caption font-semibold border transition-all duration-150 ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-caption font-semibold border transition-all duration-150 ${
                   isActive('/citizen')
                     ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-civic-xs'
                     : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-800'
@@ -173,15 +173,15 @@ export const Header: React.FC = () => {
 
               {user ? (
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-civic-md">
-                    <div className="h-6 w-6 rounded-full bg-civic-800 text-white flex items-center justify-center text-micro font-semibold">
+                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 px-3.5 py-1.5 rounded-full shadow-civic-xs">
+                    <div className="h-6 w-6 rounded-full bg-civic-900 text-white flex items-center justify-center text-micro font-semibold">
                       <User className="h-3.5 w-3.5" />
                     </div>
-                    <div className="text-left">
+                    <div className="text-left flex items-center gap-1.5">
                       <p className="text-caption font-semibold text-slate-900 leading-tight max-w-[140px] truncate">
                         {user.email}
                       </p>
-                      <span className="inline-block text-micro font-semibold uppercase tracking-wider text-civic-700">
+                      <span className="text-micro font-semibold uppercase tracking-wider text-civic-700 px-1.5 py-0.5 rounded-full bg-civic-100">
                         {user.role}
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export const Header: React.FC = () => {
                   <button
                     onClick={handleLogout}
                     title="Sign Out"
-                    className="flex items-center gap-1.5 rounded-civic-md border border-slate-200 bg-white px-3 py-2 text-caption font-semibold text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-caption font-semibold text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-colors cursor-pointer shadow-civic-xs"
                   >
                     <LogOut className="h-3.5 w-3.5" />
                     <span className="hidden xl:inline">Logout</span>
@@ -198,7 +198,7 @@ export const Header: React.FC = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="rounded-civic-md bg-civic-800 px-4 py-2 text-caption font-semibold text-white shadow-civic-sm hover:bg-civic-900 transition-all active:scale-95"
+                  className="rounded-full bg-civic-900 px-5 py-2 text-btn font-medium text-white shadow-civic-xs hover:bg-civic-800 transition-all active:scale-95"
                 >
                   Officer Login
                 </Link>
@@ -209,7 +209,7 @@ export const Header: React.FC = () => {
             <div className="flex lg:hidden items-center gap-2">
               <Link
                 to="/citizen"
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-civic-md text-caption font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"
               >
                 <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>GovAssist</span>
@@ -217,7 +217,7 @@ export const Header: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-slate-600 hover:text-civic-900 rounded-civic-md border border-slate-200 hover:bg-slate-50 transition-colors"
+                className="p-2 text-slate-600 hover:text-civic-900 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors"
                 aria-label="Toggle navigation menu"
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -236,7 +236,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/progress"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-full text-caption font-semibold ${
                       isActive('/progress')
                         ? 'bg-civic-50 text-civic-800 border border-civic-200/80'
                         : 'text-slate-600 hover:bg-slate-50'
@@ -249,7 +249,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/module"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-full text-caption font-semibold ${
                       isActive('/module')
                         ? 'bg-civic-50 text-civic-800 border border-civic-200/80'
                         : 'text-slate-600 hover:bg-slate-50'
@@ -262,7 +262,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/tutor"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-full text-caption font-semibold ${
                       isActive('/tutor')
                         ? 'bg-civic-50 text-civic-800 border border-civic-200/80'
                         : 'text-slate-600 hover:bg-slate-50'
@@ -275,7 +275,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/quiz"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-full text-caption font-semibold ${
                       isActive('/quiz')
                         ? 'bg-civic-50 text-civic-800 border border-civic-200/80'
                         : 'text-slate-600 hover:bg-slate-50'
@@ -289,7 +289,7 @@ export const Header: React.FC = () => {
                     <Link
                       to="/admin"
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                      className={`flex items-center gap-2.5 px-3.5 py-2 rounded-full text-caption font-semibold ${
                         isActive('/admin')
                           ? 'bg-civic-50 text-civic-800 border border-civic-200/80'
                           : 'text-slate-600 hover:bg-slate-50'
@@ -309,7 +309,7 @@ export const Header: React.FC = () => {
                 <Link
                   to="/citizen"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-civic-md text-caption font-semibold ${
+                  className={`flex items-center justify-between px-3.5 py-2 rounded-full text-caption font-semibold ${
                     isActive('/citizen')
                       ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                       : 'text-slate-700 hover:bg-slate-50'
@@ -327,7 +327,7 @@ export const Header: React.FC = () => {
                 {user ? (
                   <>
                     <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-full bg-civic-800 text-white flex items-center justify-center text-micro font-semibold">
+                      <div className="h-7 w-7 rounded-full bg-civic-900 text-white flex items-center justify-center text-micro font-semibold">
                         <User className="h-4 w-4" />
                       </div>
                       <div>
@@ -339,7 +339,7 @@ export const Header: React.FC = () => {
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-1.5 text-caption text-red-600 font-semibold px-2.5 py-1 rounded-civic-md hover:bg-red-50"
+                      className="flex items-center gap-1.5 text-caption text-red-600 font-semibold px-3 py-1 rounded-full hover:bg-red-50"
                     >
                       <LogOut className="h-3.5 w-3.5" />
                       <span>Logout</span>
@@ -349,7 +349,7 @@ export const Header: React.FC = () => {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-2.5 bg-civic-800 text-white rounded-civic-md text-caption font-semibold shadow-civic-sm"
+                    className="w-full text-center py-2.5 bg-civic-900 text-white rounded-full text-btn font-medium shadow-civic-xs hover:bg-civic-800"
                   >
                     Officer Sign In
                   </Link>

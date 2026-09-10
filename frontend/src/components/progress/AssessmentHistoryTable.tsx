@@ -115,8 +115,8 @@ export const AssessmentHistoryTable: React.FC<AssessmentHistoryTableProps> = ({ 
                             <span>Passed (&ge;75%)</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-300">
-                            <AlertCircle className="h-3 w-3 text-amber-600" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-saffron-50 text-saffron-900 border border-saffron-300">
+                            <AlertCircle className="h-3 w-3 text-saffron-600" />
                             <span>Below 75% Standard</span>
                           </span>
                         )}

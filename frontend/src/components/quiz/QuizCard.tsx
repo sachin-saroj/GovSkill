@@ -30,14 +30,14 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   return (
     <Card
       id={`question-card-${questionIndex}`}
-      className={`border-slate-200 shadow-civic-sm p-6 space-y-4 bg-white rounded-civic-xl transition-all ${
+      className={`border-slate-200 shadow-civic-xs p-6 space-y-4 bg-white rounded-civic-xl transition-all ${
         disabled ? 'opacity-70' : ''
-      } ${isFlagged ? 'ring-2 ring-amber-400 border-amber-300' : ''}`}
+      } ${isFlagged ? 'ring-2 ring-saffron-400 border-saffron-300' : ''}`}
     >
       {/* Question Header & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <span className="h-7 w-7 rounded-civic-md bg-civic-100 text-civic-900 flex items-center justify-center font-semibold text-caption shrink-0 shadow-civic-xs">
+          <span className="h-7 w-7 rounded-full bg-civic-100 text-civic-900 flex items-center justify-center font-semibold text-caption shrink-0 shadow-civic-xs">
             {questionIndex + 1}
           </span>
           {question.competency && (
@@ -53,13 +53,13 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             type="button"
             onClick={onToggleFlag}
             disabled={disabled}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-caption font-semibold rounded-civic-md border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1 text-caption font-semibold rounded-full border transition-all cursor-pointer ${
               isFlagged
-                ? 'bg-amber-100 text-amber-800 border-amber-300 shadow-civic-xs'
+                ? 'bg-saffron-100 text-saffron-800 border-saffron-300 shadow-civic-xs'
                 : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
             }`}
           >
-            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-amber-700 fill-amber-700' : 'text-slate-400'}`} />
+            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-saffron-700 fill-saffron-700' : 'text-slate-400'}`} />
             <span>{isFlagged ? 'Flagged for Review' : 'Flag Question'}</span>
           </button>
         )}
@@ -81,7 +81,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
               key={idx}
               whileHover={shouldReduceMotion || disabled ? {} : { scale: 1.005, x: 2 }}
               whileTap={shouldReduceMotion || disabled ? {} : { scale: 0.995 }}
-              className={`flex items-center gap-3.5 p-4 rounded-civic-md border transition-all duration-150 shadow-civic-xs ${
+              className={`flex items-center gap-3.5 p-4 rounded-civic-lg border transition-all duration-150 shadow-civic-xs ${
                 disabled
                   ? 'border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed'
                   : isSelected
@@ -100,7 +100,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
               />
               <span
                 aria-hidden="true"
-                className={`h-6 w-6 rounded-civic-sm flex items-center justify-center text-micro font-semibold shrink-0 transition-colors ${
+                className={`h-6 w-6 rounded-full flex items-center justify-center text-micro font-semibold shrink-0 transition-colors ${
                   isSelected
                     ? 'bg-civic-900 text-white'
                     : 'bg-slate-100 text-slate-600'

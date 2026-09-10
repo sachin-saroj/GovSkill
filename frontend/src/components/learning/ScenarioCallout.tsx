@@ -184,15 +184,15 @@ export const ScenarioCallout: React.FC<ScenarioCalloutProps> = ({
       </div>
 
       {/* Common Mistakes & Red Flags */}
-      <div className="rounded-civic-xl bg-amber-50/70 border border-amber-200/80 p-4 space-y-2.5 shadow-civic-xs">
-        <div className="flex items-center gap-2 text-amber-900 font-semibold text-caption">
-          <ShieldAlert className="h-4 w-4 text-amber-700 shrink-0" />
+      <div className="rounded-civic-xl bg-saffron-50/70 border border-saffron-200/80 p-4 space-y-2.5 shadow-civic-xs">
+        <div className="flex items-center gap-2 text-saffron-900 font-semibold text-caption">
+          <ShieldAlert className="h-4 w-4 text-saffron-700 shrink-0" />
           <span>Common Mistakes & Red Flags to Avoid</span>
         </div>
-        <ul className="space-y-1.5 text-caption text-amber-950 font-normal">
+        <ul className="space-y-1.5 text-caption text-saffron-950 font-normal">
           {context.commonMistakes.map((mistake, idx) => (
             <li key={idx} className="flex items-start gap-2">
-              <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
+              <AlertTriangle className="h-3.5 w-3.5 text-saffron-600 shrink-0 mt-0.5" />
               <span className="leading-snug">{mistake}</span>
             </li>
           ))}

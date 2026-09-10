@@ -28,7 +28,7 @@ export const QuickPromptGrid: React.FC<QuickPromptGridProps> = ({
             type="button"
             onClick={() => onSelectPrompt(suggestion)}
             disabled={disabled}
-            className="text-caption text-left px-3.5 py-1.5 bg-slate-50 border border-slate-200 hover:border-civic-600 hover:bg-civic-50/50 hover:text-civic-900 text-slate-700 rounded-full transition-colors duration-150 shadow-civic-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
+            className="text-caption text-left px-4 py-2 bg-white border border-civic-200 hover:border-civic-400 hover:bg-civic-50/60 hover:text-civic-900 text-slate-700 rounded-full transition-colors duration-150 shadow-civic-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
           >
             {suggestion}
           </button>

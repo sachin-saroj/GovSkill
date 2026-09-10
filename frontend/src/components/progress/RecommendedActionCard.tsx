@@ -48,29 +48,29 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
 
   return (
     <Card
-      className={`p-6 border shadow-civic-sm transition-all duration-200 rounded-civic-xl ${
+      className={`p-6 sm:p-8 border shadow-civic-xs transition-all duration-200 rounded-civic-xl ${
         isAllCertified
-          ? 'bg-emerald-50/40 border-emerald-200'
+          ? 'bg-emerald-50/50 border-emerald-200'
           : isHighPriority
-          ? 'bg-gradient-to-r from-amber-50/60 via-orange-50/30 to-white border-amber-200'
-          : 'bg-white border-slate-200'
+          ? 'bg-amber-50/40 border-amber-200'
+          : 'bg-civic-50/50 border-civic-200'
       }`}
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div
-            className={`p-3 rounded-civic-md shrink-0 ${
+            className={`p-3 rounded-full shrink-0 ${
               isAllCertified
-                ? 'bg-emerald-100'
+                ? 'bg-emerald-100 text-emerald-800'
                 : isHighPriority
-                ? 'bg-amber-100'
-                : 'bg-civic-100'
+                ? 'bg-amber-100 text-amber-900'
+                : 'bg-civic-100 text-civic-800'
             }`}
           >
             {getActionIcon()}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span
                 className={`text-micro font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
@@ -78,7 +78,7 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
                     ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                     : isHighPriority
                     ? 'bg-amber-100 text-amber-900 border-amber-300'
-                    : 'bg-slate-100 text-slate-700 border-slate-300'
+                    : 'bg-civic-100 text-civic-800 border-civic-200'
                 }`}
               >
                 {isAllCertified ? 'Curriculum Complete' : 'Recommended Next Action'}
@@ -88,29 +88,27 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
               )}
             </div>
 
-            <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight leading-snug">
               {recommendation.title}
             </h3>
 
-            <p className="text-body text-slate-600 leading-relaxed max-w-2xl font-normal">
+            <p className="text-body text-slate-600 leading-relaxed font-normal">
               {recommendation.description}
             </p>
           </div>
         </div>
 
-        <div className="shrink-0 flex items-center justify-end">
+        <div className="shrink-0 flex items-center justify-start md:justify-end">
           <Link
             to={recommendation.link}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-civic-md text-caption font-semibold transition-all shadow-civic-xs active:scale-98 cursor-pointer ${
+            className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-btn font-semibold min-h-[44px] transition-all shadow-civic-xs cursor-pointer ${
               isAllCertified
-                ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
-                : isHighPriority
-                ? 'bg-civic-900 hover:bg-civic-800 text-white'
-                : 'bg-slate-800 hover:bg-slate-900 text-white'
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                : 'bg-civic-900 hover:bg-civic-800 text-white'
             }`}
           >
             <span>{getButtonText()}</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

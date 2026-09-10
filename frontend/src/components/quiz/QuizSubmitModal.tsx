@@ -32,12 +32,12 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
         {/* Header Icon */}
         <div className="flex items-center gap-3">
           <div
-            className={`h-11 w-11 rounded-civic-md flex items-center justify-center shrink-0 ${
-              hasUnanswered ? 'bg-amber-100 text-amber-800' : 'bg-civic-100 text-civic-800'
+            className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 ${
+              hasUnanswered ? 'bg-saffron-100 text-saffron-800' : 'bg-civic-100 text-civic-800'
             }`}
           >
             {hasUnanswered ? (
-              <AlertTriangle className="h-6 w-6 text-amber-700" />
+              <AlertTriangle className="h-6 w-6 text-saffron-700" />
             ) : (
               <CheckCircle2 className="h-6 w-6 text-civic-800" />
             )}
@@ -66,9 +66,9 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
           </div>
 
           {flaggedCount > 0 && (
-            <div className="flex justify-between items-center text-amber-800 bg-amber-50 p-2.5 rounded-civic-md border border-amber-200">
+            <div className="flex justify-between items-center text-saffron-800 bg-saffron-50 px-3.5 py-2 rounded-full border border-saffron-200">
               <span className="inline-flex items-center gap-1.5 font-medium">
-                <Flag className="h-3.5 w-3.5 text-amber-700 fill-amber-700" />
+                <Flag className="h-3.5 w-3.5 text-saffron-700 fill-saffron-700" />
                 <span>Flagged for Review:</span>
               </span>
               <span className="font-semibold">{flaggedCount}</span>
@@ -76,9 +76,9 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
           )}
 
           {hasUnanswered && (
-            <div className="p-3 rounded-civic-md bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" />
-              <p className="text-caption leading-relaxed">
+            <div className="p-3.5 rounded-civic-lg bg-saffron-50 border border-saffron-200 text-saffron-900 flex items-start gap-2">
+              <AlertTriangle className="h-4 w-4 text-saffron-700 shrink-0 mt-0.5" />
+              <p className="text-caption leading-relaxed font-normal">
                 <strong className="font-semibold">Notice:</strong> You have <strong>{unansweredCount}</strong> unanswered question(s). Unanswered questions will receive 0 points.
               </p>
             </div>

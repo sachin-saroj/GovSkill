@@ -67,8 +67,8 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-slate-50 relative overflow-hidden">
       {/* Subtle Civic Ambient Background */}
-      <div className="absolute inset-0 bg-civic-pattern opacity-10 pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-civic-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 bg-civic-pattern opacity-5 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-civic-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <motion.div
         variants={staggerContainerVariants}
@@ -78,20 +78,17 @@ export const LoginPage: React.FC = () => {
       >
         {/* Main Authentication Card */}
         <motion.div variants={fadeUpVariants}>
-          <Card className="border-slate-200 shadow-civic-xl p-6 sm:p-8 bg-white/95 backdrop-blur-md rounded-civic-2xl" variant="elevated">
+          <Card className="border-slate-200 shadow-civic-md p-6 sm:p-8 bg-white rounded-civic-xl">
             {/* Header Banner */}
             <div className="text-center mb-6 space-y-2">
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.05, rotate: 2 }}
-                className="inline-flex p-3.5 rounded-civic-xl bg-civic-900 text-white shadow-civic-sm mb-1"
-              >
-                <Shield className="h-7 w-7 text-saffron-400" />
-              </motion.div>
+              <div className="inline-flex p-3 rounded-full bg-civic-900 text-white shadow-civic-xs mb-1">
+                <Shield className="h-6 w-6 text-saffron-400" />
+              </div>
               <h2 className="text-page-title font-semibold text-slate-900 tracking-tight">
                 {isRegister ? 'Create GovSkill Account' : 'Sign in to GovSkill'}
               </h2>
               <p className="text-caption text-slate-500 font-normal">
-                Local Government Officer & Supervisor Training Gateway
+                Official Digital Training Gateway for Local Governance
               </p>
             </div>
 
@@ -102,7 +99,7 @@ export const LoginPage: React.FC = () => {
                   initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                  className="mb-6 p-3.5 rounded-civic-xl bg-slate-50 border border-slate-200/90 space-y-2 overflow-hidden shadow-civic-xs"
+                  className="mb-6 p-4 rounded-civic-lg bg-slate-50 border border-slate-200 space-y-2.5 overflow-hidden shadow-civic-xs"
                 >
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-micro font-semibold text-slate-600 uppercase tracking-wider">
@@ -115,7 +112,7 @@ export const LoginPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleFillDemo('employee')}
-                      className="px-3 py-2 text-caption font-semibold rounded-civic-md bg-white border border-slate-200 hover:border-civic-700 text-slate-800 hover:text-civic-800 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer"
+                      className="px-3.5 py-2 text-caption font-semibold rounded-full bg-white border border-slate-200 hover:border-civic-700 text-slate-800 hover:text-civic-800 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer min-h-[40px]"
                     >
                       <User className="h-3.5 w-3.5 text-civic-700" />
                       <span>Employee</span>
@@ -123,7 +120,7 @@ export const LoginPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleFillDemo('admin')}
-                      className="px-3 py-2 text-caption font-semibold rounded-civic-md bg-white border border-slate-200 hover:border-saffron-600 text-slate-800 hover:text-saffron-700 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer"
+                      className="px-3.5 py-2 text-caption font-semibold rounded-full bg-white border border-slate-200 hover:border-saffron-600 text-slate-800 hover:text-saffron-700 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer min-h-[40px]"
                     >
                       <Lock className="h-3.5 w-3.5 text-saffron-600" />
                       <span>Supervisor (Admin)</span>
@@ -140,7 +137,7 @@ export const LoginPage: React.FC = () => {
                   initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-                  className="mb-5 p-3.5 rounded-civic-xl bg-red-50 border border-red-200 text-caption text-red-700 flex items-start gap-2 shadow-civic-xs"
+                  className="mb-5 p-4 rounded-civic-lg bg-red-50 border border-red-200 text-caption text-red-700 flex items-start gap-2.5 shadow-civic-xs font-normal"
                 >
                   <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                   <span>{error}</span>
@@ -158,6 +155,7 @@ export const LoginPage: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 leftIcon={<User className="h-4 w-4" />}
+                className="rounded-full min-h-[44px]"
               />
 
               <Input
@@ -168,6 +166,7 @@ export const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 leftIcon={<Lock className="h-4 w-4" />}
+                className="rounded-full min-h-[44px]"
               />
 
               <AnimatePresence>
@@ -185,7 +184,7 @@ export const LoginPage: React.FC = () => {
                       id="role-select"
                       value={role}
                       onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
-                      className="w-full rounded-civic-md border border-slate-300 bg-white px-3.5 py-2.5 text-caption text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 cursor-pointer"
+                      className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 text-caption text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 cursor-pointer min-h-[44px]"
                     >
                       <option value="employee">Government Employee (Trainee Officer)</option>
                       <option value="admin">Department Supervisor (Admin)</option>
@@ -194,10 +193,10 @@ export const LoginPage: React.FC = () => {
                 )}
               </AnimatePresence>
 
-              <div className="pt-1">
+              <div className="pt-2">
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-sm cursor-pointer"
+                  className="w-full font-semibold shadow-civic-xs cursor-pointer rounded-full min-h-[44px]"
                   size="lg"
                   isLoading={isLoading}
                   variant="primary"
@@ -228,10 +227,10 @@ export const LoginPage: React.FC = () => {
         <motion.div variants={fadeUpVariants}>
           <Link
             to="/citizen"
-            className="w-full p-4 bg-emerald-50/70 hover:bg-emerald-50 rounded-civic-xl border border-emerald-200/90 shadow-civic-xs flex items-center justify-between text-caption transition-all group hover:border-emerald-300 hover:shadow-civic-md"
+            className="w-full p-4 bg-emerald-50/70 hover:bg-emerald-50 rounded-civic-xl border border-emerald-200 shadow-civic-xs flex items-center justify-between text-caption transition-all group hover:border-emerald-300 hover:shadow-civic-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-civic-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-civic-xs group-hover:scale-105 transition-transform">
+              <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-civic-xs group-hover:scale-105 transition-transform">
                 <FileCheck className="h-4 w-4 text-emerald-700" />
               </div>
               <div>

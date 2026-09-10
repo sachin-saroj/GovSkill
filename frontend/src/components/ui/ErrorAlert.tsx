@@ -34,7 +34,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
           <button
             type="button"
             onClick={onRetry}
-            className="flex items-center gap-1.5 px-3 py-1 bg-white border border-red-200 rounded-civic-md text-red-800 text-caption font-semibold hover:bg-red-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1 bg-white border border-red-200 rounded-full text-red-800 text-caption font-semibold hover:bg-red-50 transition-colors cursor-pointer shadow-civic-xs"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Retry</span>
@@ -45,7 +45,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss error"
-            className="p-1 text-red-500 hover:text-red-800 hover:bg-red-100 rounded-civic-sm transition-colors cursor-pointer"
+            className="p-1 text-red-500 hover:text-red-800 hover:bg-red-100 rounded-full transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>

@@ -101,8 +101,8 @@ export const PublicVerificationPage: React.FC = () => {
           animate={shouldReduceMotion ? {} : 'visible'}
           className="text-center space-y-3 print:hidden"
         >
-          <div className="inline-flex p-3 rounded-civic-xl bg-civic-900 text-saffron-400 shadow-civic-md">
-            <ShieldCheck className="h-8 w-8" />
+          <div className="inline-flex p-3 rounded-full bg-civic-900 text-saffron-400 shadow-civic-xs mb-1">
+            <ShieldCheck className="h-7 w-7 text-saffron-400" />
           </div>
           <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
             Official Credential Verification Portal
@@ -113,7 +113,7 @@ export const PublicVerificationPage: React.FC = () => {
         </motion.div>
 
         {/* Lookup Search Input Bar */}
-        <div className="bg-white p-4 sm:p-6 rounded-civic-xl shadow-civic-sm border border-slate-200 print:hidden">
+        <div className="bg-white p-4 sm:p-6 rounded-civic-xl shadow-civic-xs border border-slate-200 print:hidden">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -122,22 +122,22 @@ export const PublicVerificationPage: React.FC = () => {
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
                 placeholder="Enter Credential ID (e.g., GS-CERT-2026-A1B2C3D4E5F6)"
-                className="w-full pl-10 pr-4 py-2.5 text-caption rounded-civic-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-civic-600 focus:border-transparent font-mono"
+                className="w-full pl-10 pr-4 py-2.5 text-caption rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 font-mono min-h-[44px]"
               />
             </div>
             <Button
               type="submit"
               disabled={isLoading || !searchId.trim()}
-              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-civic-800 hover:bg-civic-900 text-white rounded-civic-md text-caption font-semibold"
+              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-civic-900 hover:bg-civic-800 text-white rounded-full text-caption font-semibold min-h-[44px] shadow-civic-xs cursor-pointer"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
                   <span>Verifying...</span>
                 </>
               ) : (
                 <>
-                  <ShieldCheck className="h-4 w-4" />
+                  <ShieldCheck className="h-4 w-4 text-saffron-400" />
                   <span>Verify Credential</span>
                 </>
               )}
@@ -180,13 +180,13 @@ export const PublicVerificationPage: React.FC = () => {
               className={`p-4 sm:p-5 rounded-civic-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                 credential.valid
                   ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
-                  : 'bg-amber-50 border-amber-200 text-amber-900'
+                  : 'bg-saffron-50 border-saffron-200 text-saffron-900'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`p-2.5 rounded-civic-md ${
-                    credential.valid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                  className={`p-2.5 rounded-full ${
+                    credential.valid ? 'bg-emerald-100 text-emerald-700' : 'bg-saffron-100 text-saffron-700'
                   }`}
                 >
                   {credential.valid ? <CheckCircle2 className="h-6 w-6" /> : <ShieldAlert className="h-6 w-6" />}
@@ -207,7 +207,7 @@ export const PublicVerificationPage: React.FC = () => {
                 variant="outline"
                 size="sm"
                 onClick={handlePrint}
-                className="flex items-center gap-1.5 text-caption shrink-0 print:hidden bg-white hover:bg-slate-50 font-semibold"
+                className="flex items-center gap-1.5 text-caption shrink-0 print:hidden bg-white hover:bg-slate-50 font-semibold rounded-full min-h-[40px] px-4 shadow-civic-xs cursor-pointer"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>Print Official Receipt</span>
@@ -286,11 +286,11 @@ export const PublicVerificationPage: React.FC = () => {
                       <Lock className="h-3.5 w-3.5 text-saffron-400" />
                       <span>Cryptographic Verification Signature</span>
                     </span>
-                    <span className="text-micro font-mono text-emerald-400 font-semibold bg-emerald-950/80 px-2 py-0.5 rounded-civic-sm border border-emerald-800">
+                    <span className="text-micro font-mono text-emerald-400 font-semibold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800">
                       HMAC-SHA256
                     </span>
                   </div>
-                  <p className="font-mono text-caption text-slate-400 break-all bg-civic-900/90 p-2.5 rounded-civic-md border border-civic-800 font-normal">
+                  <p className="font-mono text-caption text-slate-400 break-all bg-civic-900/90 p-2.5 rounded-civic-lg border border-civic-800 font-normal">
                     {credential.verification_hash}
                   </p>
                 </div>

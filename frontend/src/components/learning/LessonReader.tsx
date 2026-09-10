@@ -114,7 +114,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       <div className="space-y-3 pb-5 border-b border-slate-200">
         <div className="flex flex-wrap items-center justify-between gap-3 text-caption">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-civic-sm bg-civic-100 text-civic-900 font-semibold text-micro uppercase tracking-wider">
+            <span className="px-2.5 py-1 rounded-full bg-civic-100 text-civic-900 font-semibold text-micro uppercase tracking-wider">
               Section {safeIndex + 1} of {totalSections}
             </span>
             <span className="inline-flex items-center gap-1 text-slate-500 font-medium text-caption">
@@ -125,7 +125,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
 
           <div className="flex items-center gap-2">
             {isCurrentCompleted ? (
-              <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-civic-md border border-emerald-200">
+              <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Lessons Completed</span>
               </span>
@@ -148,21 +148,27 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         </div>
 
         {/* Section Jump Tabs */}
-        <div className="flex items-center gap-1.5 pt-1 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 pt-1 overflow-x-auto pb-1 scrollbar-none">
           {sections.map((sec, idx) => {
             const isCurrent = idx === safeIndex;
+            const isPast = isCurrentCompleted || idx < safeIndex;
+
+            let tabStyle = 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-transparent';
+            if (isCurrent) {
+              tabStyle = 'bg-civic-900 text-white shadow-civic-xs border-civic-900 font-semibold';
+            } else if (isPast) {
+              tabStyle = 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 font-medium';
+            }
+
             return (
               <button
                 key={idx}
                 type="button"
                 onClick={() => onSectionChange(idx)}
-                className={`px-3 py-1.5 rounded-civic-md text-caption font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                  isCurrent
-                    ? 'bg-civic-900 text-white shadow-civic-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                className={`px-4 py-2 rounded-full text-caption whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${tabStyle}`}
               >
-                {idx + 1}. {sec.displayTitle}
+                {isPast && !isCurrent && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />}
+                <span>{idx + 1}. {sec.displayTitle}</span>
               </button>
             );
           })}
@@ -170,7 +176,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       </div>
 
       {/* 2. Operational Learning Objective Box */}
-      <div className="rounded-civic-xl bg-civic-50/80 border border-civic-200/80 p-4 space-y-1.5 shadow-civic-xs">
+      <div className="rounded-civic-xl bg-civic-50/70 border border-civic-200/80 p-4 space-y-1.5 shadow-civic-xs">
         <div className="flex items-center gap-2 text-civic-900 font-semibold text-caption">
           <Target className="h-4 w-4 text-civic-700 shrink-0" />
           <span>Operational Learning Objective</span>
@@ -183,7 +189,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       {/* 3. Section Title & Core Procedural Guidance */}
       <div className="space-y-4 pt-1">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-page-title font-semibold text-civic-950 tracking-tight leading-snug">
+          <h2 className="text-page-title font-semibold text-slate-900 tracking-tight leading-snug">
             {activeSection.rawTitle}
           </h2>
 
@@ -191,16 +197,16 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           <button
             type="button"
             onClick={handleAskTutor}
-            className="shrink-0 hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-civic-md bg-slate-100 hover:bg-blue-50 text-civic-800 hover:text-civic-950 border border-slate-200 hover:border-civic-300 text-caption font-semibold transition-all cursor-pointer shadow-civic-xs"
+            className="shrink-0 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-civic-50 text-civic-800 hover:text-civic-950 border border-slate-200 hover:border-civic-300 text-caption font-semibold transition-all cursor-pointer shadow-civic-xs min-h-[40px]"
             title="Ask AI Tutor about this specific section"
           >
-            <Bot className="h-3.5 w-3.5 text-civic-700" />
+            <Bot className="h-4 w-4 text-civic-700" />
             <span>Ask Tutor About Section</span>
           </button>
         </div>
 
         {/* Procedural Text Body */}
-        <div className="text-body text-slate-700 leading-relaxed whitespace-pre-line space-y-3 font-normal">
+        <div className="text-body text-slate-700 leading-relaxed whitespace-pre-line space-y-4 font-normal">
           {activeSection.body}
         </div>
       </div>
@@ -224,7 +230,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         <button
           type="button"
           onClick={handleAskTutor}
-          className="w-full flex items-center justify-center gap-2 p-2.5 rounded-civic-md bg-blue-50 text-civic-900 border border-civic-200 text-caption font-semibold cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-civic-50 text-civic-900 border border-civic-200 text-caption font-semibold cursor-pointer min-h-[44px]"
         >
           <Bot className="h-4 w-4 text-civic-700" />
           <span>Ask AI Tutor About This Section</span>
@@ -235,12 +241,12 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       <div className="pt-6 border-t border-slate-200 space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Previous / Next Buttons */}
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <button
               type="button"
               onClick={handlePrevSection}
               disabled={safeIndex === 0}
-              className="flex-1 sm:flex-initial px-4 py-2 text-caption font-semibold rounded-civic-md border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-civic-xs"
+              className="flex-1 sm:flex-initial px-5 py-2.5 text-btn font-semibold rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all cursor-pointer shadow-civic-xs min-h-[44px]"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Previous Section</span>
@@ -250,7 +256,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
               <button
                 type="button"
                 onClick={handleNextSection}
-                className="flex-1 sm:flex-initial px-4 py-2 text-caption font-semibold rounded-civic-md bg-civic-800 hover:bg-civic-900 text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-civic-xs"
+                className="flex-1 sm:flex-initial px-5 py-2.5 text-btn font-semibold rounded-full bg-civic-900 hover:bg-civic-800 text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-civic-xs min-h-[44px]"
               >
                 <span>Next Section</span>
                 <ChevronRight className="h-4 w-4" />
@@ -264,10 +270,10 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
               type="button"
               onClick={onCompleteLessons}
               disabled={isMarkingComplete || isCurrentCompleted}
-              className={`w-full sm:w-auto px-5 py-2.5 text-caption font-semibold rounded-civic-md flex items-center justify-center gap-2 transition-all shadow-civic-xs ${
+              className={`w-full sm:w-auto px-6 py-2.5 text-btn font-semibold rounded-full flex items-center justify-center gap-2 transition-all shadow-civic-xs min-h-[44px] ${
                 isCurrentCompleted
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-default'
-                  : 'bg-civic-800 text-white hover:bg-civic-900 active:scale-95 cursor-pointer'
+                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-300 cursor-default'
+                  : 'bg-civic-900 text-white hover:bg-civic-800 cursor-pointer'
               }`}
             >
               {isMarkingComplete ? (
@@ -277,7 +283,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
                 </>
               ) : isCurrentCompleted ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                   <span>Lessons Completed {completedAt ? `(${new Date(completedAt).toLocaleDateString()})` : ''}</span>
                 </>
               ) : (
@@ -292,23 +298,23 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
 
         {/* Recommended Next Action Callout (After completing or on last section) */}
         {isCurrentCompleted && (
-          <div className="rounded-civic-xl bg-emerald-50/80 border border-emerald-200 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
-            <div className="space-y-0.5">
+          <div className="rounded-civic-xl bg-emerald-50/70 border border-emerald-200 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-emerald-900 font-semibold text-caption">
                 <Award className="h-4 w-4 text-emerald-700" />
                 <span>Next Step: Validate Your Competency</span>
               </div>
-              <p className="text-caption text-emerald-800 font-normal">
+              <p className="text-body text-emerald-800 font-normal">
                 You have completed the official curriculum. Take the scored assessment to earn your verified credential.
               </p>
             </div>
 
             <Link
               to={`/quiz/${module.id}`}
-              className="px-4 py-2 rounded-civic-md bg-emerald-700 hover:bg-emerald-800 text-white text-caption font-semibold flex items-center gap-1.5 shrink-0 shadow-civic-xs"
+              className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-btn font-semibold flex items-center gap-2 shrink-0 shadow-civic-xs min-h-[44px]"
             >
               <span>Take Scored Quiz</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         )}

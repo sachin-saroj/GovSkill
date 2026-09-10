@@ -32,7 +32,7 @@ export const ReadinessMetricCard: React.FC<ReadinessMetricCardProps> = ({
   return (
     <Card className="border-slate-200 shadow-civic-sm p-6 space-y-3.5 bg-white hover:shadow-civic-md transition-all duration-200 rounded-civic-xl">
       <div className="flex items-start justify-between gap-3">
-        <div className={`p-3 rounded-civic-md ${iconBgClass} ${iconColorClass} shrink-0 shadow-civic-xs`}>
+        <div className={`p-3 rounded-full ${iconBgClass} ${iconColorClass} shrink-0 shadow-civic-xs`}>
           <Icon className="h-5 w-5" />
         </div>
 

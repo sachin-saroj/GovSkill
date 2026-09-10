@@ -207,61 +207,83 @@ export const QuizPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
-      {/* Header Banner & Module Switcher */}
-      <motion.div variants={fadeUpVariants} className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-emerald-700 font-semibold text-caption">
-            <Award className="h-4 w-4 text-emerald-600" />
-            <span>Official Competency Assessment</span>
+      {/* 1. Header Banner & Assessment Progress */}
+      <motion.div variants={fadeUpVariants} className="bg-white rounded-civic-xl border border-slate-200 p-6 sm:p-8 shadow-civic-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-micro font-semibold uppercase tracking-wider text-civic-700">
+              <Award className="h-4 w-4 text-civic-700" />
+              <span>Competency Assessment</span>
+            </div>
+            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
+              {moduleTitle} Assessment
+            </h1>
+            <p className="text-body text-slate-600 font-normal">
+              Passing threshold is 75%. Server-side scored with competency-level breakdown and official certification.
+            </p>
           </div>
-          <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
-            {moduleTitle} Assessment
-          </h1>
-          <p className="text-caption text-slate-500">
-            Passing threshold is 75%. Server-side scored with competency-level feedback.
-          </p>
+
+          {modules.length > 1 && (
+            <div className="bg-slate-50 p-3 rounded-civic-xl border border-slate-200 shrink-0 shadow-civic-xs">
+              <label htmlFor="quiz-module-select" className="block text-micro font-semibold uppercase text-slate-600 mb-1 tracking-wider">
+                Switch Assessment:
+              </label>
+              <select
+                id="quiz-module-select"
+                value={activeModuleId}
+                onChange={(e) => {
+                  setAnswers({});
+                  setFlaggedQuestions({});
+                  setResult(null);
+                  navigate(`/quiz/${e.target.value}`);
+                }}
+                className="w-full px-4 py-2 text-caption font-semibold text-slate-900 bg-white border border-slate-300 rounded-full focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer min-h-[40px]"
+              >
+                {modules.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
-        {modules.length > 1 && (
-          <div className="bg-slate-50 p-3 rounded-civic-xl border border-slate-200 shrink-0 shadow-civic-xs">
-            <label htmlFor="quiz-module-select" className="block text-micro font-semibold uppercase text-slate-600 mb-1.5 tracking-wider">
-              Switch Assessment:
-            </label>
-            <select
-              id="quiz-module-select"
-              value={activeModuleId}
-              onChange={(e) => {
-                setAnswers({});
-                setFlaggedQuestions({});
-                setResult(null);
-                navigate(`/quiz/${e.target.value}`);
-              }}
-              className="w-full px-3 py-1.5 text-caption font-semibold text-slate-900 bg-white border border-slate-300 rounded-civic-md focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer"
-            >
-              {modules.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.title}
-                </option>
-              ))}
-            </select>
+        {/* Answer Progress Meter */}
+        <div className="space-y-2 pt-1">
+          <div className="flex items-center justify-between text-caption">
+            <span className="font-semibold text-slate-800">
+              Assessment Progress:
+            </span>
+            <span className="font-mono font-semibold text-slate-600">
+              {answeredCount} of {questions.length} answered ({progressPct}%)
+            </span>
           </div>
-        )}
+          <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/60">
+            <motion.div
+              initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
+              animate={{ width: `${progressPct}%` }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="h-2 bg-civic-900 rounded-full"
+            />
+          </div>
+        </div>
       </motion.div>
 
-      {/* Adaptive Assessment Focus Banner (Phase 3) */}
+      {/* 2. Adaptive Assessment Focus Banner */}
       {adaptiveMeta?.is_adaptive && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-civic-xl bg-gradient-to-r from-civic-50 via-indigo-50/60 to-white border border-civic-200/90 shadow-civic-xs space-y-2"
+          className="p-6 rounded-civic-xl bg-civic-50/80 border border-civic-200/90 shadow-civic-xs space-y-2"
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 font-semibold text-civic-900 text-caption">
               <Sparkles className="h-4 w-4 text-civic-700" />
               <span>Adaptive Question Selection Active</span>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-800 text-white">
+            <span className="px-3 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-900 text-white shadow-civic-xs">
               Targeted Remediation
             </span>
           </div>
@@ -274,7 +296,7 @@ export const QuizPage: React.FC = () => {
               {adaptiveMeta.focus_competencies.map((comp) => (
                 <span
                   key={comp}
-                  className="px-2.5 py-0.5 rounded-civic-md text-caption font-semibold bg-white border border-civic-200 text-civic-800 shadow-civic-xs"
+                  className="px-3 py-1 rounded-full text-caption font-semibold bg-white border border-civic-200 text-civic-900 shadow-civic-xs"
                 >
                   {comp}
                 </span>
@@ -284,13 +306,13 @@ export const QuizPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Instructions & Assessment Rules Bar */}
-      <div className="p-6 rounded-civic-xl bg-slate-50 border border-slate-200 text-caption text-slate-700 space-y-2">
+      {/* 3. Instructions & Assessment Rules Bar */}
+      <div className="p-6 rounded-civic-xl bg-slate-50 border border-slate-200 text-caption text-slate-700 space-y-2.5 shadow-civic-xs">
         <div className="flex items-center gap-2 font-semibold text-slate-900 text-caption">
           <ShieldCheck className="h-4 w-4 text-civic-700" />
           <span>Assessment Guidelines & Instructions:</span>
         </div>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-slate-600 pl-6 list-disc">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-slate-600 pl-5 list-disc">
           <li>Answer all {questions.length} questions to maximize your competency score.</li>
           <li>A score of 75% or higher grants official module certification.</li>
           <li>You can flag questions to review before final submission.</li>
@@ -298,7 +320,7 @@ export const QuizPage: React.FC = () => {
         </ul>
       </div>
 
-      {/* Question Navigator (Jump Palette) */}
+      {/* 4. Question Navigator (Jump Palette) */}
       <QuizNavigator
         questions={questions}
         answers={answers}
@@ -306,24 +328,6 @@ export const QuizPage: React.FC = () => {
         onJumpToQuestion={handleJumpToQuestion}
         disabled={isSubmitting}
       />
-
-      {/* Answer Progress Meter */}
-      <motion.div variants={fadeUpVariants} className="bg-slate-50 p-4 rounded-civic-xl border border-slate-200 shadow-civic-xs space-y-2">
-        <div className="flex items-center justify-between text-caption">
-          <span className="font-semibold text-slate-800">Completion Progress:</span>
-          <span className="font-medium text-slate-600">
-            {answeredCount} of {questions.length} answered ({progressPct}%)
-          </span>
-        </div>
-        <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-          <motion.div
-            initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
-            animate={{ width: `${progressPct}%` }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="h-2 bg-civic-800 rounded-full"
-          />
-        </div>
-      </motion.div>
 
       {error && (
         <ErrorAlert
@@ -333,7 +337,7 @@ export const QuizPage: React.FC = () => {
         />
       )}
 
-      {/* Questions Stack */}
+      {/* 5. Questions Stack */}
       <motion.div variants={fadeUpVariants} className="space-y-6">
         {questions.map((q, idx) => (
           <QuizCard
@@ -349,13 +353,13 @@ export const QuizPage: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Bottom Submit Control Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 border-t border-slate-200">
-        <div className="flex items-center gap-3 text-caption text-slate-500">
+      {/* 6. Bottom Submit Control Bar */}
+      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-200 bg-white p-6 rounded-civic-xl shadow-civic-xs">
+        <div className="flex items-center gap-3 text-caption text-slate-500 font-medium">
           <span>{answeredCount} of {questions.length} answered</span>
           {flaggedCount > 0 && (
-            <span className="text-amber-800 font-semibold flex items-center gap-1">
-              <Flag className="h-3 w-3 fill-amber-700 text-amber-700" />
+            <span className="text-saffron-900 font-semibold flex items-center gap-1 bg-saffron-50 px-2.5 py-0.5 rounded-full border border-saffron-200">
+              <Flag className="h-3 w-3 fill-saffron-700 text-saffron-700" />
               <span>{flaggedCount} flagged</span>
             </span>
           )}
@@ -365,8 +369,9 @@ export const QuizPage: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            size="md"
             onClick={() => navigate(`/module?id=${activeModuleId}`)}
+            className="min-h-[44px] rounded-full px-5"
           >
             <BookOpen className="h-3.5 w-3.5 mr-1.5" />
             <span>Review Lesson</span>
@@ -375,7 +380,8 @@ export const QuizPage: React.FC = () => {
           <Button
             onClick={handleOpenSubmitModal}
             disabled={isSubmitting}
-            size="sm"
+            size="md"
+            className="min-h-[44px] rounded-full px-6 shadow-civic-xs"
           >
             {isSubmitting ? (
               <>

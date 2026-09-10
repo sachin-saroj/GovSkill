@@ -52,7 +52,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         {/* Top Control Bar */}
         <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200 print:hidden">
           <div className="flex items-center gap-2 text-caption font-semibold text-civic-900">
-            <Award className="h-4 w-4 text-saffron-500" />
+            <Award className="h-4 w-4 text-saffron-600" />
             <span>Official Training Credential</span>
           </div>
           <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 text-slate-500 hover:text-slate-900 rounded-civic-md hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 text-slate-500 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
@@ -99,12 +99,12 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               has successfully completed all prescribed official lesson guidelines and achieved verified mastery in the training module:
             </p>
 
-            <div className="inline-block px-5 py-2.5 rounded-civic-md bg-civic-50 border border-civic-200 text-civic-900 font-semibold text-section-heading mb-6">
+            <div className="inline-block px-5 py-2.5 rounded-full bg-civic-50 border border-civic-200 text-civic-900 font-semibold text-section-heading mb-6">
               {moduleTitle}
             </div>
 
             {/* Score & Evaluation Details */}
-            <div className="grid grid-cols-3 gap-3 max-w-md mx-auto bg-slate-50 p-4 rounded-civic-md border border-slate-200 text-caption mb-6">
+            <div className="grid grid-cols-3 gap-3 max-w-md mx-auto bg-slate-50 p-4 rounded-civic-xl border border-slate-200 text-caption mb-6">
               <div>
                 <span className="block text-micro text-slate-500 uppercase font-semibold">Evaluation Score</span>
                 <span className="font-semibold text-emerald-700">{scorePercentage}%</span>

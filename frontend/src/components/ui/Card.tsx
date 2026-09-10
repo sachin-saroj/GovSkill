@@ -15,12 +15,12 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    default: 'bg-white border border-slate-200/90 shadow-civic-xs rounded-civic-xl',
-    feature: 'bg-white border border-slate-200 shadow-civic-sm rounded-civic-2xl',
-    elevated: 'bg-white border border-slate-200 shadow-civic-md rounded-civic-xl',
+    default: 'bg-white border border-slate-200 shadow-civic-xs rounded-civic-xl',
+    feature: 'bg-white border border-slate-200 shadow-civic-xs rounded-civic-2xl',
+    elevated: 'bg-white border border-slate-200 shadow-civic-sm rounded-civic-xl',
     interactive:
-      'bg-white border border-slate-200 shadow-civic-xs hover:shadow-civic-md hover:border-civic-300 transition-all duration-200 cursor-pointer rounded-civic-xl',
-    subtle: 'bg-slate-50 border border-slate-200/80 shadow-none rounded-civic-xl',
+      'bg-white border border-slate-200 shadow-civic-xs hover:shadow-civic-sm hover:border-civic-300 transition-all duration-200 cursor-pointer rounded-civic-xl',
+    subtle: 'bg-civic-50/70 border border-civic-200/80 shadow-none rounded-civic-xl',
   };
 
   const paddingStyle = noPadding ? '' : variant === 'feature' ? 'p-8' : 'p-6';
@@ -60,7 +60,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
   className = '',
   ...props
 }) => (
-  <p className={`text-caption font-medium text-civic-500 ${className}`} {...props}>
+  <p className={`text-caption font-medium text-slate-500 ${className}`} {...props}>
     {children}
   </p>
 );

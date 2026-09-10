@@ -119,26 +119,26 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
       {/* Overall Verification Status Banner */}
       <motion.div variants={fadeUpVariants}>
         <Card
-          className={`p-6 border rounded-civic-xl transition-all ${
+          className={`p-6 border rounded-civic-xl transition-all shadow-civic-xs ${
             allPassed
-              ? 'bg-emerald-50/80 border-emerald-300 shadow-civic-md'
-              : 'bg-amber-50/80 border-amber-300 shadow-civic-md'
+              ? 'bg-emerald-50/80 border-emerald-300'
+              : 'bg-saffron-50/80 border-saffron-300'
           }`}
         >
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div
-                className={`h-11 w-11 rounded-civic-md flex items-center justify-center shrink-0 shadow-civic-xs ${
-                  allPassed ? 'bg-emerald-600 text-white' : 'bg-amber-600 text-white'
+                className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 shadow-civic-xs ${
+                  allPassed ? 'bg-emerald-600 text-white' : 'bg-saffron-600 text-white'
                 }`}
               >
                 {allPassed ? <ShieldCheck className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
               </div>
-              <div className="space-y-1">
-                <h3 className="text-section-heading font-semibold text-slate-900">
+              <div className="space-y-1.5">
+                <h3 className="text-section-heading font-semibold text-slate-900 leading-snug">
                   {allPassed ? 'Pre-Submission Verification: PASSED' : 'Pre-Submission Notice: CORRECTIONS NEEDED'}
                 </h3>
-                <p className="text-caption text-slate-700 leading-relaxed font-normal">
+                <p className="text-body text-slate-700 leading-relaxed font-normal">
                   {recommendedNextStep || (allPassed
                     ? `All ${results.length} compliance rules passed successfully. This document meets standard submission requirements.`
                     : `${failedCount} of ${results.length} checks failed. Review the AI guidance and corrective actions below before formal submission.`)}
@@ -155,13 +155,13 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     <button
                       type="button"
                       onClick={onGenerateSlip}
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-civic-md text-caption font-semibold transition-all shadow-civic-xs cursor-pointer active:scale-95 ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-caption font-semibold transition-all shadow-civic-xs cursor-pointer min-h-[44px] ${
                         allPassed
                           ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
-                          : 'bg-amber-700 hover:bg-amber-800 text-white'
+                          : 'bg-saffron-700 hover:bg-saffron-800 text-white'
                       }`}
                     >
-                      <FileCheck2 className="h-3.5 w-3.5" />
+                      <FileCheck2 className="h-4 w-4" />
                       <span>View & Print Pre-Submission Counter Slip</span>
                     </button>
                   </div>
@@ -177,12 +177,12 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
       </motion.div>
 
       {/* Detailed Rule Breakdown List */}
-      <motion.div variants={fadeUpVariants} className="space-y-2.5">
+      <motion.div variants={fadeUpVariants} className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-700">
             Compliance Rules Checklist ({results.length} Checks)
           </h4>
-          <span className="text-caption text-slate-400 font-normal">100% Deterministic Evaluation</span>
+          <span className="text-caption text-slate-500 font-normal">100% Deterministic Evaluation</span>
         </div>
 
         {results.map((rule) => {
@@ -191,10 +191,10 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
           return (
             <Card
               key={rule.ruleName}
-              className={`p-4 border rounded-civic-lg transition-all duration-150 ${
+              className={`p-5 border rounded-civic-xl transition-all duration-150 shadow-civic-xs ${
                 rule.passed
-                  ? 'border-slate-200 bg-white hover:border-emerald-200 shadow-civic-xs'
-                  : 'border-amber-300 bg-amber-50/30 hover:border-amber-400 shadow-civic-xs'
+                  ? 'border-slate-200 bg-white hover:border-emerald-200'
+                  : 'border-saffron-300 bg-saffron-50/40 hover:border-saffron-400'
               }`}
             >
               <button
@@ -202,19 +202,19 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                 onClick={() => setExpandedRule(isExpanded ? null : rule.ruleName)}
                 className="flex w-full items-start justify-between text-left gap-3 cursor-pointer"
               >
-                <div className="flex items-start gap-2.5 min-w-0">
+                <div className="flex items-start gap-3 min-w-0">
                   {rule.passed ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
                   ) : (
-                    <XCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+                    <XCircle className="h-5 w-5 text-saffron-600 shrink-0 mt-0.5" />
                   )}
-                  <div className="space-y-0.5 min-w-0">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-caption text-slate-900">
                         {rule.ruleName}
                       </span>
                       {rule.severity === 'critical' && !rule.passed && (
-                        <span className="text-micro uppercase font-semibold text-red-700 bg-red-100 px-1.5 py-0.5 rounded-civic-sm border border-red-200">
+                        <span className="text-micro uppercase font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full border border-red-200">
                           Critical
                         </span>
                       )}
@@ -229,10 +229,10 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
 
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-caption font-semibold ${
+                    className={`rounded-full px-3 py-0.5 text-caption font-semibold ${
                       rule.passed
                         ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-amber-100 text-amber-900 border border-amber-300'
+                        : 'bg-saffron-100 text-saffron-900 border border-saffron-300'
                     }`}
                   >
                     {rule.passed ? 'Passed' : 'Action Needed'}
@@ -252,9 +252,9 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 pt-3 border-t border-slate-200 text-caption space-y-2.5 font-normal">
+                    <div className="mt-4 pt-3.5 border-t border-slate-200 text-caption space-y-3 font-normal">
                       {rule.recommended_action && (
-                        <div className="p-3 bg-white rounded-civic-md border border-slate-200 flex items-start gap-2 text-slate-700 shadow-civic-xs">
+                        <div className="p-4 bg-white rounded-civic-lg border border-slate-200 flex items-start gap-2.5 text-slate-700 shadow-civic-xs">
                           <ArrowRight className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
                           <div>
                             <span className="font-semibold text-slate-900 block">Recommended Action:</span>
@@ -264,7 +264,7 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                       )}
 
                       {rule.explanation && (
-                        <div className="p-3.5 bg-slate-50 rounded-civic-md border border-slate-200 text-slate-700 space-y-1 shadow-civic-xs">
+                        <div className="p-4 bg-slate-50 rounded-civic-lg border border-slate-200 text-slate-700 space-y-1.5 shadow-civic-xs">
                           <div className="flex items-center gap-1.5 text-micro font-semibold text-civic-800 uppercase tracking-wide">
                             <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
                             <span>AI Plain-Language Guidance:</span>

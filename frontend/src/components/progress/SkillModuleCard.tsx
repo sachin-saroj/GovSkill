@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { EmployeeSkillItem } from '@/types';
 import Card from '@/components/ui/Card';
+import Badge from '@/components/ui/Badge';
 import {
   Award,
   BookOpen,
@@ -65,45 +66,45 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
     switch (readinessState) {
       case 'Certified':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300">
+          <Badge variant="certified">
             <Award className="h-3 w-3 text-emerald-600" />
             <span>Certified</span>
-          </span>
+          </Badge>
         );
       case 'Operational':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-50 text-civic-800 border border-civic-300">
+          <Badge variant="civic">
             <CheckCircle2 className="h-3 w-3 text-civic-700" />
             <span>Operational</span>
-          </span>
+          </Badge>
         );
       case 'Assessment Pending':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-saffron-50 text-saffron-900 border border-saffron-300">
+          <Badge variant="attention">
             <Clock className="h-3 w-3 text-saffron-700" />
             <span>Assessment Pending</span>
-          </span>
+          </Badge>
         );
       case 'Needs Improvement':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-300">
-            <AlertCircle className="h-3 w-3 text-amber-600" />
+          <Badge variant="attention">
+            <AlertCircle className="h-3 w-3 text-saffron-600" />
             <span>Needs Improvement</span>
-          </span>
+          </Badge>
         );
       case 'In Progress':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-blue-50 text-blue-900 border border-blue-200">
-            <PlayCircle className="h-3 w-3 text-blue-700" />
+          <Badge variant="in-progress">
+            <PlayCircle className="h-3 w-3 text-civic-700" />
             <span>In Progress</span>
-          </span>
+          </Badge>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200">
+          <Badge variant="neutral">
             <Circle className="h-3 w-3 text-slate-400" />
             <span>Not Started</span>
-          </span>
+          </Badge>
         );
     }
   };
@@ -116,7 +117,7 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
       transition={{ type: 'spring', stiffness: 350, damping: 25 }}
     >
       <Card
-        className="p-6 flex flex-col justify-between space-y-6 border border-slate-200/90 shadow-civic-sm hover:shadow-civic-md transition-all duration-300 bg-white rounded-civic-xl"
+        className="p-6 flex flex-col justify-between space-y-5 border border-slate-200 shadow-civic-xs hover:shadow-civic-sm transition-all duration-200 bg-white rounded-civic-xl"
         variant="default"
       >
         <div className="space-y-4">
@@ -135,15 +136,15 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
             </div>
 
             {isCertified && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-micro font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 shrink-0 shadow-civic-xs">
+              <Badge variant="certified" className="shrink-0 shadow-civic-xs">
                 <Award className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Certified Standard</span>
-              </span>
+              </Badge>
             )}
           </div>
 
           {/* Competency Evidence & Metrics Box */}
-          <div className="space-y-3.5 bg-slate-50 p-4 rounded-civic-lg border border-slate-200/80">
+          <div className="space-y-3 bg-slate-50/80 p-4 rounded-civic-lg border border-slate-200/80">
             {/* Lesson Completion Toggle */}
             <div className="flex items-center justify-between text-caption">
               <span className="font-semibold text-slate-700">Official Curriculum:</span>
@@ -152,7 +153,7 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
                 whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
                 whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
                 onClick={() => onToggleLessons(skill.module_id)}
-                className={`px-3 py-1 rounded-civic-md text-caption font-semibold border transition-all cursor-pointer shadow-civic-xs ${
+                className={`px-3 py-1 rounded-full text-caption font-semibold border transition-all cursor-pointer shadow-civic-xs ${
                   skill.lessons_completed
                     ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                     : 'bg-white text-slate-700 border-slate-300 hover:border-civic-700 hover:text-civic-900'
@@ -166,13 +167,13 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
             <div className="flex items-center justify-between text-caption">
               <span className="font-semibold text-slate-700">Best Assessment:</span>
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-civic-900 font-mono">
+                <span className="font-semibold text-slate-900 font-mono">
                   {skill.total_questions > 0
                     ? `${skill.best_score} / ${skill.total_questions} (${skill.score_percentage}%)`
                     : 'Not attempted'}
                 </span>
                 {typeof skill.score_improvement_delta === 'number' && skill.score_improvement_delta > 0 && (
-                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-micro font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-micro font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
                     <TrendingUp className="h-3 w-3 text-emerald-600" />
                     <span>+{skill.score_improvement_delta}%</span>
                   </span>
@@ -192,7 +193,7 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
                     : readinessState === 'Operational' || readinessState === 'Assessment Pending'
                     ? 'bg-civic-700'
                     : readinessState === 'Needs Improvement'
-                    ? 'bg-amber-500'
+                    ? 'bg-saffron-500'
                     : 'bg-slate-300'
                 }`}
               />
@@ -211,7 +212,7 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
         </div>
 
         {/* Card Footer Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 text-caption font-semibold">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 text-caption font-semibold">
           <Link
             to={`/module?id=${skill.module_id}`}
             className="flex items-center gap-1.5 font-semibold text-civic-800 hover:text-civic-900 hover:underline"
@@ -227,7 +228,7 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
                 whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
                 whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
                 onClick={() => onViewCertificate(skill)}
-                className="inline-flex items-center gap-1.5 font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-1.5 rounded-civic-md border border-emerald-300 transition-all shadow-civic-xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-1.5 rounded-full border border-emerald-300 transition-all shadow-civic-xs cursor-pointer"
               >
                 <Award className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Certificate</span>
@@ -236,11 +237,11 @@ export const SkillModuleCard: React.FC<SkillModuleCardProps> = ({
 
             <Link
               to={`/quiz/${skill.module_id}`}
-              className={`inline-flex items-center gap-1.5 font-semibold px-3.5 py-1.5 rounded-civic-md transition-all shadow-civic-xs group ${
+              className={`inline-flex items-center gap-1.5 font-semibold px-4 py-2 rounded-full min-h-[40px] transition-all shadow-civic-xs group ${
                 isCertified
                   ? 'text-civic-800 bg-civic-50 hover:bg-civic-100 border border-civic-200/90'
                   : skill.attempts_count && skill.attempts_count > 0
-                  ? 'text-white bg-amber-600 hover:bg-amber-700'
+                  ? 'text-white bg-saffron-600 hover:bg-saffron-700'
                   : 'text-white bg-civic-900 hover:bg-civic-800'
               }`}
             >

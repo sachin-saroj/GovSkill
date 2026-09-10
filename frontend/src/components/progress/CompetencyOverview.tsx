@@ -5,7 +5,6 @@ import {
   Award,
   CheckCircle2,
   Shield,
-  User,
   Clock,
   CheckCheck,
   Target,
@@ -66,163 +65,150 @@ export const CompetencyOverview: React.FC<CompetencyOverviewProps> = ({
 
   return (
     <motion.div variants={fadeUpVariants} className="space-y-6">
-      {/* Civic Hero Competency Banner */}
-      <div className="relative overflow-hidden rounded-civic-2xl bg-gradient-to-r from-civic-950 via-civic-900 to-civic-800 p-8 text-white shadow-civic-xl border border-civic-800">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-civic-600/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/3 -mb-10 w-48 h-48 bg-saffron-500/10 rounded-full blur-2xl pointer-events-none" />
+      {/* 1. Calm Page Title Header */}
+      <div className="border-b border-slate-200/90 pb-5 space-y-1">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 text-micro font-semibold uppercase tracking-wider text-civic-700 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
+                <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
+                <span>My Skill Progress & Credentials</span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                <Shield className="h-3 w-3 text-civic-700" />
+                <span className="capitalize">{userRole} Track</span>
+              </span>
+            </div>
+            <h1 className="text-page-title font-semibold tracking-tight text-slate-900">
+              My Skills
+            </h1>
+          </div>
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-micro font-semibold uppercase tracking-wider text-saffron-400 backdrop-blur-sm">
-                <Sparkles className="h-3.5 w-3.5 text-saffron-400" />
-                <span>Competency Intelligence Dashboard</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowCalculationModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-civic-900/90 hover:bg-civic-800 border border-civic-700/80 text-caption font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
-                title="View how operational scores and readiness tiers are calculated"
-              >
-                <Info className="h-3.5 w-3.5 text-civic-400" />
-                <span>How is this calculated?</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => setShowCalculationModal(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-caption font-semibold text-slate-700 hover:text-slate-900 transition-colors shadow-civic-xs cursor-pointer"
+            title="View how operational scores and readiness tiers are calculated"
+          >
+            <Info className="h-3.5 w-3.5 text-civic-700" />
+            <span>How is this calculated?</span>
+          </button>
+        </div>
+        <p className="text-body text-slate-600 font-normal">
+          Official local government administrative digital skill profile, verified certifications, and targeted learning recommendations.
+        </p>
+      </div>
+
+      {/* 2. Primary Competency Hero Card */}
+      <Card className="p-6 sm:p-8 bg-white border border-slate-200 shadow-civic-xs rounded-civic-xl space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Main Visual Dominance: Large Score & Readiness Tier */}
+          <div className="lg:col-span-5 space-y-3 border-b lg:border-b-0 lg:border-r border-slate-100 pb-6 lg:pb-0 lg:pr-8">
+            <div className="flex items-center gap-2">
+              <span className="text-micro font-semibold uppercase tracking-wider text-slate-500">
+                Overall Competency
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-50 text-civic-800 border border-civic-200">
+                {learningStatus}
+              </span>
             </div>
 
-            <h1 className="text-page-title font-semibold tracking-tight text-white">
-              My Skill Progress & Credentials
-            </h1>
+            <div className="flex items-baseline gap-3">
+              <span className="text-5xl sm:text-6xl font-bold text-slate-900 font-mono tracking-tight">
+                {overallScore}%
+              </span>
+              <div className="space-y-0.5">
+                <span className="text-caption font-semibold text-emerald-700 block">
+                  {certifiedCount} of {totalCount} Certified
+                </span>
+                <span className="text-caption text-slate-500 font-normal block">
+                  {modulesRemaining > 0 ? `${modulesRemaining} remaining` : 'All certified'}
+                </span>
+              </div>
+            </div>
 
-            <p className="text-body text-slate-300 leading-relaxed font-normal">
+            {/* Subtle Progress Bar */}
+            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+              <motion.div
+                initial={shouldReduceMotion ? { width: `${Math.max(5, overallScore)}%` } : { width: '0%' }}
+                animate={{ width: `${Math.max(5, Math.min(100, overallScore))}%` }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
+                className="h-2.5 bg-gradient-to-r from-civic-700 to-emerald-600 rounded-full"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 pt-1 text-caption">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span className="font-semibold text-slate-800">
+                Readiness Level: <strong className="text-emerald-800 font-semibold">{readinessLevel}</strong>
+              </span>
+            </div>
+          </div>
+
+          {/* Supporting Overview Metadata & Track Information */}
+          <div className="lg:col-span-7 space-y-4">
+            <p className="text-body text-slate-700 leading-relaxed font-normal">
               {explanation ||
                 'Real-time competency assessment, verified certifications, and targeted learning recommendations for local government personnel.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-2 pt-1 text-caption text-slate-300">
-              <div className="flex items-center gap-1.5 bg-civic-950/80 px-3 py-1 rounded-civic-md border border-civic-800">
-                <User className="h-3.5 w-3.5 text-slate-400" />
-                <span className="font-semibold text-slate-200">Local Office Staff</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+              <div className="p-3 rounded-civic-lg bg-slate-50 border border-slate-200/80 space-y-1">
+                <span className="text-micro font-semibold uppercase text-slate-500 flex items-center gap-1">
+                  <Award className="h-3 w-3 text-civic-700" /> Certified
+                </span>
+                <p className="text-section-heading font-semibold text-slate-900 leading-none">
+                  {certifiedCount} / {totalCount}
+                </p>
+                <span className="text-micro text-slate-400 font-normal">Modules verified</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-civic-950/80 px-3 py-1 rounded-civic-md border border-civic-800">
-                <Shield className="h-3.5 w-3.5 text-saffron-400" />
-                <span className="capitalize font-semibold text-slate-200">{userRole} Track</span>
+
+              <div className="p-3 rounded-civic-lg bg-slate-50 border border-slate-200/80 space-y-1">
+                <span className="text-micro font-semibold uppercase text-slate-500 flex items-center gap-1">
+                  <CheckCheck className="h-3 w-3 text-emerald-600" /> Curriculum
+                </span>
+                <p className="text-section-heading font-semibold text-slate-900 leading-none">
+                  {modulesCompleted} / {totalCount}
+                </p>
+                <span className="text-micro text-slate-400 font-normal">Lessons read</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-civic-950/80 px-3 py-1 rounded-civic-md border border-civic-800 text-emerald-300">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                <span className="font-semibold">{readinessLevel}</span>
+
+              <div className="p-3 rounded-civic-lg bg-slate-50 border border-slate-200/80 space-y-1 col-span-2 sm:col-span-1">
+                <span className="text-micro font-semibold uppercase text-slate-500 flex items-center gap-1">
+                  <Clock className="h-3 w-3 text-saffron-600" /> Pending
+                </span>
+                <p className="text-section-heading font-semibold text-slate-900 leading-none">
+                  {modulesRemaining}
+                </p>
+                <span className="text-micro text-slate-400 font-normal">Modules to certify</span>
               </div>
             </div>
 
-            {/* Competency Insights Strip (Strongest / Weakest) */}
+            {/* Competency Strengths / Focus Highlight Strip */}
             {(strongest || weakest || avgScore > 0) && (
-              <div className="flex flex-wrap items-center gap-2 pt-2 text-caption">
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-caption">
                 {strongest && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-civic-md bg-emerald-950/80 border border-emerald-800/80 text-emerald-300">
-                    <TrendingUp className="h-3 w-3 text-emerald-400" />
-                    <span><strong className="text-white font-semibold">Strongest:</strong> {strongest}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-900 font-medium">
+                    <TrendingUp className="h-3 w-3 text-emerald-600" />
+                    <span><strong>Strongest:</strong> {strongest}</span>
                   </div>
                 )}
                 {weakest && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-civic-md bg-amber-950/80 border border-amber-800/80 text-amber-300">
-                    <AlertCircle className="h-3 w-3 text-amber-400" />
-                    <span><strong className="text-white font-semibold">Priority Focus:</strong> {weakest}</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-saffron-50 border border-saffron-200 text-saffron-900 font-medium">
+                    <AlertCircle className="h-3 w-3 text-saffron-600" />
+                    <span><strong>Priority Focus:</strong> {weakest}</span>
                   </div>
                 )}
                 {avgScore > 0 && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-civic-md bg-civic-950/80 border border-civic-800 text-slate-300">
-                    <span><strong className="text-white font-semibold">Avg Score:</strong> {avgScore}%</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-medium">
+                    <span><strong>Avg Score:</strong> {avgScore}%</span>
                   </div>
                 )}
               </div>
             )}
           </div>
-
-          {/* Metric Scorecard Widget */}
-          <motion.div
-            whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-            className="bg-civic-950/90 p-6 rounded-civic-xl border border-civic-700/80 text-center shrink-0 lg:min-w-[260px] shadow-civic-md backdrop-blur-md"
-          >
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-micro font-semibold uppercase tracking-wider text-slate-400">
-                Certification Coverage
-              </span>
-              <span className="text-micro font-semibold uppercase px-2 py-0.5 rounded-full bg-civic-800 text-saffron-300 border border-civic-700">
-                {learningStatus}
-              </span>
-            </div>
-            <div className="text-3xl font-bold text-white tracking-tight mb-1 font-mono">
-              {overallScore}%
-            </div>
-            <div className="flex items-center justify-center gap-1.5 text-caption font-semibold text-emerald-400 mb-2">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-              <span>{certifiedCount} of {totalCount} Modules Certified</span>
-            </div>
-            <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden mb-2">
-              <motion.div
-                initial={shouldReduceMotion ? { width: `${Math.max(5, overallScore)}%` } : { width: '0%' }}
-                animate={{ width: `${Math.max(5, Math.min(100, overallScore))}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="h-2 bg-gradient-to-r from-emerald-500 to-civic-400 rounded-full"
-              />
-            </div>
-            <div className="flex items-center justify-between text-caption text-slate-400">
-              <span>
-                {modulesRemaining > 0
-                  ? `${modulesRemaining} module${modulesRemaining === 1 ? '' : 's'} remaining`
-                  : 'All modules certified'}
-              </span>
-              {avgScore > 0 && (
-                <span className="font-mono text-slate-300">
-                  {avgScore}% avg
-                </span>
-              )}
-            </div>
-          </motion.div>
         </div>
-      </div>
-
-      {/* KPI Metric Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="p-4 border-slate-200 bg-white flex items-center gap-3 shadow-civic-xs rounded-civic-xl hover:border-slate-300 transition-colors">
-          <div className="h-10 w-10 rounded-civic-md bg-civic-100 text-civic-800 flex items-center justify-center shrink-0">
-            <Award className="h-4 w-4 text-civic-700" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-section-heading text-slate-900 leading-none">{certifiedCount} / {totalCount}</p>
-            <p className="text-caption text-slate-500 font-medium pt-1">Certifications</p>
-          </div>
-        </Card>
-
-        <Card className="p-4 border-slate-200 bg-white flex items-center gap-3 shadow-civic-xs rounded-civic-xl hover:border-slate-300 transition-colors">
-          <div className="h-10 w-10 rounded-civic-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-            <CheckCheck className="h-4 w-4 text-emerald-700" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-section-heading text-slate-900 leading-none">{modulesCompleted} / {totalCount}</p>
-            <p className="text-caption text-slate-500 font-medium pt-1">Lessons Completed</p>
-          </div>
-        </Card>
-
-        <Card className="p-4 border-slate-200 bg-white flex items-center gap-3 shadow-civic-xs rounded-civic-xl hover:border-slate-300 transition-colors">
-          <div className="h-10 w-10 rounded-civic-md bg-saffron-100 text-saffron-900 flex items-center justify-center shrink-0">
-            <Clock className="h-4 w-4 text-saffron-700" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-section-heading text-slate-900 leading-none">{modulesRemaining}</p>
-            <p className="text-caption text-slate-500 font-medium pt-1">Modules Remaining</p>
-          </div>
-        </Card>
-
-        <Card className="p-4 border-slate-200 bg-white flex items-center gap-3 shadow-civic-xs rounded-civic-xl hover:border-slate-300 transition-colors">
-          <div className="h-10 w-10 rounded-civic-md bg-civic-50 text-civic-800 flex items-center justify-center shrink-0">
-            <Target className="h-4 w-4 text-civic-700" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-caption text-slate-900 truncate">{readinessLevel}</p>
-            <p className="text-caption text-slate-500 font-medium pt-0.5">Readiness Tier</p>
-          </div>
-        </Card>
-      </div>
+      </Card>
 
       {/* Transparent Calculation Explainer Modal */}
       <AnimatePresence>

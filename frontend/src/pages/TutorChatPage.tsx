@@ -179,69 +179,71 @@ export const TutorChatPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-5xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
-      {/* Header Banner */}
-      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-5 gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-civic-800 font-semibold text-caption">
-            <Sparkles className="h-4 w-4 text-saffron-500" />
-            <span>Government Training Copilot</span>
+      {/* 1. Header Banner & Scope Toolbar */}
+      <motion.div variants={fadeUpVariants} className="bg-white rounded-civic-xl border border-slate-200 p-6 sm:p-8 shadow-civic-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-micro font-semibold uppercase tracking-wider text-civic-700">
+              <Bot className="h-4 w-4 text-civic-700" />
+              <span>Government Training Assistant</span>
+            </div>
+            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
+              Administrative Assistant & Copilot
+            </h1>
+            <p className="text-body text-slate-600 font-normal">
+              Answers are strictly grounded in approved government training modules and official administrative curriculum.
+            </p>
           </div>
-          <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
-            Administrative Assistant & Copilot
-          </h1>
-          <p className="text-caption text-slate-500 font-normal">
-            Answers are strictly grounded in approved government training modules with zero policy fabrication.
-          </p>
-        </div>
 
-        <div className="flex items-center gap-3">
-          {/* Module Scope Selector */}
-          <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-civic-md border border-slate-200 shrink-0 shadow-civic-xs">
-            <BookOpen className="h-4 w-4 text-civic-700" />
-            <label htmlFor="context-select" className="text-caption font-semibold text-slate-600">
-              Scope:
-            </label>
-            <select
-              id="context-select"
-              value={selectedModuleId}
-              onChange={(e) => setSelectedModuleId(e.target.value)}
-              disabled={isLoading}
-              className="text-caption font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Module Scope Selector */}
+            <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-full border border-slate-200 shadow-civic-xs min-h-[40px]">
+              <BookOpen className="h-4 w-4 text-civic-700 shrink-0" />
+              <label htmlFor="context-select" className="text-caption font-semibold text-slate-600 shrink-0">
+                Scope:
+              </label>
+              <select
+                id="context-select"
+                value={selectedModuleId}
+                onChange={(e) => setSelectedModuleId(e.target.value)}
+                disabled={isLoading}
+                className="text-caption font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <option value="auto">Auto-Detect Relevant Module ✨</option>
+                {modules.map((mod) => (
+                  <option key={mod.id} value={mod.id}>
+                    {mod.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleResetChat}
+              title="Reset conversation"
+              className="flex items-center gap-1.5 px-4 py-2 text-caption font-semibold text-slate-600 border border-slate-200 rounded-full hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
             >
-              <option value="auto">Auto-Detect Relevant Module ✨</option>
-              {modules.map((mod) => (
-                <option key={mod.id} value={mod.id}>
-                  {mod.title}
-                </option>
-              ))}
-            </select>
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={handleResetChat}
-            title="Reset conversation"
-            className="flex items-center gap-1.5 px-3 py-2 text-caption font-semibold text-slate-600 border border-slate-200 rounded-civic-md hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Reset</span>
-          </button>
         </div>
-      </motion.div>
 
-      {/* Active Scope Pill */}
-      <motion.div variants={fadeUpVariants} className="flex items-center justify-between px-4 py-2.5 rounded-civic-xl bg-slate-100/80 border border-slate-200 text-caption text-slate-600 shadow-civic-xs">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-emerald-600" />
-          <span>
-            <strong className="font-semibold text-slate-900">Active Copilot Scope:</strong> {activeModuleTitle}
+        {/* 2. Trust & Grounding Indicator Strip */}
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-full bg-civic-50/70 border border-civic-200/80 text-caption text-slate-700">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+            <span>
+              <strong className="font-semibold text-civic-950">Training scope:</strong> {activeModuleTitle}
+            </span>
+          </div>
+          <span className="text-micro font-semibold uppercase tracking-wider text-civic-700 bg-white px-2.5 py-0.5 rounded-full border border-civic-200 hidden sm:inline">
+            Curriculum Grounded
           </span>
         </div>
-        <span className="text-micro font-semibold uppercase tracking-wider text-slate-500 hidden sm:inline">
-          Anti-hallucination verified
-        </span>
       </motion.div>
 
       {/* Targeted Remediation Banner */}
@@ -251,11 +253,11 @@ export const TutorChatPage: React.FC = () => {
           className="p-6 rounded-civic-xl bg-saffron-50 border border-saffron-300/80 text-caption text-saffron-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-civic-xs"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-civic-md bg-saffron-100 text-saffron-800 shrink-0">
+            <div className="p-2.5 rounded-full bg-saffron-100 text-saffron-800 shrink-0">
               <Sparkles className="h-5 w-5 text-saffron-600" />
             </div>
             <div>
-              <div className="font-semibold text-section-heading text-saffron-900">
+              <div className="font-semibold text-section-heading text-saffron-900 leading-snug">
                 Targeted Remediation Active: {incomingCompetency}
               </div>
               <p className="text-caption text-saffron-800 font-normal">
@@ -274,7 +276,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-3 py-1.5 rounded-civic-md bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs"
+              className="px-4 py-2 rounded-full bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs min-h-[38px]"
             >
               Practice Scenario
             </button>
@@ -287,7 +289,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-3 py-1.5 rounded-civic-md bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs"
+              className="px-4 py-2 rounded-full bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs min-h-[38px]"
             >
               Red Flags
             </button>
@@ -312,7 +314,7 @@ export const TutorChatPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleRetryLast}
-                className="flex items-center gap-1 px-2.5 py-1 bg-white border border-red-300 text-red-800 rounded-civic-md font-semibold hover:bg-red-50 text-caption cursor-pointer shadow-civic-xs"
+                className="flex items-center gap-1.5 px-3.5 py-1 bg-white border border-red-300 text-red-800 rounded-full font-semibold hover:bg-red-50 text-caption cursor-pointer shadow-civic-xs"
               >
                 <RefreshCw className="h-3 w-3" />
                 <span>Retry</span>
@@ -333,8 +335,8 @@ export const TutorChatPage: React.FC = () => {
 
       {/* Chat Messages Workspace */}
       <motion.div variants={fadeUpVariants}>
-        <Card className="min-h-[460px] flex flex-col justify-between p-6 sm:p-8 bg-slate-50/50 border-slate-200 shadow-civic-sm rounded-civic-xl">
-          <div className="space-y-4 overflow-y-auto max-h-[520px] pr-2 mb-4">
+        <Card className="min-h-[480px] flex flex-col justify-between p-6 sm:p-8 bg-slate-50/50 border-slate-200 shadow-civic-xs rounded-civic-xl">
+          <div className="space-y-4 overflow-y-auto max-h-[540px] pr-2 mb-4">
             {messages.map((msg) => (
               <ChatMessageItem
                 key={msg.id}
@@ -354,10 +356,10 @@ export const TutorChatPage: React.FC = () => {
                   exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
                   className="flex gap-3 items-center text-slate-600 text-caption"
                 >
-                  <div className="h-8 w-8 rounded-civic-md bg-civic-800 text-white flex items-center justify-center shadow-civic-xs">
+                  <div className="h-8 w-8 rounded-full bg-civic-900 text-white flex items-center justify-center shadow-civic-xs">
                     <Bot className="h-4 w-4 text-saffron-400" />
                   </div>
-                  <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-civic-xl shadow-civic-xs">
+                  <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-full shadow-civic-xs">
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
                     <span className="font-medium text-slate-700 text-caption">
                       Verifying question against official training curriculum...
@@ -371,19 +373,19 @@ export const TutorChatPage: React.FC = () => {
           </div>
 
           {/* Input Form Bar */}
-          <form onSubmit={handleSendMessage} className="flex gap-3 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-4 rounded-b-civic-xl">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-4 rounded-b-civic-xl">
             <Input
               placeholder="Ask about verification rules, SLA timelines, cybersecurity standards..."
               value={inputQuestion}
               onChange={(e) => setInputQuestion(e.target.value)}
               disabled={isLoading}
-              className="flex-1 text-caption bg-slate-50 border-slate-200 focus:bg-white rounded-civic-md"
+              className="flex-1 text-caption bg-slate-50 border-slate-200 focus:bg-white rounded-full min-h-[46px] px-4"
             />
             <Button
               type="submit"
               size="md"
               disabled={isLoading || !inputQuestion.trim()}
-              className="px-5 shadow-civic-xs shrink-0 cursor-pointer"
+              className="px-6 min-h-[46px] rounded-full shadow-civic-xs shrink-0 cursor-pointer"
             >
               <Send className="h-4 w-4 mr-1.5" />
               <span>Send</span>

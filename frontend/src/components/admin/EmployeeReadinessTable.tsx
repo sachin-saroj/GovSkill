@@ -40,7 +40,7 @@ export const EmployeeReadinessTable: React.FC<EmployeeReadinessTableProps> = ({
             disabled={offset === 0 || isLoading}
             onClick={onPrevPage}
             aria-label="Previous page"
-            className="p-1.5 border border-slate-300 rounded-civic-md hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-civic-xs cursor-pointer"
+            className="p-1.5 border border-slate-300 rounded-full hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-civic-xs cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -49,7 +49,7 @@ export const EmployeeReadinessTable: React.FC<EmployeeReadinessTableProps> = ({
             disabled={attempts.length < limit || isLoading}
             onClick={onNextPage}
             aria-label="Next page"
-            className="p-1.5 border border-slate-300 rounded-civic-md hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-civic-xs cursor-pointer"
+            className="p-1.5 border border-slate-300 rounded-full hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-civic-xs cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

@@ -11,9 +11,9 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    rectangular: 'rounded-civic-md',
+    rectangular: 'rounded-civic-lg',
     circular: 'rounded-full',
-    text: 'rounded-civic-sm h-4 w-full',
+    text: 'rounded-full h-4 w-full',
   };
 
   return (

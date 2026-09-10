@@ -15,13 +15,13 @@ import {
   LayoutDashboard,
   Cpu,
   Layers,
+  QrCode,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
-import EcosystemVisual from '@/components/landing/EcosystemVisual';
-import HeroVisual from '@/components/landing/HeroVisual';
-import InteractiveTiltCard from '@/components/landing/InteractiveTiltCard';
-import { staggerContainerVariants, viewportOnce } from '@/lib/motion';
+import Card from '@/components/ui/Card';
+import CivicArchitectureConsole from '@/components/landing/CivicArchitectureConsole';
+import { staggerContainerVariants } from '@/lib/motion';
 
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
@@ -38,7 +38,7 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-900 selection:bg-civic-200 selection:text-civic-900">
-      {/* 1. Immersive 3D Hero Section */}
+      {/* 1. Authoritative Civic Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-civic-950 to-slate-900 text-white pt-12 pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         {/* Layered Ambient Depth Lighting */}
         <div className="absolute inset-0 bg-civic-dark-pattern opacity-30 pointer-events-none" />
@@ -87,36 +87,37 @@ export const LandingPage: React.FC = () => {
               className="flex flex-wrap items-center justify-center gap-4 pt-2"
             >
               <Link to="/citizen">
-                <motion.div
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="shadow-civic-md hover:shadow-emerald-600/30 cursor-pointer"
+                  leftIcon={<FileCheck className="h-5 w-5" />}
+                  rightIcon={<ArrowRight className="h-4 w-4" />}
                 >
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="shadow-civic-md hover:shadow-emerald-600/30 cursor-pointer"
-                    leftIcon={<FileCheck className="h-5 w-5" />}
-                    rightIcon={<ArrowRight className="h-4 w-4" />}
-                  >
-                    Citizen Pre-Check (GovAssist)
-                  </Button>
-                </motion.div>
+                  Citizen Pre-Check (GovAssist)
+                </Button>
               </Link>
 
               <Link to={user ? (user.role === 'admin' ? '/admin' : '/progress') : '/login'}>
-                <motion.div
-                  whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-                  whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/10 hover:bg-white/20 text-white border-slate-600 shadow-civic-md backdrop-blur-md cursor-pointer"
+                  leftIcon={<Shield className="h-5 w-5 text-saffron-400" />}
                 >
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="bg-white/10 hover:bg-white/20 text-white border-slate-600 shadow-civic-md backdrop-blur-md cursor-pointer"
-                    leftIcon={<Shield className="h-5 w-5 text-saffron-400" />}
-                  >
-                    {user ? 'Go to Officer Workspace' : 'Officer & Supervisor Login'}
-                  </Button>
-                </motion.div>
+                  {user ? 'Go to Officer Workspace' : 'Officer & Supervisor Login'}
+                </Button>
+              </Link>
+
+              <Link to="/verify">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-civic-900/60 hover:bg-civic-800 text-slate-200 border-civic-700 shadow-civic-md cursor-pointer"
+                  leftIcon={<QrCode className="h-4 w-4 text-emerald-400" />}
+                >
+                  Verify Certificate
+                </Button>
               </Link>
             </motion.div>
 
@@ -130,7 +131,7 @@ export const LandingPage: React.FC = () => {
                 <span className="text-caption font-semibold text-slate-200">100% Deterministic Rules</span>
               </div>
               <div className="flex items-center gap-2.5 p-3 rounded-civic-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs backdrop-blur-sm">
-                <Bot className="h-4 w-4 text-blue-400 shrink-0" />
+                <Bot className="h-4 w-4 text-civic-400 shrink-0" />
                 <span className="text-caption font-semibold text-slate-200">Grounded Gemini AI Tutor</span>
               </div>
               <div className="flex items-center gap-2.5 p-3 rounded-civic-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs backdrop-blur-sm">
@@ -138,33 +139,70 @@ export const LandingPage: React.FC = () => {
                 <span className="text-caption font-semibold text-slate-200">Server-Scored Quiz Scoring</span>
               </div>
               <div className="flex items-center gap-2.5 p-3 rounded-civic-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-colors shadow-civic-xs backdrop-blur-sm">
-                <LayoutDashboard className="h-4 w-4 text-purple-400 shrink-0" />
+                <LayoutDashboard className="h-4 w-4 text-emerald-400 shrink-0" />
                 <span className="text-caption font-semibold text-slate-200">Department Readiness Metrics</span>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Interactive 3D Hero Visual Showcase */}
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            <HeroVisual />
-          </motion.div>
+          {/* Clean Civic Infrastructure Showcase Console */}
+          <div className="w-full max-w-5xl mx-auto rounded-civic-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 shadow-civic-2xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-civic-xl bg-civic-900 text-saffron-400 flex items-center justify-center border border-civic-700 font-bold">
+                  <Shield className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-section-heading font-semibold text-white">
+                    GovSkill National Public Infrastructure Console
+                  </h2>
+                  <p className="text-caption text-slate-400">
+                    Production Architecture • Deterministic Verification • Tamper-Evident HMAC Certification
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-800 text-micro font-mono text-emerald-400">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  API GATEWAY ACTIVE
+                </span>
+              </div>
+            </div>
+
+            {/* Live Operational Metric Telemetry */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 rounded-civic-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <p className="text-micro font-semibold uppercase tracking-wider text-slate-400">Rule Engine Logic</p>
+                <p className="text-section-heading font-bold text-emerald-400 font-mono">100% Deterministic</p>
+                <p className="text-micro text-slate-400">Zero AI in pass/fail decisions</p>
+              </div>
+
+              <div className="p-4 rounded-civic-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <p className="text-micro font-semibold uppercase tracking-wider text-slate-400">Digital Credentials</p>
+                <p className="text-section-heading font-bold text-saffron-400 font-mono">HMAC-SHA256</p>
+                <p className="text-micro text-slate-400">Tamper-evident verification</p>
+              </div>
+
+              <div className="p-4 rounded-civic-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <p className="text-micro font-semibold uppercase tracking-wider text-slate-400">Citizen Privacy</p>
+                <p className="text-section-heading font-bold text-blue-400 font-mono">Zero PII to LLM</p>
+                <p className="text-micro text-slate-400">Isolated document storage</p>
+              </div>
+
+              <div className="p-4 rounded-civic-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                <p className="text-micro font-semibold uppercase tracking-wider text-slate-400">Physical Counter Prep</p>
+                <p className="text-section-heading font-bold text-purple-400 font-mono">A4 Counter Slip</p>
+                <p className="text-micro text-slate-400">Instant printable receipt</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 2. Interactive Dynamic Architecture Ecosystem Section */}
+      {/* 2. Interactive Civic Architecture Ecosystem Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto space-y-8">
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 0.4 }}
-            className="text-center max-w-3xl mx-auto space-y-2"
-          >
+          <div className="text-center max-w-3xl mx-auto space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-900 border border-civic-700 text-micro font-semibold uppercase tracking-wider text-civic-300">
               <Cpu className="h-3.5 w-3.5 text-civic-400" />
               <span>Full System Architecture</span>
@@ -175,22 +213,16 @@ export const LandingPage: React.FC = () => {
             <p className="text-caption text-slate-400 leading-relaxed">
               Explore how citizen pre-verification connects to deterministic validation rules, grounded AI explanations, and employee competency certification.
             </p>
-          </motion.div>
+          </div>
 
-          <EcosystemVisual />
+          <CivicArchitectureConsole />
         </div>
       </section>
 
-      {/* 3. Dual Ecosystem 3D Tilt Cards Section */}
+      {/* 3. Dual Ecosystem Pillars Section (Sachin Pure Civic UI Standard) */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-50 border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto space-y-12">
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 0.4 }}
-            className="text-center max-w-3xl mx-auto space-y-2"
-          >
+          <div className="text-center max-w-3xl mx-auto space-y-2">
             <Badge variant="info" size="md">
               Two Pillars • One Unified Platform
             </Badge>
@@ -200,14 +232,11 @@ export const LandingPage: React.FC = () => {
             <p className="text-body text-slate-600 leading-relaxed">
               Bridging administrative staff capability and citizen self-service through transparent rule verification and grounded artificial intelligence.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* GovSkill Pillar Card with 3D Tilt */}
-            <InteractiveTiltCard
-              maxTilt={4}
-              className="bg-white border border-civic-200/90 rounded-civic-2xl p-8 flex flex-col justify-between"
-            >
+            {/* GovSkill Pillar Card */}
+            <Card className="bg-white border border-civic-200/90 rounded-civic-2xl p-8 flex flex-col justify-between shadow-civic-sm hover:shadow-civic-xl hover:border-civic-400 transition-all duration-200">
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
@@ -261,13 +290,10 @@ export const LandingPage: React.FC = () => {
                   </Button>
                 </Link>
               </div>
-            </InteractiveTiltCard>
+            </Card>
 
-            {/* GovAssist Pillar Card with 3D Tilt */}
-            <InteractiveTiltCard
-              maxTilt={4}
-              className="bg-white border border-emerald-200/90 rounded-civic-2xl p-8 flex flex-col justify-between"
-            >
+            {/* GovAssist Pillar Card */}
+            <Card className="bg-white border border-emerald-200/90 rounded-civic-2xl p-8 flex flex-col justify-between shadow-civic-sm hover:shadow-civic-xl hover:border-emerald-400 transition-all duration-200">
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
@@ -321,7 +347,7 @@ export const LandingPage: React.FC = () => {
                   </Button>
                 </Link>
               </div>
-            </InteractiveTiltCard>
+            </Card>
           </div>
         </div>
       </section>
@@ -329,13 +355,7 @@ export const LandingPage: React.FC = () => {
       {/* 4. How the Ecosystem Connects / Workflow Storytelling */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto space-y-12">
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 0.4 }}
-            className="text-center max-w-2xl mx-auto space-y-2"
-          >
+          <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-micro font-semibold uppercase tracking-wider text-slate-700">
               <Layers className="h-3.5 w-3.5 text-civic-700" />
               <span>Step-by-Step Workflow</span>
@@ -346,17 +366,10 @@ export const LandingPage: React.FC = () => {
             <p className="text-caption text-slate-500">
               Four streamlined steps from citizen pre-submission to verified officer qualification.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.35, delay: 0.05 }}
-              whileHover={shouldReduceMotion ? {} : { y: -3 }}
-              className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all"
-            >
+            <div className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all">
               <div className="h-8 w-8 rounded-civic-md bg-emerald-600 text-white flex items-center justify-center text-caption font-semibold shadow-civic-xs">
                 1
               </div>
@@ -364,16 +377,9 @@ export const LandingPage: React.FC = () => {
               <p className="text-caption text-slate-600 leading-relaxed">
                 Applicant uploads income certificate. OCR and deterministic rules check validity before physical queueing.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.35, delay: 0.12 }}
-              whileHover={shouldReduceMotion ? {} : { y: -3 }}
-              className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all"
-            >
+            <div className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all">
               <div className="h-8 w-8 rounded-civic-md bg-civic-700 text-white flex items-center justify-center text-caption font-semibold shadow-civic-xs">
                 2
               </div>
@@ -381,16 +387,9 @@ export const LandingPage: React.FC = () => {
               <p className="text-caption text-slate-600 leading-relaxed">
                 Government employees review administrative procedures and consult the grounded AI tutor for nuanced clarification.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.35, delay: 0.19 }}
-              whileHover={shouldReduceMotion ? {} : { y: -3 }}
-              className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all"
-            >
+            <div className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all">
               <div className="h-8 w-8 rounded-civic-md bg-saffron-600 text-white flex items-center justify-center text-caption font-semibold shadow-civic-xs">
                 3
               </div>
@@ -398,16 +397,9 @@ export const LandingPage: React.FC = () => {
               <p className="text-caption text-slate-600 leading-relaxed">
                 Trainees take server-evaluated quizzes to verify competency and earn official digital skill credentials.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.35, delay: 0.26 }}
-              whileHover={shouldReduceMotion ? {} : { y: -3 }}
-              className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all"
-            >
+            <div className="p-6 rounded-civic-xl border border-slate-200 bg-slate-50/70 space-y-2 relative hover:shadow-civic-md transition-all">
               <div className="h-8 w-8 rounded-civic-md bg-civic-900 text-white flex items-center justify-center text-caption font-semibold shadow-civic-xs">
                 4
               </div>
@@ -415,7 +407,7 @@ export const LandingPage: React.FC = () => {
               <p className="text-caption text-slate-600 leading-relaxed">
                 Department supervisors track employee readiness scorecards, audit histories, and compliance readiness.
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -435,24 +427,19 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center justify-center gap-4 shrink-0">
             <Link to="/citizen">
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
-              >
-                <Button size="md" variant="secondary" className="shadow-civic-md cursor-pointer">
-                  Test Citizen Tool
-                </Button>
-              </motion.div>
+              <Button size="md" variant="secondary" className="shadow-civic-md cursor-pointer">
+                Test Citizen Tool
+              </Button>
             </Link>
             <Link to="/login">
-              <motion.div
-                whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
-                whileTap={shouldReduceMotion ? {} : { scale: 0.97 }}
-              >
-                <Button size="md" variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-slate-600 shadow-civic-md cursor-pointer">
-                  Officer Sign In
-                </Button>
-              </motion.div>
+              <Button size="md" variant="outline" className="bg-white/10 text-white hover:bg-white/20 border-slate-600 shadow-civic-md cursor-pointer">
+                Officer Sign In
+              </Button>
+            </Link>
+            <Link to="/verify">
+              <Button size="md" variant="outline" className="bg-civic-800 text-slate-200 hover:bg-civic-700 border-civic-600 shadow-civic-md cursor-pointer">
+                Public Verification
+              </Button>
             </Link>
           </div>
         </div>

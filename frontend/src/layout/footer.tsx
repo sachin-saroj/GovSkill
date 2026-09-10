@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
           {/* Brand & Purpose */}
           <div className="space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-civic-md bg-civic-800 text-white flex items-center justify-center border border-civic-700">
+              <div className="h-8 w-8 rounded-full bg-civic-800 text-white flex items-center justify-center border border-civic-700">
                 <Shield className="h-4 w-4 text-saffron-400" />
               </div>
               <span className="font-semibold text-section-heading text-white tracking-tight">GovSkill</span>
@@ -74,6 +74,12 @@ export const Footer: React.FC = () => {
                   <span>Income Certificate Pre-Check</span>
                 </Link>
               </li>
+              <li>
+                <Link to="/verify" className="text-civic-300 hover:text-white font-medium flex items-center gap-1.5 transition-colors">
+                  <Shield className="h-3.5 w-3.5 text-saffron-400" />
+                  <span>Verify Digital Certificate</span>
+                </Link>
+              </li>
               <li className="text-caption text-slate-400 pt-1 leading-relaxed font-normal">
                 Pre-submission OCR and 4-rule compliance engine checks format, validity period, issuing authority, and seal clarity before physical submission.
               </li>
@@ -85,18 +91,18 @@ export const Footer: React.FC = () => {
             <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-100">
               System Governance
             </h4>
-            <div className="bg-civic-900/80 rounded-civic-md p-3 border border-civic-800 text-caption space-y-1.5 font-normal">
-              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
+            <div className="divide-y divide-slate-800/80 text-caption font-normal">
+              <div className="flex items-center justify-between py-2 text-slate-300">
                 <span>Rule Execution</span>
-                <span className="text-emerald-400">100% Deterministic</span>
+                <span className="text-emerald-400 font-semibold font-mono text-micro">100% Deterministic</span>
               </div>
-              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
+              <div className="flex items-center justify-between py-2 text-slate-300">
                 <span>AI Layer Scope</span>
-                <span className="text-civic-300">Grounded Explanations</span>
+                <span className="text-civic-300 font-semibold">Grounded Explanations</span>
               </div>
-              <div className="flex items-center justify-between text-caption font-semibold text-slate-200">
+              <div className="flex items-center justify-between py-2 text-slate-300">
                 <span>Citizen Data</span>
-                <span className="text-slate-400">Isolated & Transient</span>
+                <span className="text-slate-400 font-semibold">Isolated & Transient</span>
               </div>
             </div>
           </div>

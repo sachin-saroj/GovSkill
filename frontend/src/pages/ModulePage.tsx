@@ -165,24 +165,50 @@ export const ModulePage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
-      {/* Header Banner */}
+      {/* 1. Compact Professional Module Header */}
       <motion.div variants={fadeUpVariants}>
-        <div className="relative overflow-hidden rounded-civic-2xl bg-gradient-to-r from-civic-950 via-civic-900 to-civic-800 p-8 text-white shadow-civic-xl border border-civic-800">
-          <div className="relative z-10 space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-civic-800/80 border border-civic-700 text-micro font-semibold uppercase tracking-wider text-slate-200 backdrop-blur-sm">
-              <BookOpen className="h-3.5 w-3.5 text-saffron-400" />
-              <span>Core Employee Training Module</span>
+        <div className="bg-white rounded-civic-xl border border-slate-200 p-6 sm:p-8 shadow-civic-xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-2 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-civic-50 border border-civic-200 text-micro font-semibold uppercase tracking-wider text-civic-800">
+                  <BookOpen className="h-3.5 w-3.5 text-civic-700" />
+                  <span>Administrative Training Curriculum</span>
+                </span>
+
+                {isCurrentCompleted ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                    <span>Curriculum Completed</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-50 text-civic-800 border border-civic-200">
+                    In Progress
+                  </span>
+                )}
+              </div>
+
+              <h1 className="text-page-title font-semibold tracking-tight text-slate-900 leading-tight">
+                {selectedModule?.title || 'Digital Document Handling'}
+              </h1>
+
+              <p className="text-body text-slate-600 leading-relaxed font-normal">
+                Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
+              </p>
             </div>
 
-            <h1 className="text-page-title font-semibold tracking-tight text-white leading-tight">
-              {selectedModule?.title || 'Digital Document Handling'}
-            </h1>
-
-            <p className="text-body text-slate-300 leading-relaxed max-w-2xl font-normal">
-              Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
-            </p>
+            <div className="shrink-0 flex items-center gap-3">
+              <div className="bg-slate-50 border border-slate-200/80 rounded-civic-lg p-3 text-center min-w-[120px]">
+                <span className="text-micro uppercase font-semibold text-slate-500 block">
+                  Module
+                </span>
+                <span className="text-section-heading font-semibold text-slate-900 font-mono">
+                  {modules.findIndex((m) => m.id === selectedModule?.id) + 1} of {modules.length}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>

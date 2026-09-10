@@ -32,14 +32,14 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
             <span>{answeredCount} Answered</span>
           </span>
           {unansweredCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-amber-700 font-semibold">
-              <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+            <span className="inline-flex items-center gap-1 text-saffron-800 font-medium">
+              <AlertCircle className="h-3.5 w-3.5 text-saffron-600" />
               <span>{unansweredCount} Unanswered</span>
             </span>
           )}
           {flaggedCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-amber-800 font-semibold">
-              <Flag className="h-3.5 w-3.5 text-amber-700 fill-amber-700" />
+            <span className="inline-flex items-center gap-1 text-saffron-800 font-semibold">
+              <Flag className="h-3.5 w-3.5 text-saffron-700 fill-saffron-700" />
               <span>{flaggedCount} Flagged</span>
             </span>
           )}
@@ -54,7 +54,7 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
 
           let btnClass = 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200';
           if (isFlagged) {
-            btnClass = 'bg-amber-100 text-amber-900 border-amber-400 font-semibold';
+            btnClass = 'bg-saffron-100 text-saffron-900 border-saffron-400 font-semibold';
           } else if (isAnswered) {
             btnClass = 'bg-civic-900 text-white border-civic-900 font-semibold shadow-civic-xs';
           }
@@ -65,7 +65,7 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
               type="button"
               onClick={() => onJumpToQuestion(idx)}
               disabled={disabled}
-              className={`h-8 min-w-[32px] px-2 rounded-civic-md border text-caption flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 ${btnClass}`}
+              className={`h-8 min-w-[32px] px-2 rounded-full border text-caption flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 ${btnClass}`}
               title={`Jump to Question ${idx + 1}${isFlagged ? ' (Flagged)' : ''}${isAnswered ? ' (Answered)' : ''}`}
             >
               <span>{idx + 1}</span>

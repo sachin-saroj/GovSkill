@@ -56,21 +56,21 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     >
       {!isUser && (
         <div
-          className={`h-8 w-8 rounded-civic-md flex items-center justify-center shrink-0 shadow-civic-xs mt-0.5 ${
-            isOutOfScope ? 'bg-amber-700 text-white' : 'bg-civic-800 text-white'
+          className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 shadow-civic-xs mt-0.5 ${
+            isOutOfScope ? 'bg-saffron-600 text-white' : 'bg-civic-900 text-white'
           }`}
         >
-          {isOutOfScope ? <AlertTriangle className="h-4 w-4 text-amber-200" /> : <Bot className="h-4 w-4 text-saffron-400" />}
+          {isOutOfScope ? <AlertTriangle className="h-4 w-4 text-saffron-200" /> : <Bot className="h-4 w-4 text-saffron-400" />}
         </div>
       )}
 
       <div
-        className={`max-w-[90%] sm:max-w-[85%] rounded-civic-xl px-5 py-4 text-body leading-relaxed shadow-civic-xs transition-all space-y-3 ${
+        className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-5 py-4 text-body leading-relaxed shadow-civic-xs transition-all space-y-3 ${
           isUser
-            ? 'bg-civic-900 text-white rounded-br-none'
+            ? 'bg-civic-900 text-white rounded-tr-sm'
             : isOutOfScope
-            ? 'bg-amber-50/90 border border-amber-300 text-slate-900 rounded-bl-none'
-            : 'bg-white border border-slate-200 text-slate-900 rounded-bl-none'
+            ? 'bg-saffron-50/90 border border-saffron-300 text-slate-900 rounded-tl-sm'
+            : 'bg-white border border-slate-200 text-slate-900 rounded-tl-sm'
         }`}
       >
         {/* Source Reference & Grounding Status Strip */}
@@ -79,8 +79,8 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             <div className="flex flex-wrap items-center gap-1.5">
               {/* Grounding Status Pill */}
               {isOutOfScope ? (
-                <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
-                  <AlertTriangle className="h-3 w-3 text-amber-700" />
+                <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-saffron-900 bg-saffron-100 px-2.5 py-0.5 rounded-full border border-saffron-300">
+                  <AlertTriangle className="h-3 w-3 text-saffron-700" />
                   <span>Unverified / Out of Scope</span>
                 </span>
               ) : (
@@ -91,9 +91,9 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               )}
 
               {/* Matched Module Name */}
-              <span className="inline-flex items-center gap-1 text-micro font-semibold text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-civic-md border border-civic-200">
+              <span className="inline-flex items-center gap-1 text-micro font-semibold text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
                 <BookOpen className="h-3 w-3 text-civic-700" />
-                <span className="truncate max-w-[180px]">{msg.matched_module_title}</span>
+                <span className="truncate max-w-[200px]">{msg.matched_module_title}</span>
               </span>
             </div>
 
@@ -112,11 +112,11 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         {/* Source Sections Tags */}
         {!isUser && msg.source_sections && msg.source_sections.length > 0 && !isOutOfScope && (
           <div className="flex flex-wrap items-center gap-1 text-caption text-slate-500">
-            <span className="font-semibold text-slate-600">Sections:</span>
+            <span className="font-semibold text-slate-600">Training source sections:</span>
             {msg.source_sections.map((sec, idx) => (
               <span
                 key={idx}
-                className="px-2 py-0.5 rounded-civic-sm bg-slate-100 text-slate-700 font-medium border border-slate-200 text-micro"
+                className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-medium border border-slate-200 text-micro"
               >
                 {sec}
               </span>
@@ -125,7 +125,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         )}
 
         {/* Message Content Body */}
-        <div className="whitespace-pre-line leading-relaxed font-normal text-slate-800">
+        <div className="whitespace-pre-line leading-relaxed font-normal text-slate-800 text-body">
           {msg.text}
         </div>
 
@@ -139,7 +139,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'simple')}
               disabled={disabled}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-civic-md bg-slate-50 hover:bg-civic-50 text-slate-700 hover:text-civic-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-civic-50 text-slate-700 hover:text-civic-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
             >
               <HelpCircle className="h-3.5 w-3.5 text-civic-700" />
               <span>Explain simpler</span>
@@ -148,7 +148,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'procedure')}
               disabled={disabled}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-civic-md bg-slate-50 hover:bg-civic-50 text-slate-700 hover:text-civic-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-civic-50 text-slate-700 hover:text-civic-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
             >
               <ListOrdered className="h-3.5 w-3.5 text-civic-700" />
               <span>Give procedure</span>
@@ -157,16 +157,16 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'pitfalls')}
               disabled={disabled}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-civic-md bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-saffron-50 text-slate-700 hover:text-saffron-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
             >
-              <AlertOctagon className="h-3.5 w-3.5 text-amber-600" />
+              <AlertOctagon className="h-3.5 w-3.5 text-saffron-600" />
               <span>What to avoid</span>
             </button>
             <button
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'example')}
               disabled={disabled}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-civic-md bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-900 border border-slate-200 text-caption font-semibold transition-all cursor-pointer disabled:opacity-50"
             >
               <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
               <span>Workplace scenario</span>
@@ -187,7 +187,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                   type="button"
                   onClick={() => onSelectFollowup(followup)}
                   disabled={disabled}
-                  className="text-left text-caption px-3 py-1.5 rounded-civic-md bg-civic-50/70 hover:bg-civic-100 text-civic-900 border border-civic-200/80 transition-all font-medium cursor-pointer disabled:opacity-50"
+                  className="text-left text-caption px-3.5 py-1.5 rounded-full bg-civic-50/70 hover:bg-civic-100 text-civic-900 border border-civic-200/80 transition-all font-medium cursor-pointer disabled:opacity-50"
                 >
                   💬 {followup}
                 </button>
@@ -207,7 +207,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
       </div>
 
       {isUser && (
-        <div className="h-8 w-8 rounded-civic-md bg-slate-700 text-white flex items-center justify-center shrink-0 shadow-civic-xs mt-0.5">
+        <div className="h-8 w-8 rounded-full bg-slate-700 text-white flex items-center justify-center shrink-0 shadow-civic-xs mt-0.5">
           <User className="h-4 w-4 text-slate-200" />
         </div>
       )}
