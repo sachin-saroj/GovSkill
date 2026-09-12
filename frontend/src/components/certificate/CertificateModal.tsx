@@ -47,23 +47,28 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-white rounded-civic-2xl shadow-2xl overflow-hidden border border-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A0A0A]/75 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-[#EDE4D0] rounded-3xl shadow-2xl overflow-hidden border border-[#D9CFBB]">
         {/* Top Control Bar */}
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200 print:hidden">
-          <div className="flex items-center gap-2 text-caption font-semibold text-civic-900">
-            <Award className="h-4 w-4 text-saffron-600" />
+        <div className="flex items-center justify-between px-6 py-4 bg-[#EDE4D0] border-b border-[#D9CFBB] print:hidden">
+          <div className="flex items-center gap-2 text-caption font-semibold text-[#0A0A0A]">
+            <Award className="h-4 w-4 text-[#C9A24A]" />
             <span>Official Training Credential</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handlePrint} className="flex items-center gap-1.5 text-caption">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrint}
+              className="flex items-center gap-1.5 text-caption rounded-full border-[#D9CFBB] bg-[#F5EFE0] hover:bg-[#EDE4D0] text-[#0A0A0A]"
+            >
               <Printer className="h-3.5 w-3.5" />
               <span>Print / Save PDF</span>
             </Button>
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 text-slate-500 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 text-[#6B6357] hover:text-[#0A0A0A] rounded-full hover:bg-[#D9CFBB]/50 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
@@ -71,66 +76,66 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         </div>
 
         {/* Printable Certificate Frame */}
-        <div className="p-8 sm:p-10 text-center bg-white print:p-0">
-          <div className="border-4 border-double border-civic-800/30 rounded-civic-xl p-8 sm:p-10 bg-gradient-to-b from-slate-50/50 to-white relative overflow-hidden">
+        <div className="p-6 sm:p-8 text-center bg-[#EDE4D0] print:p-0">
+          <div className="border-2 border-[#C9A24A]/60 rounded-2xl p-8 sm:p-10 bg-[#F5EFE0] relative overflow-hidden shadow-inner">
             {/* Watermark Seal */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-              <Shield className="w-96 h-96 text-civic-900" />
+              <Shield className="w-96 h-96 text-[#0A0A0A]" />
             </div>
 
             {/* Header / Seal */}
-            <div className="inline-flex p-3 rounded-full bg-civic-100 text-civic-900 mb-3">
-              <Shield className="h-10 w-10 text-civic-800" />
+            <div className="inline-flex p-3 rounded-full bg-[#0A0A0A] text-[#C9A24A] mb-3">
+              <Shield className="h-10 w-10" />
             </div>
 
-            <p className="text-micro font-semibold uppercase tracking-wider text-slate-500 mb-1">
+            <p className="font-mono text-micro font-semibold uppercase tracking-widest text-[#6B6357] mb-1">
               Local Government Administration & Training Board
             </p>
-            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight mb-4">
+            <h1 className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight mb-4">
               Certificate of Digital Competency
             </h1>
 
-            <p className="text-caption text-slate-500 mb-2">This is to certify that</p>
-            <div className="text-section-heading font-semibold text-civic-900 border-b-2 border-civic-700/30 pb-1 max-w-md mx-auto mb-4 font-mono">
+            <p className="text-caption text-[#6B6357] mb-2 font-normal">This is to certify that</p>
+            <div className="font-mono text-section-heading font-semibold text-[#0A0A0A] border-b border-[#D9CFBB] pb-1 max-w-md mx-auto mb-4">
               {employeeEmail}
             </div>
 
-            <p className="text-caption text-slate-600 leading-relaxed max-w-lg mx-auto mb-6">
+            <p className="text-caption text-[#6B6357] leading-relaxed max-w-lg mx-auto mb-6 font-normal">
               has successfully completed all prescribed official lesson guidelines and achieved verified mastery in the training module:
             </p>
 
-            <div className="inline-block px-5 py-2.5 rounded-full bg-civic-50 border border-civic-200 text-civic-900 font-semibold text-section-heading mb-6">
+            <div className="inline-block px-5 py-2.5 rounded-full bg-[#EDE4D0] border border-[#D9CFBB] text-[#0A0A0A] font-semibold text-section-heading mb-6">
               {moduleTitle}
             </div>
 
             {/* Score & Evaluation Details */}
-            <div className="grid grid-cols-3 gap-3 max-w-md mx-auto bg-slate-50 p-4 rounded-civic-xl border border-slate-200 text-caption mb-6">
+            <div className="grid grid-cols-3 gap-3 max-w-md mx-auto bg-[#EDE4D0] p-4 rounded-xl border border-[#D9CFBB] text-caption mb-6">
               <div>
-                <span className="block text-micro text-slate-500 uppercase font-semibold">Evaluation Score</span>
-                <span className="font-semibold text-emerald-700">{scorePercentage}%</span>
+                <span className="block font-mono text-micro text-[#6B6357] uppercase font-semibold">Evaluation Score</span>
+                <span className="font-semibold text-[#2A5B4A]">{scorePercentage}%</span>
               </div>
               <div>
-                <span className="block text-micro text-slate-500 uppercase font-semibold">Questions Passed</span>
-                <span className="font-semibold text-slate-900">{bestScore} / {totalQuestions}</span>
+                <span className="block font-mono text-micro text-[#6B6357] uppercase font-semibold">Questions Passed</span>
+                <span className="font-semibold text-[#0A0A0A]">{bestScore} / {totalQuestions}</span>
               </div>
               <div>
-                <span className="block text-micro text-slate-500 uppercase font-semibold">Verification</span>
-                <span className="font-semibold text-civic-900 inline-flex items-center gap-1">
-                  <CheckCircle2 className="h-3 w-3 text-emerald-600" /> Verified
+                <span className="block font-mono text-micro text-[#6B6357] uppercase font-semibold">Verification</span>
+                <span className="font-semibold text-[#2A5B4A] inline-flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3 text-[#2A5B4A]" /> Verified
                 </span>
               </div>
             </div>
 
             {/* Signature & Date Footer */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 pt-4 border-t border-slate-200 text-caption text-slate-500">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 pt-4 border-t border-[#D9CFBB] text-caption text-[#6B6357]">
               <div className="text-left space-y-1">
-                <span className="block text-micro uppercase font-semibold">Credential ID</span>
-                <span className="font-mono text-caption font-semibold text-slate-900">{certificateId}</span>
+                <span className="block font-mono text-micro uppercase font-semibold">Credential ID</span>
+                <span className="font-mono text-caption font-semibold text-[#0A0A0A]">{certificateId}</span>
                 <a
                   href={`/verify/${certificateId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-civic-700 hover:underline print:hidden"
+                  className="inline-flex items-center gap-1 font-mono text-micro font-semibold uppercase tracking-wider text-[#2A5B4A] hover:underline print:hidden"
                 >
                   <span>Verify Authenticity Online</span>
                   <ExternalLink className="h-3 w-3" />
@@ -138,8 +143,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               </div>
 
               <div className="text-left sm:text-right">
-                <span className="block text-micro uppercase font-semibold">Date of Issuance</span>
-                <span className="font-semibold text-slate-900">{issueDate}</span>
+                <span className="block font-mono text-micro uppercase font-semibold">Date of Issuance</span>
+                <span className="font-semibold text-[#0A0A0A]">{issueDate}</span>
               </div>
             </div>
           </div>

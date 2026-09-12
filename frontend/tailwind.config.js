@@ -7,14 +7,66 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Target Design Token Architecture
+        brand: {
+          DEFAULT: "#1E40AF",
+          hover: "#1E3A8A",
+          surface: "#FAFAFA",
+          border: "#E5E5E5",
+        },
+        // Cohesive Canvas Design System (CCDS) Primary Tokens
+        ccds: {
+          backdrop: "#EAECEF",
+          canvas: "#FFFFFF",
+          subtle: "#F8FAFC",
+          border: "#F1F5F9",
+          textPrimary: "#0A0A0A",
+          textBody: "#525252",
+          textMuted: "#94A3B8",
+          mint: {
+            DEFAULT: "#3BB78F",
+            glow: "#47D1A5",
+            hover: "#34A580",
+          },
+          teal: {
+            dark: "#1F7A8C",
+            lumina: "#2DD4BF",
+          },
+          coral: {
+            DEFAULT: "#FF6B4A",
+            hover: "#FA5A3C",
+            light: "#FFF1EE",
+          },
+          gold: {
+            DEFAULT: "#FFB800",
+            hover: "#E5A600",
+            light: "#FFF9E6",
+          },
+          cyan: {
+            DEFAULT: "#0EA5E9",
+            light: "#E0F2FE",
+            dark: "#0369A1",
+          },
+        },
+        accent: {
+          mint: "#A7F3D0",
+          "mint-text": "#065F46",
+          "mint-bg": "#ECFDF5",
+          yellow: "#FEF08A",
+          "yellow-text": "#854D0E",
+          "yellow-bg": "#FEFCE8",
+          cyan: "#A5F3FC",
+          "cyan-text": "#155E75",
+          "cyan-bg": "#ECFEFF",
+        },
         // High-End Civic & National Digital Infrastructure Color Palette
         civic: {
           950: "#071322", // Deepest midnight navy
           900: "#0B192C", // Base national navy
           850: "#0F284E", // Elevated navy surface
           800: "#133E87", // Primary heritage navy
-          700: "#1E4D8C", // Standard GovSkill brand blue
-          600: "#2A69AC",
+          700: "#1E40AF", // Aligned with target primary #1E40AF
+          600: "#2563EB",
           500: "#3B82F6",
           400: "#60A5FA",
           300: "#93C5FD",
@@ -50,8 +102,8 @@ export default {
         },
         // Backward-compatible semantic tokens
         primary: {
-          DEFAULT: "#1E4D8C",
-          hover: "#163A6B",
+          DEFAULT: "#1E40AF",
+          hover: "#1E3A8A",
           dark: "#0B192C",
           light: "#EFF6FF",
         },
@@ -72,16 +124,17 @@ export default {
         },
         surface: {
           DEFAULT: "#FFFFFF",
-          subtle: "#F8FAFC",
+          subtle: "#FAFAFA",
           card: "#FFFFFF",
           elevated: "#FFFFFF",
+          muted: "#F4F4F5",
         },
-        appbg: "#F8FAFC",
-        textPrimary: "#0F172A",
-        textSecondary: "#475569",
-        textMuted: "#64748B",
-        appBorder: "#E2E8F0",
-        appBorderStrong: "#CBD5E1",
+        appbg: "#FAFAFA",
+        textPrimary: "#0A0A0A",
+        textSecondary: "#525252",
+        textMuted: "#A3A3A3",
+        appBorder: "#E5E5E5",
+        appBorderStrong: "#D4D4D8",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],

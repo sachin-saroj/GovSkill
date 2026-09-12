@@ -102,7 +102,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
             onClose();
           }
         }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/70 backdrop-blur-sm print:p-0 print:static print:bg-white print:backdrop-blur-none"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-[#0A0A0A]/75 backdrop-blur-sm print:p-0 print:static print:bg-white print:backdrop-blur-none"
       >
         <motion.div
           variants={scaleInVariants}
@@ -112,13 +112,13 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
           role="dialog"
           aria-modal="true"
           aria-labelledby="counter-slip-title"
-          className="relative w-full max-w-3xl bg-white rounded-civic-2xl shadow-civic-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col print:max-h-none print:shadow-none print:border-none print:rounded-none print:w-full print:m-0"
+          className="relative w-full max-w-3xl bg-[#F5EFE0] rounded-2xl shadow-2xl border border-[#D9CFBB] overflow-hidden my-auto max-h-[92vh] flex flex-col print:max-h-none print:shadow-none print:border-none print:rounded-none print:w-full print:m-0"
         >
           {/* Top Modal Controls (Hidden in Print) */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80 print:hidden shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#D9CFBB] bg-[#EDE4D0] print:hidden shrink-0">
             <div className="flex items-center gap-2">
-              <FileCheck2 className="h-4 w-4 text-civic-800" />
-              <span className="text-micro font-semibold uppercase tracking-wider text-civic-900">
+              <FileCheck2 className="h-4 w-4 text-[#2A5B4A]" />
+              <span className="font-mono text-micro font-semibold uppercase tracking-wider text-[#6B6357]">
                 Pre-Submission Counter Slip
               </span>
             </div>
@@ -129,7 +129,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                 onClick={handlePrint}
                 variant="primary"
                 size="sm"
-                className="flex items-center gap-1.5 shadow-civic-xs text-caption font-semibold cursor-pointer rounded-full min-h-[40px] px-4"
+                className="flex items-center gap-1.5 text-caption font-semibold cursor-pointer rounded-full min-h-[40px] px-4"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>Print / Save PDF Slip</span>
@@ -139,7 +139,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                 type="button"
                 onClick={onClose}
                 aria-label="Close Counter Slip Modal"
-                className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-colors cursor-pointer"
+                className="p-1.5 text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#D9CFBB]/50 rounded-full transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -147,45 +147,45 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
           </div>
 
           {/* Printable Counter Slip Container */}
-          <div className="p-6 sm:p-8 space-y-6 overflow-y-auto print:overflow-visible print:p-6 print:space-y-4 printable-slip">
+          <div className="p-6 sm:p-8 space-y-6 overflow-y-auto print:overflow-visible print:p-6 print:space-y-4 printable-slip bg-[#F5EFE0]">
             {/* Header: DPI & Service Heading */}
-            <div className="border-b-2 border-civic-900/20 pb-4 text-center space-y-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-900 text-white text-micro font-semibold uppercase tracking-wider print:bg-black print:text-white">
+            <div className="border-b border-[#D9CFBB] pb-4 text-center space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0A0A0A] text-[#F5EFE0] font-mono text-micro font-semibold uppercase tracking-wider print:bg-black print:text-white">
                 <span>National Digital Public Infrastructure • Local Governance Platform</span>
               </div>
-              <h1 id="counter-slip-title" className="text-page-title font-semibold text-slate-900 tracking-tight pt-1">
+              <h1 id="counter-slip-title" className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight pt-1">
                 PRE-SUBMISSION COUNTER SLIP
               </h1>
-              <p className="text-caption font-medium text-slate-600 uppercase tracking-wide">
+              <p className="text-caption font-medium text-[#6B6357] uppercase tracking-wide">
                 GovAssist Self-Service Document Quality & Pre-Validation Inspection
               </p>
             </div>
 
             {/* Document Metadata & Status Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-civic-xl print:bg-white print:border-slate-300">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#EDE4D0] border border-[#D9CFBB] rounded-xl print:bg-white print:border-slate-300">
               <div className="space-y-0.5 sm:col-span-2">
-                <span className="text-micro font-semibold text-slate-500 uppercase tracking-wider block">
+                <span className="font-mono text-micro font-semibold text-[#6B6357] uppercase tracking-wider block">
                   Document Reference ID:
                 </span>
-                <div className="flex items-center gap-2 font-mono text-caption font-semibold text-slate-900">
+                <div className="flex items-center gap-2 font-mono text-caption font-bold text-[#0A0A0A]">
                   <span className="truncate">{documentId}</span>
                   <button
                     type="button"
                     onClick={handleCopyRef}
-                    className="p-1 text-slate-400 hover:text-civic-800 transition-colors print:hidden cursor-pointer"
+                    className="p-1 text-[#6B6357] hover:text-[#0A0A0A] transition-colors print:hidden cursor-pointer"
                     title="Copy Reference ID"
                   >
-                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copied ? <Check className="h-3.5 w-3.5 text-[#2A5B4A]" /> : <Copy className="h-3.5 w-3.5" />}
                   </button>
                 </div>
               </div>
 
               <div className="space-y-0.5 sm:text-right">
-                <span className="text-micro font-semibold text-slate-500 uppercase tracking-wider block">
+                <span className="font-mono text-micro font-semibold text-[#6B6357] uppercase tracking-wider block">
                   Inspection Timestamp:
                 </span>
-                <span className="text-caption font-medium text-slate-800 flex items-center gap-1 sm:justify-end">
-                  <Clock className="h-3 w-3 text-slate-400 print:hidden" />
+                <span className="text-caption font-mono font-medium text-[#0A0A0A] flex items-center gap-1 sm:justify-end">
+                  <Clock className="h-3 w-3 text-[#6B6357] print:hidden" />
                   {formattedDate}
                 </span>
               </div>
@@ -193,61 +193,61 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
 
             {/* Extracted Certificate Profile */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-caption">
-              <div className="p-3.5 bg-white border border-slate-200 rounded-civic-lg space-y-1">
-                <span className="text-micro font-semibold text-slate-400 uppercase flex items-center gap-1">
-                  <User className="h-3 w-3" /> Applicant Name
+              <div className="p-3.5 bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl space-y-1">
+                <span className="text-micro font-semibold text-[#6B6357] uppercase flex items-center gap-1">
+                  <User className="h-3 w-3 text-[#2A5B4A]" /> Applicant Name
                 </span>
-                <p className="font-semibold text-slate-900 text-caption">
-                  {extractedData?.name || <span className="text-rose-600 italic font-normal">Not Detected</span>}
+                <p className="font-semibold text-[#0A0A0A] text-caption">
+                  {extractedData?.name || <span className="text-[#C97B5A] italic font-normal">Not Detected</span>}
                 </p>
               </div>
 
-              <div className="p-3.5 bg-white border border-slate-200 rounded-civic-lg space-y-1">
-                <span className="text-micro font-semibold text-slate-400 uppercase flex items-center gap-1">
-                  <Hash className="h-3 w-3" /> Certificate Number
+              <div className="p-3.5 bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl space-y-1">
+                <span className="text-micro font-semibold text-[#6B6357] uppercase flex items-center gap-1">
+                  <Hash className="h-3 w-3 text-[#2A5B4A]" /> Certificate Number
                 </span>
-                <p className="font-mono font-semibold text-slate-900 text-caption">
-                  {extractedData?.certificate_number || <span className="text-rose-600 italic font-normal">Not Detected</span>}
+                <p className="font-mono font-semibold text-[#0A0A0A] text-caption">
+                  {extractedData?.certificate_number || <span className="text-[#C97B5A] italic font-normal">Not Detected</span>}
                 </p>
               </div>
 
-              <div className="p-3.5 bg-white border border-slate-200 rounded-civic-lg space-y-1">
-                <span className="text-micro font-semibold text-slate-400 uppercase flex items-center gap-1">
-                  <Calendar className="h-3 w-3" /> Validity / Expiry Date
+              <div className="p-3.5 bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl space-y-1">
+                <span className="text-micro font-semibold text-[#6B6357] uppercase flex items-center gap-1">
+                  <Calendar className="h-3 w-3 text-[#2A5B4A]" /> Validity / Expiry Date
                 </span>
-                <p className="font-mono font-semibold text-slate-900 text-caption">
-                  {extractedData?.expiry_date || <span className="text-rose-600 italic font-normal">Not Detected</span>}
+                <p className="font-mono font-semibold text-[#0A0A0A] text-caption">
+                  {extractedData?.expiry_date || <span className="text-[#C97B5A] italic font-normal">Not Detected</span>}
                 </p>
               </div>
             </div>
 
             {/* Authoritative Overall Status Banner */}
             <div
-              className={`p-6 rounded-civic-xl border-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+              className={`p-6 rounded-xl border-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                 isPassed
-                  ? 'bg-emerald-50 border-emerald-400 text-emerald-950 print:bg-white print:border-emerald-700'
-                  : 'bg-saffron-50 border-saffron-400 text-saffron-950 print:bg-white print:border-saffron-700'
+                  ? 'bg-[#2A5B4A]/10 border-[#2A5B4A]/40 text-[#0A0A0A] print:bg-white print:border-[#2A5B4A]'
+                  : 'bg-[#C97B5A]/10 border-[#C97B5A]/40 text-[#0A0A0A] print:bg-white print:border-[#C97B5A]'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 font-semibold ${
-                    isPassed ? 'bg-emerald-600 text-white' : 'bg-saffron-600 text-white'
+                    isPassed ? 'bg-[#2A5B4A] text-white' : 'bg-[#C97B5A] text-white'
                   }`}
                 >
                   {isPassed ? <ShieldCheck className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
                 </div>
                 <div>
-                  <span className="text-micro uppercase font-semibold tracking-wider opacity-80 block">
+                  <span className="font-mono text-micro uppercase font-semibold tracking-wider text-[#6B6357] block">
                     Pre-Submission Status Result
                   </span>
-                  <h2 className="text-section-heading font-semibold tracking-tight">
+                  <h2 className="font-serif text-section-heading font-normal tracking-tight text-[#0A0A0A]">
                     {isPassed
                       ? 'READY FOR PHYSICAL COUNTER SUBMISSION'
                       : 'ACTION REQUIRED BEFORE COUNTER SUBMISSION'}
                   </h2>
                   {recommendedNextStep && (
-                    <p className="text-caption opacity-90 leading-snug pt-0.5 max-w-xl font-normal">
+                    <p className="text-caption text-[#6B6357] leading-snug pt-0.5 max-w-xl font-normal">
                       {recommendedNextStep}
                     </p>
                   )}
@@ -255,7 +255,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
               </div>
 
               <div className="sm:text-right shrink-0">
-                <span className="inline-block px-3 py-1 rounded-full text-caption font-semibold bg-white border border-slate-300 text-slate-900 shadow-civic-xs">
+                <span className="inline-block px-3 py-1 rounded-full text-caption font-semibold bg-[#F5EFE0] border border-[#D9CFBB] text-[#0A0A0A]">
                   {passedRules} / {totalRules} Rules Compliant
                 </span>
               </div>
@@ -263,14 +263,14 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
 
             {/* 4-Rule Compliance Checklist Matrix */}
             <div className="space-y-2.5">
-              <h3 className="text-micro font-semibold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <FileText className="h-3.5 w-3.5 text-civic-800" />
+              <h3 className="font-mono text-micro font-semibold uppercase tracking-wider text-[#6B6357] flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5 text-[#2A5B4A]" />
                 <span>Deterministic Rule Verification Matrix</span>
               </h3>
 
-              <div className="border border-slate-200 rounded-civic-xl overflow-hidden shadow-civic-xs">
+              <div className="border border-[#D9CFBB] rounded-xl overflow-hidden bg-[#F5EFE0]">
                 <table className="w-full text-left text-caption">
-                  <thead className="bg-slate-100/90 border-b border-slate-200 text-slate-700 font-semibold text-micro uppercase tracking-wider">
+                  <thead className="bg-[#EDE4D0] border-b border-[#D9CFBB] text-[#6B6357] font-semibold text-micro uppercase tracking-wider font-mono">
                     <tr>
                       <th className="px-3.5 py-2.5">Validation Rule</th>
                       <th className="px-3.5 py-2.5">Status</th>
@@ -278,34 +278,34 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                       <th className="px-3.5 py-2.5">Required Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-normal">
+                  <tbody className="divide-y divide-[#D9CFBB] font-normal">
                     {validationResults.map((rule) => (
                       <tr
                         key={rule.ruleName}
-                        className={rule.passed ? 'bg-white' : 'bg-saffron-50/40 font-medium'}
+                        className={rule.passed ? 'bg-[#F5EFE0]' : 'bg-[#C97B5A]/5 font-medium'}
                       >
-                        <td className="px-3.5 py-2.5 font-semibold text-slate-900 whitespace-nowrap">
+                        <td className="px-3.5 py-2.5 font-semibold text-[#0A0A0A] whitespace-nowrap">
                           {rule.ruleName}
                         </td>
                         <td className="px-3.5 py-2.5 whitespace-nowrap">
                           <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
+                            className={`inline-flex items-center px-2 py-0.5 rounded-full font-mono text-micro font-semibold border ${
                               rule.passed
-                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                : 'bg-saffron-100 text-saffron-900 border-saffron-300'
+                                ? 'bg-[#2A5B4A]/15 text-[#2A5B4A] border-[#2A5B4A]/30'
+                                : 'bg-[#C97B5A]/15 text-[#C97B5A] border-[#C97B5A]/30'
                             }`}
                           >
                             {rule.passed ? 'PASSED' : 'ACTION REQUIRED'}
                           </span>
                         </td>
-                        <td className="px-3.5 py-2.5 text-slate-700 text-caption leading-snug font-normal">
+                        <td className="px-3.5 py-2.5 text-[#6B6357] text-caption leading-snug font-normal">
                           {rule.reason}
                         </td>
-                        <td className="px-3.5 py-2.5 text-slate-800 text-caption leading-snug">
+                        <td className="px-3.5 py-2.5 text-[#0A0A0A] text-caption leading-snug">
                           {rule.passed ? (
-                            <span className="text-emerald-700 font-medium">No action needed</span>
+                            <span className="text-[#2A5B4A] font-medium">No action needed</span>
                           ) : (
-                            <span className="text-rose-700 font-semibold">{rule.recommended_action}</span>
+                            <span className="text-[#C97B5A] font-semibold">{rule.recommended_action}</span>
                           )}
                         </td>
                       </tr>
@@ -317,17 +317,17 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
 
             {/* Failure Action Callouts (if any rules failed) */}
             {failedRules.length > 0 && (
-              <div className="p-4 rounded-civic-xl bg-rose-50/70 border border-rose-200 space-y-2">
-                <div className="flex items-center gap-2 text-rose-900 font-semibold text-caption">
-                  <AlertTriangle className="h-4 w-4 text-rose-700 shrink-0" />
+              <div className="p-4 rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 space-y-2">
+                <div className="flex items-center gap-2 text-[#C97B5A] font-semibold text-caption">
+                  <AlertTriangle className="h-4 w-4 text-[#C97B5A] shrink-0" />
                   <span>CRITICAL REMEDIAL STEPS REQUIRED BEFORE SUBMISSION:</span>
                 </div>
-                <ul className="list-disc list-inside text-caption text-rose-900 space-y-1 pl-1 font-normal">
+                <ul className="list-disc list-inside text-caption text-[#0A0A0A] space-y-1 pl-1 font-normal">
                   {failedRules.map((r) => (
                     <li key={r.ruleName}>
                       <span className="font-semibold">{r.ruleName}:</span> {r.recommended_action}
                       {r.explanation && (
-                        <p className="text-caption text-slate-700 pl-5 font-normal italic">
+                        <p className="text-caption text-[#6B6357] pl-5 font-normal italic">
                           Guidance: {r.explanation}
                         </p>
                       )}
@@ -338,53 +338,53 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
             )}
 
             {/* Physical Submission Preparation Checklist */}
-            <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-200 space-y-3">
-              <h3 className="text-micro font-semibold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-civic-800" />
+            <div className="p-4 rounded-xl bg-[#EDE4D0] border border-[#D9CFBB] space-y-3">
+              <h3 className="font-mono text-micro font-semibold uppercase tracking-wider text-[#6B6357] flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
                 <span>Physical Documents Checklist (What to bring to the Counter)</span>
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-slate-700 font-normal">
-                <label className="flex items-start gap-2 p-2.5 bg-white rounded-civic-md border border-slate-200">
-                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded text-civic-800" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-[#6B6357] font-normal">
+                <label className="flex items-start gap-2 p-2.5 bg-[#F5EFE0] rounded-lg border border-[#D9CFBB] text-[#0A0A0A]">
+                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded accent-[#0A0A0A]" />
                   <span>Original Income Certificate for physical inspection</span>
                 </label>
-                <label className="flex items-start gap-2 p-2.5 bg-white rounded-civic-md border border-slate-200">
-                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded text-civic-800" />
+                <label className="flex items-start gap-2 p-2.5 bg-[#F5EFE0] rounded-lg border border-[#D9CFBB] text-[#0A0A0A]">
+                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded accent-[#0A0A0A]" />
                   <span>2 Self-attested photocopies of the certificate</span>
                 </label>
-                <label className="flex items-start gap-2 p-2.5 bg-white rounded-civic-md border border-slate-200">
-                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded text-civic-800" />
+                <label className="flex items-start gap-2 p-2.5 bg-[#F5EFE0] rounded-lg border border-[#D9CFBB] text-[#0A0A0A]">
+                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded accent-[#0A0A0A]" />
                   <span>Government Photo ID (Aadhaar / Voter ID / Ration Card)</span>
                 </label>
-                <label className="flex items-start gap-2 p-2.5 bg-white rounded-civic-md border border-slate-200">
-                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded text-civic-800" />
+                <label className="flex items-start gap-2 p-2.5 bg-[#F5EFE0] rounded-lg border border-[#D9CFBB] text-[#0A0A0A]">
+                  <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 rounded accent-[#0A0A0A]" />
                   <span>2 Recent passport-size photographs of applicant</span>
                 </label>
               </div>
             </div>
 
             {/* Official Disclaimer & Verification Stamp Block */}
-            <div className="pt-2 border-t border-slate-200 text-caption text-slate-500 space-y-2 font-normal">
+            <div className="pt-2 border-t border-[#D9CFBB] text-caption text-[#6B6357] space-y-2 font-normal">
               <p className="leading-relaxed">
-                <strong className="font-semibold">STATUTORY ADVISORY:</strong> This Pre-Submission Counter Slip is generated by the GovAssist automated pre-validation system to assist citizens with error-free application preparation. Pre-check pass status indicates technical compliance with standard document criteria and does not constitute final statutory approval, which is solely exercised by the authorized Revenue Officer / Tehsildar.
+                <strong className="font-semibold text-[#0A0A0A]">STATUTORY ADVISORY:</strong> This Pre-Submission Counter Slip is generated by the GovAssist automated pre-validation system to assist citizens with error-free application preparation. Pre-check pass status indicates technical compliance with standard document criteria and does not constitute final statutory approval, which is solely exercised by the authorized Revenue Officer / Tehsildar.
               </p>
 
               <div className="flex justify-between items-end pt-4 print:pt-6">
                 <div>
-                  <span className="font-mono text-micro text-slate-400 block">
+                  <span className="font-mono text-micro text-[#6B6357] block">
                     GOVSKILL-PRECHECK-{documentId?.slice(0, 8).toUpperCase()}
                   </span>
-                  <span className="text-caption text-slate-500">
+                  <span className="text-caption text-[#6B6357]">
                     System Generated • No Physical Signature Required
                   </span>
                 </div>
 
-                <div className="text-right border-t border-slate-300 pt-1 px-4">
-                  <span className="text-caption font-semibold text-slate-600 block uppercase">
+                <div className="text-right border-t border-[#D9CFBB] pt-1 px-4">
+                  <span className="text-caption font-semibold text-[#0A0A0A] block uppercase">
                     Taluk / Citizen Service Counter
                   </span>
-                  <span className="text-micro text-slate-400">Date Received: ______________</span>
+                  <span className="font-mono text-micro text-[#6B6357]">Date Received: ______________</span>
                 </div>
               </div>
             </div>

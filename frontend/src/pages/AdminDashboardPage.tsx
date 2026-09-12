@@ -462,31 +462,31 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Workforce Competency Health & Intervention Priority (Phase 3) */}
       {skillsOverview?.competency_health && skillsOverview.competency_health.length > 0 && (
-        <motion.div variants={fadeUpVariants} className="bg-white rounded-civic-xl border border-slate-200 shadow-civic-sm p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <motion.div variants={fadeUpVariants} className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] shadow-xs p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D9CFBB] pb-4">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-civic-700" />
-                <h2 className="text-section-heading font-semibold text-slate-900">
+                <ShieldCheck className="h-4 w-4 text-[#2A5B4A]" />
+                <h2 className="font-serif text-lg font-normal text-[#0A0A0A] tracking-tight">
                   Workforce Competency Health & Intervention Priority
                 </h2>
               </div>
-              <p className="text-caption text-slate-500 font-normal">
+              <p className="text-xs text-[#6B6357] font-sans font-normal">
                 Aggregated mastery telemetry across all local government employee assessment attempts
               </p>
             </div>
             {skillsOverview.lowest_performing_competency && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-saffron-50 border border-saffron-200 text-caption font-semibold text-saffron-900 shrink-0">
-                <Sparkles className="h-3.5 w-3.5 text-saffron-700" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F5EFE0] border border-[#C97B5A]/40 text-xs font-mono font-semibold text-[#C97B5A] shrink-0">
+                <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
                 <span>Priority Focus: {skillsOverview.lowest_performing_competency}</span>
               </div>
             )}
           </div>
 
-          <div className="overflow-x-auto rounded-civic-lg border border-slate-100">
-            <table className="w-full text-left text-caption border-collapse">
+          <div className="overflow-x-auto rounded-xl border border-[#D9CFBB]">
+            <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 text-micro font-semibold text-slate-500 uppercase tracking-wider bg-slate-50/50">
+                <tr className="border-b border-[#D9CFBB] text-[10px] font-mono font-semibold text-[#6B6357] uppercase tracking-wider bg-[#F5EFE0]">
                   <th className="py-2.5 px-3">Competency</th>
                   <th className="py-2.5 px-3">Module</th>
                   <th className="py-2.5 px-3">Avg Mastery</th>
@@ -495,24 +495,24 @@ export const AdminDashboardPage: React.FC = () => {
                   <th className="py-2.5 px-3 text-right">Health Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
+              <tbody className="divide-y divide-[#D9CFBB]/60 font-normal text-[#0A0A0A]">
                 {skillsOverview.competency_health.map((item) => (
-                  <tr key={item.competency} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2.5 px-3 font-semibold text-slate-900">{item.competency}</td>
-                    <td className="py-2.5 px-3 text-slate-500">{item.module_title}</td>
-                    <td className="py-2.5 px-3 font-mono font-semibold text-slate-900">{item.average_mastery_pct}%</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-emerald-700">{item.employees_mastered}</td>
-                    <td className="py-2.5 px-3 text-center font-semibold text-saffron-700">{item.employees_developing}</td>
+                  <tr key={item.competency} className="hover:bg-[#F5EFE0]/60 transition-colors">
+                    <td className="py-2.5 px-3 font-semibold text-[#0A0A0A]">{item.competency}</td>
+                    <td className="py-2.5 px-3 text-[#6B6357]">{item.module_title}</td>
+                    <td className="py-2.5 px-3 font-mono font-bold text-[#0A0A0A]">{item.average_mastery_pct}%</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-semibold text-[#2A5B4A]">{item.employees_mastered}</td>
+                    <td className="py-2.5 px-3 text-center font-mono font-semibold text-[#C97B5A]">{item.employees_developing}</td>
                     <td className="py-2.5 px-3 text-right">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-micro font-semibold border ${
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold border ${
                           item.status === 'Healthy'
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40'
                             : item.status === 'Needs Attention'
-                            ? 'bg-saffron-100 text-saffron-800 border-saffron-300'
+                            ? 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40'
                             : item.status === 'Unassessed'
-                            ? 'bg-slate-100 text-slate-700 border-slate-300'
-                            : 'bg-rose-100 text-rose-800 border-rose-300'
+                            ? 'bg-[#EDE4D0] text-[#6B6357] border-[#D9CFBB]'
+                            : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]'
                         }`}
                       >
                         {item.status}
@@ -527,14 +527,14 @@ export const AdminDashboardPage: React.FC = () => {
       )}
 
       {/* Navigation Tabs (Pills) */}
-      <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-2 p-1.5 bg-slate-100/80 rounded-full border border-slate-200 w-fit">
+      <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-2 p-1.5 bg-[#EDE4D0] rounded-full border border-[#D9CFBB] w-fit">
         <button
           type="button"
           onClick={() => setActiveTab('attempts')}
-          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
+          className={`px-5 py-2.5 text-xs font-mono font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'attempts'
-              ? 'bg-civic-900 text-white shadow-civic-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+              ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-xs'
+              : 'text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#F5EFE0]'
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -544,10 +544,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('modules')}
-          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
+          className={`px-5 py-2.5 text-xs font-mono font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'modules'
-              ? 'bg-civic-900 text-white shadow-civic-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+              ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-xs'
+              : 'text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#F5EFE0]'
           }`}
         >
           <BookOpen className="h-4 w-4" />
@@ -557,10 +557,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('questions')}
-          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
+          className={`px-5 py-2.5 text-xs font-mono font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'questions'
-              ? 'bg-civic-900 text-white shadow-civic-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+              ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-xs'
+              : 'text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#F5EFE0]'
           }`}
         >
           <HelpCircle className="h-4 w-4" />
@@ -570,13 +570,13 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('governance')}
-          className={`px-5 py-2.5 text-caption font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
+          className={`px-5 py-2.5 text-xs font-mono font-semibold rounded-full flex items-center gap-2 transition-all cursor-pointer min-h-[40px] ${
             activeTab === 'governance'
-              ? 'bg-civic-900 text-white shadow-civic-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+              ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-xs'
+              : 'text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#F5EFE0]'
           }`}
         >
-          <ShieldCheck className="h-4 w-4 text-emerald-500" />
+          <ShieldCheck className="h-4 w-4 text-[#2A5B4A]" />
           <span>Workforce Governance & Telemetry</span>
         </button>
       </motion.div>
@@ -607,12 +607,12 @@ export const AdminDashboardPage: React.FC = () => {
       {/* TAB 2: MODULE CMS */}
       {activeTab === 'modules' && (
         <motion.div variants={fadeUpVariants} className="space-y-6">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+          <div className="flex items-center justify-between pb-2 border-b border-[#D9CFBB]">
             <div>
-              <h2 className="text-section-heading font-semibold text-slate-900">
+              <h2 className="font-serif text-xl font-normal text-[#0A0A0A] tracking-tight">
                 Training Modules Management
               </h2>
-              <p className="text-caption text-slate-500 font-normal">
+              <p className="text-xs text-[#6B6357] font-sans font-normal">
                 Create, update, and manage official training curriculum modules
               </p>
             </div>
@@ -620,7 +620,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenModuleModal()}
-              className="flex items-center gap-1.5 px-5 py-2.5 bg-civic-900 text-white text-caption font-semibold rounded-full hover:bg-civic-800 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-[#0A0A0A] text-[#F5EFE0] text-xs font-mono font-semibold rounded-full hover:bg-[#0A0A0A]/90 transition-all shadow-xs cursor-pointer min-h-[40px]"
             >
               <Plus className="h-4 w-4" />
               <span>Create New Module</span>
@@ -631,35 +631,35 @@ export const AdminDashboardPage: React.FC = () => {
             {modules.map((mod) => (
               <div key={mod.id}>
                 <Card
-                  className="p-6 flex flex-col justify-between space-y-4 border-slate-200 shadow-civic-xs bg-white hover:shadow-civic-sm transition-all rounded-civic-xl"
+                  className="p-6 flex flex-col justify-between space-y-4 border-[#D9CFBB] shadow-xs bg-[#EDE4D0] hover:border-[#0A0A0A]/40 transition-all rounded-2xl"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+                      <h3 className="font-serif text-lg font-normal text-[#0A0A0A] tracking-tight">
                         {mod.title}
                       </h3>
-                      <span className="text-micro font-mono bg-slate-100 px-2.5 py-0.5 rounded-full text-slate-600 border border-slate-200 shrink-0">
+                      <span className="text-[10px] font-mono bg-[#F5EFE0] px-2.5 py-0.5 rounded-full text-[#6B6357] border border-[#D9CFBB] shrink-0">
                         {mod.id.substring(0, 8)}...
                       </span>
                     </div>
-                    <p className="text-caption text-slate-600 line-clamp-3 whitespace-pre-line font-mono bg-slate-50 p-3.5 rounded-civic-lg border border-slate-200 font-normal">
+                    <p className="text-xs text-[#0A0A0A] line-clamp-3 whitespace-pre-line font-mono bg-[#F5EFE0] p-3.5 rounded-xl border border-[#D9CFBB] font-normal">
                       {mod.content.substring(0, 150)}...
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 text-caption font-semibold">
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#D9CFBB] text-xs font-mono font-semibold">
                     <button
                       type="button"
                       onClick={() => handleOpenModuleModal(mod)}
-                      className="flex items-center gap-1 text-civic-800 hover:underline cursor-pointer"
+                      className="flex items-center gap-1 text-[#0A0A0A] hover:underline cursor-pointer"
                     >
-                      <Edit2 className="h-3.5 w-3.5" />
+                      <Edit2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
                       <span>Edit</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDeleteModule(mod.id)}
-                      className="flex items-center gap-1 text-red-600 hover:underline cursor-pointer ml-2"
+                      className="flex items-center gap-1 text-[#C97B5A] hover:underline cursor-pointer ml-2"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       <span>Delete</span>
@@ -675,16 +675,16 @@ export const AdminDashboardPage: React.FC = () => {
       {/* TAB 3: QUIZ MANAGEMENT CMS */}
       {activeTab === 'questions' && (
         <motion.div variants={fadeUpVariants} className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-4 rounded-civic-xl border border-slate-200 shadow-civic-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#EDE4D0] p-4 rounded-2xl border border-[#D9CFBB] shadow-xs">
             <div className="flex items-center gap-3">
-              <label htmlFor="admin-module-select" className="text-micro font-semibold text-slate-600 uppercase tracking-wider">
+              <label htmlFor="admin-module-select" className="text-[10px] font-mono font-semibold text-[#6B6357] uppercase tracking-wider">
                 Select Module:
               </label>
               <select
                 id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
-                className="px-4 py-2 text-caption font-semibold text-slate-900 border border-slate-300 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-civic-700/20 cursor-pointer min-h-[40px]"
+                className="px-4 py-2 text-xs font-mono font-semibold text-[#0A0A0A] border border-[#D9CFBB] rounded-full bg-[#F5EFE0] focus:outline-none focus:ring-1 focus:ring-[#0A0A0A] cursor-pointer min-h-[40px]"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -697,7 +697,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenQuestionModal()}
-              className="flex items-center gap-1.5 px-5 py-2.5 bg-civic-900 text-white text-caption font-semibold rounded-full hover:bg-civic-800 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-[#0A0A0A] text-[#F5EFE0] text-xs font-mono font-semibold rounded-full hover:bg-[#0A0A0A]/90 transition-all shadow-xs cursor-pointer min-h-[40px]"
             >
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
@@ -705,37 +705,37 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           {isLoadingQuestions ? (
-            <div className="p-12 text-center text-caption text-slate-500 flex items-center justify-center gap-2 font-normal">
-              <Loader2 className="h-4 w-4 animate-spin text-civic-700" />
+            <div className="p-12 text-center text-xs font-mono text-[#6B6357] flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-[#0A0A0A]" />
               <span>Loading module questions...</span>
             </div>
           ) : questions.length === 0 ? (
-            <div className="p-12 text-center text-caption text-slate-500 bg-white rounded-civic-xl border border-slate-200 shadow-civic-xs font-normal">
+            <div className="p-12 text-center text-xs font-sans text-[#6B6357] bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] shadow-xs">
               No questions found for this module. Click "Add Question" above to create one.
             </div>
           ) : (
             <div className="space-y-4">
               {questions.map((q, qIdx) => (
-                <Card key={q.id} className="p-6 space-y-3.5 border-slate-200 shadow-civic-xs bg-white rounded-civic-xl">
+                <Card key={q.id} className="p-6 space-y-3.5 border-[#D9CFBB] shadow-xs bg-[#EDE4D0] rounded-2xl">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-2.5">
-                      <span className="font-semibold text-civic-800 text-caption mt-0.5">Q{qIdx + 1}.</span>
-                      <h4 className="text-section-heading font-semibold text-slate-900">{q.question}</h4>
+                      <span className="font-mono font-bold text-[#0A0A0A] text-xs mt-0.5">Q{qIdx + 1}.</span>
+                      <h4 className="font-serif text-lg font-normal text-[#0A0A0A] tracking-tight">{q.question}</h4>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         type="button"
                         onClick={() => handleOpenQuestionModal(q)}
-                        className="text-caption text-civic-800 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-xs font-mono text-[#0A0A0A] font-semibold hover:underline flex items-center gap-1 cursor-pointer"
                       >
-                        <Edit2 className="h-3.5 w-3.5" />
+                        <Edit2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
                         <span>Edit</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteQuestion(q.id)}
-                        className="text-caption text-red-600 font-semibold hover:underline flex items-center gap-1 ml-2 cursor-pointer"
+                        className="text-xs font-mono text-[#C97B5A] font-semibold hover:underline flex items-center gap-1 ml-2 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         <span>Delete</span>
@@ -743,23 +743,23 @@ export const AdminDashboardPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-100 font-normal">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-[#D9CFBB]">
                     {q.options.map((opt, optIdx) => {
                       const isCorrect = optIdx === q.correct_option_index;
                       return (
                         <div
                           key={optIdx}
-                          className={`p-3 rounded-civic-lg text-caption flex items-center justify-between border transition-colors ${
+                          className={`p-3 rounded-xl text-xs flex items-center justify-between border transition-colors ${
                             isCorrect
-                              ? 'bg-emerald-50/70 border-emerald-300 font-semibold text-emerald-900 shadow-civic-xs'
-                              : 'bg-slate-50 border-slate-200 text-slate-700'
+                              ? 'bg-[#F5EFE0] border-[#2A5B4A]/60 font-semibold text-[#0A0A0A] shadow-xs'
+                              : 'bg-[#F5EFE0] border-[#D9CFBB] text-[#0A0A0A]'
                           }`}
                         >
                           <span className="leading-snug">
-                            <strong className="mr-1">{String.fromCharCode(65 + optIdx)}.</strong> {opt}
+                            <strong className="mr-1 font-mono">{String.fromCharCode(65 + optIdx)}.</strong> {opt}
                           </span>
                           {isCorrect && (
-                            <span className="flex items-center gap-1 text-micro bg-emerald-600 text-white px-2 py-0.5 rounded-full font-semibold shadow-civic-xs shrink-0 ml-2">
+                            <span className="flex items-center gap-1 text-[10px] font-mono bg-[#2A5B4A] text-[#F5EFE0] px-2 py-0.5 rounded-full font-semibold shadow-xs shrink-0 ml-2">
                               <Check className="h-3 w-3" /> Answer
                             </span>
                           )}
@@ -792,23 +792,23 @@ export const AdminDashboardPage: React.FC = () => {
       {/* MODULE MODAL with AnimatePresence */}
       <AnimatePresence>
         {isModuleModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
             <motion.div
               variants={scaleInVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="bg-white rounded-civic-2xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-civic-xl border border-slate-200"
+              className="bg-[#EDE4D0] rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl border border-[#D9CFBB]"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-section-heading font-semibold text-slate-900">
+              <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
+                <h3 className="font-serif text-xl font-normal text-[#0A0A0A] tracking-tight">
                   {editingModule ? 'Edit Training Module' : 'Create Training Module'}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsModuleModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-slate-100 rounded-full text-slate-500 cursor-pointer"
+                  className="p-1 hover:bg-[#F5EFE0] rounded-full text-[#6B6357] cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -816,40 +816,40 @@ export const AdminDashboardPage: React.FC = () => {
 
               <form onSubmit={handleSaveModule} className="space-y-4">
                 <div>
-                  <label className="block text-caption font-semibold text-slate-700 mb-1">Module Title</label>
+                  <label className="block text-xs font-mono font-semibold text-[#0A0A0A] mb-1">Module Title</label>
                   <input
                     type="text"
                     required
                     value={moduleFormTitle}
                     onChange={(e) => setModuleFormTitle(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-caption border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs font-sans text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl focus:ring-1 focus:ring-[#0A0A0A] focus:border-[#0A0A0A] focus:outline-none"
                     placeholder="e.g. Cybersecurity Basics"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-caption font-semibold text-slate-700 mb-1">Markdown Lesson Content</label>
+                  <label className="block text-xs font-mono font-semibold text-[#0A0A0A] mb-1">Markdown Lesson Content</label>
                   <textarea
                     required
                     rows={8}
                     value={moduleFormContent}
                     onChange={(e) => setModuleFormContent(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-caption font-mono border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none font-normal"
+                    className="w-full px-3.5 py-2.5 text-xs font-mono text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl focus:ring-1 focus:ring-[#0A0A0A] focus:border-[#0A0A0A] focus:outline-none font-normal"
                     placeholder="# Lesson 1: Overview..."
                   />
                 </div>
 
-                <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <div className="flex justify-end gap-2.5 pt-3 border-t border-[#D9CFBB]">
                   <button
                     type="button"
                     onClick={() => setIsModuleModalOpen(false)}
-                    className="px-5 py-2.5 text-caption font-semibold text-slate-700 border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer min-h-[40px]"
+                    className="px-5 py-2.5 text-xs font-mono font-semibold text-[#0A0A0A] border border-[#D9CFBB] rounded-full hover:bg-[#F5EFE0] cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 text-caption font-semibold text-white bg-civic-900 rounded-full hover:bg-civic-800 shadow-civic-xs cursor-pointer min-h-[40px]"
+                    className="px-5 py-2.5 text-xs font-mono font-semibold text-[#F5EFE0] bg-[#0A0A0A] rounded-full hover:bg-[#0A0A0A]/90 shadow-xs cursor-pointer min-h-[40px]"
                   >
                     Save Module
                   </button>
@@ -863,23 +863,23 @@ export const AdminDashboardPage: React.FC = () => {
       {/* QUESTION MODAL with AnimatePresence */}
       <AnimatePresence>
         {isQuestionModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
             <motion.div
               variants={scaleInVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="bg-white rounded-civic-2xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-civic-xl border border-slate-200"
+              className="bg-[#EDE4D0] rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl border border-[#D9CFBB]"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-section-heading font-semibold text-slate-900">
+              <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
+                <h3 className="font-serif text-xl font-normal text-[#0A0A0A] tracking-tight">
                   {editingQuestion ? 'Edit Quiz Question' : 'Add Quiz Question'}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-slate-100 rounded-full text-slate-500 cursor-pointer"
+                  className="p-1 hover:bg-[#F5EFE0] rounded-full text-[#6B6357] cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -887,19 +887,19 @@ export const AdminDashboardPage: React.FC = () => {
 
               <form onSubmit={handleSaveQuestion} className="space-y-4">
                 <div>
-                  <label className="block text-caption font-semibold text-slate-700 mb-1">Question Text</label>
+                  <label className="block text-xs font-mono font-semibold text-[#0A0A0A] mb-1">Question Text</label>
                   <input
                     type="text"
                     required
                     value={qText}
                     onChange={(e) => setQText(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-caption border border-slate-300 rounded-civic-lg focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs font-sans text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl focus:ring-1 focus:ring-[#0A0A0A] focus:border-[#0A0A0A] focus:outline-none"
                     placeholder="e.g. What is the minimum certificate number length?"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-caption font-semibold text-slate-700">Options (Select Correct Answer Radio)</label>
+                  <label className="block text-xs font-mono font-semibold text-[#0A0A0A]">Options (Select Correct Answer Radio)</label>
                   {qOptions.map((opt, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       <input
@@ -908,7 +908,7 @@ export const AdminDashboardPage: React.FC = () => {
                         aria-label={`Mark Option ${String.fromCharCode(65 + idx)} as correct`}
                         checked={qCorrectIdx === idx}
                         onChange={() => setQCorrectIdx(idx)}
-                        className="h-4 w-4 text-civic-700 cursor-pointer"
+                        className="h-4 w-4 text-[#0A0A0A] accent-[#0A0A0A] cursor-pointer"
                       />
                       <input
                         type="text"
@@ -919,24 +919,24 @@ export const AdminDashboardPage: React.FC = () => {
                           updated[idx] = e.target.value;
                           setQOptions(updated);
                         }}
-                        className="w-full px-3.5 py-2 text-caption border border-slate-300 rounded-civic-lg focus:outline-none focus:ring-2 focus:ring-civic-700/20"
+                        className="w-full px-3.5 py-2 text-xs font-sans text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0A0A0A]"
                         placeholder={`Option ${String.fromCharCode(65 + idx)}${idx >= 2 ? ' (Optional)' : ''}`}
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <div className="flex justify-end gap-2.5 pt-3 border-t border-[#D9CFBB]">
                   <button
                     type="button"
                     onClick={() => setIsQuestionModalOpen(false)}
-                    className="px-5 py-2.5 text-caption font-semibold text-slate-700 border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer min-h-[40px]"
+                    className="px-5 py-2.5 text-xs font-mono font-semibold text-[#0A0A0A] border border-[#D9CFBB] rounded-full hover:bg-[#F5EFE0] cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 text-caption font-semibold text-white bg-civic-900 rounded-full hover:bg-civic-800 shadow-civic-xs cursor-pointer min-h-[40px]"
+                    className="px-5 py-2.5 text-xs font-mono font-semibold text-[#F5EFE0] bg-[#0A0A0A] rounded-full hover:bg-[#0A0A0A]/90 shadow-xs cursor-pointer min-h-[40px]"
                   >
                     Save Question
                   </button>

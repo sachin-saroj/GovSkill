@@ -61,47 +61,47 @@ export const LearningActivityTimeline: React.FC<LearningActivityTimelineProps> =
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Activity className="h-4 w-4 text-civic-700" />
-        <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+        <Activity className="h-4 w-4 text-[#C9A24A]" />
+        <h3 className="font-serif font-bold text-xl text-[#0A0A0A] tracking-tight">
           Learning & Assessment Audit Trail
         </h3>
       </div>
 
       {activities.length === 0 ? (
-        <Card className="p-6 rounded-civic-xl text-center border-slate-200 bg-white shadow-civic-xs">
-          <p className="text-caption text-slate-500">
+        <Card className="p-6 rounded-2xl text-center border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
+          <p className="text-caption text-[#6B6357]">
             No recent activity recorded yet. Read module lessons or submit assessments to build your activity audit log.
           </p>
         </Card>
       ) : (
-        <Card className="p-6 rounded-civic-xl border border-slate-200 bg-white shadow-civic-xs">
-          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-slate-200">
+        <Card className="p-6 rounded-2xl border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
+          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[#D9CFBB]">
             {activities.map((act, idx) => (
               <div key={idx} className="relative group">
                 {/* Dot */}
-                <div className="absolute -left-[27px] top-0.5 h-6 w-6 rounded-full bg-white border-2 border-slate-300 group-hover:border-civic-700 flex items-center justify-center transition-colors shadow-civic-xs">
+                <div className="absolute -left-[27px] top-0.5 h-6 w-6 rounded-full bg-[#F5EFE0] border-2 border-[#D9CFBB] group-hover:border-[#0A0A0A] flex items-center justify-center transition-colors shadow-sm">
                   {getActivityIcon(act.activity_type)}
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-caption font-semibold text-slate-900">
+                      <span className="text-caption font-semibold text-[#0A0A0A]">
                         {act.title}
                       </span>
                       <span
-                        className={`text-micro font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getActivityTag(
+                        className={`text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getActivityTag(
                           act.activity_type
                         )}`}
                       >
                         {act.module_title}
                       </span>
                     </div>
-                    <span className="text-caption font-mono text-slate-400">
+                    <span className="text-caption font-mono text-[#6B6357]">
                       {formatDate(act.timestamp)}
                     </span>
                   </div>
-                  <p className="text-caption text-slate-600">
+                  <p className="text-caption text-[#6B6357]">
                     {act.detail}
                   </p>
                 </div>

@@ -19,13 +19,13 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
   return (
     <div
       role="alert"
-      className={`p-4 rounded-civic-xl bg-red-50 border border-red-200 text-caption text-red-700 flex items-start justify-between gap-4 shadow-civic-xs animate-fade-in ${className}`}
+      className={`p-4 rounded-2xl bg-[#C97B5A]/12 border border-[#C97B5A]/35 text-[13px] text-[#8F3E22] flex items-start justify-between gap-4 shadow-xs animate-fade-in ${className}`}
     >
       <div className="flex items-start gap-2.5 min-w-0">
-        <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+        <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0 mt-0.5" />
         <div className="space-y-0.5">
-          {title && <p className="font-semibold text-red-900 leading-tight">{title}</p>}
-          <p className="leading-relaxed text-red-700">{message}</p>
+          {title && <p className="font-serif text-[15px] font-normal text-[#8F3E22] leading-tight">{title}</p>}
+          <p className="leading-relaxed text-[#8F3E22]/90">{message}</p>
         </div>
       </div>
 
@@ -34,7 +34,7 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
           <button
             type="button"
             onClick={onRetry}
-            className="flex items-center gap-1.5 px-3 py-1 bg-white border border-red-200 rounded-full text-red-800 text-caption font-semibold hover:bg-red-50 transition-colors cursor-pointer shadow-civic-xs"
+            className="flex items-center gap-1.5 px-3 py-1 bg-[#F5EFE0] border border-[#C97B5A]/30 rounded-full text-[#8F3E22] text-[12px] font-medium hover:bg-[#EDE4D0] transition-colors cursor-pointer shadow-xs"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Retry</span>

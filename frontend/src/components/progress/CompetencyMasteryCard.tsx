@@ -112,49 +112,49 @@ export const CompetencyMasteryCard: React.FC<CompetencyMasteryCardProps> = ({ ma
   };
 
   return (
-    <div className="bg-white rounded-civic-xl border border-slate-200/80 shadow-civic-xs p-6 sm:p-8 space-y-6">
+    <div className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] shadow-sm p-6 sm:p-8 space-y-6">
       {/* Header & Metric Summary */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#D9CFBB] pb-5">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Award className="h-4 w-4 text-civic-700" />
-            <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+            <Award className="h-4 w-4 text-[#C9A24A]" />
+            <h2 className="font-serif font-bold text-xl text-[#0A0A0A] tracking-tight">
               Competency Mastery Breakdown
             </h2>
           </div>
-          <p className="text-caption text-slate-500 font-medium">
+          <p className="text-caption text-[#6B6357] font-medium">
             Granular competency evidence calculated with 70/30 recency weighting across attempts
           </p>
         </div>
 
         {/* Quick Filter Tabs */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-civic-md gap-1 text-caption font-semibold">
+        <div className="flex items-center bg-[#E4D9C3] p-1 rounded-full border border-[#D9CFBB] gap-1 text-[12px] font-mono">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 rounded-civic-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
               filter === 'all'
-                ? 'bg-white text-slate-900 shadow-civic-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-sm'
+                : 'text-[#6B6357] hover:text-[#0A0A0A]'
             }`}
           >
             All ({masteryList.length})
           </button>
           <button
             onClick={() => setFilter('unmastered')}
-            className={`px-3 py-1.5 rounded-civic-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
               filter === 'unmastered'
-                ? 'bg-white text-slate-900 shadow-civic-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-sm'
+                : 'text-[#6B6357] hover:text-[#0A0A0A]'
             }`}
           >
             Priority ({developingCount + operationalCount})
           </button>
           <button
             onClick={() => setFilter('mastered')}
-            className={`px-3 py-1.5 rounded-civic-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
               filter === 'mastered'
-                ? 'bg-white text-slate-900 shadow-civic-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#0A0A0A] text-[#F5EFE0] shadow-sm'
+                : 'text-[#6B6357] hover:text-[#0A0A0A]'
             }`}
           >
             Mastered ({masteredCount})
@@ -168,15 +168,15 @@ export const CompetencyMasteryCard: React.FC<CompetencyMasteryCardProps> = ({ ma
           <motion.div
             key={item.competency}
             variants={fadeUpVariants}
-            className="rounded-civic-xl border border-slate-200/90 bg-slate-50/50 p-6 space-y-4 hover:border-slate-300 transition-colors"
+            className="rounded-xl border border-[#D9CFBB] bg-[#F5EFE0] p-6 space-y-4 hover:border-[#0A0A0A]/40 transition-colors shadow-sm"
           >
             {/* Top Row: Competency & Badges */}
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <div className="text-micro font-semibold uppercase tracking-wider text-civic-700">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#C97B5A]">
                   {item.module_title}
                 </div>
-                <h3 className="text-section-heading font-semibold text-slate-900 leading-snug">
+                <h3 className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
                   {item.competency}
                 </h3>
               </div>
@@ -189,11 +189,11 @@ export const CompetencyMasteryCard: React.FC<CompetencyMasteryCardProps> = ({ ma
             {/* Score & Progress Bar with 75% Benchmark */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-caption font-medium">
-                <span className="text-slate-600">
+                <span className="text-[#6B6357]">
                   Mastery Evidence:{' '}
-                  <strong className="text-slate-900 font-semibold">{item.mastery_score}%</strong>
+                  <strong className="text-[#0A0A0A] font-mono font-semibold">{item.mastery_score}%</strong>
                 </span>
-                <span className="text-slate-500 text-caption font-mono">
+                <span className="text-[#6B6357] text-caption font-mono">
                   {item.attempts_evaluated > 0
                     ? `${item.attempts_evaluated} attempt${
                         item.attempts_evaluated > 1 ? 's' : ''
@@ -201,22 +201,22 @@ export const CompetencyMasteryCard: React.FC<CompetencyMasteryCardProps> = ({ ma
                     : 'Curriculum phase'}
                 </span>
               </div>
-              <div className="relative h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div className="relative h-2 w-full bg-[#E0D5BE] border border-[#D9CFBB]/60 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     item.mastery_level === 'Mastered'
-                      ? 'bg-emerald-600'
+                      ? 'bg-[#2A5B4A]'
                       : item.mastery_level === 'Operational'
-                      ? 'bg-blue-600'
+                      ? 'bg-[#0A0A0A]'
                       : item.mastery_level === 'Developing'
-                      ? 'bg-amber-500'
-                      : 'bg-indigo-400'
+                      ? 'bg-[#C97B5A]'
+                      : 'bg-[#6B6357]'
                   }`}
                   style={{ width: `${Math.min(100, Math.max(4, item.mastery_score))}%` }}
                 />
                 {/* 75% Target Line Indicator */}
                 <div
-                  className="absolute top-0 bottom-0 w-0.5 bg-slate-700/60 z-10"
+                  className="absolute top-0 bottom-0 w-0.5 bg-[#0A0A0A] z-10"
                   style={{ left: '75%' }}
                   title="75% Certification Threshold"
                 />
@@ -227,18 +227,18 @@ export const CompetencyMasteryCard: React.FC<CompetencyMasteryCardProps> = ({ ma
             <div className="flex items-center gap-2 pt-1">
               <Link
                 to={item.deep_link}
-                className="inline-flex items-center gap-1.5 text-caption font-semibold text-civic-700 hover:text-civic-800 bg-civic-50 hover:bg-civic-100/80 px-3 py-1.5 rounded-civic-md border border-civic-200/80 transition-colors"
+                className="inline-flex items-center gap-1.5 text-caption font-medium text-[#0A0A0A] hover:text-[#C97B5A] bg-[#EDE4D0] hover:bg-[#E4D9C3] px-3 py-1.5 rounded-full border border-[#D9CFBB] transition-colors"
               >
-                <BookOpen className="h-3.5 w-3.5" />
+                <BookOpen className="h-3.5 w-3.5 text-[#C9A24A]" />
                 <span>{item.target_section_title ? `Review Section ${item.target_section_index + 1}` : 'Review Section'}</span>
               </Link>
               <Link
                 to={`/tutor?moduleId=${item.module_id}&competency=${encodeURIComponent(
                   item.competency
                 )}&mode=remediation&prompt=${encodeURIComponent(item.tutor_prompt)}`}
-                className="inline-flex items-center gap-1.5 text-caption font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-100 px-3 py-1.5 rounded-civic-md border border-slate-200 shadow-civic-xs transition-colors"
+                className="inline-flex items-center gap-1.5 text-caption font-medium text-[#0A0A0A] hover:text-[#C97B5A] bg-[#EDE4D0] hover:bg-[#E4D9C3] px-3 py-1.5 rounded-full border border-[#D9CFBB] transition-colors"
               >
-                <Bot className="h-3.5 w-3.5 text-civic-700" />
+                <Bot className="h-3.5 w-3.5 text-[#C97B5A]" />
                 <span>Practice in Copilot</span>
               </Link>
             </div>

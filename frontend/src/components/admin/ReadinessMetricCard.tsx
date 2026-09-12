@@ -15,43 +15,43 @@ interface ReadinessMetricCardProps {
 
 export const ReadinessMetricCard: React.FC<ReadinessMetricCardProps> = ({
   icon: Icon,
-  iconColorClass = 'text-civic-700',
-  iconBgClass = 'bg-civic-50',
+  iconColorClass,
+  iconBgClass,
   label,
   value,
   subtext,
   badgeText,
-  badgeVariant = 'civic',
+  badgeVariant,
 }) => {
-  const badgeClasses = {
-    emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    civic: 'bg-civic-50 text-civic-800 border-civic-200',
-    saffron: 'bg-saffron-50 text-saffron-900 border-saffron-200',
-  };
-
   return (
-    <Card className="border-slate-200 shadow-civic-sm p-6 space-y-3.5 bg-white hover:shadow-civic-md transition-all duration-200 rounded-civic-xl">
+    <Card className="border-[#D9CFBB] p-6 space-y-3.5 bg-[#EDE4D0] hover:border-[#0A0A0A]/40 transition-all duration-200 rounded-2xl shadow-xs">
       <div className="flex items-start justify-between gap-3">
-        <div className={`p-3 rounded-full ${iconBgClass} ${iconColorClass} shrink-0 shadow-civic-xs`}>
+        <div className={`p-3 rounded-full shrink-0 shadow-xs border border-[#D9CFBB] ${iconBgClass || 'bg-[#F5EFE0]'} ${iconColorClass || 'text-[#0A0A0A]'}`}>
           <Icon className="h-5 w-5" />
         </div>
 
         {badgeText && (
-          <span className={`text-micro font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-civic-xs ${badgeClasses[badgeVariant]}`}>
+          <span className={`text-[10px] font-mono font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+            badgeVariant === 'emerald'
+              ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30'
+              : badgeVariant === 'saffron'
+              ? 'bg-[#C9A24A]/15 text-[#0A0A0A] border-[#C9A24A]/30'
+              : 'bg-[#F5EFE0] text-[#6B6357] border-[#D9CFBB]'
+          }`}>
             {badgeText}
           </span>
         )}
       </div>
 
       <div>
-        <span className="text-caption font-medium text-slate-500 block mb-1">
+        <span className="text-xs font-mono text-[#6B6357] block mb-1">
           {label}
         </span>
-        <div className="text-page-title font-semibold text-slate-900 tracking-tight font-mono">
+        <div className="font-mono text-3xl font-bold text-[#0A0A0A] tracking-tight">
           {value}
         </div>
         {subtext && (
-          <p className="text-caption text-slate-500 font-normal mt-1">
+          <p className="text-xs text-[#6B6357] font-sans font-normal mt-1">
             {subtext}
           </p>
         )}

@@ -60,65 +60,65 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 space-y-8"
     >
       {/* Primary Score & Status Seal Card */}
-      <Card className="text-center p-8 sm:p-10 space-y-6 border-slate-200 shadow-civic-xs bg-white rounded-civic-xl">
+      <Card className="text-center p-8 sm:p-10 space-y-6 border-[#D9CFBB] bg-[#EDE4D0] rounded-2xl shadow-xs">
         {/* Outcome Seal */}
         <motion.div
           variants={scaleInVariants}
-          className={`inline-flex p-4 sm:p-5 rounded-civic-xl shadow-civic-xs ${
+          className={`inline-flex p-4 sm:p-5 rounded-2xl shadow-xs border ${
             passed
-              ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-              : 'bg-saffron-50 text-saffron-600 border border-saffron-200'
+              ? 'bg-[#F5EFE0] text-[#2A5B4A] border-[#2A5B4A]/30'
+              : 'bg-[#F5EFE0] text-[#C97B5A] border-[#C97B5A]/30'
           }`}
         >
-          <Award className="h-14 w-14" />
+          <Award className="h-12 w-12" />
         </motion.div>
 
-        <motion.div variants={fadeUpVariants} className="space-y-1.5">
-          <div className="flex items-center justify-center gap-2 text-micro font-semibold uppercase tracking-wider text-slate-500">
+        <motion.div variants={fadeUpVariants} className="space-y-2">
+          <div className="flex items-center justify-center gap-2 text-xs font-mono uppercase tracking-widest text-[#6B6357]">
             <History className="h-3.5 w-3.5" />
             <span>Attempt #{attempt_number} Evaluation</span>
           </div>
-          <h2 className="text-page-title font-semibold text-slate-900 tracking-tight">
+          <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#0A0A0A] tracking-tight">
             {passed ? 'Assessment Certified!' : 'Assessment Completed — Review Required'}
           </h2>
-          <p className="text-body text-slate-600 max-w-lg mx-auto leading-relaxed font-normal">
-            Your competency assessment for <strong>{moduleTitle}</strong> has been evaluated server-side and recorded in your official employee profile.
+          <p className="text-sm text-[#6B6357] max-w-lg mx-auto leading-relaxed font-sans">
+            Your competency assessment for <strong className="text-[#0A0A0A]">{moduleTitle}</strong> has been evaluated server-side and recorded in your official employee profile.
           </p>
         </motion.div>
 
         {/* Score & Certification Card */}
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-civic-xl bg-slate-50 border border-slate-200 max-w-md mx-auto shadow-civic-xs space-y-4"
+          className="p-6 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] max-w-md mx-auto shadow-xs space-y-4"
         >
-          <div className="flex items-center justify-between text-caption text-slate-500 border-b border-slate-200 pb-2 font-medium">
-            <span>Score: <strong className="font-semibold text-slate-800 font-mono">{score} of {total}</strong></span>
-            <span>Passing Threshold: <strong className="font-semibold text-slate-800 font-mono">75%</strong></span>
+          <div className="flex items-center justify-between text-xs text-[#6B6357] font-mono border-b border-[#D9CFBB] pb-2">
+            <span>Score: <strong className="font-bold text-[#0A0A0A]">{score} of {total}</strong></span>
+            <span>Passing Threshold: <strong className="font-bold text-[#0A0A0A]">75%</strong></span>
           </div>
 
-          <div className="text-hero font-semibold text-civic-900 font-mono tracking-tight">
+          <div className="font-serif text-5xl font-normal text-[#0A0A0A] tracking-tight py-1">
             {percentage}%
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             <span
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1 text-micro font-semibold uppercase tracking-wider rounded-full border shadow-civic-xs ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-mono uppercase tracking-wider rounded-full border ${
                 passed
-                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                  : 'bg-saffron-100 text-saffron-900 border-saffron-300'
+                  ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40 font-semibold'
+                  : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40 font-semibold'
               }`}
             >
               {passed ? (
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
               ) : (
-                <AlertTriangle className="h-3.5 w-3.5 text-saffron-600" />
+                <AlertTriangle className="h-3.5 w-3.5 text-[#C97B5A]" />
               )}
               <span>{passed ? 'Certified Competency' : 'Needs Review (<75%)'}</span>
             </span>
 
-            <span className="inline-flex items-center gap-1 px-3.5 py-1 text-caption font-semibold rounded-full bg-slate-200/80 text-slate-800 border border-slate-300">
-              <TrendingUp className="h-3 w-3 text-slate-600" />
-              <span className="font-mono">Best Score: {best_score}/{total} ({bestPercentage}%)</span>
+            <span className="inline-flex items-center gap-1 px-3.5 py-1 text-xs font-mono rounded-full bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB]">
+              <TrendingUp className="h-3 w-3 text-[#6B6357]" />
+              <span>Best Score: {best_score}/{total} ({bestPercentage}%)</span>
             </span>
           </div>
 
@@ -126,14 +126,14 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
             <motion.div
               whileHover={shouldReduceMotion ? {} : { scale: 1.01 }}
               whileTap={shouldReduceMotion ? {} : { scale: 0.99 }}
-              className="pt-2 border-t border-slate-200/80"
+              className="pt-2 border-t border-[#D9CFBB]"
             >
               <button
                 type="button"
                 onClick={onViewCertificate}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-emerald-700 hover:bg-emerald-800 text-white text-caption font-semibold rounded-full shadow-civic-xs transition-all cursor-pointer min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#2A5B4A] hover:bg-[#2A5B4A]/90 text-[#F5EFE0] text-xs font-mono uppercase tracking-wider font-semibold rounded-full shadow-xs transition-all cursor-pointer min-h-[44px]"
               >
-                <Award className="h-4 w-4 text-emerald-100" />
+                <Award className="h-4 w-4 text-[#F5EFE0]" />
                 <span>View & Print Official Certificate</span>
               </button>
             </motion.div>
@@ -144,33 +144,33 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       {/* Competency-Level Breakdown Card */}
       {competency_breakdown && competency_breakdown.length > 0 && (
         <motion.div variants={fadeUpVariants}>
-          <Card className="p-6 sm:p-8 space-y-5 border-slate-200 shadow-civic-xs bg-white rounded-civic-xl">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2 text-slate-900 font-semibold text-section-heading">
-                <Layers className="h-4 w-4 text-civic-700" />
+          <Card className="p-6 sm:p-8 space-y-5 border-[#D9CFBB] bg-[#EDE4D0] rounded-2xl shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
+              <div className="flex items-center gap-2 text-[#0A0A0A] font-serif text-lg tracking-tight">
+                <Layers className="h-4 w-4 text-[#2A5B4A]" />
                 <span>Competency Breakdown</span>
               </div>
-              <span className="text-caption font-semibold text-slate-500 font-mono">
+              <span className="text-xs font-mono text-[#6B6357]">
                 {competency_breakdown.length} Competencies Evaluated
               </span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {competency_breakdown.map((item, idx) => (
-                <div key={idx} className="p-4 rounded-civic-lg bg-slate-50 border border-slate-200/80 space-y-2.5">
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-caption">
-                    <span className="font-semibold text-slate-900">{item.competency}</span>
+                <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-serif text-sm font-medium text-[#0A0A0A]">{item.competency}</span>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-semibold text-slate-600">
+                      <span className="font-mono text-xs text-[#6B6357]">
                         {item.score}/{item.total} ({item.percentage}%)
                       </span>
                       <span
-                        className={`text-micro font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                        className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                           item.mastery_level === 'Mastered' || item.passed
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40'
                             : item.mastery_level === 'Operational'
-                            ? 'bg-civic-100 text-civic-800 border-civic-300'
-                            : 'bg-saffron-100 text-saffron-800 border-saffron-300'
+                            ? 'bg-[#EDE4D0] text-[#0A0A0A] border-[#D9CFBB]'
+                            : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40'
                         }`}
                       >
                         {item.mastery_level || (item.passed ? 'Mastered' : 'Needs Review')}
@@ -178,38 +178,38 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-[#EDE4D0] rounded-full h-2 overflow-hidden border border-[#D9CFBB]/60">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${
                         item.mastery_level === 'Mastered' || item.passed
-                          ? 'bg-emerald-600'
+                          ? 'bg-[#2A5B4A]'
                           : item.mastery_level === 'Operational'
-                          ? 'bg-civic-700'
-                          : 'bg-saffron-500'
+                          ? 'bg-[#0A0A0A]'
+                          : 'bg-[#C97B5A]'
                       }`}
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
 
                   {!item.passed && (
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/60 text-caption">
-                      <span className="text-saffron-900 font-medium">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#D9CFBB] text-xs">
+                      <span className="text-[#C97B5A] font-sans">
                         Targeted review recommended before retaking.
                       </span>
                       <div className="flex items-center gap-2">
                         <Link
                           to={`/tutor?competency=${encodeURIComponent(item.competency)}&mode=remediation&prompt=${encodeURIComponent(`I need help understanding ${item.competency}. Can you explain the core rules and give me a practice scenario?`)}`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-saffron-50 hover:bg-saffron-100 text-saffron-900 border border-saffron-200 font-semibold transition-colors shadow-civic-xs text-caption"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EDE4D0] hover:bg-[#EDE4D0]/80 text-[#0A0A0A] border border-[#D9CFBB] font-mono text-xs transition-colors shadow-xs"
                         >
-                          <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
+                          <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
                           <span>Ask AI Tutor</span>
                         </Link>
                         <button
                           type="button"
                           onClick={onGoToLessons}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-civic-50 hover:bg-civic-100 text-civic-800 border border-civic-200 font-semibold transition-colors cursor-pointer shadow-civic-xs text-caption"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EDE4D0] hover:bg-[#EDE4D0]/80 text-[#0A0A0A] border border-[#D9CFBB] font-mono text-xs transition-colors cursor-pointer shadow-xs"
                         >
-                          <BookOpen className="h-3.5 w-3.5 text-civic-600" />
+                          <BookOpen className="h-3.5 w-3.5 text-[#2A5B4A]" />
                           <span>Review Lesson</span>
                         </button>
                       </div>
@@ -225,44 +225,44 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       {/* Strengths & Weak Areas Grid */}
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Strengths */}
-        <Card className="p-6 border-slate-200 shadow-civic-xs bg-emerald-50/40 space-y-3 rounded-civic-xl">
-          <div className="flex items-center gap-2 text-emerald-900 font-semibold text-section-heading">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+        <Card className="p-6 border-[#D9CFBB] bg-[#EDE4D0] space-y-3.5 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2 text-[#2A5B4A] font-serif text-base tracking-tight">
+            <CheckCircle2 className="h-4 w-4 text-[#2A5B4A]" />
             <span>Validated Strengths</span>
           </div>
           {strengths && strengths.length > 0 ? (
-            <ul className="space-y-1.5 text-caption text-emerald-950">
+            <ul className="space-y-2 text-xs font-sans text-[#0A0A0A]">
               {strengths.map((st, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-emerald-600 font-bold">✓</span>
+                <li key={idx} className="flex items-start gap-2 bg-[#F5EFE0] p-2.5 rounded-lg border border-[#D9CFBB]">
+                  <span className="text-[#2A5B4A] font-mono font-bold">✓</span>
                   <span>{st}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-caption text-slate-500 italic">
+            <p className="text-xs text-[#6B6357] italic">
               No strengths validated above 75% on this attempt.
             </p>
           )}
         </Card>
 
         {/* Weak Areas */}
-        <Card className="p-6 border-slate-200 shadow-civic-xs bg-saffron-50/40 space-y-3 rounded-civic-xl">
-          <div className="flex items-center gap-2 text-saffron-900 font-semibold text-section-heading">
-            <AlertTriangle className="h-4 w-4 text-saffron-600" />
+        <Card className="p-6 border-[#D9CFBB] bg-[#EDE4D0] space-y-3.5 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2 text-[#C97B5A] font-serif text-base tracking-tight">
+            <AlertTriangle className="h-4 w-4 text-[#C97B5A]" />
             <span>Areas for Remediation</span>
           </div>
           {weak_areas && weak_areas.length > 0 ? (
-            <ul className="space-y-1.5 text-caption text-saffron-950">
+            <ul className="space-y-2 text-xs font-sans text-[#0A0A0A]">
               {weak_areas.map((wa, idx) => (
-                <li key={idx} className="flex items-start gap-1.5">
-                  <span className="text-saffron-600 font-bold">!</span>
+                <li key={idx} className="flex items-start gap-2 bg-[#F5EFE0] p-2.5 rounded-lg border border-[#D9CFBB]">
+                  <span className="text-[#C97B5A] font-mono font-bold">!</span>
                   <span>{wa}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-caption text-emerald-700 font-medium">
+            <p className="text-xs text-[#2A5B4A] font-sans font-medium">
               No skill gaps detected in this module!
             </p>
           )}
@@ -270,18 +270,18 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       </motion.div>
 
       {/* Action Recommendation Banner */}
-      <motion.div variants={fadeUpVariants} className="p-6 rounded-civic-xl bg-civic-900 text-white shadow-civic-xs space-y-2">
-        <div className="flex items-center gap-2 text-caption font-semibold text-saffron-400">
+      <motion.div variants={fadeUpVariants} className="p-6 sm:p-7 rounded-2xl bg-[#0A0A0A] text-[#F5EFE0] border border-[#0A0A0A] space-y-2 shadow-xs">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#C9A24A]">
           <Sparkles className="h-4 w-4" />
           <span>Recommended Next Action:</span>
         </div>
-        <p className="text-body text-slate-200 leading-relaxed font-normal">
+        <p className="text-sm font-sans text-[#EDE4D0] leading-relaxed font-normal">
           {recommended_action}
         </p>
       </motion.div>
 
       {/* Footer Navigation Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-slate-200">
+      <motion.div variants={fadeUpVariants} className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-[#D9CFBB]">
         <Button variant="outline" size="md" onClick={onRetake} className="min-h-[44px] rounded-full px-5">
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
           <span>Retake Assessment</span>
@@ -289,7 +289,7 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
 
         <div className="flex flex-wrap gap-3">
           <Button variant="outline" size="md" onClick={onGoToProgress} className="min-h-[44px] rounded-full px-5">
-            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-saffron-600" />
+            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#C9A24A]" />
             <span>View My Skills Dashboard</span>
           </Button>
           <Button size="md" onClick={onGoToLessons} className="min-h-[44px] rounded-full px-5">

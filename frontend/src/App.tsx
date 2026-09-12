@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
-import Header from '@/layout/header';
-import Footer from '@/layout/footer';
 import LandingPage from '@/pages/LandingPage';
 import LoginPage from '@/pages/LoginPage';
 import ProgressDashboardPage from '@/pages/ProgressDashboardPage';
@@ -12,6 +10,9 @@ import QuizPage from '@/pages/QuizPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import CitizenUploadPage from '@/pages/CitizenUploadPage';
 import PublicVerificationPage from '@/pages/PublicVerificationPage';
+import DashboardLayout from '@/layout/DashboardLayout';
+import Nav from '@/sections/Nav';
+import Footer from '@/sections/Footer';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({
   children,
@@ -21,10 +22,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-[60vh] bg-[#F5EFE0]">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-full border-2 border-civic-700 border-t-transparent animate-spin" />
-          <p className="text-slate-500 text-sm font-medium">Verifying officer session...</p>
+          <div className="h-8 w-8 rounded-full border-2 border-[#0A0A0A] border-t-transparent animate-spin" />
+          <p className="text-[#6B6357] text-sm font-medium font-sans">
+            Verifying administrative credentials…
+          </p>
         </div>
       </div>
     );
@@ -43,78 +46,103 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
 export const AppContent: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-      <Header />
-      <main className="flex-1 flex flex-col">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/progress"
-            element={
-              <ProtectedRoute>
-                <ProgressDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/module"
-            element={
-              <ProtectedRoute>
-                <ModulePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tutor"
-            element={
-              <ProtectedRoute>
-                <TutorChatPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/quiz/:moduleId"
-            element={
-              <ProtectedRoute>
-                <QuizPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/quiz"
-            element={
-              <ProtectedRoute>
-                <QuizPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly>
-                <AdminDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/citizen" element={<CitizenUploadPage />} />
-          <Route path="/verify/:credentialId" element={<PublicVerificationPage />} />
-          <Route path="/verify" element={<PublicVerificationPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+      {/* Route 01: Reconstructed Editorial Landing Page */}
+      <Route path="/" element={<LandingPage />} />
+
+      {/* Route 02: Officer & Supervisor Authentication */}
+      <Route
+        path="/login"
+        element={
+          <div className="min-h-screen flex flex-col bg-[#F5EFE0] text-[#0A0A0A]">
+            <Nav />
+            <main className="flex-1 flex flex-col">
+              <LoginPage />
+            </main>
+            <Footer />
+          </div>
+        }
+      />
+
+      {/* Route 03: Officer Competency Dashboard */}
+      <Route
+        path="/progress"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <ProgressDashboardPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Route 04: Structured Administrative Curriculum */}
+      <Route
+        path="/module"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <ModulePage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Route 05: Grounded Administrative AI Tutor */}
+      <Route
+        path="/tutor"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <TutorChatPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Route 06: Server-Scored Certification Examination */}
+      <Route
+        path="/quiz"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <QuizPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Route 07: Supervisor Governance Telemetry */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute adminOnly>
+            <DashboardLayout>
+              <AdminDashboardPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Route 08: Citizen Pre-Submission Document Checker (GovAssist) */}
+      <Route path="/citizen" element={<CitizenUploadPage />} />
+
+      {/* Route 09: Public Certificate Verification */}
+      <Route path="/verify" element={<PublicVerificationPage />} />
+
+      {/* Fallback Redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <AppContent />
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

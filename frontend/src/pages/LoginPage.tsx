@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { getApiErrorMessage } from '@/lib/apiError';
 import api from '@/lib/api';
-import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import {
@@ -65,29 +64,34 @@ export const LoginPage: React.FC = () => {
 
 
   return (
-    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-slate-50 relative overflow-hidden">
-      {/* Subtle Civic Ambient Background */}
-      <div className="absolute inset-0 bg-civic-pattern opacity-5 pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-civic-500/5 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-[#F5EFE0] relative overflow-hidden">
       <motion.div
         variants={staggerContainerVariants}
         initial="hidden"
         animate="visible"
-        className="w-full max-w-md space-y-6 relative z-10"
+        className="w-full max-w-md space-y-5 relative z-10"
       >
         {/* Main Authentication Card */}
         <motion.div variants={fadeUpVariants}>
-          <Card className="border-slate-200 shadow-civic-md p-6 sm:p-8 bg-white rounded-civic-xl">
+          <div className="relative group p-6 sm:p-8 rounded-2xl bg-[#EDE4D0]/85 border border-[#D9CFBB] shadow-[0_20px_50px_-15px_rgba(10,10,10,0.08)]">
+            {/* Corner Archival Registration Brackets */}
+            <span className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
+            <span className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
+            <span className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
+            <span className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
+
             {/* Header Banner */}
-            <div className="text-center mb-6 space-y-2">
-              <div className="inline-flex p-3 rounded-full bg-civic-900 text-white shadow-civic-xs mb-1">
-                <Shield className="h-6 w-6 text-saffron-400" />
+            <div className="text-center mb-6 space-y-1.5">
+              <div className="inline-flex p-2.5 rounded-full bg-[#0A0A0A] text-[#F5EFE0] shadow-xs mb-1">
+                <Shield className="h-5 w-5 text-[#C9A24A]" />
               </div>
-              <h2 className="text-page-title font-semibold text-slate-900 tracking-tight">
+              <h2
+                className="font-serif text-[24px] sm:text-[26px] font-normal text-[#0A0A0A] tracking-[-0.02em]"
+                style={{ fontFamily: '"Fraunces", Georgia, serif' }}
+              >
                 {isRegister ? 'Create GovSkill Account' : 'Sign in to GovSkill'}
               </h2>
-              <p className="text-caption text-slate-500 font-normal">
+              <p className="font-sans text-[13px] text-[#6B6357]">
                 Official Digital Training Gateway for Local Governance
               </p>
             </div>
@@ -99,30 +103,30 @@ export const LoginPage: React.FC = () => {
                   initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                  className="mb-6 p-4 rounded-civic-lg bg-slate-50 border border-slate-200 space-y-2.5 overflow-hidden shadow-civic-xs"
+                  className="mb-5 p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2 overflow-hidden shadow-xs"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-micro font-semibold text-slate-600 uppercase tracking-wider">
-                      <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
+                    <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-[#0A0A0A] uppercase tracking-wider">
+                      <Sparkles className="h-3 w-3 text-[#C9A24A]" />
                       <span>Demo Credentials</span>
                     </span>
-                    <span className="text-micro font-medium text-slate-400">One-click populate</span>
+                    <span className="font-mono text-[10px] text-[#6B6357]">One-click populate</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => handleFillDemo('employee')}
-                      className="px-3.5 py-2 text-caption font-semibold rounded-full bg-white border border-slate-200 hover:border-civic-700 text-slate-800 hover:text-civic-800 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer min-h-[40px]"
+                      className="px-3 py-1.5 text-[12px] font-sans font-medium rounded-full bg-[#EDE4D0] border border-[#D9CFBB] hover:border-[#0A0A0A]/50 text-[#0A0A0A] transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[36px]"
                     >
-                      <User className="h-3.5 w-3.5 text-civic-700" />
+                      <User className="h-3 w-3 text-[#6B6357]" />
                       <span>Employee</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleFillDemo('admin')}
-                      className="px-3.5 py-2 text-caption font-semibold rounded-full bg-white border border-slate-200 hover:border-saffron-600 text-slate-800 hover:text-saffron-700 transition-all flex items-center justify-center gap-1.5 shadow-civic-xs cursor-pointer min-h-[40px]"
+                      className="px-3 py-1.5 text-[12px] font-sans font-medium rounded-full bg-[#EDE4D0] border border-[#D9CFBB] hover:border-[#C9A24A] text-[#0A0A0A] transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[36px]"
                     >
-                      <Lock className="h-3.5 w-3.5 text-saffron-600" />
+                      <Lock className="h-3 w-3 text-[#C9A24A]" />
                       <span>Supervisor (Admin)</span>
                     </button>
                   </div>
@@ -137,9 +141,9 @@ export const LoginPage: React.FC = () => {
                   initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-                  className="mb-5 p-4 rounded-civic-lg bg-red-50 border border-red-200 text-caption text-red-700 flex items-start gap-2.5 shadow-civic-xs font-normal"
+                  className="mb-5 p-3.5 rounded-xl bg-[#C97B5A]/12 border border-[#C97B5A]/35 text-[13px] text-[#8F3E22] flex items-start gap-2.5 shadow-xs"
                 >
-                  <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                  <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </motion.div>
               )}
@@ -177,14 +181,14 @@ export const LoginPage: React.FC = () => {
                     exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     className="space-y-1.5 overflow-hidden"
                   >
-                    <label htmlFor="role-select" className="block text-micro font-semibold uppercase tracking-wider text-slate-700">
+                    <label htmlFor="role-select" className="block font-mono text-[10.5px] uppercase tracking-wider text-[#6B6357]">
                       Account Role
                     </label>
                     <select
                       id="role-select"
                       value={role}
                       onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
-                      className="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 text-caption text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 cursor-pointer min-h-[44px]"
+                      className="w-full rounded-full border border-[#D9CFBB] bg-[#F5EFE0] px-4 py-2.5 text-[13px] text-[#0A0A0A] focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]/10 focus:border-[#0A0A0A] cursor-pointer min-h-[44px]"
                     >
                       <option value="employee">Government Employee (Trainee Officer)</option>
                       <option value="admin">Department Supervisor (Admin)</option>
@@ -196,7 +200,7 @@ export const LoginPage: React.FC = () => {
               <div className="pt-2">
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-xs cursor-pointer rounded-full min-h-[44px]"
+                  className="w-full font-sans font-medium shadow-sm cursor-pointer rounded-full min-h-[44px]"
                   size="lg"
                   isLoading={isLoading}
                   variant="primary"
@@ -207,7 +211,7 @@ export const LoginPage: React.FC = () => {
             </form>
 
             {/* Toggle between Register and Sign In */}
-            <div className="mt-6 pt-5 border-t border-slate-100 text-center text-caption text-slate-600 font-normal">
+            <div className="mt-5 pt-4 border-t border-[#D9CFBB]/70 text-center text-[13px] text-[#6B6357]">
               {isRegister ? 'Already have an official account?' : "Don't have an officer account yet?"}{' '}
               <button
                 type="button"
@@ -215,30 +219,30 @@ export const LoginPage: React.FC = () => {
                   setIsRegister(!isRegister);
                   setError(null);
                 }}
-                className="text-civic-800 font-semibold hover:underline cursor-pointer ml-1"
+                className="text-[#0A0A0A] font-semibold hover:underline cursor-pointer ml-1"
               >
                 {isRegister ? 'Sign In' : 'Register Here'}
               </button>
             </div>
-          </Card>
+          </div>
         </motion.div>
 
         {/* Citizen GovAssist Shortcut Card */}
         <motion.div variants={fadeUpVariants}>
           <Link
             to="/citizen"
-            className="w-full p-4 bg-emerald-50/70 hover:bg-emerald-50 rounded-civic-xl border border-emerald-200 shadow-civic-xs flex items-center justify-between text-caption transition-all group hover:border-emerald-300 hover:shadow-civic-sm"
+            className="w-full p-4 bg-[#EDE4D0]/70 hover:bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] shadow-xs flex items-center justify-between text-[13px] transition-all group hover:border-[#0A0A0A]/40"
           >
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-civic-xs group-hover:scale-105 transition-transform">
-                <FileCheck className="h-4 w-4 text-emerald-700" />
+              <div className="h-8 w-8 rounded-full bg-[#F5EFE0] text-[#2A5B4A] border border-[#D9CFBB] flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <FileCheck className="h-4 w-4 text-[#2A5B4A]" />
               </div>
               <div>
-                <p className="font-semibold text-slate-900">Visiting as a Citizen?</p>
-                <p className="text-caption text-slate-600 font-normal">Use the self-service Income Certificate pre-checker</p>
+                <p className="font-serif text-[14px] text-[#0A0A0A] font-normal">Visiting as a Citizen?</p>
+                <p className="text-[12px] text-[#6B6357]">Use the self-service Income Certificate pre-checker</p>
               </div>
             </div>
-            <ArrowRight className="h-4 w-4 text-emerald-700 group-hover:translate-x-1.5 transition-transform" />
+            <ArrowRight className="h-4 w-4 text-[#0A0A0A] group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
       </motion.div>

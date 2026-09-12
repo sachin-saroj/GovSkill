@@ -30,19 +30,19 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   return (
     <Card
       id={`question-card-${questionIndex}`}
-      className={`border-slate-200 shadow-civic-xs p-6 space-y-4 bg-white rounded-civic-xl transition-all ${
+      className={`border-[#D9CFBB] p-6 sm:p-7 space-y-5 bg-[#EDE4D0] rounded-2xl transition-all ${
         disabled ? 'opacity-70' : ''
-      } ${isFlagged ? 'ring-2 ring-saffron-400 border-saffron-300' : ''}`}
+      } ${isFlagged ? 'ring-2 ring-[#C97B5A]/60 border-[#C97B5A]' : ''}`}
     >
       {/* Question Header & Action Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-        <div className="flex items-center gap-2">
-          <span className="h-7 w-7 rounded-full bg-civic-100 text-civic-900 flex items-center justify-center font-semibold text-caption shrink-0 shadow-civic-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D9CFBB] pb-3.5">
+        <div className="flex items-center gap-2.5">
+          <span className="h-7 w-7 rounded-full bg-[#0A0A0A] text-[#F5EFE0] flex items-center justify-center font-mono font-bold text-xs shrink-0 shadow-xs">
             {questionIndex + 1}
           </span>
           {question.competency && (
-            <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-wider text-civic-800 bg-civic-50 px-2.5 py-0.5 rounded-full border border-civic-200">
-              <Award className="h-3 w-3 text-civic-700" />
+            <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase tracking-wider text-[#6B6357] bg-[#F5EFE0] px-2.5 py-0.5 rounded-full border border-[#D9CFBB]">
+              <Award className="h-3 w-3 text-[#2A5B4A]" />
               <span>{question.competency}</span>
             </span>
           )}
@@ -53,25 +53,25 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             type="button"
             onClick={onToggleFlag}
             disabled={disabled}
-            className={`inline-flex items-center gap-1.5 px-3 py-1 text-caption font-semibold rounded-full border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded-full border transition-all cursor-pointer ${
               isFlagged
-                ? 'bg-saffron-100 text-saffron-800 border-saffron-300 shadow-civic-xs'
-                : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                ? 'bg-[#F5EFE0] text-[#C97B5A] border-[#C97B5A] font-semibold'
+                : 'bg-[#F5EFE0] hover:bg-[#F5EFE0]/80 text-[#6B6357] border-[#D9CFBB]'
             }`}
           >
-            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-saffron-700 fill-saffron-700' : 'text-slate-400'}`} />
+            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-[#C97B5A] fill-[#C97B5A]' : 'text-[#6B6357]'}`} />
             <span>{isFlagged ? 'Flagged for Review' : 'Flag Question'}</span>
           </button>
         )}
       </div>
 
       {/* Question Text */}
-      <h3 className="text-section-heading font-semibold text-slate-900 leading-snug tracking-tight">
+      <h3 className="font-serif text-lg sm:text-xl font-normal text-[#0A0A0A] leading-snug tracking-tight">
         {question.question}
       </h3>
 
       {/* Answer Options Grid */}
-      <div className="space-y-3 pt-1">
+      <div className="space-y-2.5 pt-1">
         {question.options.map((option, idx) => {
           const isSelected = selectedOption === idx;
           const letter = OPTION_LETTERS[idx] || String.fromCharCode(65 + idx);
@@ -79,14 +79,14 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           return (
             <motion.label
               key={idx}
-              whileHover={shouldReduceMotion || disabled ? {} : { scale: 1.005, x: 2 }}
-              whileTap={shouldReduceMotion || disabled ? {} : { scale: 0.995 }}
-              className={`flex items-center gap-3.5 p-4 rounded-civic-lg border transition-all duration-150 shadow-civic-xs ${
+              whileHover={shouldReduceMotion || disabled ? {} : { scale: 1.003, x: 2 }}
+              whileTap={shouldReduceMotion || disabled ? {} : { scale: 0.997 }}
+              className={`flex items-center gap-3.5 p-4 rounded-xl border transition-all duration-150 ${
                 disabled
-                  ? 'border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed'
+                  ? 'border-[#D9CFBB] bg-[#F5EFE0]/50 text-[#6B6357] cursor-not-allowed'
                   : isSelected
-                  ? 'border-civic-700 bg-civic-50/80 text-civic-950 ring-2 ring-civic-700/20 font-semibold cursor-pointer'
-                  : 'border-slate-200 bg-white hover:bg-slate-50/90 hover:border-slate-300 text-slate-800 cursor-pointer'
+                  ? 'border-[#0A0A0A] bg-[#F5EFE0] text-[#0A0A0A] ring-1 ring-[#0A0A0A] font-semibold cursor-pointer shadow-xs'
+                  : 'border-[#D9CFBB] bg-[#F5EFE0] hover:border-[#0A0A0A]/60 text-[#0A0A0A] cursor-pointer'
               }`}
             >
               <input
@@ -96,19 +96,19 @@ export const QuizCard: React.FC<QuizCardProps> = ({
                 checked={isSelected}
                 onChange={() => !disabled && onSelectOption(idx)}
                 disabled={disabled}
-                className="h-4 w-4 text-civic-700 focus:ring-civic-700 disabled:cursor-not-allowed"
+                className="h-4 w-4 text-[#0A0A0A] focus:ring-[#0A0A0A] accent-[#0A0A0A] disabled:cursor-not-allowed"
               />
               <span
                 aria-hidden="true"
-                className={`h-6 w-6 rounded-full flex items-center justify-center text-micro font-semibold shrink-0 transition-colors ${
+                className={`h-6 w-6 rounded-full flex items-center justify-center font-mono text-xs shrink-0 transition-colors ${
                   isSelected
-                    ? 'bg-civic-900 text-white'
-                    : 'bg-slate-100 text-slate-600'
+                    ? 'bg-[#0A0A0A] text-[#F5EFE0]'
+                    : 'bg-[#EDE4D0] text-[#6B6357] border border-[#D9CFBB]'
                 }`}
               >
                 {letter}
               </span>
-              <span className="text-caption font-medium leading-relaxed">
+              <span className="text-sm font-sans font-normal leading-relaxed">
                 {option}
               </span>
             </motion.label>

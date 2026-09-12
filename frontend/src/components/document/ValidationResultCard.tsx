@@ -52,21 +52,21 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="space-y-4"
       >
-        <Card className="border-civic-200 bg-white p-6 shadow-civic-sm space-y-4 rounded-civic-xl">
+        <Card className="border-[#D9CFBB] bg-[#EDE4D0] p-6 space-y-4 rounded-2xl">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-civic-md bg-civic-100 text-civic-700 flex items-center justify-center shadow-civic-xs">
-              <Loader2 className="h-5 w-5 animate-spin text-civic-700" />
+            <div className="h-10 w-10 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] text-[#2A5B4A] flex items-center justify-center">
+              <Loader2 className="h-5 w-5 animate-spin text-[#2A5B4A]" />
             </div>
             <div>
-              <h4 className="text-section-heading font-semibold text-slate-900">Executing Deterministic Rule Engine</h4>
-              <p className="text-caption text-slate-500 font-normal">Extracting OCR text & validating 4 compliance rules...</p>
+              <h4 className="font-serif text-section-heading font-normal text-[#0A0A0A]">Executing Deterministic Rule Engine</h4>
+              <p className="text-caption text-[#6B6357] font-normal">Extracting OCR text & validating 4 compliance rules...</p>
             </div>
           </div>
           <div className="space-y-2.5 pt-2">
-            <div className="h-11 bg-slate-100 rounded-civic-md animate-pulse" />
-            <div className="h-11 bg-slate-100 rounded-civic-md animate-pulse" />
-            <div className="h-11 bg-slate-100 rounded-civic-md animate-pulse" />
-            <div className="h-11 bg-slate-100 rounded-civic-md animate-pulse" />
+            <div className="h-11 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB]/60 animate-pulse" />
+            <div className="h-11 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB]/60 animate-pulse" />
+            <div className="h-11 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB]/60 animate-pulse" />
+            <div className="h-11 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB]/60 animate-pulse" />
           </div>
         </Card>
       </motion.div>
@@ -79,12 +79,12 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
         initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="border-red-200 bg-red-50/50 p-6 shadow-civic-sm space-y-2 rounded-civic-xl">
-          <div className="flex items-center gap-2 text-red-700 font-semibold text-caption">
+        <Card className="border-[#C97B5A]/30 bg-[#C97B5A]/10 p-6 space-y-2 rounded-2xl">
+          <div className="flex items-center gap-2 text-[#C97B5A] font-semibold text-caption">
             <XCircle className="h-5 w-5 shrink-0" />
             <span>Verification Notice</span>
           </div>
-          <p className="text-caption text-red-600 leading-relaxed font-normal">{error}</p>
+          <p className="text-caption text-[#6B6357] leading-relaxed font-normal">{error}</p>
         </Card>
       </motion.div>
     );
@@ -92,12 +92,12 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
 
   if (!results || results.length === 0) {
     return (
-      <Card className="border-slate-200 bg-white p-6 sm:p-8 shadow-civic-sm text-center space-y-3 rounded-civic-xl">
-        <div className="h-12 w-12 rounded-civic-lg bg-slate-100 text-slate-400 mx-auto flex items-center justify-center shadow-civic-xs">
+      <Card className="border-[#D9CFBB] bg-[#EDE4D0] p-6 sm:p-8 text-center space-y-3 rounded-2xl">
+        <div className="h-12 w-12 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] text-[#6B6357] mx-auto flex items-center justify-center">
           <Info className="h-6 w-6" />
         </div>
-        <h4 className="text-section-heading font-semibold text-slate-800">No Document Verified Yet</h4>
-        <p className="text-caption text-slate-500 max-w-sm mx-auto leading-relaxed font-normal">
+        <h4 className="font-serif text-section-heading font-normal text-[#0A0A0A]">No Document Verified Yet</h4>
+        <p className="text-caption text-[#6B6357] max-w-sm mx-auto leading-relaxed font-normal">
           Upload an Income Certificate above to run automated pre-submission compliance checks.
         </p>
       </Card>
@@ -119,32 +119,32 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
       {/* Overall Verification Status Banner */}
       <motion.div variants={fadeUpVariants}>
         <Card
-          className={`p-6 border rounded-civic-xl transition-all shadow-civic-xs ${
+          className={`p-6 border rounded-2xl transition-all ${
             allPassed
-              ? 'bg-emerald-50/80 border-emerald-300'
-              : 'bg-saffron-50/80 border-saffron-300'
+              ? 'bg-[#2A5B4A]/10 border-[#2A5B4A]/30'
+              : 'bg-[#C97B5A]/10 border-[#C97B5A]/30'
           }`}
         >
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div
-                className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 shadow-civic-xs ${
-                  allPassed ? 'bg-emerald-600 text-white' : 'bg-saffron-600 text-white'
+                className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 ${
+                  allPassed ? 'bg-[#2A5B4A] text-white' : 'bg-[#C97B5A] text-white'
                 }`}
               >
                 {allPassed ? <ShieldCheck className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
               </div>
               <div className="space-y-1.5">
-                <h3 className="text-section-heading font-semibold text-slate-900 leading-snug">
+                <h3 className="font-serif text-section-heading font-normal text-[#0A0A0A] leading-snug">
                   {allPassed ? 'Pre-Submission Verification: PASSED' : 'Pre-Submission Notice: CORRECTIONS NEEDED'}
                 </h3>
-                <p className="text-body text-slate-700 leading-relaxed font-normal">
+                <p className="text-body text-[#0A0A0A] leading-relaxed font-normal">
                   {recommendedNextStep || (allPassed
                     ? `All ${results.length} compliance rules passed successfully. This document meets standard submission requirements.`
                     : `${failedCount} of ${results.length} checks failed. Review the AI guidance and corrective actions below before formal submission.`)}
                 </p>
                 {timestamp && (
-                  <span className="inline-flex items-center gap-1 text-caption text-slate-500 pt-1 font-normal">
+                  <span className="inline-flex items-center gap-1 text-caption font-mono text-[#6B6357] pt-1 font-normal">
                     <Clock className="h-3 w-3" />
                     <span>Verified at: {new Date(timestamp).toLocaleString()}</span>
                   </span>
@@ -155,10 +155,10 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     <button
                       type="button"
                       onClick={onGenerateSlip}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-caption font-semibold transition-all shadow-civic-xs cursor-pointer min-h-[44px] ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-caption font-semibold transition-all cursor-pointer min-h-[44px] ${
                         allPassed
-                          ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
-                          : 'bg-saffron-700 hover:bg-saffron-800 text-white'
+                          ? 'bg-[#2A5B4A] hover:bg-[#2A5B4A]/90 text-white'
+                          : 'bg-[#C97B5A] hover:bg-[#C97B5A]/90 text-white'
                       }`}
                     >
                       <FileCheck2 className="h-4 w-4" />
@@ -179,10 +179,10 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
       {/* Detailed Rule Breakdown List */}
       <motion.div variants={fadeUpVariants} className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h4 className="text-micro font-semibold uppercase tracking-wider text-slate-700">
+          <h4 className="text-micro font-semibold uppercase tracking-wider text-[#6B6357]">
             Compliance Rules Checklist ({results.length} Checks)
           </h4>
-          <span className="text-caption text-slate-500 font-normal">100% Deterministic Evaluation</span>
+          <span className="text-caption font-mono text-[#6B6357] font-normal">100% Deterministic Evaluation</span>
         </div>
 
         {results.map((rule) => {
@@ -191,10 +191,10 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
           return (
             <Card
               key={rule.ruleName}
-              className={`p-5 border rounded-civic-xl transition-all duration-150 shadow-civic-xs ${
+              className={`p-5 border rounded-2xl transition-all duration-150 ${
                 rule.passed
-                  ? 'border-slate-200 bg-white hover:border-emerald-200'
-                  : 'border-saffron-300 bg-saffron-50/40 hover:border-saffron-400'
+                  ? 'border-[#D9CFBB] bg-[#F5EFE0] hover:border-[#2A5B4A]/50'
+                  : 'border-[#C97B5A]/40 bg-[#C97B5A]/5 hover:border-[#C97B5A]'
               }`}
             >
               <button
@@ -204,23 +204,23 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
               >
                 <div className="flex items-start gap-3 min-w-0">
                   {rule.passed ? (
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-5 w-5 text-[#2A5B4A] shrink-0 mt-0.5" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-saffron-600 shrink-0 mt-0.5" />
+                    <XCircle className="h-5 w-5 text-[#C97B5A] shrink-0 mt-0.5" />
                   )}
                   <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-caption text-slate-900">
+                      <span className="font-semibold text-caption text-[#0A0A0A]">
                         {rule.ruleName}
                       </span>
                       {rule.severity === 'critical' && !rule.passed && (
-                        <span className="text-micro uppercase font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full border border-red-200">
+                        <span className="text-micro uppercase font-mono font-semibold text-[#C97B5A] bg-[#C97B5A]/10 px-2 py-0.5 rounded-full border border-[#C97B5A]/30">
                           Critical
                         </span>
                       )}
                     </div>
                     {rule.reason && (
-                      <p className="text-caption text-slate-600 leading-snug font-normal">
+                      <p className="text-caption text-[#6B6357] leading-snug font-normal">
                         {rule.reason}
                       </p>
                     )}
@@ -231,13 +231,13 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                   <span
                     className={`rounded-full px-3 py-0.5 text-caption font-semibold ${
                       rule.passed
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-saffron-100 text-saffron-900 border border-saffron-300'
+                        ? 'bg-[#2A5B4A]/15 text-[#2A5B4A] border border-[#2A5B4A]/30'
+                        : 'bg-[#C97B5A]/15 text-[#C97B5A] border border-[#C97B5A]/30'
                     }`}
                   >
                     {rule.passed ? 'Passed' : 'Action Needed'}
                   </span>
-                  <span className="text-slate-400">
+                  <span className="text-[#6B6357]">
                     {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </span>
                 </div>
@@ -252,24 +252,24 @@ export const ValidationResultCard: React.FC<ValidationResultCardProps> = ({
                     exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-4 pt-3.5 border-t border-slate-200 text-caption space-y-3 font-normal">
+                    <div className="mt-4 pt-3.5 border-t border-[#D9CFBB] text-caption space-y-3 font-normal">
                       {rule.recommended_action && (
-                        <div className="p-4 bg-white rounded-civic-lg border border-slate-200 flex items-start gap-2.5 text-slate-700 shadow-civic-xs">
-                          <ArrowRight className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
+                        <div className="p-4 bg-[#EDE4D0] rounded-xl border border-[#D9CFBB] flex items-start gap-2.5 text-[#0A0A0A]">
+                          <ArrowRight className="h-4 w-4 text-[#2A5B4A] shrink-0 mt-0.5" />
                           <div>
-                            <span className="font-semibold text-slate-900 block">Recommended Action:</span>
-                            <p className="leading-relaxed text-slate-600 font-normal">{rule.recommended_action}</p>
+                            <span className="font-semibold text-[#0A0A0A] block">Recommended Action:</span>
+                            <p className="leading-relaxed text-[#6B6357] font-normal">{rule.recommended_action}</p>
                           </div>
                         </div>
                       )}
 
                       {rule.explanation && (
-                        <div className="p-4 bg-slate-50 rounded-civic-lg border border-slate-200 text-slate-700 space-y-1.5 shadow-civic-xs">
-                          <div className="flex items-center gap-1.5 text-micro font-semibold text-civic-800 uppercase tracking-wide">
-                            <Sparkles className="h-3.5 w-3.5 text-saffron-600" />
+                        <div className="p-4 bg-[#EDE4D0] rounded-xl border border-[#D9CFBB] text-[#0A0A0A] space-y-1.5">
+                          <div className="flex items-center gap-1.5 text-micro font-semibold text-[#0A0A0A] uppercase tracking-wider">
+                            <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
                             <span>AI Plain-Language Guidance:</span>
                           </div>
-                          <p className="leading-relaxed text-slate-700 pl-5 font-normal">{rule.explanation}</p>
+                          <p className="leading-relaxed text-[#6B6357] pl-5 font-normal">{rule.explanation}</p>
                         </div>
                       )}
                     </div>

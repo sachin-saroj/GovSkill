@@ -21,16 +21,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = '',
 }) => {
   return (
-    <Card className={`p-8 text-center bg-white border border-slate-200 shadow-civic-xs rounded-civic-xl space-y-4 max-w-md mx-auto ${className}`}>
-      <div className="h-12 w-12 rounded-full bg-slate-100 text-slate-500 mx-auto flex items-center justify-center border border-slate-200/80 shadow-civic-xs">
-        <Icon className="h-6 w-6 text-civic-700" />
+    <Card className={`p-8 text-center bg-[#EDE4D0]/70 border border-[#D9CFBB] shadow-[0_16px_40px_-15px_rgba(10,10,10,0.06)] rounded-2xl space-y-4 max-w-md mx-auto ${className}`}>
+      <div className="h-12 w-12 rounded-full bg-[#F5EFE0] text-[#0A0A0A] mx-auto flex items-center justify-center border border-[#D9CFBB] shadow-xs">
+        <Icon className="h-5 w-5 text-[#0A0A0A]" />
       </div>
 
-      <div className="space-y-1">
-        <h3 className="text-section-heading font-semibold text-civic-900 tracking-tight">
+      <div className="space-y-1.5">
+        <h3 className="font-serif text-[18px] sm:text-[20px] font-normal text-[#0A0A0A] tracking-[-0.02em]">
           {title}
         </h3>
-        <p className="text-caption font-normal text-slate-500 max-w-sm mx-auto leading-relaxed">
+        <p className="text-[13px] font-normal text-[#6B6357] max-w-sm mx-auto leading-relaxed">
           {description}
         </p>
       </div>

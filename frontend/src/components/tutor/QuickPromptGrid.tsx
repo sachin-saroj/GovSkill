@@ -14,9 +14,9 @@ export const QuickPromptGrid: React.FC<QuickPromptGridProps> = ({
 }) => {
   return (
     <div className="space-y-2.5">
-      <div className="flex items-center gap-1.5 text-slate-500">
-        <Sparkles className="h-3.5 w-3.5 text-saffron-500" />
-        <span className="text-micro font-semibold uppercase tracking-wider block">
+      <div className="flex items-center gap-1.5 text-[#6B6357]">
+        <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
+        <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.14em] block text-[#6B6357]">
           Quick Questions / Prompt Starters:
         </span>
       </div>
@@ -28,7 +28,7 @@ export const QuickPromptGrid: React.FC<QuickPromptGridProps> = ({
             type="button"
             onClick={() => onSelectPrompt(suggestion)}
             disabled={disabled}
-            className="text-caption text-left px-4 py-2 bg-white border border-civic-200 hover:border-civic-400 hover:bg-civic-50/60 hover:text-civic-900 text-slate-700 rounded-full transition-colors duration-150 shadow-civic-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
+            className="text-caption text-left px-4 py-2 bg-[#F5EFE0] border border-[#D9CFBB] hover:border-[#0A0A0A] hover:bg-[#FAF6ED] text-[#0A0A0A] rounded-full transition-colors duration-150 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
           >
             {suggestion}
           </button>

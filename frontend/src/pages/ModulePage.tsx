@@ -169,42 +169,42 @@ export const ModulePage: React.FC = () => {
     >
       {/* 1. Compact Professional Module Header */}
       <motion.div variants={fadeUpVariants}>
-        <div className="bg-white rounded-civic-xl border border-slate-200 p-6 sm:p-8 shadow-civic-xs">
+        <div className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-2 max-w-3xl">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-civic-50 border border-civic-200 text-micro font-semibold uppercase tracking-wider text-civic-800">
-                  <BookOpen className="h-3.5 w-3.5 text-civic-700" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#E4D9C3] border border-[#D9CFBB] text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#0A0A0A]">
+                  <BookOpen className="h-3.5 w-3.5 text-[#C9A24A]" />
                   <span>Administrative Training Curriculum</span>
                 </span>
 
                 {isCurrentCompleted ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300">
-                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30">
+                    <CheckCircle2 className="h-3 w-3 text-[#2A5B4A]" />
                     <span>Curriculum Completed</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-micro font-semibold uppercase tracking-wider bg-civic-50 text-civic-800 border border-civic-200">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#E4D9C3] text-[#0A0A0A] border border-[#D9CFBB]">
                     In Progress
                   </span>
                 )}
               </div>
 
-              <h1 className="text-page-title font-semibold tracking-tight text-slate-900 leading-tight">
+              <h1 className="font-serif font-bold text-3xl sm:text-4xl tracking-tight text-[#0A0A0A] leading-tight">
                 {selectedModule?.title || 'Digital Document Handling'}
               </h1>
 
-              <p className="text-body text-slate-600 leading-relaxed font-normal">
+              <p className="text-body text-[#6B6357] leading-relaxed font-normal">
                 Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
               </p>
             </div>
 
             <div className="shrink-0 flex items-center gap-3">
-              <div className="bg-slate-50 border border-slate-200/80 rounded-civic-lg p-3 text-center min-w-[120px]">
-                <span className="text-micro uppercase font-semibold text-slate-500 block">
+              <div className="bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl p-3 text-center min-w-[120px]">
+                <span className="text-[10px] font-mono uppercase font-semibold text-[#6B6357] block">
                   Module
                 </span>
-                <span className="text-section-heading font-semibold text-slate-900 font-mono">
+                <span className="font-serif font-bold text-xl text-[#0A0A0A]">
                   {modules.findIndex((m) => m.id === selectedModule?.id) + 1} of {modules.length}
                 </span>
               </div>

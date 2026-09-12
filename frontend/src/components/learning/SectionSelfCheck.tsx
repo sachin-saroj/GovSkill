@@ -152,17 +152,17 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
   const isCorrect = selectedOption === checkItem.correctIndex;
 
   return (
-    <div className="rounded-civic-xl border border-civic-200 bg-gradient-to-br from-civic-50/70 to-slate-50 p-5 space-y-4 shadow-civic-xs">
+    <div className="rounded-xl border border-[#D9CFBB] bg-[#F5EFE0] p-5 space-y-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-civic-900 font-semibold text-caption uppercase tracking-wider">
-          <HelpCircle className="h-4 w-4 text-civic-700" />
+        <div className="flex items-center gap-2 text-[#0A0A0A] font-mono font-semibold text-[10px] uppercase tracking-[0.14em]">
+          <HelpCircle className="h-4 w-4 text-[#C9A24A]" />
           <span>Quick Understanding Check</span>
         </div>
         {isSubmitted && (
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1 text-caption text-slate-500 hover:text-civic-800 font-semibold cursor-pointer"
+            className="flex items-center gap-1 text-[11px] font-mono text-[#6B6357] hover:text-[#0A0A0A] font-medium cursor-pointer"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Try Again</span>
@@ -170,22 +170,22 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
         )}
       </div>
 
-      <p className="text-caption font-semibold text-slate-900">
+      <p className="font-serif font-bold text-base text-[#0A0A0A]">
         {checkItem.question}
       </p>
 
       {/* Options List */}
       <div className="space-y-2">
         {checkItem.options.map((option, idx) => {
-          let btnStyle = 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700';
+          let btnStyle = 'border-[#D9CFBB] bg-[#EDE4D0] hover:bg-[#E4D9C3] text-[#0A0A0A]';
 
           if (isSubmitted) {
             if (idx === checkItem.correctIndex) {
-              btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold';
+              btnStyle = 'border-[#2A5B4A] bg-[#2A5B4A]/10 text-[#2A5B4A] font-semibold';
             } else if (idx === selectedOption) {
-              btnStyle = 'border-red-400 bg-red-50 text-red-900';
+              btnStyle = 'border-[#C97B5A] bg-[#C97B5A]/10 text-[#C97B5A]';
             } else {
-              btnStyle = 'border-slate-200 bg-white opacity-60 text-slate-500';
+              btnStyle = 'border-[#D9CFBB] bg-[#EDE4D0] opacity-50 text-[#6B6357]';
             }
           }
 
@@ -195,14 +195,14 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={isSubmitted}
-              className={`w-full text-left px-4 py-2.5 rounded-full border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default shadow-civic-xs`}
+              className={`w-full text-left px-4 py-2.5 rounded-full border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default shadow-sm`}
             >
               <span className="leading-snug">{option}</span>
               {isSubmitted && idx === checkItem.correctIndex && (
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="h-4 w-4 text-[#2A5B4A] shrink-0" />
               )}
               {isSubmitted && idx === selectedOption && !isCorrect && (
-                <XCircle className="h-4 w-4 text-red-500 shrink-0" />
+                <XCircle className="h-4 w-4 text-[#C97B5A] shrink-0" />
               )}
             </button>
           );
@@ -212,13 +212,13 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
       {/* Feedback Alert */}
       {isSubmitted && (
         <div
-          className={`p-3.5 rounded-civic-lg border text-caption leading-relaxed animate-fade-in shadow-civic-xs ${
+          className={`p-3.5 rounded-xl border text-caption leading-relaxed animate-fade-in shadow-sm ${
             isCorrect
-              ? 'bg-emerald-50/90 border-emerald-300 text-emerald-900'
-              : 'bg-saffron-50/90 border-saffron-300 text-saffron-900'
+              ? 'bg-[#2A5B4A]/10 border-[#2A5B4A]/30 text-[#2A5B4A]'
+              : 'bg-[#C97B5A]/10 border-[#C97B5A]/30 text-[#C97B5A]'
           }`}
         >
-          <p className="font-semibold mb-0.5">
+          <p className="font-serif font-bold mb-0.5">
             {isCorrect ? '✓ Correct Understanding!' : '⚠ Concept Clarification:'}
           </p>
           <p className="text-caption font-normal">{checkItem.explanation}</p>

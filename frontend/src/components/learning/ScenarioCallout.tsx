@@ -165,34 +165,34 @@ export const ScenarioCallout: React.FC<ScenarioCalloutProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
       {/* Practical Scenario Card */}
-      <div className="rounded-civic-xl bg-slate-50 border border-slate-200/90 p-4 space-y-2.5 shadow-civic-xs">
-        <div className="flex items-center gap-2 text-civic-900 font-semibold text-caption">
-          <Building2 className="h-4 w-4 text-civic-700 shrink-0" />
+      <div className="rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] p-4 space-y-2.5 shadow-sm">
+        <div className="flex items-center gap-2 text-[#0A0A0A] font-serif font-bold text-caption">
+          <Building2 className="h-4 w-4 text-[#C9A24A] shrink-0" />
           <span>Workplace Scenario & Operational Impact</span>
         </div>
-        <p className="text-caption text-slate-700 leading-relaxed font-normal">
-          <strong className="text-slate-900 font-semibold">Scenario: </strong>
+        <p className="text-caption text-[#6B6357] leading-relaxed font-normal">
+          <strong className="text-[#0A0A0A] font-semibold">Scenario: </strong>
           {context.scenario}
         </p>
-        <div className="pt-1.5 border-t border-slate-200 text-caption text-slate-600 flex items-start gap-1.5 font-normal">
-          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="pt-1.5 border-t border-[#D9CFBB] text-caption text-[#6B6357] flex items-start gap-1.5 font-normal">
+          <CheckCircle2 className="h-3.5 w-3.5 text-[#2A5B4A] shrink-0 mt-0.5" />
           <span>
-            <strong className="font-semibold text-slate-800">Why it matters: </strong>
+            <strong className="font-semibold text-[#0A0A0A]">Why it matters: </strong>
             {context.workplaceImportance}
           </span>
         </div>
       </div>
 
       {/* Common Mistakes & Red Flags */}
-      <div className="rounded-civic-xl bg-saffron-50/70 border border-saffron-200/80 p-4 space-y-2.5 shadow-civic-xs">
-        <div className="flex items-center gap-2 text-saffron-900 font-semibold text-caption">
-          <ShieldAlert className="h-4 w-4 text-saffron-700 shrink-0" />
+      <div className="rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 p-4 space-y-2.5 shadow-sm">
+        <div className="flex items-center gap-2 text-[#C97B5A] font-mono font-semibold text-caption uppercase tracking-wider">
+          <ShieldAlert className="h-4 w-4 text-[#C97B5A] shrink-0" />
           <span>Common Mistakes & Red Flags to Avoid</span>
         </div>
-        <ul className="space-y-1.5 text-caption text-saffron-950 font-normal">
+        <ul className="space-y-1.5 text-caption text-[#0A0A0A] font-normal">
           {context.commonMistakes.map((mistake, idx) => (
             <li key={idx} className="flex items-start gap-2">
-              <AlertTriangle className="h-3.5 w-3.5 text-saffron-600 shrink-0 mt-0.5" />
+              <AlertTriangle className="h-3.5 w-3.5 text-[#C97B5A] shrink-0 mt-0.5" />
               <span className="leading-snug">{mistake}</span>
             </li>
           ))}

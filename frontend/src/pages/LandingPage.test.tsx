@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LandingPage from './LandingPage';
@@ -17,7 +17,7 @@ const renderLanding = () =>
     </BrowserRouter>
   );
 
-describe('LandingPage', () => {
+describe('Editorial LandingPage Rebuild', () => {
   beforeEach(() => {
     mockedUseAuth.mockReturnValue({
       user: null,
@@ -28,90 +28,84 @@ describe('LandingPage', () => {
     });
   });
 
-  it('renders national DPI badge, main headline, and key trust pillars', () => {
+  it('renders editorial hero with display serif headline and single primary CTA', () => {
     renderLanding();
 
-    expect(
-      screen.getByText(/National Digital Public Infrastructure • Local Governance Platform/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/Precision Digital Skills &/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/Citizen Document Verification/i)
-    ).toBeInTheDocument();
-
-    expect(screen.getAllByText(/100% Deterministic Rules/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Grounded Gemini AI Tutor/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/Server-Scored Quiz Scoring/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/Civil Competency Platform/i)).toBeInTheDocument();
+    expect(screen.getByText(/Public service,/i)).toBeInTheDocument();
+    expect(screen.getByText(/mastered/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Explore the Curriculum/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Pre-check a citizen document/i })).toBeInTheDocument();
   });
 
-  it('shows sign-in link when user is not logged in', () => {
+  it('renders the partner trust marquee with statutory frameworks', () => {
     renderLanding();
-    expect(screen.getByRole('button', { name: /Officer & Supervisor Login/i })).toBeInTheDocument();
+
+    expect(screen.getByText(/Statutory Frameworks & Institutional Standards/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Department of Revenue & Land Records/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Kerala State IT Mission/i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it('shows officer workspace button when user is logged in as employee', () => {
-    mockedUseAuth.mockReturnValue({
-      user: { id: '1', email: 'employee@govskill.test', role: 'employee' },
-      token: 'test-token',
-      isLoading: false,
-      login: vi.fn(),
-      logout: vi.fn(),
-    });
-
+  it('renders the single dark rounded stage anchor section', () => {
     renderLanding();
-    expect(screen.getByRole('button', { name: /Go to Officer Workspace/i })).toBeInTheDocument();
+
+    expect(screen.getByText(/Institutional Command/i)).toBeInTheDocument();
+    expect(screen.getByText(/An administrative interface shaped for/i)).toBeInTheDocument();
+    expect(screen.getByText(/unwavering/i)).toBeInTheDocument();
+    expect(screen.getByText(/Officer Training View/i)).toBeInTheDocument();
   });
 
-  it('renders interactive architecture diagram and switches active node on click', async () => {
+  it('renders the 5/7 asymmetric comparison section', () => {
     renderLanding();
 
-    // Verify initial active node is deterministic rule engine
-    expect(screen.getAllByText(/100% Code-Driven Validation Protocol/i).length).toBeGreaterThanOrEqual(1);
-
-    // Click on Citizen Pre-Check node
-    const citizenNodeBtn = screen.getByRole('button', {
-      name: /Inspect Citizen Document Pre-Check architecture node/i,
-    });
-    fireEvent.click(citizenNodeBtn);
-
-    // Verify details updated for citizen pre-check
-    expect(
-      await screen.findByText(/Self-Service Pre-Submission OCR Extraction/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/The Traditional Process/i)).toBeInTheDocument();
+    expect(screen.getByText(/The GovSkill Standard/i)).toBeInTheDocument();
+    expect(screen.getByText(/Surprise Rejections/i)).toBeInTheDocument();
   });
 
-  it('toggles interactive tour play/pause state', () => {
+  it('renders the core statement section with plate illustration', () => {
     renderLanding();
 
-    const tourBtn = screen.getByRole('button', { name: /Play architecture tour/i });
-    expect(tourBtn).toBeInTheDocument();
-
-    fireEvent.click(tourBtn);
-    expect(screen.getByRole('button', { name: /Pause architecture tour/i })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Pause architecture tour/i }));
-    expect(screen.getByRole('button', { name: /Play architecture tour/i })).toBeInTheDocument();
+    expect(screen.getByText(/Institutional Purpose/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/GovSkill is crafted for the dedicated officers who/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/serve/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/the public./i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders GovSkill and GovAssist 3D tilt cards with feature breakdowns', () => {
+  it('renders the competency tag cloud', () => {
     renderLanding();
 
-    expect(screen.getByText(/Employee Competency & Training Platform/i)).toBeInTheDocument();
-    expect(screen.getByText(/Citizen Pre-Submission Document Checker/i)).toBeInTheDocument();
-    expect(screen.getByText(/4-Rule Deterministic Evaluation/i)).toBeInTheDocument();
-    expect(screen.getByText(/Structured Administrative Modules/i)).toBeInTheDocument();
+    expect(screen.getByText(/Competency Domains/i)).toBeInTheDocument();
+    expect(screen.getByText('Income Certificate Verification')).toBeInTheDocument();
+    expect(screen.getByText('Temporal Validity Horizons')).toBeInTheDocument();
+    expect(screen.getByText('Statutory Counter Slips')).toBeInTheDocument();
   });
 
-  it('renders the 4-step workflow journey', () => {
+  it('renders asymmetric Feature A and Feature B sections', () => {
     renderLanding();
 
-    expect(screen.getByText('Citizen Pre-Checks')).toBeInTheDocument();
-    expect(screen.getByText('Officer Curriculum')).toBeInTheDocument();
-    expect(screen.getByText('Certified Assessment')).toBeInTheDocument();
-    expect(screen.getByText('Supervisor Oversight')).toBeInTheDocument();
+    expect(screen.getByText(/Citizen Pre-Submission Validation/i)).toBeInTheDocument();
+    expect(screen.getByText(/Officer Competency Academy/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Launch the Pre-Check Tool/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /View Administrative Curriculum/i })).toBeInTheDocument();
+  });
+
+  it('renders field dispatches testimonials and the dark green metric strip', () => {
+    renderLanding();
+
+    expect(screen.getByText(/Field Dispatches/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Voices from the/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/field./i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/Deterministic Rule Processing/i)).toBeInTheDocument();
+    expect(screen.getByText(/Passing Standard for Certification/i)).toBeInTheDocument();
+  });
+
+  it('renders final CTA and editorial footer with huge wordmark', () => {
+    renderLanding();
+
+    expect(screen.getAllByText(/Serve/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/better./i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByRole('button', { name: /Begin Document Pre-Check/i })).toBeInTheDocument();
+    expect(screen.getByText(/DPDP Act 2023 Compliant • Statutory Data Safeguards/i)).toBeInTheDocument();
   });
 });

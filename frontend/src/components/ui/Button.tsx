@@ -25,21 +25,21 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary:
-      'bg-civic-900 text-white hover:bg-civic-800 active:bg-civic-950 focus-visible:ring-civic-800 shadow-civic-xs hover:shadow-civic-sm',
+      'bg-[#0A0A0A] text-[#F5EFE0] hover:bg-[#222222] active:bg-[#000000] focus-visible:ring-[#0A0A0A] shadow-sm hover:shadow-md',
     secondary:
-      'border border-civic-300 bg-white text-civic-900 hover:bg-civic-50 hover:border-civic-400 active:bg-civic-100 focus-visible:ring-civic-800 shadow-civic-xs',
+      'border border-[#D9CFBB] bg-[#EDE4D0]/70 text-[#0A0A0A] hover:bg-[#EDE4D0] hover:border-[#0A0A0A]/40 active:bg-[#E2D7C0] focus-visible:ring-[#0A0A0A] shadow-xs',
     success:
-      'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 focus-visible:ring-emerald-600 shadow-civic-xs hover:shadow-civic-sm',
+      'bg-[#2A5B4A] text-[#F5EFE0] hover:bg-[#1E4235] active:bg-[#153026] focus-visible:ring-[#2A5B4A] shadow-sm',
     warning:
-      'bg-saffron-600 text-white hover:bg-saffron-700 active:bg-saffron-800 focus-visible:ring-saffron-600 shadow-civic-xs hover:shadow-civic-sm',
+      'bg-[#C9A24A] text-[#0A0A0A] font-semibold hover:bg-[#B8923B] active:bg-[#A8822E] focus-visible:ring-[#C9A24A] shadow-sm',
     saffron:
-      'bg-saffron-600 text-white hover:bg-saffron-700 active:bg-saffron-800 focus-visible:ring-saffron-600 shadow-civic-xs hover:shadow-civic-sm',
+      'bg-[#C9A24A] text-[#0A0A0A] font-semibold hover:bg-[#B8923B] active:bg-[#A8822E] focus-visible:ring-[#C9A24A] shadow-sm',
     danger:
-      'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-600 shadow-civic-xs',
+      'bg-[#C97B5A] text-[#F5EFE0] hover:bg-[#B56A49] active:bg-[#A05938] focus-visible:ring-[#C97B5A] shadow-sm',
     outline:
-      'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 focus-visible:ring-civic-800 shadow-civic-xs',
+      'border border-[#D9CFBB] bg-transparent text-[#0A0A0A] hover:bg-[#EDE4D0]/50 hover:border-[#0A0A0A]/40 active:bg-[#EDE4D0] focus-visible:ring-[#0A0A0A]',
     ghost:
-      'bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 focus-visible:ring-civic-800',
+      'bg-transparent text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#EDE4D0]/40 active:bg-[#EDE4D0]/70 focus-visible:ring-[#0A0A0A]',
   };
 
   const sizes = {

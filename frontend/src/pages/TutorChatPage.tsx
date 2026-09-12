@@ -182,26 +182,26 @@ export const TutorChatPage: React.FC = () => {
       className="max-w-5xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* 1. Header Banner & Scope Toolbar */}
-      <motion.div variants={fadeUpVariants} className="bg-white rounded-civic-xl border border-slate-200 p-6 sm:p-8 shadow-civic-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
+      <motion.div variants={fadeUpVariants} className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#D9CFBB] gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-micro font-semibold uppercase tracking-wider text-civic-700">
-              <Bot className="h-4 w-4 text-civic-700" />
+            <div className="flex items-center gap-2 text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#C97B5A]">
+              <Bot className="h-4 w-4 text-[#C97B5A]" />
               <span>Government Training Assistant</span>
             </div>
-            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
+            <h1 className="font-serif font-bold text-3xl sm:text-4xl text-[#0A0A0A] tracking-tight">
               Administrative Assistant & Copilot
             </h1>
-            <p className="text-body text-slate-600 font-normal">
+            <p className="text-body text-[#6B6357] font-normal">
               Answers are strictly grounded in approved government training modules and official administrative curriculum.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0">
             {/* Module Scope Selector */}
-            <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-full border border-slate-200 shadow-civic-xs min-h-[40px]">
-              <BookOpen className="h-4 w-4 text-civic-700 shrink-0" />
-              <label htmlFor="context-select" className="text-caption font-semibold text-slate-600 shrink-0">
+            <div className="flex items-center gap-2 bg-[#F5EFE0] px-3.5 py-2 rounded-full border border-[#D9CFBB] shadow-sm min-h-[40px]">
+              <BookOpen className="h-4 w-4 text-[#C9A24A] shrink-0" />
+              <label htmlFor="context-select" className="text-caption font-mono font-semibold text-[#6B6357] shrink-0 text-[11px]">
                 Scope:
               </label>
               <select
@@ -209,7 +209,7 @@ export const TutorChatPage: React.FC = () => {
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
                 disabled={isLoading}
-                className="text-caption font-semibold text-slate-900 bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                className="text-caption font-mono font-medium text-[#0A0A0A] bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-[11px]"
               >
                 <option value="auto">Auto-Detect Relevant Module ✨</option>
                 {modules.map((mod) => (
@@ -224,7 +224,7 @@ export const TutorChatPage: React.FC = () => {
               type="button"
               onClick={handleResetChat}
               title="Reset conversation"
-              className="flex items-center gap-1.5 px-4 py-2 text-caption font-semibold text-slate-600 border border-slate-200 rounded-full hover:bg-slate-50 hover:text-slate-900 transition-all shadow-civic-xs cursor-pointer min-h-[40px]"
+              className="flex items-center gap-1.5 px-4 py-2 text-[12px] font-mono font-medium text-[#0A0A0A] border border-[#D9CFBB] rounded-full bg-[#F5EFE0] hover:bg-[#EFE6D2] transition-all shadow-sm cursor-pointer min-h-[40px]"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Reset</span>
@@ -233,14 +233,14 @@ export const TutorChatPage: React.FC = () => {
         </div>
 
         {/* 2. Trust & Grounding Indicator Strip */}
-        <div className="flex items-center justify-between px-4 py-2.5 rounded-full bg-civic-50/70 border border-civic-200/80 text-caption text-slate-700">
+        <div className="flex items-center justify-between px-4 py-2.5 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption text-[#6B6357]">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+            <ShieldCheck className="h-4 w-4 text-[#2A5B4A] shrink-0" />
             <span>
-              <strong className="font-semibold text-civic-950">Training scope:</strong> {activeModuleTitle}
+              <strong className="font-semibold text-[#0A0A0A]">Training scope:</strong> {activeModuleTitle}
             </span>
           </div>
-          <span className="text-micro font-semibold uppercase tracking-wider text-civic-700 bg-white px-2.5 py-0.5 rounded-full border border-civic-200 hidden sm:inline">
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[#2A5B4A] bg-[#2A5B4A]/10 px-2.5 py-0.5 rounded-full border border-[#2A5B4A]/30 hidden sm:inline">
             Curriculum Grounded
           </span>
         </div>
@@ -250,17 +250,17 @@ export const TutorChatPage: React.FC = () => {
       {incomingCompetency && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-civic-xl bg-saffron-50 border border-saffron-300/80 text-caption text-saffron-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-civic-xs"
+          className="p-6 rounded-2xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#0A0A0A] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-full bg-saffron-100 text-saffron-800 shrink-0">
-              <Sparkles className="h-5 w-5 text-saffron-600" />
+            <div className="p-2.5 rounded-full bg-[#C97B5A]/20 text-[#C97B5A] shrink-0">
+              <Sparkles className="h-5 w-5 text-[#C97B5A]" />
             </div>
             <div>
-              <div className="font-semibold text-section-heading text-saffron-900 leading-snug">
+              <div className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
                 Targeted Remediation Active: {incomingCompetency}
               </div>
-              <p className="text-caption text-saffron-800 font-normal">
+              <p className="text-caption text-[#6B6357] font-normal">
                 Grounded guidance tailored to resolve this specific operational skill gap.
               </p>
             </div>
@@ -276,7 +276,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-4 py-2 rounded-full bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs min-h-[38px]"
+              className="px-4 py-2 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption font-medium text-[#0A0A0A] hover:bg-[#EFE6D2] transition-colors cursor-pointer disabled:opacity-60 shadow-sm min-h-[38px]"
             >
               Practice Scenario
             </button>
@@ -289,7 +289,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-4 py-2 rounded-full bg-white border border-saffron-300 text-caption font-semibold text-saffron-900 hover:bg-saffron-100 transition-colors cursor-pointer disabled:opacity-60 shadow-civic-xs min-h-[38px]"
+              className="px-4 py-2 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption font-medium text-[#0A0A0A] hover:bg-[#EFE6D2] transition-colors cursor-pointer disabled:opacity-60 shadow-sm min-h-[38px]"
             >
               Red Flags
             </button>
@@ -304,17 +304,17 @@ export const TutorChatPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-civic-xl bg-red-50 border border-red-300 text-caption text-red-700 flex items-center justify-between gap-2 shadow-civic-xs"
+            className="p-4 rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#C97B5A] flex items-center justify-between gap-2 shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+              <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0" />
               <span>{error}</span>
             </div>
             {lastFailedQuestion && (
               <button
                 type="button"
                 onClick={handleRetryLast}
-                className="flex items-center gap-1.5 px-3.5 py-1 bg-white border border-red-300 text-red-800 rounded-full font-semibold hover:bg-red-50 text-caption cursor-pointer shadow-civic-xs"
+                className="flex items-center gap-1.5 px-3.5 py-1 bg-[#F5EFE0] border border-[#D9CFBB] text-[#0A0A0A] rounded-full font-medium hover:bg-[#EFE6D2] text-caption cursor-pointer shadow-sm"
               >
                 <RefreshCw className="h-3 w-3" />
                 <span>Retry</span>
@@ -324,75 +324,173 @@ export const TutorChatPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Suggested Questions Grid */}
-      <motion.div variants={fadeUpVariants}>
-        <QuickPromptGrid
-          prompts={PROMPT_SUGGESTIONS}
-          onSelectPrompt={(p) => sendQuestionText(p)}
-          disabled={isLoading}
-        />
-      </motion.div>
+      {/* 70/30 Asymmetric Layout: 70% Conversation + 30% Training Context Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column (8 cols on lg): Conversation Stage */}
+        <motion.div variants={fadeUpVariants} className="lg:col-span-8 space-y-4">
+          <Card className="min-h-[560px] flex flex-col justify-between p-6 sm:p-8 bg-[#EDE4D0] border border-[#D9CFBB] shadow-sm rounded-2xl">
+            {/* If only initial greeting message, display editorial artwork empty state */}
+            {messages.length <= 1 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-4 sm:p-6 space-y-6">
+                <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-2xl overflow-hidden shadow-md border border-[#D9CFBB] bg-[#F5EFE0]">
+                  <img
+                    src="/illustrations/copilot_empty_illustration.jpg"
+                    alt="Training Copilot"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
 
-      {/* Chat Messages Workspace */}
-      <motion.div variants={fadeUpVariants}>
-        <Card className="min-h-[480px] flex flex-col justify-between p-6 sm:p-8 bg-slate-50/50 border-slate-200 shadow-civic-xs rounded-civic-xl">
-          <div className="space-y-4 overflow-y-auto max-h-[540px] pr-2 mb-4">
-            {messages.map((msg) => (
-              <ChatMessageItem
-                key={msg.id}
-                msg={msg}
-                matchedModule={findModuleByTitle(msg.matched_module_title)}
-                onSelectFollowup={(f) => sendQuestionText(f)}
-                onSelectModeAction={handleSelectModeAction}
+                <div className="space-y-2 max-w-md">
+                  <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#0A0A0A] tracking-tight">
+                    Ask Anything Regarding Government Workflows
+                  </h3>
+                  <p className="text-caption text-[#6B6357] leading-relaxed font-normal">
+                    {messages[0]?.text || "Hello! I am your official Government Training Copilot. Ask me any question regarding document verification, portal workflows, cybersecurity standards, or record retention. All answers are strictly grounded in approved curriculum."}
+                  </p>
+                </div>
+
+                {/* Quick Prompt Suggestions */}
+                <div className="w-full max-w-lg pt-2">
+                  <QuickPromptGrid
+                    prompts={PROMPT_SUGGESTIONS}
+                    onSelectPrompt={(p) => sendQuestionText(p)}
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4 overflow-y-auto max-h-[560px] pr-2 mb-4">
+                {messages.map((msg) => (
+                  <ChatMessageItem
+                    key={msg.id}
+                    msg={msg}
+                    matchedModule={findModuleByTitle(msg.matched_module_title)}
+                    onSelectFollowup={(f) => sendQuestionText(f)}
+                    onSelectModeAction={handleSelectModeAction}
+                    disabled={isLoading}
+                  />
+                ))}
+
+                <AnimatePresence>
+                  {isLoading && (
+                    <motion.div
+                      initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
+                      className="flex gap-3 items-center text-[#6B6357] text-caption"
+                    >
+                      <div className="h-8 w-8 rounded-full bg-[#0A0A0A] text-[#F5EFE0] flex items-center justify-center shadow-sm shrink-0 border border-[#D9CFBB]">
+                        <Bot className="h-4 w-4 text-[#C9A24A]" />
+                      </div>
+                      <div className="flex items-center gap-2 bg-[#F5EFE0] border border-[#D9CFBB] px-4 py-2.5 rounded-full shadow-sm">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-[#0A0A0A]" />
+                        <span className="font-mono text-[11px] text-[#0A0A0A]">
+                          Verifying against official training curriculum...
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+
+            {/* Input Form Bar */}
+            <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-4 border-t border-[#D9CFBB] bg-transparent">
+              <Input
+                placeholder="Ask about verification rules, SLA timelines, cybersecurity standards..."
+                value={inputQuestion}
+                onChange={(e) => setInputQuestion(e.target.value)}
                 disabled={isLoading}
+                className="flex-1 text-caption bg-[#F5EFE0] border-[#D9CFBB] focus:bg-[#FAF6ED] rounded-full min-h-[46px] px-5"
               />
-            ))}
+              <Button
+                type="submit"
+                size="md"
+                disabled={isLoading || !inputQuestion.trim()}
+                className="px-6 min-h-[46px] rounded-full shadow-sm shrink-0 cursor-pointer bg-[#0A0A0A] hover:bg-[#262626] text-[#F5EFE0] font-medium text-[13px]"
+              >
+                <Send className="h-4 w-4 mr-1.5" />
+                <span>Send</span>
+              </Button>
+            </form>
+          </Card>
+        </motion.div>
 
-            <AnimatePresence>
-              {isLoading && (
-                <motion.div
-                  initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
-                  className="flex gap-3 items-center text-slate-600 text-caption"
-                >
-                  <div className="h-8 w-8 rounded-full bg-civic-900 text-white flex items-center justify-center shadow-civic-xs">
-                    <Bot className="h-4 w-4 text-saffron-400" />
-                  </div>
-                  <div className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-full shadow-civic-xs">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-civic-700" />
-                    <span className="font-medium text-slate-700 text-caption">
-                      Verifying question against official training curriculum...
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        {/* Right Column (4 cols on lg): Contextual Training Intelligence Panel */}
+        <motion.div variants={fadeUpVariants} className="lg:col-span-4 space-y-4">
+          <div className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-[#6B6357]">
+                CURRENT TRAINING CONTEXT
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-[#2A5B4A]/10 text-[#2A5B4A] text-[10px] font-mono font-semibold border border-[#2A5B4A]/30">
+                Grounded
+              </span>
+            </div>
 
-            <div ref={messagesEndRef} />
+            <div className="space-y-1">
+              <h4 className="text-[10px] font-mono uppercase tracking-wider text-[#6B6357]">
+                Active Training Scope
+              </h4>
+              <p className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
+                {activeModuleTitle}
+              </p>
+              <p className="text-[11px] text-[#6B6357]">
+                Factual responses drawn directly from certified public service training curriculum.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2 text-[11px] text-[#6B6357]">
+              <div className="flex items-center gap-1.5 font-semibold text-[#0A0A0A] text-xs">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                <span>Anti-Hallucination Policy</span>
+              </div>
+              <p>
+                The Training Copilot will refuse questions outside official government procedures or public administration standards.
+              </p>
+            </div>
+
+            {/* Contextual Quick Action Triggers */}
+            <div className="space-y-2 pt-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B6357] block">
+                Targeted Practice
+              </span>
+
+              <button
+                type="button"
+                onClick={() =>
+                  sendQuestionText(
+                    `Give me an operational workplace scenario to test my understanding of ${activeModuleTitle}`,
+                    'procedure'
+                  )
+                }
+                disabled={isLoading}
+                className="w-full text-left p-3 rounded-xl border border-[#D9CFBB] hover:border-[#0A0A0A] bg-[#F5EFE0] hover:bg-[#FAF6ED] transition-all text-caption font-medium text-[#0A0A0A] flex items-center justify-between group cursor-pointer shadow-sm"
+              >
+                <span>Practice Workplace Scenario</span>
+                <span className="text-[#6B6357] group-hover:text-[#0A0A0A] font-bold">→</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  sendQuestionText(
+                    `What are the most critical mistakes and pitfalls in ${activeModuleTitle}?`,
+                    'pitfalls'
+                  )
+                }
+                disabled={isLoading}
+                className="w-full text-left p-3 rounded-xl border border-[#D9CFBB] hover:border-[#0A0A0A] bg-[#F5EFE0] hover:bg-[#FAF6ED] transition-all text-caption font-medium text-[#0A0A0A] flex items-center justify-between group cursor-pointer shadow-sm"
+              >
+                <span>Inspect Operational Pitfalls</span>
+                <span className="text-[#6B6357] group-hover:text-[#0A0A0A] font-bold">→</span>
+              </button>
+            </div>
           </div>
-
-          {/* Input Form Bar */}
-          <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-4 border-t border-slate-200 bg-white -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 p-4 rounded-b-civic-xl">
-            <Input
-              placeholder="Ask about verification rules, SLA timelines, cybersecurity standards..."
-              value={inputQuestion}
-              onChange={(e) => setInputQuestion(e.target.value)}
-              disabled={isLoading}
-              className="flex-1 text-caption bg-slate-50 border-slate-200 focus:bg-white rounded-full min-h-[46px] px-4"
-            />
-            <Button
-              type="submit"
-              size="md"
-              disabled={isLoading || !inputQuestion.trim()}
-              className="px-6 min-h-[46px] rounded-full shadow-civic-xs shrink-0 cursor-pointer"
-            >
-              <Send className="h-4 w-4 mr-1.5" />
-              <span>Send</span>
-            </Button>
-          </form>
-        </Card>
-      </motion.div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };

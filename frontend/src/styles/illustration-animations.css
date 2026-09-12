@@ -1,0 +1,372 @@
+/* ================================================================
+   GovSkill Editorial Motion System — Illustration & Section Animations
+   Respects prefers-reduced-motion: reduce unconditionally.
+   ================================================================ */
+
+/* --- Illustration 1: Hero Animations --- */
+@keyframes lampGlowPulse {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes windowLightShift {
+  0% {
+    opacity: 0.25;
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateY(-4px) rotate(0.5deg);
+  }
+  100% {
+    opacity: 0.25;
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+@keyframes inkLineDraw {
+  from {
+    stroke-dashoffset: 240;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- Illustration 2: Statement Animations --- */
+@keyframes figureDrift1 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes figureDrift2 {
+  0%, 100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes figureDrift3 {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes plazaRuleBreathe {
+  0%, 100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* --- Illustration 3: Feature A (Inspection) Animations --- */
+@keyframes magnifyDrift {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  25% {
+    transform: translate(6px, -4px);
+  }
+  50% {
+    transform: translate(3px, 6px);
+  }
+  75% {
+    transform: translate(-5px, 2px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+@keyframes sealTilt {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* --- Illustration 4: Feature B (Credential Seal) Animations --- */
+@keyframes sealRotateSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes outerRingRotate {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes ribbonTrace {
+  from {
+    stroke-dashoffset: 500;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- Illustration 5: Final CTA (Horizon) Animations --- */
+@keyframes skyHueBreathe {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes pathShimmerSweep {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.4;
+  }
+  70% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+/* --- Section UI Motion Elements --- */
+@keyframes scrollTravelDot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(32px);
+    opacity: 0;
+  }
+}
+
+@keyframes dotPulse4s {
+  0%, 85%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  92% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
+
+@keyframes dotPulse6s {
+  0%, 90%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  95% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+@keyframes ochreRingBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+}
+
+@keyframes badgeRotate40s {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flourishKDraw {
+  from {
+    stroke-dashoffset: 120;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* Utility Animation Classes */
+.animate-lamp-pulse {
+  animation: lampGlowPulse 4s ease-in-out infinite;
+}
+
+.animate-window-shift {
+  animation: windowLightShift 12s ease-in-out infinite alternate;
+}
+
+.animate-doc-draw {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: inkLineDraw 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-doc-draw-delay {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: inkLineDraw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+.animate-figure-drift-1 {
+  animation: figureDrift1 8s ease-in-out infinite;
+}
+
+.animate-figure-drift-2 {
+  animation: figureDrift2 8s ease-in-out infinite 0.12s;
+}
+
+.animate-figure-drift-3 {
+  animation: figureDrift3 8s ease-in-out infinite 0.24s;
+}
+
+.animate-plaza-breathe {
+  animation: plazaRuleBreathe 6s ease-in-out infinite;
+}
+
+.animate-magnify-drift {
+  animation: magnifyDrift 7s ease-in-out infinite;
+}
+
+.animate-seal-tilt {
+  animation: sealTilt 10s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.animate-ribbon-trace {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: ribbonTrace 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-seal-spin {
+  animation: sealRotateSlow 60s linear infinite;
+  transform-origin: center center;
+}
+
+.animate-ring-reverse {
+  animation: outerRingRotate 90s linear infinite;
+  transform-origin: center center;
+}
+
+.animate-sky-breathe {
+  animation: skyHueBreathe 20s ease-in-out infinite;
+}
+
+.animate-path-shimmer {
+  animation: pathShimmerSweep 8s ease-in-out infinite;
+}
+
+.animate-scroll-dot {
+  animation: scrollTravelDot 3s ease-in-out infinite;
+}
+
+.animate-dot-pulse-4s {
+  animation: dotPulse4s 4s ease-in-out infinite;
+}
+
+.animate-dot-pulse-6s {
+  animation: dotPulse6s 6s ease-in-out infinite;
+}
+
+.animate-ochre-ring {
+  animation: ochreRingBreathe 3s ease-in-out infinite;
+}
+
+.animate-badge-rotate {
+  animation: badgeRotate40s 40s linear infinite;
+  transform-origin: center center;
+}
+
+.animate-flourish-k {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: flourishKDraw 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+/* Prefers-Reduced-Motion Rules:
+   Transforms are frozen/disabled, ambient loops are halted, only static opacity states remain. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-lamp-pulse,
+  .animate-window-shift,
+  .animate-doc-draw,
+  .animate-doc-draw-delay,
+  .animate-figure-drift-1,
+  .animate-figure-drift-2,
+  .animate-figure-drift-3,
+  .animate-plaza-breathe,
+  .animate-magnify-drift,
+  .animate-seal-tilt,
+  .animate-ribbon-trace,
+  .animate-seal-spin,
+  .animate-ring-reverse,
+  .animate-sky-breathe,
+  .animate-path-shimmer,
+  .animate-scroll-dot,
+  .animate-dot-pulse-4s,
+  .animate-dot-pulse-6s,
+  .animate-ochre-ring,
+  .animate-badge-rotate,
+  .animate-flourish-k {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .animate-doc-draw,
+  .animate-doc-draw-delay,
+  .animate-ribbon-trace,
+  .animate-flourish-k {
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+}

@@ -4,16 +4,13 @@
 
 @layer base {
   :root {
-    --civic-navy: #0B192C;
-    --civic-blue: #1E4D8C;
-    --civic-blue-hover: #163A6B;
-    --civic-saffron: #D97706;
-    --civic-emerald: #059669;
-    --civic-crimson: #DC2626;
-    --civic-bg: #F8FAFC;
-    --civic-surface: #FFFFFF;
-    --civic-border: #E2E8F0;
-    --civic-border-strong: #CBD5E1;
+    --color-cream: #F5EFE0;
+    --color-cream-deep: #EDE4D0;
+    --color-ink: #0A0A0A;
+    --color-rule: #D9CFBB;
+    --color-accent-green: #2A5B4A;
+    --color-terracotta: #C97B5A;
+    --color-ochre: #C9A24A;
   }
 
   html {
@@ -24,20 +21,20 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #F5EFE0;
+    color: #0A0A0A;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
 
   ::selection {
-    background-color: #DBEAFE;
-    color: #0B192C;
+    background-color: rgba(201, 162, 74, 0.25);
+    color: #0A0A0A;
   }
 
   :focus-visible {
-    outline: 2px solid #1E4D8C;
+    outline: 2px solid #1E40AF;
     outline-offset: 2px;
   }
 
@@ -154,16 +151,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #EDE4D0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D9CFBB;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #6B6357;
 }
 
 /* Print Optimization for Counter Slips & Official Receipts */

@@ -235,19 +235,20 @@ export const CitizenUploadPage: React.FC = () => {
       animate="visible"
       className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
-      {/* Top Civic Header Banner */}
+      {/* Top Civic Header Banner with Museum Editorial Passe-partout Frame */}
       <motion.div variants={fadeUpVariants}>
-        <div className="bg-white rounded-civic-xl border border-slate-200 shadow-civic-xs p-6 sm:p-8 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div className="relative overflow-hidden bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 space-y-4">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#C9A24A]" />
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#D9CFBB] pt-1">
             <div className="flex items-center gap-2.5">
-              <span className="h-9 w-9 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-semibold shadow-civic-xs">
-                <FileCheck className="h-5 w-5 text-emerald-700" />
+              <span className="h-9 w-9 rounded-full bg-[#F5EFE0] text-[#0A0A0A] border border-[#D9CFBB] flex items-center justify-center font-semibold">
+                <FileCheck className="h-5 w-5 text-[#2A5B4A]" />
               </span>
               <div>
-                <span className="font-semibold text-micro uppercase tracking-wider text-emerald-800 block">
+                <span className="font-mono text-micro uppercase tracking-widest text-[#6B6357] block">
                   GovAssist Citizen Self-Service
                 </span>
-                <span className="text-caption text-slate-500 font-medium">
+                <span className="text-caption text-[#6B6357] font-medium">
                   Official Revenue & Taluk Document Verification Protocol
                 </span>
               </div>
@@ -264,19 +265,19 @@ export const CitizenUploadPage: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
+            <h1 className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight">
               Income Certificate Pre-submission Checker
             </h1>
-            <p className="text-body text-slate-600 max-w-3xl leading-relaxed font-normal">
+            <p className="text-body text-[#6B6357] max-w-3xl leading-relaxed font-normal">
               Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
             </p>
           </div>
 
           {/* Factual Disclaimer Strip */}
-          <div className="p-3.5 rounded-civic-lg bg-civic-50/80 border border-civic-200/80 text-caption text-slate-700 flex items-start gap-2.5 font-normal shadow-civic-xs">
-            <Info className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] text-caption text-[#6B6357] flex items-start gap-2.5 font-normal">
+            <Info className="h-4 w-4 text-[#C9A24A] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong>Notice:</strong> This self-service pre-check validates standard document readability and format rules prior to your Taluk office visit. It does not replace formal verification by competent revenue authorities.
+              <strong className="text-[#0A0A0A]">Notice:</strong> This self-service pre-check validates standard document readability and format rules prior to your Taluk office visit. It does not replace formal verification by competent revenue authorities.
             </p>
           </div>
         </div>
@@ -289,13 +290,13 @@ export const CitizenUploadPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-civic-xl bg-red-50 border border-red-200 text-caption text-red-700 flex items-start justify-between gap-2.5 shadow-civic-xs"
+            className="p-4 rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#C97B5A] flex items-start justify-between gap-2.5"
           >
             <div className="flex items-start gap-2.5">
-              <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+              <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0 mt-0.5" />
               <div className="space-y-0.5">
-                <p className="font-semibold">Verification Notice</p>
-                <p className="leading-relaxed font-normal">{error}</p>
+                <p className="font-semibold text-[#0A0A0A]">Verification Notice</p>
+                <p className="leading-relaxed font-normal text-[#6B6357]">{error}</p>
               </div>
             </div>
             {file && (
@@ -303,7 +304,7 @@ export const CitizenUploadPage: React.FC = () => {
                 size="sm"
                 variant="outline"
                 onClick={handleUpload}
-                className="text-caption shrink-0 rounded-full"
+                className="text-caption shrink-0 rounded-full border-[#D9CFBB] bg-[#F5EFE0] hover:bg-[#EDE4D0] text-[#0A0A0A]"
               >
                 <RefreshCw className="h-3 w-3 mr-1" />
                 <span>Retry</span>
@@ -314,17 +315,17 @@ export const CitizenUploadPage: React.FC = () => {
       </AnimatePresence>
 
       {/* Tab Navigation */}
-      <motion.div variants={fadeUpVariants} className="flex border-b border-slate-200 gap-4 sm:gap-8">
+      <motion.div variants={fadeUpVariants} className="flex border-b border-[#D9CFBB] gap-4 sm:gap-8">
         <button
           type="button"
           onClick={() => setActiveTab('upload')}
           className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'upload'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
+              ? 'border-[#0A0A0A] text-[#0A0A0A]'
+              : 'border-transparent text-[#6B6357] hover:text-[#0A0A0A] hover:border-[#D9CFBB]'
           }`}
         >
-          <UploadCloud className="h-4 w-4 text-civic-700" />
+          <UploadCloud className="h-4 w-4 text-[#2A5B4A]" />
           <span>Upload Document</span>
         </button>
 
@@ -333,11 +334,11 @@ export const CitizenUploadPage: React.FC = () => {
           onClick={() => setActiveTab('lookup')}
           className={`pb-3.5 text-caption font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
             activeTab === 'lookup'
-              ? 'border-civic-800 text-civic-900'
-              : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'
+              ? 'border-[#0A0A0A] text-[#0A0A0A]'
+              : 'border-transparent text-[#6B6357] hover:text-[#0A0A0A] hover:border-[#D9CFBB]'
           }`}
         >
-          <Search className="h-4 w-4 text-civic-700" />
+          <Search className="h-4 w-4 text-[#2A5B4A]" />
           <span>Lookup by Reference ID</span>
         </button>
       </motion.div>
@@ -347,33 +348,33 @@ export const CitizenUploadPage: React.FC = () => {
         {/* Left Column: Upload or Lookup Form (5 cols on lg) */}
         <motion.div variants={fadeUpVariants} className="lg:col-span-5 space-y-6">
           {activeTab === 'upload' ? (
-            <Card className="space-y-6 bg-white shadow-civic-xs border-slate-200 rounded-civic-xl p-6 sm:p-8">
-              <div className="pb-3 border-b border-slate-100">
-                <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+            <Card className="space-y-6 bg-[#EDE4D0] border-[#D9CFBB] rounded-2xl p-6 sm:p-8">
+              <div className="pb-3 border-b border-[#D9CFBB]">
+                <h2 className="font-serif text-section-heading font-normal text-[#0A0A0A] tracking-tight">
                   Upload Income Certificate
                 </h2>
-                <p className="text-caption text-slate-500 mt-0.5 font-normal">
+                <p className="text-caption text-[#6B6357] mt-0.5 font-normal">
                   Digital scan, photograph, or PDF file
                 </p>
               </div>
 
               {/* 4-Stage Processing Pipeline Visual */}
-              <div className="bg-slate-50 p-3.5 rounded-civic-lg border border-slate-200/80 space-y-2">
-                <div className="flex items-center justify-between text-micro font-semibold uppercase tracking-wider text-slate-500">
+              <div className="bg-[#F5EFE0] p-3.5 rounded-xl border border-[#D9CFBB] space-y-2">
+                <div className="flex items-center justify-between text-micro font-semibold uppercase tracking-wider text-[#6B6357]">
                   <span>Verification Pipeline</span>
-                  <span className="text-civic-700">4 Automated Stages</span>
+                  <span className="text-[#2A5B4A] font-mono">4 Automated Stages</span>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5 text-center text-micro font-semibold">
-                  <div className={`p-1.5 rounded-civic-sm border ${file ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-white text-slate-600 border-slate-200'}`}>
+                  <div className={`p-1.5 rounded-lg border transition-colors ${file ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30' : 'bg-[#EDE4D0] text-[#6B6357] border-[#D9CFBB]'}`}>
                     1. Select
                   </div>
-                  <div className={`p-1.5 rounded-civic-sm border ${isLoading ? 'bg-civic-100 text-civic-900 border-civic-300 animate-pulse' : results ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-white text-slate-600 border-slate-200'}`}>
+                  <div className={`p-1.5 rounded-lg border transition-colors ${isLoading ? 'bg-[#C9A24A]/20 text-[#0A0A0A] border-[#C9A24A] animate-pulse' : results ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30' : 'bg-[#EDE4D0] text-[#6B6357] border-[#D9CFBB]'}`}>
                     2. OCR
                   </div>
-                  <div className={`p-1.5 rounded-civic-sm border ${results ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-white text-slate-600 border-slate-200'}`}>
+                  <div className={`p-1.5 rounded-lg border transition-colors ${results ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30' : 'bg-[#EDE4D0] text-[#6B6357] border-[#D9CFBB]'}`}>
                     3. Rules
                   </div>
-                  <div className={`p-1.5 rounded-civic-sm border ${results ? 'bg-civic-900 text-white border-civic-900' : 'bg-white text-slate-600 border-slate-200'}`}>
+                  <div className={`p-1.5 rounded-lg border transition-colors ${results ? 'bg-[#0A0A0A] text-[#F5EFE0] border-[#0A0A0A]' : 'bg-[#EDE4D0] text-[#6B6357] border-[#D9CFBB]'}`}>
                     4. Result
                   </div>
                 </div>
@@ -385,35 +386,41 @@ export const CitizenUploadPage: React.FC = () => {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-civic-xl p-6 sm:p-8 text-center transition-all duration-200 ${
+                  className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
                     isLoading
-                      ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
+                      ? 'border-[#D9CFBB] bg-[#EDE4D0]/40 cursor-not-allowed opacity-60'
                       : isDragging
-                      ? 'border-civic-700 bg-civic-50 ring-4 ring-civic-200/50 scale-[1.01]'
+                      ? 'border-[#C9A24A] bg-[#EDE4D0] ring-4 ring-[#C9A24A]/20 scale-[1.01]'
                       : file
-                      ? 'border-emerald-300 bg-emerald-50/40'
-                      : 'border-slate-300 bg-slate-50/70 hover:border-civic-700 hover:bg-white'
+                      ? 'border-[#2A5B4A]/40 bg-[#2A5B4A]/5'
+                      : 'border-[#D9CFBB] bg-[#F5EFE0] hover:border-[#0A0A0A]/40 hover:bg-[#EDE4D0]/50'
                   }`}
                 >
-                  <div className="h-12 w-12 rounded-full bg-white shadow-civic-xs text-civic-700 mx-auto mb-3 flex items-center justify-center border border-slate-200">
-                    <UploadCloud className="h-6 w-6 text-civic-700" />
-                  </div>
+                  {!file && (
+                    <div className="w-32 h-32 mx-auto mb-3 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#EDE4D0] flex items-center justify-center">
+                      <img
+                        src="/illustrations/govassist_upload_illustration.jpg"
+                        alt="Document Verification"
+                        className="w-full h-full object-cover object-center"
+                      />
+                    </div>
+                  )}
 
                   <label
                     htmlFor="file-upload"
                     className={isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
                   >
                     <span
-                      className={`text-caption font-semibold block ${
+                      className={`text-caption font-bold block ${
                         isLoading
-                          ? 'text-slate-400 no-underline'
-                          : 'text-civic-800 hover:text-civic-900 hover:underline'
+                          ? 'text-[#6B6357]/60 no-underline'
+                          : 'text-[#0A0A0A] hover:underline'
                       }`}
                     >
-                      Choose a file to upload
+                      Choose an Income Certificate to pre-check
                     </span>
-                    <span className="text-caption text-slate-500 block mt-1.5 font-normal">
-                      Supports PNG, JPG, or PDF (Max 5MB)
+                    <span className="text-[11px] text-[#6B6357] block mt-1 font-mono">
+                      PNG, JPG, or PDF scan (Max 5MB) • 100% Deterministic Engine
                     </span>
                     <input
                       id="file-upload"
@@ -433,16 +440,16 @@ export const CitizenUploadPage: React.FC = () => {
                         initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
-                        className="mt-4 p-3.5 bg-white rounded-civic-lg border border-emerald-200 text-caption font-semibold text-slate-900 space-y-2 shadow-civic-xs"
+                        className="mt-4 p-3.5 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB] text-caption font-semibold text-[#0A0A0A] space-y-2"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 truncate">
                             {previewUrl ? (
-                              <ImageIcon className="h-4 w-4 text-emerald-600 shrink-0" />
+                              <ImageIcon className="h-4 w-4 text-[#2A5B4A] shrink-0" />
                             ) : (
-                              <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                              <FileText className="h-4 w-4 text-[#2A5B4A] shrink-0" />
                             )}
-                            <span className="truncate max-w-[200px]">{file.name}</span>
+                            <span className="truncate max-w-[200px] font-mono text-caption">{file.name}</span>
                           </div>
                           <button
                             type="button"
@@ -455,18 +462,18 @@ export const CitizenUploadPage: React.FC = () => {
                             }}
                             disabled={isLoading}
                             title="Remove file"
-                            className="text-slate-400 hover:text-red-600 p-1 rounded-full transition-colors cursor-pointer"
+                            className="text-[#6B6357] hover:text-[#C97B5A] p-1 rounded-full transition-colors cursor-pointer"
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>
                         </div>
 
                         {previewUrl && (
-                          <div className="pt-2 border-t border-slate-100 flex justify-center">
+                          <div className="pt-2 border-t border-[#D9CFBB] flex justify-center">
                             <img
                               src={previewUrl}
                               alt="Document Preview"
-                              className="max-h-36 rounded-civic-md object-contain border border-slate-200 shadow-civic-xs"
+                              className="max-h-36 rounded-lg object-contain border border-[#D9CFBB]"
                             />
                           </div>
                         )}
@@ -476,15 +483,15 @@ export const CitizenUploadPage: React.FC = () => {
                 </div>
 
                 {isLoading && processingStage && (
-                  <div className="p-3.5 rounded-full bg-civic-50 border border-civic-200 text-caption text-civic-900 flex items-center gap-2.5 shadow-civic-xs">
-                    <Loader2 className="h-4 w-4 animate-spin text-civic-700 shrink-0" />
+                  <div className="p-3.5 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption text-[#0A0A0A] flex items-center gap-2.5">
+                    <Loader2 className="h-4 w-4 animate-spin text-[#2A5B4A] shrink-0" />
                     <span className="font-medium">{processingStage}</span>
                   </div>
                 )}
 
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-xs cursor-pointer rounded-full min-h-[44px]"
+                  className="w-full font-semibold cursor-pointer rounded-full min-h-[44px]"
                   size="md"
                   disabled={isLoading || !file}
                   isLoading={isLoading}
@@ -495,43 +502,43 @@ export const CitizenUploadPage: React.FC = () => {
               </form>
 
               {/* Pre-check Rules Tested Guide */}
-              <div className="text-caption text-slate-600 space-y-2 pt-4 border-t border-slate-100 font-normal">
-                <div className="flex items-center gap-1.5 text-micro font-semibold uppercase tracking-wider text-slate-700">
-                  <ShieldCheck className="h-3.5 w-3.5 text-civic-700" />
+              <div className="text-caption text-[#6B6357] space-y-2 pt-4 border-t border-[#D9CFBB] font-normal">
+                <div className="flex items-center gap-1.5 text-micro font-semibold uppercase tracking-wider text-[#0A0A0A]">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#2A5B4A]" />
                   <span>Pre-check Compliance Rules:</span>
                 </div>
                 <ul className="grid grid-cols-1 gap-1.5 pl-1 text-caption">
-                  <li className="flex items-center gap-2 text-slate-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong className="font-semibold">Name present:</strong> Verifies applicant name is clearly readable.</span>
+                  <li className="flex items-center gap-2 text-[#6B6357]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+                    <span><strong className="font-semibold text-[#0A0A0A]">Name present:</strong> Verifies applicant name is clearly readable.</span>
                   </li>
-                  <li className="flex items-center gap-2 text-slate-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong className="font-semibold">Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
+                  <li className="flex items-center gap-2 text-[#6B6357]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+                    <span><strong className="font-semibold text-[#0A0A0A]">Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
                   </li>
-                  <li className="flex items-center gap-2 text-slate-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong className="font-semibold">Expiry check:</strong> Confirms certificate date is not expired.</span>
+                  <li className="flex items-center gap-2 text-[#6B6357]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+                    <span><strong className="font-semibold text-[#0A0A0A]">Expiry check:</strong> Confirms certificate date is not expired.</span>
                   </li>
-                  <li className="flex items-center gap-2 text-slate-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-civic-700" />
-                    <span><strong className="font-semibold">Mandatory extraction:</strong> Confirms all required fields are intact.</span>
+                  <li className="flex items-center gap-2 text-[#6B6357]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+                    <span><strong className="font-semibold text-[#0A0A0A]">Mandatory extraction:</strong> Confirms all required fields are intact.</span>
                   </li>
                 </ul>
               </div>
             </Card>
           ) : (
-            <Card className="space-y-6 bg-white shadow-civic-xs border-slate-200 rounded-civic-xl p-6 sm:p-8">
-              <div className="pb-3 border-b border-slate-100">
-                <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+            <Card className="space-y-6 bg-[#EDE4D0] border-[#D9CFBB] rounded-2xl p-6 sm:p-8">
+              <div className="pb-3 border-b border-[#D9CFBB]">
+                <h2 className="font-serif text-section-heading font-normal text-[#0A0A0A] tracking-tight">
                   Lookup Previous Pre-check
                 </h2>
-                <p className="text-caption text-slate-500 mt-0.5 font-normal">
+                <p className="text-caption text-[#6B6357] mt-0.5 font-normal">
                   Retrieve existing document OCR & validation report
                 </p>
               </div>
 
-              <p className="text-body text-slate-600 leading-relaxed font-normal">
+              <p className="text-body text-[#6B6357] leading-relaxed font-normal">
                 Enter your document's unique Reference ID to review previous OCR extraction results and deterministic compliance findings.
               </p>
               <form onSubmit={handleLookupSubmit} className="space-y-5">
@@ -542,13 +549,13 @@ export const CitizenUploadPage: React.FC = () => {
                   onChange={(e) => setLookupId(e.target.value)}
                   required
                   disabled={isLoading}
-                  leftIcon={<Search className="h-4 w-4" />}
+                  leftIcon={<Search className="h-4 w-4 text-[#6B6357]" />}
                   className="rounded-full min-h-[44px]"
                 />
 
                 <Button
                   type="submit"
-                  className="w-full font-semibold shadow-civic-xs cursor-pointer rounded-full min-h-[44px]"
+                  className="w-full font-semibold cursor-pointer rounded-full min-h-[44px]"
                   size="md"
                   disabled={isLoading || !lookupId.trim()}
                   isLoading={isLoading}
@@ -558,8 +565,8 @@ export const CitizenUploadPage: React.FC = () => {
                 </Button>
               </form>
 
-              <div className="p-3.5 rounded-civic-lg bg-slate-50 border border-slate-200 text-caption text-slate-600 flex items-start gap-2 shadow-civic-xs font-normal">
-                <Info className="h-4 w-4 text-civic-700 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] text-caption text-[#6B6357] flex items-start gap-2 font-normal">
+                <Info className="h-4 w-4 text-[#C9A24A] shrink-0 mt-0.5" />
                 <span>Reference IDs are generated automatically on upload and can be shared or reviewed at any time.</span>
               </div>
             </Card>
@@ -575,9 +582,9 @@ export const CitizenUploadPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="w-full py-2.5 px-4 rounded-full border border-slate-200 bg-white hover:bg-slate-50 hover:border-civic-700 text-slate-700 hover:text-civic-900 font-semibold text-caption transition-all flex items-center justify-center gap-2 shadow-civic-xs cursor-pointer active:scale-95"
+                className="w-full py-2.5 px-4 rounded-full border border-[#D9CFBB] bg-[#F5EFE0] hover:bg-[#EDE4D0] text-[#0A0A0A] font-semibold text-caption transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
               >
-                <RotateCcw className="h-3.5 w-3.5 text-civic-700" />
+                <RotateCcw className="h-3.5 w-3.5 text-[#6B6357]" />
                 <span>Pre-check Another Document</span>
               </button>
             </motion.div>
@@ -594,17 +601,17 @@ export const CitizenUploadPage: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.95 }}
               >
-                <Card className="bg-civic-50/70 border-civic-200 p-4 shadow-civic-xs rounded-civic-xl">
+                <Card className="bg-[#EDE4D0] border-[#D9CFBB] p-4 rounded-2xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="h-8 w-8 rounded-full bg-civic-900 text-white flex items-center justify-center shrink-0 shadow-civic-xs">
-                        <Tag className="h-4 w-4 text-saffron-400" />
+                      <div className="h-8 w-8 rounded-full bg-[#0A0A0A] text-[#C9A24A] flex items-center justify-center shrink-0">
+                        <Tag className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <span className="text-micro font-semibold uppercase tracking-wider text-civic-900 block">
+                        <span className="font-mono text-micro font-semibold uppercase tracking-wider text-[#6B6357] block">
                           Document Reference ID:
                         </span>
-                        <span className="font-mono text-caption font-semibold text-slate-800 truncate block">
+                        <span className="font-mono text-caption font-semibold text-[#0A0A0A] truncate block">
                           {documentId}
                         </span>
                       </div>
@@ -614,26 +621,26 @@ export const CitizenUploadPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setIsCounterSlipOpen(true)}
-                        className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-civic-900 bg-white border border-civic-300 hover:border-civic-700 rounded-full hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                        className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] hover:bg-[#EDE4D0] rounded-full shrink-0 transition-colors cursor-pointer"
                         title="Generate Official Pre-Submission Counter Slip"
                       >
-                        <FileCheck2 className="h-3.5 w-3.5 text-civic-700" />
+                        <FileCheck2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
                         <span>Pre-submission Counter Slip</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={handleCopyId}
-                        className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-civic-900 bg-white border border-slate-200 rounded-full hover:bg-slate-50 shrink-0 transition-colors shadow-civic-xs cursor-pointer"
+                        className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-[#0A0A0A] bg-[#F5EFE0] border border-[#D9CFBB] rounded-full hover:bg-[#EDE4D0] shrink-0 transition-colors cursor-pointer"
                       >
                         {copiedId ? (
                           <>
-                            <Check className="h-3.5 w-3.5 text-emerald-600" />
-                            <span className="text-emerald-700 font-semibold">Copied</span>
+                            <Check className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                            <span className="text-[#2A5B4A] font-semibold">Copied</span>
                           </>
                         ) : (
                           <>
-                            <Copy className="h-3.5 w-3.5 text-slate-500" />
+                            <Copy className="h-3.5 w-3.5 text-[#6B6357]" />
                             <span>Copy ID</span>
                           </>
                         )}
@@ -653,49 +660,49 @@ export const CitizenUploadPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
               >
-                <Card className="bg-white border-slate-200 p-6 shadow-civic-sm space-y-3.5 rounded-civic-xl">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                <Card className="bg-[#EDE4D0] border-[#D9CFBB] p-6 space-y-3.5 rounded-2xl">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-[#D9CFBB]">
                     <div className="flex items-center gap-2">
-                      <FileCode2 className="h-4 w-4 text-civic-700" />
-                      <h3 className="text-section-heading font-semibold text-slate-900">Extracted Data Fields</h3>
+                      <FileCode2 className="h-4 w-4 text-[#2A5B4A]" />
+                      <h3 className="font-serif text-section-heading font-normal text-[#0A0A0A]">Extracted Data Fields</h3>
                     </div>
-                    <span className="text-caption font-normal text-slate-400">Tesseract OCR Pipeline</span>
+                    <span className="text-caption font-mono text-[#6B6357]">Tesseract OCR Pipeline</span>
                   </div>
 
                   <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-caption pt-1">
-                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
-                      <dt className="text-slate-500 font-normal">Applicant Name:</dt>
-                      <dd className="font-semibold text-slate-900 text-caption">
+                    <div className="p-3.5 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB] space-y-1">
+                      <dt className="text-[#6B6357] font-normal">Applicant Name:</dt>
+                      <dd className="font-semibold text-[#0A0A0A] text-caption">
                         {extractedData.name ? (
                           <span>{extractedData.name}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-micro font-semibold">
+                          <span className="inline-block bg-[#C97B5A]/10 text-[#C97B5A] px-2 py-0.5 rounded-full text-micro font-semibold border border-[#C97B5A]/30">
                             Not detected
                           </span>
                         )}
                       </dd>
                     </div>
 
-                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
-                      <dt className="text-slate-500 font-normal">Certificate No:</dt>
-                      <dd className="font-semibold text-slate-900 text-caption font-mono">
+                    <div className="p-3.5 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB] space-y-1">
+                      <dt className="text-[#6B6357] font-normal">Certificate No:</dt>
+                      <dd className="font-semibold text-[#0A0A0A] text-caption font-mono">
                         {extractedData.certificate_number ? (
                           <span>{extractedData.certificate_number}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-micro font-semibold">
+                          <span className="inline-block bg-[#C97B5A]/10 text-[#C97B5A] px-2 py-0.5 rounded-full text-micro font-semibold border border-[#C97B5A]/30">
                             Not detected
                           </span>
                         )}
                       </dd>
                     </div>
 
-                    <div className="p-3.5 bg-slate-50 rounded-civic-lg border border-slate-200/80 space-y-1">
-                      <dt className="text-slate-500 font-normal">Expiry Date:</dt>
-                      <dd className="font-semibold text-slate-900 text-caption font-mono">
+                    <div className="p-3.5 bg-[#F5EFE0] rounded-xl border border-[#D9CFBB] space-y-1">
+                      <dt className="text-[#6B6357] font-normal">Expiry Date:</dt>
+                      <dd className="font-semibold text-[#0A0A0A] text-caption font-mono">
                         {extractedData.expiry_date ? (
                           <span>{extractedData.expiry_date}</span>
                         ) : (
-                          <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-full text-micro font-semibold">
+                          <span className="inline-block bg-[#C97B5A]/10 text-[#C97B5A] px-2 py-0.5 rounded-full text-micro font-semibold border border-[#C97B5A]/30">
                             Not detected
                           </span>
                         )}

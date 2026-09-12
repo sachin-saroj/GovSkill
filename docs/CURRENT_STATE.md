@@ -1,10 +1,19 @@
 # CURRENT STATE
 
 Last Updated:
-2026-08-24
+2026-09-12
 
 ## Working
 
+- **Repository Hygiene & Dead Code Elimination**: Performed forensic audit and purged all unreferenced legacy components, dead duplicate exports, obsolete CSS variables, and orphaned static assets:
+  - Removed obsolete legacy layout headers and footers (`frontend/src/layout/header.tsx`, `frontend/src/layout/footer.tsx`).
+  - Removed unreferenced prototype landing graphics and consoles (`CivicArchitectureConsole.tsx`, `CivicArchitectureGraphic.tsx`).
+  - Removed unused UI primitive (`Skeleton.tsx`) and purged dead export from `src/components/ui/index.ts`.
+  - Replaced 65 lines of duplicate `IllustrationFrame` in `src/design-system/index.tsx` with a single authoritative re-export from `components/IllustrationFrame.tsx`.
+  - Cleaned up obsolete `--civic-*` and `--ccds-*` CSS tokens in `src/index.css`.
+  - Removed ~3.69 MB of unused static image assets (`assets/skills/*`, `illustrations/landing_hero_artwork.jpg`).
+  - All automated quality gates verified: 69/69 Vitest tests pass, 38/38 Pytest tests pass, production bundle passes with 0 TypeScript warnings.
+- **Full Platform Museum-Grade Editorial Design Harmonization**: Successfully harmonized the visual design system across every page, layout shell, modal, and interactive feature in GovSkill to match the authentic editorial aesthetic established on the landing page (warm cream `#F5EFE0`, passe-partout `#EDE4D0`, architectural hairline rules `#D9CFBB`, archival ink `#0A0A0A`, Fraunces serif headlines, and JetBrains Mono telemetry).
 - **Strict Product Design System & Universal Typographic Discipline**: Elevated the entire GovSkill frontend to the highest standard of typographic precision, 4px spacing discipline, component reuse, and role-based color restraint across all 6 core screens and global layouts:
   - **Strict 6-Size Typographic Scale (`tailwind.config.js`, `src/index.css`)**: `text-hero` ($32\text{px}/600/1.15$), `text-page-title` ($26\text{px}/600/1.2$), `text-section-heading` ($19\text{px}/600/1.3$), `text-body` ($15\text{px}/400/1.5$), `text-caption` ($13\text{px}/500/1.4$), and `text-micro` ($12\text{px}/600\text{ uppercase tracked}$).
   - **Foundation UI Tokens & Elevation Rules**: Standardized `Button.tsx`, `Card.tsx`, `Badge.tsx`, and `Input.tsx` with unified `rounded-civic-md` ($8\text{px}$), `rounded-civic-xl` ($16\text{px}$), and `rounded-civic-2xl` ($24\text{px}$) radii; fixed $p-6$ ($24\text{px}$) and $p-8$ ($32\text{px}$) card paddings; and role-restrained palette tokens (`civic`, `saffron`, `emerald`).

@@ -74,7 +74,7 @@ export const PublicVerificationPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F5EFE0] py-10 px-4 sm:px-6 lg:px-8 text-[#0A0A0A]">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Navigation & Header */}
         <div className="flex items-center justify-between print:hidden">
@@ -82,14 +82,14 @@ export const PublicVerificationPage: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 text-caption text-slate-600 hover:text-slate-900"
+            className="flex items-center gap-1.5 text-caption text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#EDE4D0] rounded-full"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Return to Home</span>
           </Button>
 
-          <div className="flex items-center gap-2 text-micro font-semibold text-civic-700 bg-civic-50 px-3 py-1.5 rounded-full border border-civic-200 uppercase tracking-wider">
-            <Lock className="h-3.5 w-3.5 text-civic-700" />
+          <div className="flex items-center gap-2 font-mono text-micro font-semibold text-[#6B6357] bg-[#EDE4D0] px-3.5 py-1.5 rounded-full border border-[#D9CFBB] uppercase tracking-wider">
+            <Lock className="h-3.5 w-3.5 text-[#2A5B4A]" />
             <span>HMAC-SHA256 Cryptographic Registry</span>
           </div>
         </div>
@@ -101,43 +101,43 @@ export const PublicVerificationPage: React.FC = () => {
           animate={shouldReduceMotion ? {} : 'visible'}
           className="text-center space-y-3 print:hidden"
         >
-          <div className="inline-flex p-3 rounded-full bg-civic-900 text-saffron-400 shadow-civic-xs mb-1">
-            <ShieldCheck className="h-7 w-7 text-saffron-400" />
+          <div className="inline-flex p-3 rounded-full bg-[#0A0A0A] text-[#C9A24A] mb-1">
+            <ShieldCheck className="h-7 w-7" />
           </div>
-          <h1 className="text-page-title font-semibold text-slate-900 tracking-tight">
+          <h1 className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight">
             Official Credential Verification Portal
           </h1>
-          <p className="text-body text-slate-600 max-w-xl mx-auto font-normal">
+          <p className="text-body text-[#6B6357] max-w-xl mx-auto font-normal">
             Verify the authenticity of digital certificates issued by the Local Government Administration & Training Board.
           </p>
         </motion.div>
 
         {/* Lookup Search Input Bar */}
-        <div className="bg-white p-4 sm:p-6 rounded-civic-xl shadow-civic-xs border border-slate-200 print:hidden">
+        <div className="bg-[#EDE4D0] p-4 sm:p-6 rounded-2xl border border-[#D9CFBB] print:hidden">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6357]" />
               <input
                 type="text"
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
                 placeholder="Enter Credential ID (e.g., GS-CERT-2026-A1B2C3D4E5F6)"
-                className="w-full pl-10 pr-4 py-2.5 text-caption rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-civic-700/20 focus:border-civic-700 font-mono min-h-[44px]"
+                className="w-full pl-10 pr-4 py-2.5 text-caption rounded-full border border-[#D9CFBB] bg-[#F5EFE0] text-[#0A0A0A] focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]/20 focus:border-[#0A0A0A] font-mono min-h-[44px]"
               />
             </div>
             <Button
               type="submit"
               disabled={isLoading || !searchId.trim()}
-              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-civic-900 hover:bg-civic-800 text-white rounded-full text-caption font-semibold min-h-[44px] shadow-civic-xs cursor-pointer"
+              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#0A0A0A] hover:bg-[#0A0A0A]/90 text-[#F5EFE0] rounded-full text-caption font-semibold min-h-[44px] cursor-pointer"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  <Loader2 className="h-4 w-4 animate-spin text-[#F5EFE0]" />
                   <span>Verifying...</span>
                 </>
               ) : (
                 <>
-                  <ShieldCheck className="h-4 w-4 text-saffron-400" />
+                  <ShieldCheck className="h-4 w-4 text-[#C9A24A]" />
                   <span>Verify Credential</span>
                 </>
               )}
@@ -147,8 +147,8 @@ export const PublicVerificationPage: React.FC = () => {
 
         {/* Result Area */}
         {isLoading && (
-          <div className="flex flex-col items-center justify-center py-12 gap-3 text-slate-500 text-caption font-normal">
-            <Loader2 className="h-8 w-8 animate-spin text-civic-700" />
+          <div className="flex flex-col items-center justify-center py-12 gap-3 text-[#6B6357] text-caption font-normal">
+            <Loader2 className="h-8 w-8 animate-spin text-[#2A5B4A]" />
             <p>Validating cryptographic signature against government registry...</p>
           </div>
         )}
@@ -158,13 +158,13 @@ export const PublicVerificationPage: React.FC = () => {
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="p-6 rounded-civic-xl bg-rose-50 border border-rose-200 text-rose-800 space-y-2 text-center"
+            className="p-6 rounded-2xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-[#C97B5A] space-y-2 text-center"
           >
-            <div className="inline-flex p-2.5 rounded-full bg-rose-100 text-rose-600">
+            <div className="inline-flex p-2.5 rounded-full bg-[#C97B5A]/15 text-[#C97B5A]">
               <ShieldAlert className="h-6 w-6" />
             </div>
-            <h3 className="text-section-heading font-semibold">Verification Failed</h3>
-            <p className="text-caption text-rose-700 max-w-md mx-auto font-normal">{error}</p>
+            <h3 className="font-serif text-section-heading font-normal text-[#0A0A0A]">Verification Failed</h3>
+            <p className="text-caption text-[#6B6357] max-w-md mx-auto font-normal">{error}</p>
           </motion.div>
         )}
 
@@ -177,25 +177,25 @@ export const PublicVerificationPage: React.FC = () => {
           >
             {/* Status Callout */}
             <div
-              className={`p-4 sm:p-5 rounded-civic-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+              className={`p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                 credential.valid
-                  ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
-                  : 'bg-saffron-50 border-saffron-200 text-saffron-900'
+                  ? 'bg-[#2A5B4A]/10 border-[#2A5B4A]/30 text-[#0A0A0A]'
+                  : 'bg-[#C97B5A]/10 border-[#C97B5A]/30 text-[#0A0A0A]'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`p-2.5 rounded-full ${
-                    credential.valid ? 'bg-emerald-100 text-emerald-700' : 'bg-saffron-100 text-saffron-700'
+                    credential.valid ? 'bg-[#2A5B4A] text-white' : 'bg-[#C97B5A] text-white'
                   }`}
                 >
                   {credential.valid ? <CheckCircle2 className="h-6 w-6" /> : <ShieldAlert className="h-6 w-6" />}
                 </div>
                 <div>
-                  <h3 className="text-section-heading font-semibold">
+                  <h3 className="font-serif text-section-heading font-normal text-[#0A0A0A]">
                     {credential.valid ? 'Official Credential Verified' : 'Signature Integrity Warning'}
                   </h3>
-                  <p className="text-caption text-slate-600 font-normal">
+                  <p className="text-caption text-[#6B6357] font-normal">
                     {credential.valid
                       ? 'Cryptographic integrity verified using server-side HMAC-SHA256 signature.'
                       : 'Signature mismatch detected. This credential data may have been altered.'}
@@ -207,7 +207,7 @@ export const PublicVerificationPage: React.FC = () => {
                 variant="outline"
                 size="sm"
                 onClick={handlePrint}
-                className="flex items-center gap-1.5 text-caption shrink-0 print:hidden bg-white hover:bg-slate-50 font-semibold rounded-full min-h-[40px] px-4 shadow-civic-xs cursor-pointer"
+                className="flex items-center gap-1.5 text-caption shrink-0 print:hidden bg-[#F5EFE0] hover:bg-[#EDE4D0] border-[#D9CFBB] text-[#0A0A0A] font-semibold rounded-full min-h-[40px] px-4 cursor-pointer"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>Print Official Receipt</span>
@@ -215,90 +215,93 @@ export const PublicVerificationPage: React.FC = () => {
             </div>
 
             {/* Official Verification Certificate Card */}
-            <div className="bg-white rounded-civic-2xl p-6 sm:p-10 shadow-civic-lg border border-slate-200 relative overflow-hidden">
-              {/* Seal Watermark Background */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-                <Award className="w-[450px] h-[450px] text-civic-900" />
-              </div>
-
-              <div className="relative z-10 space-y-8">
-                {/* Header */}
-                <div className="text-center space-y-1.5 border-b border-slate-100 pb-6">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-civic-50 border border-civic-200 text-civic-800 text-micro font-semibold uppercase tracking-wider mb-2">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>State Digital Competency Verification Record</span>
-                  </div>
-                  <h2 className="text-page-title font-semibold text-slate-900 tracking-tight">
-                    {credential.module_title}
-                  </h2>
-                  <p className="text-caption text-slate-500 font-mono font-normal">
-                    Credential ID: <span className="font-semibold text-slate-800">{credential.credential_id}</span>
-                  </p>
+            <div className="bg-[#EDE4D0] rounded-3xl p-6 sm:p-8 border border-[#D9CFBB] relative overflow-hidden">
+              {/* Inner archival parchment frame */}
+              <div className="bg-[#F5EFE0] rounded-2xl p-6 sm:p-10 border border-[#D9CFBB] relative overflow-hidden">
+                {/* Seal Watermark Background */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+                  <Award className="w-[450px] h-[450px] text-[#0A0A0A]" />
                 </div>
 
-                {/* Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="flex items-center gap-1.5 text-micro font-semibold text-slate-500 uppercase tracking-wider">
-                      <UserCheck className="h-3.5 w-3.5 text-civic-600" />
-                      <span>Certified Recipient</span>
-                    </span>
-                    <p className="text-caption font-semibold text-slate-900 font-mono">{credential.recipient_masked}</p>
-                    <span className="text-caption text-slate-400 font-normal">PII masked for public privacy</span>
-                  </div>
-
-                  <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="flex items-center gap-1.5 text-micro font-semibold text-slate-500 uppercase tracking-wider">
-                      <Calendar className="h-3.5 w-3.5 text-civic-600" />
-                      <span>Date of Issuance</span>
-                    </span>
-                    <p className="text-caption font-semibold text-slate-900">
-                      {new Date(credential.issued_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                <div className="relative z-10 space-y-8">
+                  {/* Header */}
+                  <div className="text-center space-y-1.5 border-b border-[#D9CFBB] pb-6">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EDE4D0] border border-[#D9CFBB] text-[#6B6357] font-mono text-micro font-semibold uppercase tracking-wider mb-2">
+                      <ShieldCheck className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                      <span>State Digital Competency Verification Record</span>
+                    </div>
+                    <h2 className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight">
+                      {credential.module_title}
+                    </h2>
+                    <p className="text-caption text-[#6B6357] font-mono font-normal">
+                      Credential ID: <span className="font-semibold text-[#0A0A0A]">{credential.credential_id}</span>
                     </p>
-                    <span className="text-caption text-slate-400 font-normal">
-                      {new Date(credential.issued_at).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
                   </div>
 
-                  <div className="p-4 rounded-civic-xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="flex items-center gap-1.5 text-micro font-semibold text-slate-500 uppercase tracking-wider">
-                      <Award className="h-3.5 w-3.5 text-civic-600" />
-                      <span>Score Achieved</span>
-                    </span>
-                    <p className="text-caption font-semibold text-emerald-700">
-                      {credential.score_achieved} / {credential.total_score} ({credential.percentage}%)
+                  {/* Details Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="p-4 rounded-xl bg-[#EDE4D0] border border-[#D9CFBB] space-y-1">
+                      <span className="flex items-center gap-1.5 font-mono text-micro font-semibold text-[#6B6357] uppercase tracking-wider">
+                        <UserCheck className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                        <span>Certified Recipient</span>
+                      </span>
+                      <p className="text-caption font-semibold text-[#0A0A0A] font-mono">{credential.recipient_masked}</p>
+                      <span className="text-caption text-[#6B6357] font-normal">PII masked for public privacy</span>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#EDE4D0] border border-[#D9CFBB] space-y-1">
+                      <span className="flex items-center gap-1.5 font-mono text-micro font-semibold text-[#6B6357] uppercase tracking-wider">
+                        <Calendar className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                        <span>Date of Issuance</span>
+                      </span>
+                      <p className="text-caption font-semibold text-[#0A0A0A]">
+                        {new Date(credential.issued_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </p>
+                      <span className="text-caption text-[#6B6357] font-normal font-mono">
+                        {new Date(credential.issued_at).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#EDE4D0] border border-[#D9CFBB] space-y-1">
+                      <span className="flex items-center gap-1.5 font-mono text-micro font-semibold text-[#6B6357] uppercase tracking-wider">
+                        <Award className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                        <span>Score Achieved</span>
+                      </span>
+                      <p className="text-caption font-semibold text-[#2A5B4A]">
+                        {credential.score_achieved} / {credential.total_score} ({credential.percentage}%)
+                      </p>
+                      <span className="text-caption text-[#6B6357] font-normal">Threshold: ≥ 75% required</span>
+                    </div>
+                  </div>
+
+                  {/* Cryptographic Proof Details */}
+                  <div className="p-4 rounded-xl bg-[#0A0A0A] text-[#F5EFE0] space-y-2 border border-[#D9CFBB]/30">
+                    <div className="flex items-center justify-between text-caption">
+                      <span className="font-medium text-[#D9CFBB] flex items-center gap-1.5">
+                        <Lock className="h-3.5 w-3.5 text-[#C9A24A]" />
+                        <span>Cryptographic Verification Signature</span>
+                      </span>
+                      <span className="text-micro font-mono text-[#C9A24A] font-semibold bg-[#C9A24A]/10 px-2 py-0.5 rounded-full border border-[#C9A24A]/30">
+                        HMAC-SHA256
+                      </span>
+                    </div>
+                    <p className="font-mono text-caption text-[#D9CFBB] break-all bg-[#0A0A0A] p-2.5 rounded-lg border border-[#D9CFBB]/20 font-normal">
+                      {credential.verification_hash}
                     </p>
-                    <span className="text-caption text-slate-400 font-normal">Threshold: ≥ 75% required</span>
                   </div>
-                </div>
 
-                {/* Cryptographic Proof Details */}
-                <div className="p-4 rounded-civic-xl bg-civic-950 text-slate-200 space-y-2 border border-civic-800">
-                  <div className="flex items-center justify-between text-caption">
-                    <span className="font-medium text-slate-300 flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-saffron-400" />
-                      <span>Cryptographic Verification Signature</span>
-                    </span>
-                    <span className="text-micro font-mono text-emerald-400 font-semibold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800">
-                      HMAC-SHA256
-                    </span>
+                  {/* Footer Authority */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#D9CFBB] text-caption text-[#6B6357] font-normal">
+                    <span>Issued under authority of State Digital Governance Guidelines</span>
+                    <span className="font-mono text-caption text-[#0A0A0A]">GovSkill DPI Verification v1.0</span>
                   </div>
-                  <p className="font-mono text-caption text-slate-400 break-all bg-civic-900/90 p-2.5 rounded-civic-lg border border-civic-800 font-normal">
-                    {credential.verification_hash}
-                  </p>
-                </div>
-
-                {/* Footer Authority */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 text-caption text-slate-500 font-normal">
-                  <span>Issued under authority of State Digital Governance Guidelines</span>
-                  <span className="font-mono text-caption">GovSkill DPI Verification v1.0</span>
                 </div>
               </div>
             </div>
@@ -306,7 +309,7 @@ export const PublicVerificationPage: React.FC = () => {
         )}
 
         {!hasSearched && !paramId && (
-          <div className="text-center py-8 text-caption text-slate-400 font-normal">
+          <div className="text-center py-8 text-caption text-[#6B6357] font-normal">
             Enter a credential ID above to verify an official certificate.
           </div>
         )}
