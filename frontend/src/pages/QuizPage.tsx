@@ -226,10 +226,10 @@ export const QuizPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <div className="hidden md:block w-28 h-20 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shadow-xs">
+            <div className="hidden md:block w-32 h-20 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shadow-xs">
               <img
-                src="/illustrations/curriculum_lesson_folio.jpg"
-                alt="Examination Folio"
+                src="/illustrations/quiz_assessment_examination.jpg"
+                alt="Official Civil Service Examination Desk"
                 className="w-full h-full object-cover object-center"
                 loading="lazy"
               />

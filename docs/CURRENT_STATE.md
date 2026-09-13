@@ -5,14 +5,15 @@ Last Updated:
 
 ## Working
 
-- **Museum-Grade Editorial Illustration Suite Across Platform**: Recreated and installed hand-crafted, high-fidelity woodblock and copperplate engraving-style illustrations with a warm cream (`#F5EFE0`), terracotta (`#C97B5A`), forest green (`#2A5B4A`), and ochre (`#C9A24A`) palette across all core internal pages:
+- **Museum-Grade Editorial Illustration Suite (100% Unique per Screen)**: Recreated and installed hand-crafted, high-fidelity woodblock and copperplate engraving-style illustrations with a warm cream (`#F5EFE0`), terracotta (`#C97B5A`), forest green (`#2A5B4A`), and ochre (`#C9A24A`) palette across all core internal pages with zero reuse or visual repetition:
   - **Employee Dashboard (`/progress`)**: `employee_hero_illustration.jpg` — Civil servant reviewing administrative folio and competency ledger under warm arched civic windows.
-  - **AI Tutor Desk (`/tutor`)**: `copilot_empty_illustration.jpg` — Official scholar studying statutory codices at wooden consultation desk with banker lamp.
-  - **GovAssist Citizen Pre-Check (`/citizen`)**: `govassist_upload_illustration.jpg` — Citizen presenting official statutory revenue certificate with red wax seal onto wooden counter.
-  - **Sidebar CTA**: `sidebar_cta_illustration.jpg` — Neoclassical municipal hall steps with ascending civil servants walking toward sunrise.
-  - **Login Portal (`/login`)**: `login_civic_portal.jpg` — Civil administrator entering neoclassical archway with gold-embossed civic folio.
+  - **AI Tutor Desk (`/tutor`)**: `copilot_empty_illustration.jpg` — Illuminated statutory codex with radiant golden rays, brass astrolabe, armillary sphere of wisdom, jade magnifying loupe, and bronze owl inkwell.
+  - **Curriculum Library (`/module`)**: `curriculum_lesson_folio.jpg` — Grand neoclassical civic library hall with soaring circular skylight dome, spiral staircases, and open administrative charter easel.
+  - **Quiz Assessment (`/quiz`)**: `quiz_assessment_examination.jpg` — Dedicated official examination desk with mechanical stopwatch, sand hourglass, scored evaluation rubric, inkwell, and candidate hall.
+  - **GovAssist Citizen Pre-Check (`/citizen`)**: `govassist_upload_illustration.jpg` — Citizen presenting official statutory revenue certificate with red wax seal onto wooden counter with magnifying glass.
   - **Public Verification (`/verify`)**: `verification_trust_seal.jpg` — Sovereign authentication certificate with guilloche patterns, wax seal, ribbon, magnifying glass, and fountain pen.
-  - **Curriculum Folio (`/module` & `/quiz`)**: `curriculum_lesson_folio.jpg` — Civil administrator studying municipal charters and legislation codex in government library.
+  - **Login Portal (`/login`)**: `login_civic_portal.jpg` — Monumental neoclassical portal of "Civic Governance and Public Integrity" with Corinthian columns, embossed bronze gates, glowing lanterns, and marble steps.
+  - **Sidebar CTA**: `sidebar_cta_illustration.jpg` — Neoclassical municipal hall steps with ascending civil servants walking toward golden sunrise.
   - Landing page retained 100% untouched and pristine. Full test suite passing (69/69 Vitest, 38/38 Pytest, clean Vite production bundle).
 - **Repository Hygiene & Dead Code Elimination**: Performed forensic audit and purged all unreferenced legacy components, dead duplicate exports, obsolete CSS variables, and orphaned static assets:
   - Removed obsolete legacy layout headers and footers (`frontend/src/layout/header.tsx`, `frontend/src/layout/footer.tsx`).
