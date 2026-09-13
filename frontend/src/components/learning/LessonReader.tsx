@@ -175,6 +175,19 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         </div>
       </div>
 
+      {/* Editorial Curriculum Plate */}
+      <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shadow-xs">
+        <img
+          src="/illustrations/curriculum_lesson_folio.jpg"
+          alt="Administrative Curriculum Folio"
+          className="w-full h-full object-cover object-center"
+          loading="lazy"
+        />
+        <div className="absolute top-3 left-3 bg-[#0A0A0A]/85 backdrop-blur-xs text-[#F5EFE0] text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full border border-white/15 shadow-sm">
+          Standard Civic Curriculum
+        </div>
+      </div>
+
       {/* 2. Operational Learning Objective Box */}
       <div className="rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] p-4 space-y-1.5 shadow-sm">
         <div className="flex items-center gap-2 text-[#0A0A0A] font-mono text-[11px] font-semibold uppercase tracking-wider">

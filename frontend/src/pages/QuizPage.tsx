@@ -225,7 +225,17 @@ export const QuizPage: React.FC = () => {
             </p>
           </div>
 
-          {modules.length > 1 && (
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="hidden md:block w-28 h-20 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shadow-xs">
+              <img
+                src="/illustrations/curriculum_lesson_folio.jpg"
+                alt="Examination Folio"
+                className="w-full h-full object-cover object-center"
+                loading="lazy"
+              />
+            </div>
+
+            {modules.length > 1 && (
             <div className="bg-[#F5EFE0] p-3 rounded-xl border border-[#D9CFBB] shrink-0">
               <label htmlFor="quiz-module-select" className="block text-[10px] font-mono font-semibold uppercase text-[#6B6357] mb-1 tracking-wider">
                 Switch Assessment:
@@ -250,6 +260,7 @@ export const QuizPage: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
 
         {/* Answer Progress Meter */}
         <div className="space-y-2 pt-1">

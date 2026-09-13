@@ -145,6 +145,36 @@ export const PublicVerificationPage: React.FC = () => {
           </form>
         </div>
 
+        {/* Informational Seal Illustration Banner (When no credential is yet looked up) */}
+        {!credential && !isLoading && !error && (
+          <motion.div
+            variants={fadeUpVariants}
+            initial={shouldReduceMotion ? {} : 'hidden'}
+            animate={shouldReduceMotion ? {} : 'visible'}
+            className="p-6 sm:p-8 rounded-2xl bg-[#EDE4D0]/60 border border-[#D9CFBB] flex flex-col sm:flex-row items-center gap-6 shadow-xs print:hidden"
+          >
+            <div className="w-full sm:w-48 h-36 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shrink-0">
+              <img
+                src="/illustrations/verification_trust_seal.jpg"
+                alt="Sovereign Credential Authentication"
+                className="w-full h-full object-cover object-center"
+                loading="lazy"
+              />
+            </div>
+            <div className="space-y-1.5 text-center sm:text-left">
+              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-[#C97B5A] block font-semibold">
+                Cryptographic Trust Standard
+              </span>
+              <h3 className="font-serif text-lg sm:text-xl font-normal text-[#0A0A0A]">
+                Tamper-Evident HMAC-SHA256 Digital Verification
+              </h3>
+              <p className="text-xs text-[#6B6357] leading-relaxed max-w-lg">
+                Enter any official certificate serial issued to revenue officers to immediately confirm authenticity, issue timestamp, and examination score against the sovereign registry ledger.
+              </p>
+            </div>
+          </motion.div>
+        )}
+
         {/* Result Area */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-12 gap-3 text-[#6B6357] text-caption font-normal">

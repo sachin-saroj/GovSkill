@@ -69,8 +69,38 @@ export const LoginPage: React.FC = () => {
         variants={staggerContainerVariants}
         initial="hidden"
         animate="visible"
-        className="w-full max-w-md space-y-5 relative z-10"
+        className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10"
       >
+        {/* Left Side: Editorial Archival Illustration Plate (Desktop) */}
+        <motion.div variants={fadeUpVariants} className="hidden lg:flex lg:col-span-5 flex-col space-y-3">
+          <div className="relative rounded-2xl overflow-hidden border border-[#D9CFBB] bg-[#EDE4D0] p-3 shadow-md">
+            {/* Archival corner registration marks */}
+            <span className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
+            <span className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
+            <span className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
+
+            <div className="aspect-[3/4] w-full rounded-xl overflow-hidden border border-[#D9CFBB]/70 bg-[#F5EFE0]">
+              <img
+                src="/illustrations/login_civic_portal.jpg"
+                alt="Civic Governance Portico"
+                className="w-full h-full object-cover object-top"
+                loading="eager"
+              />
+            </div>
+
+            <div className="mt-3 pt-2.5 border-t border-[#D9CFBB] flex items-center justify-between text-[11px] font-mono text-[#6B6357]">
+              <span>CIVIC PORTICO 01</span>
+              <span>EST. 2026</span>
+            </div>
+          </div>
+          <p className="text-center text-[12px] font-serif italic text-[#6B6357]">
+            Dedicated Public Service & Competency Advancement
+          </p>
+        </motion.div>
+
+        {/* Right Side: Main Authentication Flow */}
+        <div className="w-full lg:col-span-7 space-y-5">
         {/* Main Authentication Card */}
         <motion.div variants={fadeUpVariants}>
           <div className="relative group p-6 sm:p-8 rounded-2xl bg-[#EDE4D0]/85 border border-[#D9CFBB] shadow-[0_20px_50px_-15px_rgba(10,10,10,0.08)]">
@@ -245,6 +275,7 @@ export const LoginPage: React.FC = () => {
             <ArrowRight className="h-4 w-4 text-[#0A0A0A] group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
+        </div>
       </motion.div>
     </div>
   );
