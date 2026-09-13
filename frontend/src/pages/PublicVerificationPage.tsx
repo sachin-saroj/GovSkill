@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { fadeUpVariants } from '@/lib/motion';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 
 export const PublicVerificationPage: React.FC = () => {
   const { credentialId: paramId } = useParams<{ credentialId?: string }>();
@@ -101,8 +102,8 @@ export const PublicVerificationPage: React.FC = () => {
           animate={shouldReduceMotion ? {} : 'visible'}
           className="text-center space-y-3 print:hidden"
         >
-          <div className="inline-flex p-3 rounded-full bg-[#0A0A0A] text-[#C9A24A] mb-1">
-            <ShieldCheck className="h-7 w-7" />
+          <div className="flex justify-center mb-1">
+            <GovSkillLogo size={52} variant="icon" />
           </div>
           <h1 className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight">
             Official Credential Verification Portal

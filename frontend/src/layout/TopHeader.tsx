@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 import {
   Menu,
   Search,
@@ -115,13 +116,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
           <Menu className="h-5 w-5" />
         </button>
 
-        <div className="hidden sm:flex flex-col">
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#6B6357]">
-            GovSkill Platform
-          </span>
-          <h2 className="font-serif text-[15px] font-normal text-[#0A0A0A] tracking-[-0.01em]">
-            {getPageTitle()}
-          </h2>
+        <div className="flex items-center gap-2.5">
+          <GovSkillLogo size={24} variant="icon" />
+          <div className="hidden sm:flex flex-col">
+            <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[#6B6357]">
+              GovSkill Platform
+            </span>
+            <h2 className="font-serif text-[15px] font-normal text-[#0A0A0A] tracking-[-0.01em]">
+              {getPageTitle()}
+            </h2>
+          </div>
         </div>
       </div>
 

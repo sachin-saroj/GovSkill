@@ -6,8 +6,8 @@ import { getApiErrorMessage } from '@/lib/apiError';
 import api from '@/lib/api';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 import {
-  Shield,
   User,
   Lock,
   Sparkles,
@@ -110,10 +110,10 @@ export const LoginPage: React.FC = () => {
             <span className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
             <span className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
 
-            {/* Header Banner */}
-            <div className="text-center mb-6 space-y-1.5">
-              <div className="inline-flex p-2.5 rounded-full bg-[#0A0A0A] text-[#F5EFE0] shadow-xs mb-1">
-                <Shield className="h-5 w-5 text-[#C9A24A]" />
+            {/* Header Banner with Official Sovereign Emblem */}
+            <div className="text-center mb-6 space-y-2">
+              <div className="flex justify-center mb-1">
+                <GovSkillLogo size={46} variant="icon" />
               </div>
               <h2
                 className="font-serif text-[24px] sm:text-[26px] font-normal text-[#0A0A0A] tracking-[-0.02em]"

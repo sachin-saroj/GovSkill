@@ -18,6 +18,7 @@ import {
 import { ValidationRuleResult } from '@/types';
 import Button from '@/components/ui/Button';
 import { scaleInVariants } from '@/lib/motion';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 
 export interface CounterSlipModalProps {
   isOpen: boolean;
@@ -148,10 +149,13 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
 
           {/* Printable Counter Slip Container */}
           <div className="p-6 sm:p-8 space-y-6 overflow-y-auto print:overflow-visible print:p-6 print:space-y-4 printable-slip bg-[#F5EFE0]">
-            {/* Header: DPI & Service Heading */}
-            <div className="border-b border-[#D9CFBB] pb-4 text-center space-y-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0A0A0A] text-[#F5EFE0] font-mono text-micro font-semibold uppercase tracking-wider print:bg-black print:text-white">
-                <span>National Digital Public Infrastructure • Local Governance Platform</span>
+            {/* Header: DPI & Service Heading with Sovereign Logo */}
+            <div className="border-b border-[#D9CFBB] pb-4 text-center space-y-2">
+              <div className="flex items-center justify-center gap-3">
+                <GovSkillLogo size={36} variant="icon" />
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0A0A0A] text-[#F5EFE0] font-mono text-micro font-semibold uppercase tracking-wider print:bg-black print:text-white">
+                  <span>National Digital Public Infrastructure • Local Governance Platform</span>
+                </div>
               </div>
               <h1 id="counter-slip-title" className="font-serif text-page-title font-normal text-[#0A0A0A] tracking-tight pt-1">
                 PRE-SUBMISSION COUNTER SLIP

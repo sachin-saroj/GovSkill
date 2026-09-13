@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/design-system';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 
 export const Nav: React.FC = () => {
   const { user } = useAuth();
@@ -9,12 +10,13 @@ export const Nav: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-[#F5EFE0]/90 backdrop-blur-md border-b border-[#D9CFBB]/70 transition-all">
       <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)] h-20 flex items-center justify-between">
-        {/* Element 1: Logo Wordmark */}
+        {/* Element 1: Logo Wordmark with Official Sovereign Emblem */}
         <Link
           to="/"
-          className="group inline-flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 rounded-sm"
+          className="group inline-flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 rounded-sm"
           aria-label="GovSkill Home"
         >
+          <GovSkillLogo size={30} variant="icon" />
           <span
             className="font-serif text-[24px] font-normal tracking-[-0.03em] text-[#0A0A0A] transition-colors group-hover:text-[#6B6357]"
             style={{ fontFamily: '"Fraunces", Georgia, serif' }}

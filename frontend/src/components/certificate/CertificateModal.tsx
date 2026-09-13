@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Award, X, Printer, CheckCircle2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -83,9 +84,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <Shield className="w-96 h-96 text-[#0A0A0A]" />
             </div>
 
-            {/* Header / Seal */}
-            <div className="inline-flex p-3 rounded-full bg-[#0A0A0A] text-[#C9A24A] mb-3">
-              <Shield className="h-10 w-10" />
+            {/* Header / Sovereign GovSkill Seal */}
+            <div className="flex justify-center mb-3">
+              <GovSkillLogo size={52} variant="icon" />
             </div>
 
             <p className="font-mono text-micro font-semibold uppercase tracking-widest text-[#6B6357] mb-1">

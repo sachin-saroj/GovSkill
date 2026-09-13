@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 import {
-  Shield,
   Sparkles,
   BookOpen,
   Bot,
@@ -119,9 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
             onClick={onCloseMobile}
             className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] rounded-lg p-0.5"
           >
-            <div className="h-8 w-8 rounded-xl bg-[#0A0A0A] text-[#F5EFE0] flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200">
-              <Shield className="h-4 w-4 text-[#C9A24A]" />
-            </div>
+            <GovSkillLogo size={32} variant="icon" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span

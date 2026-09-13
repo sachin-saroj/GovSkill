@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { GovSkillLogo } from '@/components/GovSkillLogo';
 
 export const Footer: React.FC = () => {
   return (
@@ -99,15 +100,18 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Huge Wordmark with Pulsing Ochre Dot */}
+        {/* Huge Wordmark with Pulsing Ochre Dot and Sovereign Emblem */}
         <div className="w-full pt-8 sm:pt-14 border-t border-[#D9CFBB]/60 select-none overflow-hidden">
-          <div className="flex items-baseline justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-6">
             <div
               className="font-serif text-[clamp(60px,14vw,190px)] font-normal text-[#0A0A0A] tracking-[-0.04em] leading-[0.88]"
               style={{ fontFamily: '"Fraunces", Georgia, serif' }}
             >
               GovSkill
               <span className="inline-block w-[clamp(10px,2vw,24px)] h-[clamp(10px,2vw,24px)] rounded-full bg-[#E8964A] ml-2 sm:ml-4 animate-dot-pulse-6s" />
+            </div>
+            <div className="hidden sm:block pb-2">
+              <GovSkillLogo size={52} variant="icon" />
             </div>
           </div>
         </div>

@@ -1,0 +1,37 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sovereign Cartouche Medallion Frame -->
+  <rect x="2.5" y="2.5" width="59" height="59" rx="14" fill="#0A0A0A" stroke="#C9A24A" stroke-width="2"/>
+  
+  <!-- Inner Archival Guilloche Hairline -->
+  <rect x="5.5" y="5.5" width="53" height="53" rx="11" fill="none" stroke="#D9CFBB" stroke-width="0.75" stroke-dasharray="2.5 1.5" opacity="0.65"/>
+  
+  <!-- Neoclassical Pediment (Governance) -->
+  <path d="M18 23.5 L32 14.5 L46 23.5 Z" fill="#C9A24A" stroke="#C9A24A" stroke-width="0.8"/>
+  <rect x="16" y="23.5" width="32" height="2" rx="0.5" fill="#F5EFE0"/>
+  
+  <!-- Classical Fluted Columns (Public Integrity & Statecraft) -->
+  <rect x="20.5" y="25.5" width="3.5" height="13.5" rx="0.75" fill="#F5EFE0"/>
+  <rect x="30.25" y="25.5" width="3.5" height="13.5" rx="0.75" fill="#F5EFE0"/>
+  <rect x="40" y="25.5" width="3.5" height="13.5" rx="0.75" fill="#F5EFE0"/>
+  
+  <!-- Capitols & Bases -->
+  <rect x="19.5" y="25.5" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  <rect x="29.25" y="25.5" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  <rect x="39" y="25.5" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  
+  <rect x="19.5" y="38" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  <rect x="29.25" y="38" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  <rect x="39" y="38" width="5.5" height="1" rx="0.3" fill="#C9A24A"/>
+  
+  <!-- Base Plinth -->
+  <rect x="16.5" y="39" width="31" height="1.8" rx="0.5" fill="#F5EFE0"/>
+  
+  <!-- Open Statutory Codex / Learning Folio -->
+  <path d="M32 40 C27 37 20.5 38 15 40.5 L15 48.5 C20.5 46.5 27 45.5 32 48.5 Z" fill="#EDE4D0" stroke="#0A0A0A" stroke-width="0.8"/>
+  <path d="M32 40 C37 37 43.5 38 49 40.5 L49 48.5 C43.5 46.5 37 45.5 32 48.5 Z" fill="#F5EFE0" stroke="#0A0A0A" stroke-width="0.8"/>
+  <line x1="32" y1="39.8" x2="32" y2="49" stroke="#C97B5A" stroke-width="1.4" stroke-linecap="round"/>
+  
+  <!-- Eight-Pointed Sovereign Star of Public Service -->
+  <path d="M32 7.5 L33.4 11.2 L37.2 12.5 L33.4 13.8 L32 17.5 L30.6 13.8 L26.8 12.5 L30.6 11.2 Z" fill="#E8964A" stroke="#C9A24A" stroke-width="0.5"/>
+  <circle cx="32" cy="12.5" r="1.1" fill="#FFFFFF"/>
+</svg>
