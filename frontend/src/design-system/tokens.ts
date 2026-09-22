@@ -24,6 +24,67 @@ export const tokens = {
     ochre: '#C9A24A',
     dustyBlue: '#6B8299',
     paper: '#EFE6D2',
+
+    // Semantic Status Systems
+    status: {
+      success: {
+        solid: '#2A5B4A',
+        bg: '#2A5B4A1F',
+        border: '#2A5B4A4D',
+        text: '#1E4537',
+      },
+      warning: {
+        solid: '#C9A24A',
+        bg: '#C9A24A26',
+        border: '#C9A24A66',
+        text: '#7A5B14',
+      },
+      danger: {
+        solid: '#C97B5A',
+        bg: '#C97B5A26',
+        border: '#C97B5A66',
+        text: '#8F3E22',
+      },
+      info: {
+        solid: '#0A0A0A',
+        bg: '#EDE4D0',
+        border: '#D9CFBB',
+        text: '#0A0A0A',
+      },
+      neutral: {
+        solid: '#6B6357',
+        bg: '#EFE6D299',
+        border: '#D9CFBB',
+        text: '#6B6357',
+      },
+    },
+
+    // Semantic Surfaces
+    surfaces: {
+      canvas: '#F5EFE0',
+      subtle: '#EDE4D0',
+      paper: '#EFE6D2',
+      pure: '#FFFFFF',
+      dark: '#111111',
+      darkElevated: '#1A1A1A',
+    },
+
+    // Semantic Text
+    text: {
+      primary: '#0A0A0A',
+      secondary: '#6B6357',
+      muted: '#8C827A',
+      onDark: '#F5EFE0',
+      onDarkMuted: '#EDE4D099',
+    },
+
+    // Semantic Borders
+    borders: {
+      subtle: '#D9CFBB80',
+      default: '#D9CFBB',
+      strong: '#0A0A0A33',
+      onDark: 'rgba(255, 255, 255, 0.08)',
+    },
   },
   typography: {
     fontSerif: '"Fraunces", Georgia, serif',

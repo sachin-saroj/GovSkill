@@ -3,126 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 
 export * from './tokens';
 export * from './typography';
-
-/* ==========================================================================
-   1. BUTTON PRIMITIVE
-   Variants:
-   - primary: ink pill (#0A0A0A bg, #F5EFE0 text, hover subtle scale)
-   - secondary: editorial text link with inline arrow
-   - ghost: clean text link / bordered outline pill
-   ========================================================================== */
-
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  dark?: boolean;
-  isLoading?: boolean;
-  arrow?: boolean;
-}
-
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  dark = false,
-  isLoading = false,
-  arrow = true,
-  disabled = false,
-  className = '',
-  children,
-  ...props
-}) => {
-  const baseClasses =
-    'inline-flex items-center justify-center font-sans font-medium transition-all duration-200 outline-none select-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer';
-
-  let variantClasses = '';
-  if (variant === 'primary') {
-    variantClasses = dark
-      ? 'bg-[#F5EFE0] text-[#0A0A0A] hover:bg-[#EDE4D0] rounded-full px-7 py-3.5 shadow-sm active:scale-[0.98]'
-      : 'bg-[#0A0A0A] text-[#F5EFE0] hover:bg-[#222222] hover:shadow-md rounded-full px-7 py-3.5 shadow-sm active:scale-[0.98]';
-  } else if (variant === 'secondary') {
-    variantClasses = dark
-      ? 'bg-transparent text-[#F5EFE0] hover:text-[#EDE4D0] p-0 underline-offset-4 hover:underline'
-      : 'bg-transparent text-[#0A0A0A] hover:text-[#6B6357] p-0 underline-offset-4 hover:underline';
-  } else if (variant === 'ghost') {
-    variantClasses = dark
-      ? 'bg-transparent border border-[#EDE4D0]/30 text-[#F5EFE0] hover:bg-[#F5EFE0]/10 rounded-full px-5 py-2.5'
-      : 'bg-transparent border border-[#D9CFBB] text-[#0A0A0A] hover:bg-[#EDE4D0]/40 rounded-full px-5 py-2.5';
-  }
-
-  const sizeClass = {
-    sm: 'text-[13px]',
-    md: 'text-[14px]',
-    lg: 'text-[16px]',
-  }[size];
-
-  return (
-    <button
-      disabled={disabled || isLoading}
-      className={`${baseClasses} ${variantClasses} ${sizeClass} ${className}`}
-      {...props}
-    >
-      {isLoading ? (
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
-          <span>Processing…</span>
-        </span>
-      ) : (
-        <>
-          <span>{children}</span>
-          {arrow && variant === 'secondary' && (
-            <svg
-              className="w-4 h-4 ml-2 transition-transform duration-200 group-hover:translate-x-1"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M3 8h10M9 4l4 4-4 4" />
-            </svg>
-          )}
-        </>
-      )}
-    </button>
-  );
-};
-
-/* ==========================================================================
-   2. CARD PRIMITIVE
-   Variants:
-   - floating: soft cream frame, generous margin, floating shadow
-   - stage: dark rounded container (#111111)
-   - testimonial: editorial quote card with avatar stack
-   ========================================================================== */
-
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'floating' | 'stage' | 'testimonial';
-  children: React.ReactNode;
-}
-
-export const Card: React.FC<CardProps> = ({
-  variant = 'floating',
-  className = '',
-  children,
-  ...props
-}) => {
-  const variantClasses = {
-    floating:
-      'bg-[#EDE4D0]/40 border border-[#D9CFBB]/70 rounded-[28px] p-6 sm:p-10 shadow-[0_20px_40px_-15px_rgba(10,10,10,0.06)] backdrop-blur-sm',
-    stage:
-      'bg-[#111111] text-[#F5EFE0] rounded-[36px] sm:rounded-[44px] p-8 sm:p-14 lg:p-20 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.45)] border border-white/5',
-    testimonial:
-      'bg-[#191919] text-[#F5EFE0] border border-white/10 rounded-[28px] p-8 sm:p-10 flex flex-col justify-between shrink-0 min-w-[320px] max-w-[420px] shadow-lg',
-  }[variant];
-
-  return (
-    <div className={`${variantClasses} ${className}`} {...props}>
-      {children}
-    </div>
-  );
-};
+export * from '@/components/ui';
 
 /* ==========================================================================
    3. MARQUEE PRIMITIVE
@@ -368,30 +249,36 @@ export const ScrollSection: React.FC<ScrollSectionProps> = ({
 export interface AvatarStackProps {
   avatars: Array<{ name: string; initials: string; role?: string }>;
   overflowCount?: number;
+  dark?: boolean;
   className?: string;
 }
 
 export const AvatarStack: React.FC<AvatarStackProps> = ({
   avatars,
   overflowCount = 0,
+  dark = false,
   className = '',
 }) => {
   const visible = avatars.slice(0, 3);
   const remaining = overflowCount > 0 ? overflowCount : Math.max(0, avatars.length - 3);
 
+  const ringClass = dark ? 'ring-[#1A1A1A]' : 'ring-[#F5EFE0]';
+  const itemBgClass = dark ? 'bg-[#2A2620] text-[#F5EFE0] border border-[#E8964A]/30' : 'bg-[#EDE4D0] text-[#0A0A0A]';
+  const overflowBgClass = dark ? 'bg-[#202020] text-[#E8964A] border border-white/10' : 'bg-[#222222] text-[#EDE4D0]';
+
   return (
-    <div className={`flex items-center -space-x-2.5 overflow-hidden ${className}`}>
+    <div className={`flex items-center -space-x-2 ${className}`}>
       {visible.map((av, idx) => (
         <div
           key={idx}
           title={`${av.name} — ${av.role || ''}`}
-          className="inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-[#F5EFE0] bg-[#EDE4D0] text-[#0A0A0A] text-[11px] font-sans font-semibold uppercase shrink-0"
+          className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${itemBgClass} text-[11px] font-sans font-semibold uppercase shrink-0 shadow-sm`}
         >
           {av.initials}
         </div>
       ))}
       {remaining > 0 && (
-        <div className="inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-[#F5EFE0] bg-[#222222] text-[#EDE4D0] text-[10px] font-sans font-medium shrink-0">
+        <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${overflowBgClass} text-[10px] font-sans font-medium shrink-0 shadow-sm`}>
           +{remaining}
         </div>
       )}

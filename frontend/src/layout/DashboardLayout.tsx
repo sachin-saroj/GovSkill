@@ -21,7 +21,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5EFE0] text-[#0A0A0A] p-0 lg:p-4 xl:p-6 flex flex-col justify-center">
+    <div className="min-h-screen bg-[#F5EFE0] text-[#0A0A0A] p-0 lg:p-3 xl:p-5 flex flex-col justify-center selection:bg-[#C9A24A]/25 selection:text-[#0A0A0A]">
+      {/* Accessible Skip to Content Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-[#0A0A0A] text-[#F5EFE0] rounded-full text-xs font-mono font-medium shadow-lg outline-none ring-2 ring-[#0A0A0A] ring-offset-2"
+      >
+        Skip to main content
+      </a>
+
       {/* 1. Mobile Drawer Sidebar (hidden on desktop) */}
       {mobileSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
@@ -45,7 +53,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       )}
 
       {/* 2. Master Floating Canvas Shell */}
-      <div className="w-full max-w-[1560px] mx-auto bg-[#EDE4D0]/40 lg:rounded-[28px] shadow-[0_24px_60px_-15px_rgba(10,10,10,0.08)] border border-[#D9CFBB] flex flex-col lg:flex-row min-h-[calc(100vh-3rem)] overflow-hidden">
+      <div className="w-full max-w-[1580px] mx-auto bg-[#EDE4D0]/30 lg:rounded-[28px] shadow-[0_24px_60px_-15px_rgba(10,10,10,0.08)] border border-[#D9CFBB] flex flex-col lg:flex-row min-h-[calc(100vh-2.5rem)] overflow-hidden">
         {/* Desktop Integrated Sidebar */}
         <div className="hidden lg:block shrink-0 border-r border-[#D9CFBB]/75 bg-[#EDE4D0]/60">
           <Sidebar />
@@ -54,7 +62,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         {/* Main Application Content Area */}
         <div className="flex-1 flex flex-col min-w-0 bg-[#F5EFE0]">
           <TopHeader onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)} />
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-y-auto">
+          <main id="main-content" tabIndex={-1} className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-y-auto outline-none">
             {children}
           </main>
         </div>

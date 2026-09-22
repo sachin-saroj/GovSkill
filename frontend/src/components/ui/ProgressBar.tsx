@@ -34,11 +34,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const variantStyles = {
     primary: 'bg-[#0A0A0A]',
-    success: 'bg-emerald-600 bg-[#2A5B4A]',
+    success: 'bg-[#2A5B4A] bg-emerald-600',
     warning: 'bg-[#C9A24A]',
     danger: 'bg-[#C97B5A]',
     mint: 'bg-[#2A5B4A]',
-    cyan: 'bg-[#C9A24A]',
+    cyan: 'bg-[#6B8299]',
   };
 
   return (
@@ -46,7 +46,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       {(label || showPercentage) && (
         <div className="flex items-center justify-between text-[13px] font-sans font-medium text-[#6B6357]">
           {label && <span>{label}</span>}
-          {showPercentage && <span className="font-mono text-[12px] font-bold tabular-nums text-[#0A0A0A]">{percentage}%</span>}
+          {showPercentage && (
+            <span className="font-mono text-[12px] font-bold tabular-nums text-[#0A0A0A]">
+              {percentage}%
+            </span>
+          )}
         </div>
       )}
       <div

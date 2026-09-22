@@ -364,10 +364,10 @@ export const AdminDashboardPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-civic-xl bg-red-50 border border-red-300 text-caption text-red-700 flex items-center justify-between shadow-civic-xs"
+            className="p-4 rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#C97B5A] flex items-center justify-between shadow-xs"
           >
             <span>{error}</span>
-            <button type="button" onClick={() => setError(null)} className="p-1 hover:bg-red-100 rounded-civic-md cursor-pointer">
+            <button type="button" onClick={() => setError(null)} className="p-1 hover:bg-[#C97B5A]/20 rounded-full cursor-pointer">
               <X className="h-4 w-4" />
             </button>
           </motion.div>
@@ -381,10 +381,10 @@ export const AdminDashboardPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-civic-xl bg-emerald-50 border border-emerald-300 text-caption text-emerald-800 flex items-center justify-between shadow-civic-xs"
+            className="p-4 rounded-xl bg-[#2A5B4A]/10 border border-[#2A5B4A]/30 text-caption text-[#2A5B4A] flex items-center justify-between shadow-xs"
           >
             <span>{successMsg}</span>
-            <button type="button" onClick={() => setSuccessMsg(null)} className="p-1 hover:bg-emerald-100 rounded-civic-md cursor-pointer">
+            <button type="button" onClick={() => setSuccessMsg(null)} className="p-1 hover:bg-[#2A5B4A]/20 rounded-full cursor-pointer">
               <X className="h-4 w-4" />
             </button>
           </motion.div>
@@ -395,8 +395,8 @@ export const AdminDashboardPage: React.FC = () => {
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <ReadinessMetricCard
           icon={Users}
-          iconBgClass="bg-civic-100"
-          iconColorClass="text-civic-800"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#0A0A0A]"
           label="Enrolled Employees"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
           subtext="Municipal office workforce"
@@ -406,8 +406,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={BookOpen}
-          iconBgClass="bg-blue-100"
-          iconColorClass="text-blue-700"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#C9A24A]"
           label="Training Modules"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_modules ?? 0)}
           subtext="Standardized curriculum courses"
@@ -417,8 +417,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={CheckCircle2}
-          iconBgClass="bg-indigo-100"
-          iconColorClass="text-indigo-700"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#2A5B4A]"
           label="Quiz Attempts Logged"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_quiz_attempts ?? 0)}
           subtext="Server-scored evaluations"
@@ -428,8 +428,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Sparkles}
-          iconBgClass="bg-amber-100"
-          iconColorClass="text-amber-700"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#C9A24A]"
           label="Avg Assessment Score"
           value={isLoadingOverview ? '...' : `${skillsOverview?.average_quiz_score_pct ?? 0}%`}
           subtext="System-wide quiz average"
@@ -439,8 +439,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Award}
-          iconBgClass="bg-emerald-100"
-          iconColorClass="text-emerald-700"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#2A5B4A]"
           label="Total Certifications"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_certifications ?? 0)}
           subtext="Verified credentials earned"
@@ -450,8 +450,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Sparkles}
-          iconBgClass="bg-saffron-100"
-          iconColorClass="text-saffron-700"
+          iconBgClass="bg-[#F5EFE0]"
+          iconColorClass="text-[#C9A24A]"
           label="Certification Rate"
           value={isLoadingOverview ? '...' : `${skillsOverview?.overall_certification_rate ?? 0}%`}
           subtext="Workforce completion progress"

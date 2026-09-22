@@ -14,7 +14,7 @@ import AssessmentHistoryTable from '@/components/progress/AssessmentHistoryTable
 import LearningActivityTimeline from '@/components/progress/LearningActivityTimeline';
 import ProgressChart from '@/components/progress/ProgressChart';
 import { EmptyState, ErrorAlert } from '@/components/ui';
-import { Loader2, RefreshCw, BookOpen, Layers, Award, ShieldCheck, ExternalLink, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Loader2, RefreshCw, BookOpen, Award, ShieldCheck, ExternalLink, CheckCircle2, ArrowRight } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
 export const ProgressDashboardPage: React.FC = () => {
@@ -59,9 +59,9 @@ export const ProgressDashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-slate-500">
-        <Loader2 className="h-6 w-6 animate-spin text-civic-700" />
-        <span className="font-medium text-sm">Loading your digital skill profile...</span>
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-[#6B6357]">
+        <Loader2 className="h-6 w-6 animate-spin text-[#0A0A0A]" />
+        <span className="font-medium text-sm font-sans">Loading your digital skill profile...</span>
       </div>
     );
   }
@@ -292,15 +292,17 @@ export const ProgressDashboardPage: React.FC = () => {
 
       {/* 4. Full Detailed Curriculum Roadmap Grid */}
       <motion.div variants={fadeUpVariants} className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D9CFBB]/60">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-civic-700" />
-              <h2 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+              <span className="font-mono text-[11px] font-semibold uppercase px-2 py-0.5 rounded bg-[#EDE4D0] border border-[#D9CFBB] text-[#6B6357]">
+                § 02
+              </span>
+              <h2 className="font-serif text-[20px] sm:text-[22px] font-normal text-[#0A0A0A] tracking-[-0.02em]">
                 Full Curriculum Roadmap & Certifications
               </h2>
             </div>
-            <p className="text-caption text-slate-500 font-medium">
+            <p className="text-[13px] text-[#6B6357] font-normal">
               Comprehensive module objectives, lesson reader shortcuts, and assessment status
             </p>
           </div>
@@ -310,9 +312,9 @@ export const ProgressDashboardPage: React.FC = () => {
             whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
             whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             onClick={fetchSkillProgress}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-caption font-semibold text-slate-700 bg-white border border-slate-200 rounded-full hover:bg-slate-50 hover:border-slate-300 transition-all shadow-civic-xs cursor-pointer"
+            className="self-start sm:self-center flex items-center gap-1.5 px-4 py-2 text-[13px] font-sans font-medium text-[#0A0A0A] bg-[#EDE4D0]/70 border border-[#D9CFBB] rounded-full hover:bg-[#EDE4D0] hover:border-[#0A0A0A]/40 transition-all shadow-xs cursor-pointer"
           >
-            <RefreshCw className="h-3.5 w-3.5 text-civic-700" />
+            <RefreshCw className="h-3.5 w-3.5 text-[#0A0A0A]" />
             <span>Refresh</span>
           </motion.button>
         </div>

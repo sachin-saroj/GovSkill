@@ -7,6 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Editorial Civic Design Foundation Tokens
+        editorial: {
+          cream: "#F5EFE0",
+          creamDeep: "#EDE4D0",
+          paper: "#EFE6D2",
+          ink: "#0A0A0A",
+          inkMuted: "#6B6357",
+          inkSubtle: "#8C827A",
+          rule: "#D9CFBB",
+          stage: "#111111",
+          stageText: "#F5EFE0",
+          green: "#2A5B4A",
+          warm: "#E8964A",
+          terracotta: "#C97B5A",
+          ochre: "#C9A24A",
+          dustyBlue: "#6B8299",
+          olive: "#7B7A4E",
+        },
         // Target Design Token Architecture
         brand: {
           DEFAULT: "#1E40AF",
@@ -137,6 +155,7 @@ export default {
         appBorderStrong: "#D4D4D8",
       },
       fontFamily: {
+        serif: ["Fraunces", "Georgia", "serif"],
         sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["JetBrains Mono", "Fira Code", "Consolas", "monospace"],
       },
@@ -150,6 +169,11 @@ export default {
         micro: ["12px", { lineHeight: "1.3", fontWeight: "600", letterSpacing: "0.05em" }],
       },
       boxShadow: {
+        "editorial-soft": "0 20px 40px -15px rgba(10, 10, 10, 0.07)",
+        "editorial-card": "0 10px 30px -10px rgba(10, 10, 10, 0.05)",
+        "editorial-stage": "0 35px 70px -20px rgba(0, 0, 0, 0.55)",
+        "editorial-glow": "0 0 24px 2px rgba(232, 150, 74, 0.35)",
+        "editorial-mint-glow": "0 0 24px 2px rgba(42, 91, 74, 0.25)",
         "civic-xs": "0 1px 2px 0 rgba(7, 19, 34, 0.04)",
         "civic-sm": "0 1px 3px 0 rgba(7, 19, 34, 0.05), 0 1px 2px -1px rgba(7, 19, 34, 0.03)",
         "civic-md": "0 4px 6px -1px rgba(7, 19, 34, 0.06), 0 2px 4px -2px rgba(7, 19, 34, 0.03)",
@@ -160,6 +184,13 @@ export default {
         "civic-glow-saffron": "0 0 25px -5px rgba(245, 158, 11, 0.25)",
       },
       borderRadius: {
+        "editorial-sm": "0.5rem", // 8px
+        "editorial-md": "0.75rem", // 12px
+        "editorial-card": "1.25rem", // 20px
+        "editorial-feature": "1.75rem", // 28px
+        "editorial-stage": "2.25rem", // 36px
+        "editorial-hero": "2.75rem", // 44px
+        "editorial-full": "9999px",
         "civic-sm": "0.375rem",
         "civic-md": "0.5rem",
         "civic-lg": "0.75rem",
