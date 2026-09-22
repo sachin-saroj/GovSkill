@@ -47,7 +47,7 @@ def compute_credential_signature(
     Computes a server-side HMAC-SHA256 signature for the credential.
     The secret key is stored on the server and never exposed to clients.
     """
-    secret = settings.SECRET_KEY.encode("utf-8")
+    secret = settings.CREDENTIAL_SIGNING_KEY.encode("utf-8")
     canon_time = _canonical_timestamp(issued_at)
     payload = f"{credential_id}:{user_id}:{module_id}:{score_achieved}:{total_score}:{canon_time}".encode(
         "utf-8"

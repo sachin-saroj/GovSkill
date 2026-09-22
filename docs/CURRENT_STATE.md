@@ -13,6 +13,12 @@ Last Updated:
   - Integrated `jest-axe` into Vitest test environment (`frontend/src/test/setup.ts`) with custom `toHaveNoViolations` matcher and TypeScript assertion types.
   - Added automated accessibility testing across high-stakes screens: `LoginPage`, `QuizPage`, and `CitizenUploadPage`.
   - Baseline audit findings: `LoginPage` passed with 0 violations across sign-in and registration modes. `QuizPage` and `CitizenUploadPage` flagged 1 `heading-order` violation each, isolated and reported for triage before remediation.
+- **Dedicated Credential Signing Key Setting (Task B)**:
+  - Added `CREDENTIAL_SIGNING_KEY` setting to `Settings` in `backend/app/core/config.py`, validated with the same anti-placeholder checks as `SECRET_KEY` (rejecting empty values and insecure defaults).
+  - Updated `backend/app/services/credential_service.py` to use `settings.CREDENTIAL_SIGNING_KEY` instead of reusing `SECRET_KEY` for HMAC-SHA256 digital certificate signing and verification.
+  - Added `CREDENTIAL_SIGNING_KEY` declaration across `.env.example`, `backend/.env.example`, and `docker-compose.yml`.
+  - Added unit test `test_insecure_credential_signing_key_validation` in `backend/app/tests/test_security_operability.py`.
+  - Verified backend Pytest suite (39/39 passing) and frontend Vite build.
 - **Backend Dependency Pinning (Task A)**:
   - Pinned all 20 dependencies in `backend/requirements.txt` to exact versions matching the active virtual environment (`pip freeze`), replacing loose `>=` version constraints.
   - Verified backend Pytest test suite (38/38 passed) and frontend Vite build with zero regressions.

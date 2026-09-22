@@ -27,19 +27,51 @@ async def override_get_db():
 def test_insecure_secret_key_validation():
     # Attempting to use default placeholder raises ValidationError / ValueError
     with pytest.raises(ValidationError):
-        Settings(SECRET_KEY="super_secret_jwt_key_change_in_production")
+        Settings(
+            SECRET_KEY="super_secret_jwt_key_change_in_production",
+            CREDENTIAL_SIGNING_KEY="valid_credential_signing_key_1234567890",
+        )
 
     with pytest.raises(ValidationError):
-        Settings(SECRET_KEY="")
+        Settings(
+            SECRET_KEY="",
+            CREDENTIAL_SIGNING_KEY="valid_credential_signing_key_1234567890",
+        )
 
     # Valid secret key succeeds
-    valid_s = Settings(SECRET_KEY="valid_production_secret_key_1234567890")
+    valid_s = Settings(
+        SECRET_KEY="valid_production_secret_key_1234567890",
+        CREDENTIAL_SIGNING_KEY="valid_credential_signing_key_1234567890",
+    )
     assert valid_s.SECRET_KEY == "valid_production_secret_key_1234567890"
+
+
+def test_insecure_credential_signing_key_validation():
+    # Attempting to use default placeholder raises ValidationError / ValueError
+    with pytest.raises(ValidationError):
+        Settings(
+            SECRET_KEY="valid_production_secret_key_1234567890",
+            CREDENTIAL_SIGNING_KEY="super_secret_jwt_key_change_in_production",
+        )
+
+    with pytest.raises(ValidationError):
+        Settings(
+            SECRET_KEY="valid_production_secret_key_1234567890",
+            CREDENTIAL_SIGNING_KEY="",
+        )
+
+    # Valid credential signing key succeeds
+    valid_s = Settings(
+        SECRET_KEY="valid_production_secret_key_1234567890",
+        CREDENTIAL_SIGNING_KEY="valid_credential_signing_key_1234567890",
+    )
+    assert valid_s.CREDENTIAL_SIGNING_KEY == "valid_credential_signing_key_1234567890"
 
 
 def test_cors_origins_parsing():
     s = Settings(
         SECRET_KEY="valid_secret_key_123",
+        CREDENTIAL_SIGNING_KEY="valid_credential_signing_key_1234567890",
         ALLOWED_ORIGINS="http://localhost:5173,http://localhost:3000",
     )
     assert s.ALLOWED_ORIGINS == ["http://localhost:5173", "http://localhost:3000"]

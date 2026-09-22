@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "GovSkill"
     API_V1_STR: str = "/api"
     SECRET_KEY: str
+    CREDENTIAL_SIGNING_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
@@ -40,6 +41,22 @@ class Settings(BaseSettings):
         if not v or v.strip() in insecure_placeholders:
             raise ValueError(
                 "SECRET_KEY environment variable is missing or set to an insecure default placeholder."
+            )
+        return v
+
+    @field_validator("CREDENTIAL_SIGNING_KEY")
+    @classmethod
+    def validate_credential_signing_key(cls, v: str) -> str:
+        insecure_placeholders = {
+            "super_secret_jwt_key_change_in_production",
+            "change_this_to_a_secure_secret_key_in_production",
+            "MANDATORY_GENERATE_RANDOM_SECRET_KEY_HERE",
+            "change_me",
+            "secret",
+        }
+        if not v or v.strip() in insecure_placeholders:
+            raise ValueError(
+                "CREDENTIAL_SIGNING_KEY environment variable is missing or set to an insecure default placeholder."
             )
         return v
 
