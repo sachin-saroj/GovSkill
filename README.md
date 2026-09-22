@@ -229,6 +229,30 @@ Open application in browser: [http://localhost:3000](http://localhost:3000)
 
 ---
 
+## ⚙️ Environment Variables
+
+The application is configured through environment variables loaded from a `.env` file or container environment. The table below lists all variables, their purpose, requirement status, and default or example values:
+
+| Variable | Purpose / Description | Required / Optional | Default / Example |
+|---|---|---|---|
+| `SECRET_KEY` | High-entropy cryptographic secret used to sign and verify JWT session authentication tokens. The backend validates and strictly rejects empty values or insecure placeholder defaults. | **Required** | Generated via `python -c "import secrets; print(secrets.token_hex(32))"` |
+| `CREDENTIAL_SIGNING_KEY` | Dedicated cryptographic HMAC-SHA256 signing key used exclusively to issue and verify tamper-evident official digital completion certificates. Must be separate from `SECRET_KEY`. | **Required** | Generated via `python -c "import secrets; print(secrets.token_hex(32))"` |
+| `DATABASE_URL` | Asynchronous SQLAlchemy database connection URI. In development, defaults to local SQLite with zero setup; for production, points to PostgreSQL. | Optional | `sqlite+aiosqlite:///./govskill.db` *(dev default)*<br>`postgresql+asyncpg://user:password@localhost:5432/govskill` *(prod)* |
+| `POSTGRES_USER` | PostgreSQL superuser username for Docker Compose multi-container deployments. | Optional (Compose) | `govskill_user` |
+| `POSTGRES_PASSWORD` | PostgreSQL database password for Docker Compose. Must be supplied before starting containers. | **Required** (Compose) | Explicit secure password (no default) |
+| `POSTGRES_DB` | PostgreSQL database name for Docker Compose. | Optional (Compose) | `govskill` |
+| `ADMIN_EMAIL` | Administrator email address used for automatic initial administrator seed generation (`seed_admin.py`). | Optional | `admin@govskill.local` |
+| `ADMIN_PASSWORD` | Initial administrator account password for seed generation. | **Required** (Compose) | Explicit secure password (no default) |
+| `GEMINI_API_KEY` | Google Gemini API key used by the AI Training Copilot and GovAssist plain-language validation explanation service. | Optional | Free API key from [Google AI Studio](https://aistudio.google.com/app/apikey). If omitted, the system falls back to offline/deterministic mode. |
+| `ALLOWED_ORIGINS` | Comma-separated list of permitted frontend client origins enforced by the CORS middleware. | Optional | `http://localhost:5173,http://localhost:3000,http://localhost:3001,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:3001` |
+| `ALGORITHM` | Cryptographic algorithm used for JWT token signing. | Optional | `HS256` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiration duration in minutes before requiring re-authentication. | Optional | `1440` (24 hours) |
+| `PROJECT_NAME` | Project display name reflected in OpenAPI / Swagger documentation. | Optional | `GovSkill` |
+| `API_V1_STR` | URL prefix route for all version 1 REST API endpoints. | Optional | `/api` |
+| `VITE_API_URL` | Base backend API endpoint URL consumed by the React/Axios frontend client. | Optional (Frontend) | `http://localhost:8000` |
+
+---
+
 ## 📡 API Endpoint Reference
 
 | Method | Path | Description | Access |

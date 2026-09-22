@@ -7,8 +7,11 @@ Last Updated:
 
 - **Production Quality Gates & Full Test Suite Passing**:
   - **Vitest Frontend Suite**: 97/97 tests passing across 21 test files (100% pass rate).
-  - **Pytest Backend Suite**: 38/38 tests passing (100% pass rate).
+  - **Pytest Backend Suite**: 39/39 tests passing (100% pass rate).
   - **TypeScript & Vite Production Bundle**: Clean compilation with 0 errors (`tsc && vite build`), route-level code splitting enabled.
+- **Environment Variables Documentation Table (Task C)**:
+  - Added comprehensive "Environment Variables" reference table to `README.md` cataloging every environment variable across backend, frontend, and Docker Compose configurations (`SECRET_KEY`, `CREDENTIAL_SIGNING_KEY`, `DATABASE_URL`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `GEMINI_API_KEY`, `ALLOWED_ORIGINS`, `ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `PROJECT_NAME`, `API_V1_STR`, `VITE_API_URL`), their purpose, requirement status, and default/example values.
+  - Verified test suites (39/39 Pytest passed) and clean Vite production build.
 - **Automated Accessibility Testing Integration (`jest-axe`)**:
   - Integrated `jest-axe` into Vitest test environment (`frontend/src/test/setup.ts`) with custom `toHaveNoViolations` matcher and TypeScript assertion types.
   - Added automated accessibility testing across high-stakes screens: `LoginPage`, `QuizPage`, and `CitizenUploadPage`.
