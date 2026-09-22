@@ -9,7 +9,8 @@ from app.api.routes import (
     credentials,
     documents,
     modules,
-    progress,
+    progress_admin,
+    progress_employee,
     quiz,
     reports,
     tutor,
@@ -48,7 +49,8 @@ app.include_router(tutor.router, prefix=settings.API_V1_STR)
 app.include_router(quiz.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(documents.router, prefix=settings.API_V1_STR)
-app.include_router(progress.router, prefix=settings.API_V1_STR)
+app.include_router(progress_employee.router, prefix=settings.API_V1_STR)
+app.include_router(progress_admin.router, prefix=settings.API_V1_STR)
 app.include_router(credentials.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 
