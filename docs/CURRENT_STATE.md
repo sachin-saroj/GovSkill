@@ -13,6 +13,9 @@ Last Updated:
   - Integrated `jest-axe` into Vitest test environment (`frontend/src/test/setup.ts`) with custom `toHaveNoViolations` matcher and TypeScript assertion types.
   - Added automated accessibility testing across high-stakes screens: `LoginPage`, `QuizPage`, and `CitizenUploadPage`.
   - Baseline audit findings: `LoginPage` passed with 0 violations across sign-in and registration modes. `QuizPage` and `CitizenUploadPage` flagged 1 `heading-order` violation each, isolated and reported for triage before remediation.
+- **Backend Dependency Pinning (Task A)**:
+  - Pinned all 20 dependencies in `backend/requirements.txt` to exact versions matching the active virtual environment (`pip freeze`), replacing loose `>=` version constraints.
+  - Verified backend Pytest test suite (38/38 passed) and frontend Vite build with zero regressions.
 - **Backend Route Architecture Modularization (Task A)**:
   - Split monolithic `progress.py` (1,167 lines) into `progress_employee.py` (employee endpoints: `/my-skills`, `/modules/{module_id}/access-section`, `/modules/{module_id}/complete-lessons`) and `progress_admin.py` (admin `/admin/skills-overview` with workforce health and competency telemetry).
   - Preserved identical router prefix (`/progress`), schemas, and responses with zero logic modification.
