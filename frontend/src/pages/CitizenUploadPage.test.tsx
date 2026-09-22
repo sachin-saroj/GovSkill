@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { axe } from 'jest-axe';
 import CitizenUploadPage from './CitizenUploadPage';
 import api from '@/lib/api';
 
@@ -184,5 +185,11 @@ describe('CitizenUploadPage & GovAssist Workflow', () => {
 
     expect(await screen.findByText('Rate limit exceeded. Maximum 20 requests per 60s.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
+  });
+
+  it('passes automated accessibility audit without violations', async () => {
+    const { container } = renderPage();
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

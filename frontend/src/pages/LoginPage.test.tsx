@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { axe } from 'jest-axe';
 import LoginPage from './LoginPage';
 import api from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
@@ -143,4 +144,19 @@ describe('LoginPage', () => {
     await waitFor(() => expect(login).toHaveBeenCalledWith('admin-token'));
     expect(navigate).toHaveBeenCalledWith('/admin');
   });
+
+  it('passes automated accessibility audit without violations', async () => {
+    const { container } = renderPage();
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('passes automated accessibility audit in registration mode', async () => {
+    const { container } = renderPage();
+    fireEvent.click(screen.getByRole('button', { name: 'Register Here' }));
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
+
+

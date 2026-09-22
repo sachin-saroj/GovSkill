@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { axe } from 'jest-axe';
 import QuizPage from './QuizPage';
 import api from '@/lib/api';
 
@@ -236,5 +237,13 @@ describe('QuizPage & Competency Assessment Engine', () => {
       '/verify/GS-CERT-2026-QUIZ9999'
     );
   });
+
+  it('passes automated accessibility audit without violations', async () => {
+    const { container } = render(<QuizPage />);
+    await screen.findByText(/Assessment Guidelines & Instructions/i);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
+
 
