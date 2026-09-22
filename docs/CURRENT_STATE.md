@@ -14,6 +14,10 @@ Last Updated:
   - Preserved identical router prefix (`/progress`), schemas, and responses with zero logic modification.
   - Updated route package exports in `backend/app/api/routes/__init__.py` and router registrations in `backend/app/main.py`.
   - Verified backend test suite integrity: 38/38 Pytest tests passing.
+- **Database Seed Extraction & Quiz Route Decoupling (Task B)**:
+  - Extracted default seed questions and module UUID constants (`MODULE_1_ID`–`MODULE_4_ID`, `SEED_QUESTIONS`) from `backend/app/api/routes/quiz.py` into dedicated `backend/app/db/seed_modules.py`.
+  - Decoupled database seeding concerns from API route handling while maintaining explicit re-exports in `quiz.py` for seamless backward compatibility.
+  - Verified backend test suite integrity: 38/38 Pytest tests passing.
 - **Route-Level Code Splitting & Performance Optimization**:
   - Implemented `React.lazy()` dynamic imports for the heaviest standalone pages (`AdminDashboardPage.tsx` and `CitizenUploadPage.tsx`).
   - Wrapped router tree in `<Suspense>` with a non-intrusive `Skeleton` loading fallback.
