@@ -6,9 +6,13 @@ Last Updated:
 ## Working
 
 - **Production Quality Gates & Full Test Suite Passing**:
-  - **Vitest Frontend Suite**: 93/93 tests passing across 20 test files (100% pass rate).
+  - **Vitest Frontend Suite**: 97/97 tests passing across 21 test files (100% pass rate).
   - **Pytest Backend Suite**: 38/38 tests passing (100% pass rate).
-  - **TypeScript & Vite Production Bundle**: Clean compilation with 0 errors (`tsc && vite build`).
+  - **TypeScript & Vite Production Bundle**: Clean compilation with 0 errors (`tsc && vite build`), route-level code splitting enabled.
+- **Route-Level Code Splitting & Performance Optimization**:
+  - Implemented `React.lazy()` dynamic imports for the heaviest standalone pages (`AdminDashboardPage.tsx` and `CitizenUploadPage.tsx`).
+  - Wrapped router tree in `<Suspense>` with a non-intrusive `Skeleton` loading fallback.
+  - Reduced main initial JS bundle from 734.64 kB to 638.86 kB (a ~96 kB / 13% reduction in initial payload), isolating `AdminDashboardPage` (53.22 kB) and `CitizenUploadPage` (45.31 kB) into on-demand asynchronous chunks.
 - **Standardized Editorial UI Primitives & Data Visualizations**:
   - Form Primitives: `Checkbox`, `Radio`, `Select`, `Textarea`, `SearchField`, `Input`, `Button`.
   - Data Visualizations & Metrics: `MetricCard`, `CompetencyIndicator`, `TrendIndicator`, `ProgressBar`, `EditorialDetails`.
