@@ -28,95 +28,95 @@ export const AssessmentHistoryTable: React.FC<AssessmentHistoryTableProps> = ({ 
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <History className="h-4 w-4 text-civic-700" />
-          <h3 className="text-section-heading font-semibold text-slate-900 tracking-tight">
+          <History className="h-4 w-4 text-[#0E50B0]" />
+          <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
             Assessment Attempt History
           </h3>
         </div>
-        <span className="text-caption font-medium text-slate-500">
+        <span className="text-[11px] font-mono uppercase font-bold text-[#71717A]">
           {history.length} {history.length === 1 ? 'Recorded Attempt' : 'Recorded Attempts'}
         </span>
       </div>
 
       {history.length === 0 ? (
-        <Card className="p-6 rounded-2xl text-center border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
+        <Card className="p-6 rounded-none text-center border border-[#E4E4E7] bg-white shadow-none">
           <div className="max-w-md mx-auto space-y-2">
-            <div className="inline-flex p-3 rounded-full bg-[#E0D5BE] text-[#6B6357]">
+            <div className="inline-flex p-3 bg-[#FAFAFA] text-[#71717A] border border-[#E4E4E7]">
               <FileQuestion className="h-6 w-6" />
             </div>
-            <h4 className="font-serif font-bold text-base text-[#0A0A0A]">No Assessment Records Found</h4>
-            <p className="text-caption text-[#6B6357]">
+            <h4 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B]">No Assessment Records Found</h4>
+            <p className="text-caption text-[#71717A]">
               Complete official module lessons and take the end-of-module quiz to record your verified competency score.
             </p>
           </div>
         </Card>
       ) : (
-        <Card className="border border-[#D9CFBB] overflow-hidden bg-[#EDE4D0] shadow-sm rounded-2xl">
+        <div className="border border-[#E4E4E7] bg-white shadow-none">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-caption">
-              <thead className="bg-[#E4D9C3] border-b border-[#D9CFBB] text-[#6B6357] font-mono font-medium uppercase tracking-[0.14em] text-[10px]">
+            <table className="w-full text-left text-caption border-collapse">
+              <thead className="bg-[#FAFAFA] border-b border-[#E4E4E7] text-[#71717A] font-mono font-bold uppercase tracking-[0.15em] text-[10px]">
                 <tr>
-                  <th scope="col" className="px-4 py-3">Date & Time</th>
-                  <th scope="col" className="px-4 py-3">Module</th>
-                  <th scope="col" className="px-4 py-3">Attempt</th>
-                  <th scope="col" className="px-4 py-3 text-center">Score</th>
-                  <th scope="col" className="px-4 py-3 text-center">Growth Delta</th>
+                  <th scope="col" className="px-4 py-3 border-r border-[#E4E4E7]">Date & Time</th>
+                  <th scope="col" className="px-4 py-3 border-r border-[#E4E4E7]">Module</th>
+                  <th scope="col" className="px-4 py-3 border-r border-[#E4E4E7]">Attempt</th>
+                  <th scope="col" className="px-4 py-3 text-center border-r border-[#E4E4E7]">Score</th>
+                  <th scope="col" className="px-4 py-3 text-center border-r border-[#E4E4E7]">Growth Delta</th>
                   <th scope="col" className="px-4 py-3 text-right">Result</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9CFBB]/60 font-medium">
+              <tbody className="divide-y divide-[#E4E4E7] font-normal">
                 {history.map((item) => {
                   const delta = item.improvement_from_previous;
 
                   return (
-                    <tr key={item.attempt_id} className="hover:bg-[#EFE6D2]/60 transition-colors">
-                      <td className="px-4 py-3 text-[#6B6357] whitespace-nowrap font-mono text-[12px]">
+                    <tr key={item.attempt_id} className="hover:bg-[#FAFAFA] transition-colors">
+                      <td className="px-4 py-3 text-[#71717A] whitespace-nowrap font-mono text-xs border-r border-[#E4E4E7]">
                         {formatDate(item.submitted_at)}
                       </td>
-                      <td className="px-4 py-3 text-[#0A0A0A] font-semibold max-w-[220px] truncate text-caption">
+                      <td className="px-4 py-3 text-[#09090B] font-bold max-w-[220px] truncate text-caption border-r border-[#E4E4E7]">
                         {item.module_title}
                       </td>
-                      <td className="px-4 py-3 text-[#6B6357]">
-                        <span className="inline-block px-2 py-0.5 rounded bg-[#E0D5BE] text-[10px] font-mono font-semibold text-[#0A0A0A]">
+                      <td className="px-4 py-3 text-[#71717A] border-r border-[#E4E4E7]">
+                        <span className="inline-block px-2 py-0.5 bg-[#FAFAFA] text-[10px] font-mono font-bold text-[#09090B] border border-[#E4E4E7]">
                           #{item.attempt_number}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center font-mono font-semibold text-[#0A0A0A] text-caption">
+                      <td className="px-4 py-3 text-center font-mono font-bold text-[#09090B] text-caption border-r border-[#E4E4E7]">
                         {item.score} / {item.total} ({item.score_percentage}%)
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3 text-center border-r border-[#E4E4E7]">
                         {delta !== undefined && delta !== null ? (
                           delta > 0 ? (
-                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30 font-mono">
-                              <TrendingUp className="h-3 w-3 text-[#2A5B4A]" />
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
+                              <TrendingUp className="h-3 w-3 text-emerald-700" />
                               <span>+{delta}%</span>
                             </span>
                           ) : delta < 0 ? (
-                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#C97B5A]/10 text-[#C97B5A] border border-[#C97B5A]/30 font-mono">
-                              <TrendingDown className="h-3 w-3 text-[#C97B5A]" />
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-bold bg-orange-50 text-[#AF411E] border border-orange-200 font-mono">
+                              <TrendingDown className="h-3 w-3 text-[#AF411E]" />
                               <span>{delta}%</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E0D5BE] text-[#6B6357] font-mono">
-                              <Minus className="h-3 w-3 text-[#6B6357]" />
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-medium bg-[#FAFAFA] text-[#71717A] font-mono border border-[#E4E4E7]">
+                              <Minus className="h-3 w-3 text-[#71717A]" />
                               <span>0%</span>
                             </span>
                           )
                         ) : (
-                          <span className="text-caption text-[#6B6357] font-mono text-[11px]">
+                          <span className="text-caption text-[#71717A] font-mono text-[11px]">
                             Initial Attempt
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-right">
                         {item.passed ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30">
-                            <Award className="h-3 w-3 text-[#2A5B4A]" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono uppercase font-bold tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <Award className="h-3 w-3 text-emerald-700" />
                             <span>Passed (&ge;75%)</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-[#C97B5A]/10 text-[#C97B5A] border border-[#C97B5A]/30">
-                            <AlertCircle className="h-3 w-3 text-[#C97B5A]" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono uppercase font-bold tracking-wider bg-orange-50 text-[#AF411E] border border-orange-200">
+                            <AlertCircle className="h-3 w-3 text-[#AF411E]" />
                             <span>Below 75% Standard</span>
                           </span>
                         )}
@@ -127,7 +127,7 @@ export const AssessmentHistoryTable: React.FC<AssessmentHistoryTableProps> = ({ 
               </tbody>
             </table>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

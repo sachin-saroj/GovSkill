@@ -21,26 +21,26 @@ export const EmployeeReadinessTable: React.FC<EmployeeReadinessTableProps> = ({
   onNextPage,
 }) => {
   return (
-    <Card className="p-0 overflow-hidden border-[#D9CFBB] shadow-xs bg-[#EDE4D0] rounded-2xl">
+    <Card className="p-0 overflow-hidden border border-[#E4E4E7] shadow-none bg-white rounded-none">
       {/* Table Header Controls */}
-      <div className="px-6 py-4 border-b border-[#D9CFBB] bg-[#EDE4D0] flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-[#E4E4E7] bg-white flex items-center justify-between">
         <div>
-          <h2 className="font-serif text-lg font-normal text-[#0A0A0A] tracking-tight">
+          <h2 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
             Employee Quiz Performance Log
           </h2>
-          <p className="text-xs text-[#6B6357] font-sans font-normal">
+          <p className="text-xs text-[#71717A] font-sans">
             Official server-evaluated attempt logs and competency achievements
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-[#6B6357] font-semibold">
+        <div className="flex items-center gap-2 text-xs font-mono text-[#71717A] font-bold">
           <span>Offset: {offset}</span>
           <button
             type="button"
             disabled={offset === 0 || isLoading}
             onClick={onPrevPage}
             aria-label="Previous page"
-            className="p-1.5 border border-[#D9CFBB] bg-[#F5EFE0] text-[#0A0A0A] rounded-full hover:bg-[#EDE4D0] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer"
+            className="p-1.5 border border-[#E4E4E7] bg-white text-[#09090B] hover:bg-[#FAFAFA] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-none cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -49,7 +49,7 @@ export const EmployeeReadinessTable: React.FC<EmployeeReadinessTableProps> = ({
             disabled={attempts.length < limit || isLoading}
             onClick={onNextPage}
             aria-label="Next page"
-            className="p-1.5 border border-[#D9CFBB] bg-[#F5EFE0] text-[#0A0A0A] rounded-full hover:bg-[#EDE4D0] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer"
+            className="p-1.5 border border-[#E4E4E7] bg-white text-[#09090B] hover:bg-[#FAFAFA] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-none cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -57,54 +57,54 @@ export const EmployeeReadinessTable: React.FC<EmployeeReadinessTableProps> = ({
       </div>
 
       {isLoading ? (
-        <div className="p-12 text-center text-xs font-mono text-[#6B6357] flex items-center justify-center gap-2">
-          <Loader2 className="h-4 w-4 animate-spin text-[#0A0A0A]" />
+        <div className="p-12 text-center text-xs font-mono text-[#71717A] flex items-center justify-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin text-[#09090B]" />
           <span>Loading attempt logs...</span>
         </div>
       ) : attempts.length === 0 ? (
-        <div className="p-12 text-center text-xs font-sans text-[#6B6357] font-normal">
+        <div className="p-12 text-center text-xs font-sans text-[#71717A]">
           No employee quiz attempts recorded yet.
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-[#0A0A0A]">
-            <thead className="bg-[#F5EFE0] border-b border-[#D9CFBB] text-[10px] font-mono font-semibold text-[#6B6357] uppercase tracking-wider">
+          <table className="w-full text-left text-xs text-[#09090B] border-collapse">
+            <thead className="bg-[#FAFAFA] border-b border-[#E4E4E7] text-[10px] font-mono font-bold text-[#71717A] uppercase tracking-[0.15em]">
               <tr>
-                <th className="px-6 py-3.5">Employee Email</th>
-                <th className="px-6 py-3.5">Module Title</th>
-                <th className="px-6 py-3.5">Score</th>
-                <th className="px-6 py-3.5">Percentage</th>
+                <th className="px-6 py-3.5 border-r border-[#E4E4E7]">Employee Email</th>
+                <th className="px-6 py-3.5 border-r border-[#E4E4E7]">Module Title</th>
+                <th className="px-6 py-3.5 border-r border-[#E4E4E7]">Score</th>
+                <th className="px-6 py-3.5 border-r border-[#E4E4E7]">Percentage</th>
                 <th className="px-6 py-3.5">Submitted At</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D9CFBB]/60 font-normal">
+            <tbody className="divide-y divide-[#E4E4E7] font-normal">
               {attempts.map((att, idx) => {
                 const pct = att.total > 0 ? Math.round((att.score / att.total) * 100) : 0;
                 const isPass = pct >= 75;
 
                 return (
-                  <tr key={idx} className="hover:bg-[#F5EFE0]/60 transition-colors">
-                    <td className="px-6 py-4 font-mono font-semibold text-[#0A0A0A]">
+                  <tr key={idx} className="hover:bg-[#FAFAFA] transition-colors">
+                    <td className="px-6 py-4 font-mono font-bold text-[#09090B] border-r border-[#E4E4E7]">
                       {att.user_email}
                     </td>
-                    <td className="px-6 py-4 text-[#0A0A0A] font-sans font-medium">
+                    <td className="px-6 py-4 text-[#09090B] font-sans font-medium border-r border-[#E4E4E7]">
                       {att.module_title}
                     </td>
-                    <td className="px-6 py-4 font-mono font-bold text-[#0A0A0A]">
+                    <td className="px-6 py-4 font-mono font-bold text-[#09090B] border-r border-[#E4E4E7]">
                       {att.score} / {att.total}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 border-r border-[#E4E4E7]">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold border ${
+                        className={`inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold border ${
                           isPass
-                            ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40'
-                            : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                            : 'bg-orange-50 text-[#AF411E] border-orange-200'
                         }`}
                       >
                         {pct}%
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-[#6B6357] font-mono text-xs">
+                    <td className="px-6 py-4 text-[#71717A] font-mono text-xs">
                       {att.submitted_at ? new Date(att.submitted_at).toLocaleString() : 'Recent'}
                     </td>
                   </tr>

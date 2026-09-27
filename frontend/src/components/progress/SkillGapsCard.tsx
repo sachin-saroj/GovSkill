@@ -12,16 +12,16 @@ interface SkillGapsCardProps {
 export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
   if (!gaps || gaps.length === 0) {
     return (
-      <Card className="p-6 sm:p-8 rounded-2xl border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
+      <Card className="p-6 sm:p-8 rounded-none border border-[#E4E4E7] bg-white shadow-none">
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-full bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30 shrink-0">
-            <CheckCircle2 className="h-5 w-5 text-[#2A5B4A]" />
+          <div className="p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+            <CheckCircle2 className="h-5 w-5 text-emerald-600" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-lg text-[#0A0A0A]">
+            <h3 className="font-sans font-bold text-lg uppercase tracking-tight text-[#09090B]">
               No Operational Skill Gaps Detected
             </h3>
-            <p className="text-body text-[#6B6357] leading-relaxed font-normal">
+            <p className="text-body text-[#52525B] leading-relaxed">
               All active training competencies meet or exceed the mandatory 75% certification standard. Maintain regular review to stay operationally ready.
             </p>
           </div>
@@ -33,11 +33,11 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <ShieldAlert className="h-4 w-4 text-[#C97B5A]" />
-        <h3 className="font-serif font-bold text-xl text-[#0A0A0A] tracking-tight">
+        <ShieldAlert className="h-4 w-4 text-[#AF411E]" />
+        <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
           Identified Skill Gaps & Action Items
         </h3>
-        <Badge variant="attention">
+        <Badge variant="attention" className="rounded-none uppercase font-mono text-[10px]">
           {gaps.length} {gaps.length === 1 ? 'Area' : 'Areas'}
         </Badge>
       </div>
@@ -52,95 +52,95 @@ export const SkillGapsCard: React.FC<SkillGapsCardProps> = ({ gaps }) => {
           return (
             <Card
               key={gap.module_id}
-              className="p-6 rounded-2xl flex flex-col justify-between space-y-4 border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm"
+              className="p-6 rounded-none flex flex-col justify-between space-y-4 border border-[#E4E4E7] border-l-2 border-l-[#AF411E] bg-white shadow-none"
             >
               <div className="space-y-3">
-                <div className="flex items-start justify-between gap-2 pb-2 border-b border-[#D9CFBB]">
+                <div className="flex items-start justify-between gap-2 pb-2 border-b border-[#E4E4E7]">
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-[#6B6357]">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] font-bold">
                       Target Module
                     </span>
-                    <h4 className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
+                    <h4 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B] leading-snug">
                       {gap.skill}
                     </h4>
                   </div>
-                  <Badge variant={isNeedsAttention ? 'attention' : 'civic'} className="shrink-0">
+                  <Badge variant={isNeedsAttention ? 'attention' : 'civic'} className="shrink-0 rounded-none uppercase font-mono text-[10px]">
                     <AlertCircle className="h-3 w-3" />
                     <span>{gap.proficiency}</span>
                   </Badge>
                 </div>
 
                 {/* Score vs Target Progress Meter */}
-                <div className="space-y-1.5 bg-[#F5EFE0] p-3 rounded-xl border border-[#D9CFBB]">
-                  <div className="flex items-center justify-between text-caption font-medium text-[#6B6357]">
-                    <span className="flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-[#0A0A0A]">
-                      <Target className="h-3.5 w-3.5 text-[#C9A24A]" />
+                <div className="space-y-1.5 bg-[#FAFAFA] p-3 border border-[#E4E4E7]">
+                  <div className="flex items-center justify-between text-caption font-medium text-[#71717A]">
+                    <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[#09090B] font-bold">
+                      <Target className="h-3.5 w-3.5 text-[#0E50B0]" />
                       Target Standard: {target}%
                     </span>
-                    <span className="text-[#C97B5A] font-semibold font-mono">
+                    <span className="text-[#AF411E] font-bold font-mono text-xs">
                       Gap: {gapPct}% ({current}% current)
                     </span>
                   </div>
-                  <div className="w-full bg-[#E0D5BE] border border-[#D9CFBB]/60 rounded-full h-2 overflow-hidden relative">
+                  <div className="w-full bg-[#E4E4E7] h-1.5 overflow-hidden relative">
                     <div
-                      className="h-2 bg-[#C97B5A] rounded-full"
+                      className="h-1.5 bg-[#AF411E]"
                       style={{ width: `${Math.min(100, current)}%` }}
                     />
                     {/* Target threshold marker at 75% */}
                     <div
-                      className="absolute top-0 bottom-0 w-0.5 bg-[#0A0A0A] z-10"
+                      className="absolute top-0 bottom-0 w-0.5 bg-[#09090B] z-10"
                       style={{ left: `${target}%` }}
                       title={`Certification target: ${target}%`}
                     />
                   </div>
                 </div>
 
-                <div className="text-caption space-y-2 bg-[#F5EFE0] p-3.5 rounded-xl border border-[#D9CFBB]">
+                <div className="text-caption space-y-2 bg-[#FAFAFA] p-3.5 border border-[#E4E4E7]">
                   {gap.competency && (
-                    <div className="flex items-center gap-1.5 text-caption font-mono text-[11px] text-[#0A0A0A] bg-[#EDE4D0] px-2.5 py-1 rounded-full border border-[#D9CFBB]">
-                      <span className="font-semibold text-[#6B6357]">Target Competency:</span>
-                      <span>{gap.competency}</span>
+                    <div className="flex items-center gap-1.5 text-caption font-mono text-[10px] text-[#09090B] bg-white px-2 py-0.5 border border-[#E4E4E7]">
+                      <span className="font-bold text-[#71717A] uppercase">Target Competency:</span>
+                      <span className="font-bold">{gap.competency}</span>
                     </div>
                   )}
                   <div>
-                    <span className="font-medium text-[#0A0A0A]">Observed Evidence: </span>
-                    <span className="text-[#6B6357]">{gap.evidence}</span>
+                    <span className="font-bold text-[#09090B]">Observed Evidence: </span>
+                    <span className="text-[#52525B]">{gap.evidence}</span>
                   </div>
                   <div>
-                    <span className="font-medium text-[#0A0A0A]">Recommended Action: </span>
-                    <span className="text-[#6B6357]">{gap.recommended_action}</span>
+                    <span className="font-bold text-[#09090B]">Recommended Action: </span>
+                    <span className="text-[#52525B]">{gap.recommended_action}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[#D9CFBB]">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[#E4E4E7]">
                 <Link
                   to={
                     gap.tutor_prompt
                       ? `/tutor?moduleId=${gap.module_id}&competency=${encodeURIComponent(gap.competency || '')}&mode=remediation&prompt=${encodeURIComponent(gap.tutor_prompt)}`
                       : `/tutor?moduleId=${gap.module_id}&mode=remediation`
                   }
-                  className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-[#C97B5A] bg-[#C97B5A]/10 hover:bg-[#C97B5A]/20 border border-[#C97B5A]/30 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#AF411E] bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3 py-1 font-bold transition-colors cursor-pointer"
                   title="Ask AI Tutor to explain this weak competency and provide a practice check"
                 >
-                  <Bot className="h-3.5 w-3.5 text-[#C97B5A]" />
+                  <Bot className="h-3.5 w-3.5 text-[#AF411E]" />
                   <span>Ask AI Tutor</span>
                 </Link>
 
                 <div className="flex items-center gap-2">
                   <Link
                     to={gap.deep_link || `/module?id=${gap.module_id}`}
-                    className="inline-flex items-center gap-1.5 text-caption font-medium text-[#0A0A0A] hover:text-[#C97B5A] px-3.5 py-1.5 rounded-full hover:bg-[#E4D9C3] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-[#09090B] hover:text-[#0E50B0] px-3 py-1 border border-transparent hover:border-[#E4E4E7] transition-colors"
                   >
-                    <BookOpen className="h-3.5 w-3.5 text-[#C9A24A]" />
+                    <BookOpen className="h-3.5 w-3.5 text-[#0E50B0]" />
                     <span>{gap.target_section_title ? `Review Section` : 'Review Notes'}</span>
                   </Link>
                   <Link
                     to={`/quiz/${gap.module_id}`}
-                    className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#F5EFE0] bg-[#0A0A0A] hover:bg-[#262626] px-4 py-1.5 rounded-full shadow-sm transition-all min-h-[36px]"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-white bg-[#09090B] hover:bg-[#27272A] px-4 py-1.5 shadow-none transition-all min-h-[36px] border border-[#09090B]"
                   >
-                    <span>{current > 0 ? 'Retake Quiz' : 'Take Quiz'}</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <span>Take Assessment</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-white" />
                   </Link>
                 </div>
               </div>

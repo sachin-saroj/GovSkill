@@ -12,6 +12,8 @@ from app.schemas.admin import (
     AdminAttemptResponse,
     AdminQuestionOut,
     AdminResetPasswordRequest,
+    AdminUserStatusRequest,
+    DocumentPurgeResponse,
     ModuleCreate,
     ModuleUpdate,
     QuestionCreate,
@@ -19,6 +21,7 @@ from app.schemas.admin import (
 )
 from app.schemas.module import ModuleResponse
 from app.schemas.user import UserResponse
+from app.services.retention_service import purge_aged_documents
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -314,7 +317,52 @@ async def reset_user_password(
         )
 
     target_user.password_hash = get_password_hash(payload.new_password)
+    target_user.token_version += 1
     await db.commit()
     await db.refresh(target_user)
 
     return target_user
+
+
+@router.post("/users/{user_id}/status", response_model=UserResponse)
+async def set_user_status(
+    user_id: str,
+    payload: AdminUserStatusRequest,
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_current_admin_user),
+):
+    try:
+        target_uuid = uuid.UUID(user_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": {"code": "INVALID_ID", "message": "Invalid user UUID format"}},
+        )
+
+    result = await db.execute(select(User).where(User.id == target_uuid))
+    target_user = result.scalar_one_or_none()
+
+    if not target_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": {"code": "USER_NOT_FOUND", "message": "User not found"}},
+        )
+
+    target_user.is_active = payload.is_active
+    if not payload.is_active:
+        target_user.token_version += 1
+
+    await db.commit()
+    await db.refresh(target_user)
+
+    return target_user
+
+
+@router.post("/maintenance/purge-documents", response_model=DocumentPurgeResponse)
+async def purge_documents_endpoint(
+    retention_days: int = Query(default=30, ge=1, le=3650),
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_current_admin_user),
+):
+    summary = await purge_aged_documents(db=db, retention_days=retention_days)
+    return DocumentPurgeResponse(**summary)

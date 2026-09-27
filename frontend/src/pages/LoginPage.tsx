@@ -4,16 +4,11 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { getApiErrorMessage } from '@/lib/apiError';
 import api from '@/lib/api';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
-import { GovSkillLogo } from '@/components/GovSkillLogo';
 import {
   User,
   Lock,
-  Sparkles,
-  FileCheck,
-  ArrowRight,
   AlertCircle,
+  Zap,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
@@ -62,163 +57,146 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-
   return (
-    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-12 bg-[#F5EFE0] relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#BBBBBB]">
+      {/* ── Main Split Authentication Card (matches reference) ── */}
       <motion.div
         variants={staggerContainerVariants}
         initial="hidden"
         animate="visible"
-        className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10"
+        className="w-full max-w-[880px] bg-white rounded-[28px] sm:rounded-[32px] shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2"
       >
-        {/* Left Side: Editorial Archival Illustration Plate (Desktop) */}
-        <motion.div variants={fadeUpVariants} className="hidden lg:flex lg:col-span-5 flex-col space-y-3">
-          <div className="relative rounded-2xl overflow-hidden border border-[#D9CFBB] bg-[#EDE4D0] p-3 shadow-md">
-            {/* Archival corner registration marks */}
-            <span className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
-            <span className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
-            <span className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-[#0A0A0A]/20 pointer-events-none" aria-hidden="true" />
-
-            <div className="aspect-[3/4] w-full rounded-xl overflow-hidden border border-[#D9CFBB]/70 bg-[#F5EFE0]">
-              <img
-                src="/illustrations/login_civic_portal.jpg"
-                alt="Civic Governance Portico"
-                className="w-full h-full object-cover object-top"
-                loading="eager"
-              />
-            </div>
-
-            <div className="mt-3 pt-2.5 border-t border-[#D9CFBB] flex items-center justify-between text-[11px] font-mono text-[#6B6357]">
-              <span>CIVIC PORTICO 01</span>
-              <span>EST. 2026</span>
+        {/* ── Left Column: Clean Minimalist White Authentication Form ── */}
+        <motion.div
+          variants={fadeUpVariants}
+          className="p-7 sm:p-9 lg:p-11 flex flex-col justify-between"
+        >
+          {/* Top Row: Freestanding Lightning Emblem + Discreet Back Link */}
+          <div className="relative flex items-center justify-center mb-4">
+            <Link
+              to="/"
+              className="absolute left-0 text-xs font-mono uppercase tracking-wider text-zinc-400 hover:text-black transition-colors"
+              title="Return to GovSkill home"
+            >
+              ← GovSkill
+            </Link>
+            <div className="w-8 h-8 flex items-center justify-center">
+              <Zap className="h-5 w-5 fill-black text-black" />
             </div>
           </div>
-          <p className="text-center text-[12px] font-serif italic text-[#6B6357]">
-            Dedicated Public Service & Competency Advancement
-          </p>
-        </motion.div>
 
-        {/* Right Side: Main Authentication Flow */}
-        <div className="w-full lg:col-span-7 space-y-5">
-        {/* Main Authentication Card */}
-        <motion.div variants={fadeUpVariants}>
-          <div className="relative group p-6 sm:p-8 rounded-2xl bg-[#EDE4D0]/85 border border-[#D9CFBB] shadow-[0_20px_50px_-15px_rgba(10,10,10,0.08)]">
-            {/* Corner Archival Registration Brackets */}
-            <span className="absolute top-2 left-2 w-2 h-2 border-t border-l border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
-            <span className="absolute top-2 right-2 w-2 h-2 border-t border-r border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
-            <span className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
-            <span className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-[#0A0A0A]/25 pointer-events-none" aria-hidden="true" />
-
-            {/* Header Banner with Official Sovereign Emblem */}
-            <div className="text-center mb-6 space-y-2">
-              <div className="flex justify-center mb-1">
-                <GovSkillLogo size={46} variant="icon" />
-              </div>
-              <h2
-                className="font-serif text-[24px] sm:text-[26px] font-normal text-[#0A0A0A] tracking-[-0.02em]"
-                style={{ fontFamily: '"Fraunces", Georgia, serif' }}
-              >
-                {isRegister ? 'Create GovSkill Account' : 'Sign in to GovSkill'}
-              </h2>
-              <p className="font-sans text-[13px] text-[#6B6357]">
-                Official Digital Training Gateway for Local Governance
+          <div className="space-y-5">
+            {/* Header: 'Welcome back!' + subtext */}
+            <div className="text-center space-y-1.5">
+              <h1 className="font-sans text-[26px] sm:text-[30px] font-bold tracking-tight text-zinc-900 leading-tight">
+                {isRegister ? 'Create an account' : 'Welcome back!'}
+              </h1>
+              <p className="font-sans text-[13px] text-zinc-500 leading-relaxed max-w-[280px] mx-auto">
+                Your work, your team, your flow — all in one place.
               </p>
             </div>
 
-            {/* Quick Demo Autofill Switcher */}
-            <AnimatePresence>
-              {!isRegister && (
-                <motion.div
-                  initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                  className="mb-5 p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2 overflow-hidden shadow-xs"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-[#0A0A0A] uppercase tracking-wider">
-                      <Sparkles className="h-3 w-3 text-[#C9A24A]" />
-                      <span>Demo Credentials</span>
-                    </span>
-                    <span className="font-mono text-[10px] text-[#6B6357]">One-click populate</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleFillDemo('employee')}
-                      className="px-3 py-1.5 text-[12px] font-sans font-medium rounded-full bg-[#EDE4D0] border border-[#D9CFBB] hover:border-[#0A0A0A]/50 text-[#0A0A0A] transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[36px]"
-                    >
-                      <User className="h-3 w-3 text-[#6B6357]" />
-                      <span>Employee</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFillDemo('admin')}
-                      className="px-3 py-1.5 text-[12px] font-sans font-medium rounded-full bg-[#EDE4D0] border border-[#D9CFBB] hover:border-[#C9A24A] text-[#0A0A0A] transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[36px]"
-                    >
-                      <Lock className="h-3 w-3 text-[#C9A24A]" />
-                      <span>Supervisor (Admin)</span>
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Quick Demo Pill Buttons (matches Google / Apple pill buttons in reference) */}
+            {!isRegister && (
+              <div className="space-y-3 pt-1">
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => handleFillDemo('employee')}
+                    className="px-3 py-2 rounded-full border border-zinc-200/90 hover:border-zinc-400 bg-white hover:bg-zinc-50/80 text-zinc-800 text-[12px] font-medium tracking-tight transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
+                  >
+                    <User className="h-3.5 w-3.5 text-zinc-600" />
+                    <span>Sign in as Employee</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFillDemo('admin')}
+                    className="px-3 py-2 rounded-full border border-zinc-200/90 hover:border-zinc-400 bg-white hover:bg-zinc-50/80 text-zinc-800 text-[12px] font-medium tracking-tight transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
+                  >
+                    <Lock className="h-3.5 w-3.5 text-zinc-600" />
+                    <span>Sign in as Supervisor</span>
+                  </button>
+                </div>
 
-            {/* Error Feedback Message with AnimatePresence */}
+                {/* 'Or' Divider */}
+                <div className="relative flex items-center justify-center pt-1">
+                  <div className="w-full border-t border-zinc-200/80" />
+                  <span className="bg-white px-3 text-[11px] font-normal text-zinc-400">
+                    Or
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Error Message */}
             <AnimatePresence>
               {error && (
                 <motion.div
                   initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-                  className="mb-5 p-3.5 rounded-xl bg-[#C97B5A]/12 border border-[#C97B5A]/35 text-[13px] text-[#8F3E22] flex items-start gap-2.5 shadow-xs"
+                  className="p-3 rounded-xl bg-red-50 border border-red-200 text-[12px] text-red-700 flex items-start gap-2"
                 >
-                  <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0 mt-0.5" />
+                  <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                label="Official Email Address"
-                type="email"
-                placeholder="employee@govskill.test"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                leftIcon={<User className="h-4 w-4" />}
-                className="rounded-full min-h-[44px]"
-              />
+            {/* Authentication Form */}
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <label htmlFor="official-email-address" className="sr-only">
+                  Official Email Address
+                </label>
+                <input
+                  id="official-email-address"
+                  type="email"
+                  aria-label="Official Email Address"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                />
+              </div>
 
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                leftIcon={<Lock className="h-4 w-4" />}
-                className="rounded-full min-h-[44px]"
-              />
+              <div>
+                <label htmlFor="password-field" className="sr-only">
+                  Password
+                </label>
+                <input
+                  id="password-field"
+                  type="password"
+                  aria-label="Password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                />
+              </div>
 
+              {/* Account Role Dropdown (Registration Mode) */}
               <AnimatePresence>
                 {isRegister && (
                   <motion.div
                     initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                    className="space-y-1.5 overflow-hidden"
+                    className="space-y-1 overflow-hidden"
                   >
-                    <label htmlFor="role-select" className="block font-mono text-[10.5px] uppercase tracking-wider text-[#6B6357]">
+                    <label
+                      htmlFor="role-select"
+                      className="block font-sans text-xs font-semibold text-zinc-700"
+                    >
                       Account Role
                     </label>
                     <select
                       id="role-select"
                       value={role}
                       onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
-                      className="w-full rounded-full border border-[#D9CFBB] bg-[#F5EFE0] px-4 py-2.5 text-[13px] text-[#0A0A0A] focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]/10 focus:border-[#0A0A0A] cursor-pointer min-h-[44px]"
+                      className="w-full rounded-xl border border-zinc-200/90 bg-white px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black cursor-pointer min-h-[42px]"
                     >
                       <option value="employee">Government Employee (Trainee Officer)</option>
                       <option value="admin">Department Supervisor (Admin)</option>
@@ -227,55 +205,70 @@ export const LoginPage: React.FC = () => {
                 )}
               </AnimatePresence>
 
-              <div className="pt-2">
-                <Button
+              {/* Primary Pill Button (matches black pill in reference) */}
+              <div className="pt-1">
+                <button
                   type="submit"
-                  className="w-full font-sans font-medium shadow-sm cursor-pointer rounded-full min-h-[44px]"
-                  size="lg"
-                  isLoading={isLoading}
-                  variant="primary"
+                  aria-label={isRegister ? 'Register Account' : 'Sign In'}
+                  disabled={isLoading}
+                  className="w-full rounded-full min-h-[44px] bg-[#111113] hover:bg-black text-white font-sans font-medium text-sm tracking-tight cursor-pointer shadow-sm transition-all hover:scale-[1.005] flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {isRegister ? 'Register Account' : 'Sign In'}
-                </Button>
+                  {isLoading ? (
+                    <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  ) : isRegister ? (
+                    'Register Account'
+                  ) : (
+                    'Sign in with email'
+                  )}
+                </button>
               </div>
             </form>
 
-            {/* Toggle between Register and Sign In */}
-            <div className="mt-5 pt-4 border-t border-[#D9CFBB]/70 text-center text-[13px] text-[#6B6357]">
-              {isRegister ? 'Already have an official account?' : "Don't have an officer account yet?"}{' '}
+            {/* Toggle Between Sign In and Register */}
+            <div className="text-center text-xs text-zinc-500 pt-1">
+              <span>
+                {isRegister ? 'Already have an account? ' : "Don't have an account? "}
+              </span>
               <button
                 type="button"
+                aria-label={isRegister ? 'Sign In' : 'Register Here'}
                 onClick={() => {
                   setIsRegister(!isRegister);
                   setError(null);
                 }}
-                className="text-[#0A0A0A] font-semibold hover:underline cursor-pointer ml-1"
+                className="text-black font-semibold hover:underline cursor-pointer"
               >
-                {isRegister ? 'Sign In' : 'Register Here'}
+                {isRegister ? 'Sign In' : 'Sign Up'}
               </button>
             </div>
           </div>
+
+          {/* Bottom Footer Links (matches 'Help / Terms / Privacy' in reference) */}
+          <div className="pt-6 border-t border-zinc-100/80 flex items-center justify-center gap-3 text-[11px] text-zinc-400">
+            <span className="hover:text-black cursor-pointer transition-colors">Help</span>
+            <span>/</span>
+            <span className="hover:text-black cursor-pointer transition-colors">Terms</span>
+            <span>/</span>
+            <span className="hover:text-black cursor-pointer transition-colors">Privacy</span>
+            <span>/</span>
+            <Link to="/citizen" className="hover:text-black transition-colors font-medium">
+              Citizen Check
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Citizen GovAssist Shortcut Card */}
-        <motion.div variants={fadeUpVariants}>
-          <Link
-            to="/citizen"
-            className="w-full p-4 bg-[#EDE4D0]/70 hover:bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] shadow-xs flex items-center justify-between text-[13px] transition-all group hover:border-[#0A0A0A]/40"
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-[#F5EFE0] text-[#2A5B4A] border border-[#D9CFBB] flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                <FileCheck className="h-4 w-4 text-[#2A5B4A]" />
-              </div>
-              <div>
-                <p className="font-serif text-[14px] text-[#0A0A0A] font-normal">Visiting as a Citizen?</p>
-                <p className="text-[12px] text-[#6B6357]">Use the self-service Income Certificate pre-checker</p>
-              </div>
-            </div>
-            <ArrowRight className="h-4 w-4 text-[#0A0A0A] group-hover:translate-x-1 transition-transform" />
-          </Link>
+        {/* ── Right Column: Exact 1-Bit Dithered Architectural Landscape from Reference ── */}
+        <motion.div
+          variants={fadeUpVariants}
+          className="hidden lg:block h-full relative overflow-hidden bg-black select-none"
+        >
+          <img
+            src="/illustrations/login_dithered_architecture.png"
+            alt="Monochrome dithered pointillist architectural engraving of civic stone arches and reflection pool"
+            className="w-full h-full object-cover object-center"
+            loading="eager"
+          />
         </motion.div>
-        </div>
       </motion.div>
     </div>
   );

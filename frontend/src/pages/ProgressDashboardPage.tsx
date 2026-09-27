@@ -59,9 +59,11 @@ export const ProgressDashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-[#6B6357]">
-        <Loader2 className="h-6 w-6 animate-spin text-[#0A0A0A]" />
-        <span className="font-medium text-sm font-sans">Loading your digital skill profile...</span>
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-[#71717A]">
+        <Loader2 className="h-6 w-6 animate-spin text-[#09090B]" />
+        <span className="font-mono text-xs uppercase tracking-wider text-[#09090B] font-bold">
+          Loading your digital skill profile...
+        </span>
       </div>
     );
   }
@@ -103,11 +105,11 @@ export const ProgressDashboardPage: React.FC = () => {
       <motion.div variants={fadeUpVariants} className="grid grid-cols-12 gap-6">
         {/* Column 1: Assigned Learning / Recommended Modules (5 cols on lg) */}
         <div className="col-span-12 lg:col-span-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-serif text-[15px] text-[#0A0A0A] font-normal">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
+            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
               Assigned Modules
             </h2>
-            <Link to="/module" className="font-mono text-[11px] text-[#6B6357] hover:text-[#0A0A0A] transition-colors">
+            <Link to="/module" className="font-mono text-[10px] uppercase font-bold text-[#71717A] hover:text-[#09090B] transition-colors">
               All Curriculum ▾
             </Link>
           </div>
@@ -115,32 +117,25 @@ export const ProgressDashboardPage: React.FC = () => {
           <div className="space-y-2.5">
             {data?.skills && data.skills.length > 0 ? (
               data.skills.map((skill, idx) => {
-                const badgeStyles = [
-                  { bg: 'bg-[#C9A24A]/15', text: 'text-[#8F6A1A]' },
-                  { bg: 'bg-[#C97B5A]/15', text: 'text-[#8F3E22]' },
-                  { bg: 'bg-[#2A5B4A]/15', text: 'text-[#1E4537]' },
-                  { bg: 'bg-[#6B8299]/15', text: 'text-[#3E5266]' },
-                ];
-                const b = badgeStyles[idx % badgeStyles.length];
                 const isCert = skill.status === 'certified' || (skill.score_percentage >= 75 && skill.best_score > 0);
 
                 return (
                   <div
                     key={skill.module_id}
-                    className="flex items-center justify-between p-3 bg-[#EDE4D0]/70 rounded-xl border border-[#D9CFBB] shadow-xs hover:bg-[#EDE4D0] transition-all group"
+                    className="flex items-center justify-between p-3.5 bg-white border border-[#E4E4E7] hover:border-[#A1A1AA] transition-all group"
                   >
                     <div className="flex items-center gap-3 min-w-0 pr-2">
-                      <div className={`w-9 h-9 rounded-lg ${b.bg} ${b.text} font-mono font-bold text-xs flex items-center justify-center shrink-0 border border-[#D9CFBB]/60`}>
-                        {skill.module_title.charAt(0)}
+                      <div className="w-9 h-9 bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                        {String(idx + 1).padStart(2, '0')}
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-[13px] font-medium text-[#0A0A0A] truncate">
+                        <h3 className="text-xs font-bold uppercase tracking-tight text-[#09090B] truncate">
                           {skill.module_title}
                         </h3>
-                        <div className="flex items-center gap-2 text-[11px] font-mono text-[#6B6357]">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-[#71717A]">
                           <span>{skill.score_percentage ? `${skill.score_percentage}% Score` : '4 Sections'}</span>
                           <span>•</span>
-                          <span className={isCert ? 'text-[#2A5B4A] font-semibold' : 'text-[#6B6357]'}>
+                          <span className={isCert ? 'text-emerald-700 font-bold' : 'text-[#71717A]'}>
                             {isCert ? 'Certified' : skill.lessons_completed ? 'Lessons Read' : 'In Progress'}
                           </span>
                         </div>
@@ -149,7 +144,7 @@ export const ProgressDashboardPage: React.FC = () => {
 
                     <Link
                       to={`/module?id=${skill.module_id}`}
-                      className="shrink-0 px-3 py-1 text-[11px] font-sans font-medium text-[#0A0A0A] border border-[#D9CFBB] rounded-full hover:bg-[#0A0A0A] hover:text-[#F5EFE0] hover:border-[#0A0A0A] transition-all shadow-xs"
+                      className="shrink-0 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#09090B] border border-[#E4E4E7] hover:bg-[#09090B] hover:text-white hover:border-[#09090B] transition-all"
                     >
                       View Module
                     </Link>
@@ -157,43 +152,49 @@ export const ProgressDashboardPage: React.FC = () => {
                 );
               })
             ) : (
-              <p className="text-[12px] text-[#6B6357] p-4 bg-[#EDE4D0]/60 rounded-xl border border-[#D9CFBB]">No modules assigned yet.</p>
+              <p className="text-[11px] font-mono text-[#71717A] p-4 bg-[#FAFAFA] border border-[#E4E4E7]">
+                No modules assigned yet.
+              </p>
             )}
           </div>
         </div>
 
         {/* Column 2: Current Activity & Trajectory (4 cols on lg) */}
         <div className="col-span-12 lg:col-span-4 space-y-3">
-          <h2 className="font-serif text-[15px] text-[#0A0A0A] font-normal">
-            Current Activity & Analytics
-          </h2>
+          <div className="pb-1 border-b border-[#E4E4E7]">
+            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
+              Current Activity & Analytics
+            </h2>
+          </div>
 
           {/* Archival Stage Plate Trajectory Chart Card */}
-          <div className="bg-[#0A0A0A] border border-[#222222] rounded-2xl p-5 text-[#F5EFE0] shadow-sm space-y-3">
+          <div className="bg-white border border-[#E4E4E7] p-4 text-[#09090B] space-y-2.5">
             <div className="flex justify-between items-start">
               <div>
-                <span className="font-serif text-[13px] font-normal block text-[#F5EFE0]">Assessment Trajectory</span>
-                <span className="font-mono text-[10px] text-[#D9CFBB]/70">75% Target Certification Benchmark</span>
+                <span className="font-sans font-bold text-xs uppercase tracking-tight block text-[#09090B]">
+                  Assessment Trajectory
+                </span>
+                <span className="font-mono text-[10px] text-[#71717A]">75% Target Certification Benchmark</span>
               </div>
-              <span className="font-mono text-[9px] uppercase tracking-wider bg-white/10 text-[#C9A24A] border border-white/15 px-2 py-0.5 rounded-full">
+              <span className="font-mono text-[9px] uppercase tracking-wider bg-[#FAFAFA] text-[#0E50B0] border border-[#E4E4E7] px-2 py-0.5 font-bold">
                 Telemetry
               </span>
             </div>
 
             {/* Trajectory Mini Plot */}
-            <div className="h-16 w-full pt-1 flex items-end">
+            <div className="h-14 w-full pt-1 flex items-end">
               <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
                 {/* Target benchmark line at 75% (y=10) */}
-                <line x1="0" y1="10" x2="100" y2="10" stroke="rgba(217,207,187,0.25)" strokeDasharray="3 3" strokeWidth="1" />
+                <line x1="0" y1="10" x2="100" y2="10" stroke="#E4E4E7" strokeDasharray="3 3" strokeWidth="1" />
                 {/* Smooth curve */}
                 <path
                   d="M0 35 Q 25 32, 45 22 T 75 16 T 100 8"
                   fill="none"
-                  stroke="#C9A24A"
+                  stroke="#0E50B0"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
-                <circle cx="100" cy="8" r="3" fill="#C9A24A" stroke="#F5EFE0" strokeWidth="1.5" />
+                <circle cx="100" cy="8" r="3" fill="#0E50B0" stroke="#FFFFFF" strokeWidth="1.5" />
               </svg>
             </div>
           </div>
@@ -201,35 +202,35 @@ export const ProgressDashboardPage: React.FC = () => {
           {/* Dual Archival Milestone Blocks */}
           <div className="grid grid-cols-2 gap-3">
             {/* 1. Certified Milestone */}
-            <div className="bg-[#EDE4D0]/80 border border-[#D9CFBB] rounded-xl p-3.5 text-[#0A0A0A] shadow-xs flex flex-col justify-between min-h-[90px]">
+            <div className="bg-white border border-[#E4E4E7] p-3.5 text-[#09090B] flex flex-col justify-between min-h-[90px]">
               <div>
-                <span className="font-mono text-2xl font-bold tracking-tight block text-[#0A0A0A]">
+                <span className="font-mono text-2xl font-black tracking-tight block text-[#09090B]">
                   {certifiedCount}/{totalCount}
                 </span>
-                <span className="font-sans text-[11px] text-[#6B6357] block">
+                <span className="font-mono text-[10px] uppercase font-bold text-[#71717A] block">
                   Certified Modules
                 </span>
               </div>
               <div className="flex justify-end">
-                <span className="p-1 rounded-full bg-[#F5EFE0] border border-[#D9CFBB]">
-                  <ArrowRight className="h-3 w-3 text-[#0A0A0A] -rotate-45" />
+                <span className="p-1 bg-[#FAFAFA] border border-[#E4E4E7]">
+                  <ArrowRight className="h-3 w-3 text-[#09090B] -rotate-45" />
                 </span>
               </div>
             </div>
 
             {/* 2. Priority Gaps */}
-            <div className="bg-[#EDE4D0]/80 border border-[#D9CFBB] rounded-xl p-3.5 text-[#0A0A0A] shadow-xs flex flex-col justify-between min-h-[90px]">
+            <div className="bg-white border border-[#E4E4E7] p-3.5 text-[#09090B] flex flex-col justify-between min-h-[90px]">
               <div>
-                <span className="font-mono text-2xl font-bold tracking-tight block text-[#C97B5A]">
+                <span className="font-mono text-2xl font-black tracking-tight block text-[#AF411E]">
                   {data?.skill_gaps?.length ?? 0}
                 </span>
-                <span className="font-sans text-[11px] text-[#6B6357] block">
+                <span className="font-mono text-[10px] uppercase font-bold text-[#71717A] block">
                   Priority Action Gaps
                 </span>
               </div>
               <div className="flex justify-end">
-                <span className="p-1 rounded-full bg-[#F5EFE0] border border-[#D9CFBB]">
-                  <ArrowRight className="h-3 w-3 text-[#C97B5A]" />
+                <span className="p-1 bg-orange-50 border border-orange-200">
+                  <ArrowRight className="h-3 w-3 text-[#AF411E]" />
                 </span>
               </div>
             </div>
@@ -238,11 +239,11 @@ export const ProgressDashboardPage: React.FC = () => {
 
         {/* Column 3: Recent Learning Activity / Signals (3 cols on lg) */}
         <div className="col-span-12 lg:col-span-3 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-serif text-[15px] text-[#0A0A0A] font-normal">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
+            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
               Recent Signals
             </h2>
-            <span className="font-mono text-[10px] text-[#6B6357] uppercase tracking-wider">Audit</span>
+            <span className="font-mono text-[10px] text-[#71717A] uppercase tracking-wider font-bold">Audit</span>
           </div>
 
           <div className="space-y-2">
@@ -250,17 +251,17 @@ export const ProgressDashboardPage: React.FC = () => {
               data.recent_activity.slice(0, 4).map((act, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-2.5 bg-[#EDE4D0]/70 rounded-xl border border-[#D9CFBB] hover:bg-[#EDE4D0] transition-colors shadow-xs"
+                  className="flex items-center justify-between p-2.5 bg-white border border-[#E4E4E7] hover:border-[#A1A1AA] transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0 pr-2">
-                    <div className="w-7 h-7 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-[#0A0A0A] flex items-center justify-center shrink-0 font-mono text-[10px]">
+                    <div className="w-7 h-7 bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] flex items-center justify-center shrink-0 font-mono text-[10px]">
                       {act.activity_type === 'certification' ? '🏆' : act.activity_type === 'quiz_attempt' ? '🎯' : '📖'}
                     </div>
                     <div className="min-w-0">
-                      <span className="text-[12px] font-medium text-[#0A0A0A] block truncate">
+                      <span className="text-xs font-bold text-[#09090B] block truncate uppercase">
                         {act.module_title || act.title}
                       </span>
-                      <span className="text-[10px] font-mono text-[#6B6357] block truncate">
+                      <span className="text-[10px] font-mono text-[#71717A] block truncate">
                         {act.detail || new Date(act.timestamp).toLocaleDateString()}
                       </span>
                     </div>
@@ -268,14 +269,14 @@ export const ProgressDashboardPage: React.FC = () => {
 
                   <Link
                     to="/module"
-                    className="shrink-0 px-2.5 py-0.5 text-[10px] font-mono text-[#0A0A0A] border border-[#D9CFBB] rounded-full hover:bg-[#0A0A0A] hover:text-[#F5EFE0] transition-all"
+                    className="shrink-0 px-2 py-0.5 text-[9px] font-mono uppercase font-bold text-[#09090B] border border-[#E4E4E7] hover:bg-[#09090B] hover:text-white transition-all"
                   >
                     Review
                   </Link>
                 </div>
               ))
             ) : (
-              <div className="p-4 bg-[#EDE4D0]/60 rounded-xl border border-[#D9CFBB] text-center text-[12px] text-[#6B6357]">
+              <div className="p-4 bg-[#FAFAFA] border border-[#E4E4E7] text-center text-[11px] font-mono text-[#71717A]">
                 <span>No recent activity signals.</span>
               </div>
             )}
@@ -292,17 +293,17 @@ export const ProgressDashboardPage: React.FC = () => {
 
       {/* 4. Full Detailed Curriculum Roadmap Grid */}
       <motion.div variants={fadeUpVariants} className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D9CFBB]/60">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E4E4E7]">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[11px] font-semibold uppercase px-2 py-0.5 rounded bg-[#EDE4D0] border border-[#D9CFBB] text-[#6B6357]">
+              <span className="font-mono text-[10px] font-bold uppercase px-2 py-0.5 bg-[#FAFAFA] border border-[#E4E4E7] text-[#71717A]">
                 § 02
               </span>
-              <h2 className="font-serif text-[20px] sm:text-[22px] font-normal text-[#0A0A0A] tracking-[-0.02em]">
+              <h2 className="font-sans text-xl font-black uppercase tracking-tight text-[#09090B]">
                 Full Curriculum Roadmap & Certifications
               </h2>
             </div>
-            <p className="text-[13px] text-[#6B6357] font-normal">
+            <p className="text-[13px] text-[#71717A]">
               Comprehensive module objectives, lesson reader shortcuts, and assessment status
             </p>
           </div>
@@ -312,9 +313,9 @@ export const ProgressDashboardPage: React.FC = () => {
             whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
             whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             onClick={fetchSkillProgress}
-            className="self-start sm:self-center flex items-center gap-1.5 px-4 py-2 text-[13px] font-sans font-medium text-[#0A0A0A] bg-[#EDE4D0]/70 border border-[#D9CFBB] rounded-full hover:bg-[#EDE4D0] hover:border-[#0A0A0A]/40 transition-all shadow-xs cursor-pointer"
+            className="self-start sm:self-center flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] bg-white border border-[#E4E4E7] hover:bg-[#FAFAFA] transition-all cursor-pointer"
           >
-            <RefreshCw className="h-3.5 w-3.5 text-[#0A0A0A]" />
+            <RefreshCw className="h-3.5 w-3.5 text-[#09090B]" />
             <span>Refresh</span>
           </motion.button>
         </div>
@@ -356,16 +357,16 @@ export const ProgressDashboardPage: React.FC = () => {
       {/* 6. Official Digital Credentials Section */}
       {credentials.length > 0 && (
         <motion.div variants={fadeUpVariants} className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-full bg-[#0A0A0A] text-[#F5EFE0]">
-                <Award className="h-4 w-4 text-[#C9A24A]" />
+              <div className="p-1 bg-[#09090B] text-white">
+                <Award className="h-4 w-4 text-[#0E50B0]" />
               </div>
-              <h2 className="font-serif text-[18px] sm:text-[20px] font-normal text-[#0A0A0A]">
+              <h2 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
                 Official Digital Credentials
               </h2>
             </div>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1E4537] bg-[#2A5B4A]/12 px-2.5 py-1 rounded-full border border-[#2A5B4A]/30">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 border border-emerald-300">
               {credentials.length} Cryptographically Signed
             </span>
           </div>
@@ -374,24 +375,24 @@ export const ProgressDashboardPage: React.FC = () => {
             {credentials.map((cred) => (
               <div
                 key={cred.credential_id}
-                className="bg-[#EDE4D0]/80 p-6 rounded-2xl border border-[#D9CFBB] shadow-xs flex flex-col justify-between gap-4 relative"
+                className="bg-white p-6 border border-[#E4E4E7] shadow-none flex flex-col justify-between gap-4 relative"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#0A0A0A] bg-[#F5EFE0] px-2.5 py-0.5 rounded-full border border-[#D9CFBB]">
-                      <ShieldCheck className="h-3 w-3 text-[#2A5B4A]" />
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#09090B] bg-[#FAFAFA] px-2 py-0.5 border border-[#E4E4E7]">
+                      <ShieldCheck className="h-3 w-3 text-emerald-700" />
                       {cred.credential_id}
                     </span>
-                    <span className="font-mono text-[11px] font-semibold text-[#1E4537] bg-[#2A5B4A]/12 px-2 py-0.5 rounded-full">
+                    <span className="font-mono text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200">
                       Score: {cred.percentage}%
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-[17px] font-normal text-[#0A0A0A] leading-snug">
+                  <h3 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B] leading-snug">
                     {cred.module_title}
                   </h3>
 
-                  <p className="font-sans text-[12px] text-[#6B6357]">
+                  <p className="font-mono text-[11px] text-[#71717A]">
                     Issued on {new Date(cred.issued_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
@@ -400,9 +401,9 @@ export const ProgressDashboardPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between pt-3.5 border-t border-[#D9CFBB]/70 gap-2">
-                  <span className="inline-flex items-center gap-1 font-sans text-[12px] text-[#1E4537] font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                <div className="flex flex-wrap items-center justify-between pt-3.5 border-t border-[#E4E4E7] gap-2">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-800">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
                     Signature Verified
                   </span>
 
@@ -410,9 +411,9 @@ export const ProgressDashboardPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCredentialForModal(cred)}
-                      className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium text-[#0A0A0A] bg-[#F5EFE0] hover:bg-[#EDE4D0] px-3 py-1.5 rounded-full border border-[#D9CFBB] transition-colors cursor-pointer shadow-xs"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-[#09090B] bg-white hover:bg-[#FAFAFA] px-3 py-1.5 border border-[#E4E4E7] transition-colors cursor-pointer"
                     >
-                      <Award className="h-3.5 w-3.5 text-[#C9A24A]" />
+                      <Award className="h-3.5 w-3.5 text-[#0E50B0]" />
                       <span>View Certificate</span>
                     </button>
 
@@ -420,7 +421,7 @@ export const ProgressDashboardPage: React.FC = () => {
                       href={`/verify/${cred.credential_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium text-[#F5EFE0] bg-[#0A0A0A] hover:bg-[#222222] px-3 py-1.5 rounded-full border border-[#0A0A0A] transition-colors shadow-xs"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-white bg-[#09090B] hover:bg-[#27272A] px-3 py-1.5 border border-[#09090B] transition-colors"
                     >
                       <span>Verify Online</span>
                       <ExternalLink className="h-3 w-3" />

@@ -25,7 +25,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
 
   return (
     <div
-      className={`group relative overflow-hidden select-none py-6 border-y border-[#D9CFBB]/60 ${className}`}
+      className={`group relative overflow-hidden select-none py-6 border-y border-[#E4E4E7] bg-white ${className}`}
       tabIndex={0}
       aria-label="Partner institutions and agencies marquee"
     >
@@ -41,7 +41,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
         {items.map((item, idx) => (
           <span
             key={`orig-${idx}`}
-            className="text-[13px] font-sans font-medium uppercase tracking-[0.2em] text-[#6B6357] opacity-80 transition-opacity hover:opacity-100"
+            className="text-[12px] font-sans font-bold uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-black"
           >
             {item}
           </span>
@@ -52,7 +52,7 @@ export const Marquee: React.FC<MarqueeProps> = ({
           <span
             key={`dup-${idx}`}
             aria-hidden="true"
-            className="text-[13px] font-sans font-medium uppercase tracking-[0.2em] text-[#6B6357] opacity-80"
+            className="text-[12px] font-sans font-bold uppercase tracking-[0.2em] text-zinc-400"
           >
             {item}
           </span>
@@ -81,18 +81,18 @@ export const Chip: React.FC<ChipProps> = ({
   className = '',
 }) => {
   const sizeClasses = {
-    sm: 'text-[12px] px-3.5 py-1.5',
-    md: 'text-[14px] px-5 py-2.5',
-    lg: 'text-[16px] px-6 py-3',
+    sm: 'text-[11px] px-3 py-1 font-semibold',
+    md: 'text-[13px] px-4 py-2 font-medium',
+    lg: 'text-[15px] px-5 py-2.5 font-medium',
   }[size];
 
   const colorClasses = dark
-    ? 'bg-white/5 border-white/15 text-[#F5EFE0] hover:bg-white/10'
-    : 'bg-[#EDE4D0]/60 border-[#D9CFBB] text-[#0A0A0A] hover:bg-[#EDE4D0]';
+    ? 'bg-zinc-900 border-zinc-700 text-white hover:border-zinc-500'
+    : 'bg-white border-[#E4E4E7] text-black hover:border-black hover:bg-zinc-50';
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border font-sans font-normal tracking-tight transition-colors duration-200 select-none ${sizeClasses} ${colorClasses} ${className}`}
+      className={`inline-flex items-center rounded-none border font-sans tracking-tight transition-all duration-150 select-none shadow-[1px_1px_0px_rgba(0,0,0,0.08)] ${sizeClasses} ${colorClasses} ${className}`}
     >
       {children}
     </span>
@@ -101,7 +101,7 @@ export const Chip: React.FC<ChipProps> = ({
 
 /* ==========================================================================
    5. METRIC BLOCK
-   Large serif number with count-up animation + small sans label
+   Large sans number with count-up animation + small tracked label
    ========================================================================== */
 
 export interface MetricBlockProps {
@@ -120,7 +120,7 @@ export const MetricBlock: React.FC<MetricBlockProps> = ({
   prefix = '',
   label,
   context,
-  dark = true,
+  dark = false,
   className = '',
 }) => {
   const [current, setCurrent] = useState<number>(0);
@@ -170,20 +170,19 @@ export const MetricBlock: React.FC<MetricBlockProps> = ({
   }, [targetNumber, hasAnimated, shouldReduceMotion]);
 
   return (
-    <div ref={ref} className={`space-y-2 ${className}`}>
+    <div ref={ref} className={`space-y-1.5 ${className}`}>
       <div
-        className={`font-serif text-[clamp(44px,6vw,84px)] font-normal leading-none tracking-[-0.03em] ${
-          dark ? 'text-[#F5EFE0]' : 'text-[#0A0A0A]'
+        className={`font-sans text-[clamp(44px,6vw,84px)] font-black leading-none tracking-tighter ${
+          dark ? 'text-white' : 'text-black'
         }`}
-        style={{ fontFamily: '"Fraunces", Georgia, serif' }}
       >
         {prefix}
         {current.toLocaleString()}
         {suffix}
       </div>
       <div
-        className={`text-[12px] uppercase tracking-[0.14em] font-sans font-medium ${
-          dark ? 'text-[#EDE4D0]/70' : 'text-[#6B6357]'
+        className={`text-[11px] uppercase tracking-[0.2em] font-sans font-bold ${
+          dark ? 'text-zinc-400' : 'text-zinc-600'
         }`}
       >
         {label}
@@ -191,7 +190,7 @@ export const MetricBlock: React.FC<MetricBlockProps> = ({
       {context && (
         <p
           className={`text-[13px] font-sans font-normal leading-relaxed max-w-[260px] ${
-            dark ? 'text-[#EDE4D0]/50' : 'text-[#6B6357]/80'
+            dark ? 'text-zinc-400' : 'text-zinc-500'
           }`}
         >
           {context}
@@ -230,11 +229,11 @@ export const ScrollSection: React.FC<ScrollSectionProps> = ({
   return (
     <motion.section
       id={id}
-      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
       whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.18 }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      className={`relative w-full ${dark ? 'bg-[#111111] text-[#F5EFE0]' : 'bg-[#F5EFE0] text-[#0A0A0A]'} ${className}`}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      className={`relative w-full ${dark ? 'bg-black text-white' : 'bg-white text-black'} ${className}`}
     >
       {children}
     </motion.section>
@@ -262,9 +261,9 @@ export const AvatarStack: React.FC<AvatarStackProps> = ({
   const visible = avatars.slice(0, 3);
   const remaining = overflowCount > 0 ? overflowCount : Math.max(0, avatars.length - 3);
 
-  const ringClass = dark ? 'ring-[#1A1A1A]' : 'ring-[#F5EFE0]';
-  const itemBgClass = dark ? 'bg-[#2A2620] text-[#F5EFE0] border border-[#E8964A]/30' : 'bg-[#EDE4D0] text-[#0A0A0A]';
-  const overflowBgClass = dark ? 'bg-[#202020] text-[#E8964A] border border-white/10' : 'bg-[#222222] text-[#EDE4D0]';
+  const ringClass = dark ? 'ring-black' : 'ring-white';
+  const itemBgClass = dark ? 'bg-zinc-900 text-white border border-zinc-700' : 'bg-zinc-100 text-black border border-zinc-300';
+  const overflowBgClass = dark ? 'bg-zinc-800 text-zinc-300 border border-zinc-600' : 'bg-black text-white';
 
   return (
     <div className={`flex items-center -space-x-2 ${className}`}>
@@ -272,13 +271,13 @@ export const AvatarStack: React.FC<AvatarStackProps> = ({
         <div
           key={idx}
           title={`${av.name} — ${av.role || ''}`}
-          className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${itemBgClass} text-[11px] font-sans font-semibold uppercase shrink-0 shadow-sm`}
+          className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${itemBgClass} text-[11px] font-sans font-bold uppercase shrink-0 shadow-xs`}
         >
           {av.initials}
         </div>
       ))}
       {remaining > 0 && (
-        <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${overflowBgClass} text-[10px] font-sans font-medium shrink-0 shadow-sm`}>
+        <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full ring-2 ${ringClass} ${overflowBgClass} text-[10px] font-sans font-bold shrink-0 shadow-xs`}>
           +{remaining}
         </div>
       )}

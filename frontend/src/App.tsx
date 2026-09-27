@@ -9,9 +9,8 @@ import TutorChatPage from '@/pages/TutorChatPage';
 import QuizPage from '@/pages/QuizPage';
 import PublicVerificationPage from '@/pages/PublicVerificationPage';
 import DashboardLayout from '@/layout/DashboardLayout';
-import Nav from '@/sections/Nav';
-import Footer from '@/sections/Footer';
 import Skeleton from '@/components/ui/Skeleton';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 // Route-level lazy loading for heavier/infrequently first-visited pages
 const AdminDashboardPage = lazy(() => import('@/pages/AdminDashboardPage'));
@@ -40,10 +39,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] bg-[#F5EFE0]">
+      <div className="flex items-center justify-center min-h-[60vh] bg-white">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-full border-2 border-[#0A0A0A] border-t-transparent animate-spin" />
-          <p className="text-[#6B6357] text-sm font-medium font-sans">
+          <div className="h-8 w-8 rounded-none border-2 border-black border-t-transparent animate-spin" />
+          <p className="text-[#71717A] text-sm font-medium font-sans">
             Verifying administrative credentials…
           </p>
         </div>
@@ -70,18 +69,7 @@ export const AppContent: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
 
         {/* Route 02: Officer & Supervisor Authentication */}
-        <Route
-          path="/login"
-          element={
-            <div className="min-h-screen flex flex-col bg-[#F5EFE0] text-[#0A0A0A]">
-              <Nav />
-              <main className="flex-1 flex flex-col">
-                <LoginPage />
-              </main>
-              <Footer />
-            </div>
-          }
-        />
+        <Route path="/login" element={<LoginPage />} />
 
         {/* Route 03: Officer Competency Dashboard */}
         <Route
@@ -158,11 +146,13 @@ export const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 };
 

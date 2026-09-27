@@ -32,37 +32,37 @@ export const TrustMarquee: React.FC = () => {
   return (
     <section
       aria-label="Statutory Frameworks & Institutional Standards Registry"
-      className="group relative w-full bg-[#EDE4D0]/60 border-y border-[#D9CFBB] py-4 sm:py-5 overflow-hidden select-none transition-colors duration-300 hover:bg-[#EDE4D0]/80"
+      className="group relative w-full bg-white border-y border-[#E4E4E7] py-4 sm:py-5 overflow-hidden select-none"
     >
       {/* Edge Gradient Vignette Masks: Left & Right Seamless Fade */}
       <div
-        className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 sm:w-44 bg-gradient-to-r from-[#F5EFE0] via-[#F5EFE0]/85 to-transparent z-20"
+        className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 sm:w-44 bg-gradient-to-r from-white via-white/85 to-transparent z-20"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 sm:w-44 bg-gradient-to-l from-[#F5EFE0] via-[#F5EFE0]/85 to-transparent z-20"
+        className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 sm:w-44 bg-gradient-to-l from-white via-white/85 to-transparent z-20"
         aria-hidden="true"
       />
 
       {/* Institutional Metadata Header Bar */}
       <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)] mb-3">
-        <div className="flex items-center justify-between border-b border-[#D9CFBB]/70 pb-2.5">
-          <div className="flex items-center gap-2.5 text-[10.5px] font-mono tracking-[0.22em] uppercase text-[#6B6357]">
+        <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-2.5">
+          <div className="flex items-center gap-2.5 text-[10.5px] font-mono tracking-[0.22em] uppercase text-zinc-500">
             <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C97B5A] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C97B5A]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0E50B0] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0E50B0]" />
             </span>
-            <span className="font-semibold text-[#0A0A0A]">
+            <span className="font-bold text-black">
               Statutory Frameworks & Institutional Standards
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-4 text-[10px] font-mono tracking-[0.2em] uppercase text-[#8C8273]">
+          <div className="hidden md:flex items-center gap-4 text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-400 font-bold">
             <span className="flex items-center gap-1.5">
-              <span className="text-[#C9A24A]">◆</span>
+              <span className="text-[#0E50B0]">◆</span>
               <span>INTER-DEPARTMENTAL ACCREDITATION</span>
             </span>
-            <span className="text-[#D9CFBB]">•</span>
+            <span className="text-zinc-300">•</span>
             <span>GAZETTE COMPLIANT [REV. 2026]</span>
           </div>
         </div>
@@ -85,13 +85,13 @@ export const TrustMarquee: React.FC = () => {
           {CIVIL_ADMIN_AGENCIES.concat(CIVIL_ADMIN_AGENCIES).map((agency, idx) => (
             <div
               key={`admin-${idx}`}
-              className="flex items-center gap-3 text-[12px] sm:text-[12.5px] font-sans font-medium uppercase tracking-[0.16em] text-[#2D2821] transition-colors"
+              className="flex items-center gap-3 text-[12px] sm:text-[12.5px] font-sans font-bold uppercase tracking-[0.16em] text-zinc-700 transition-colors"
             >
-              <span className="text-[#C97B5A] text-[9px]" aria-hidden="true">
+              <span className="text-[#0E50B0] text-[9px]" aria-hidden="true">
                 ◆
               </span>
-              <span className="hover:text-[#0A0A0A]">{agency.name}</span>
-              <span className="text-[9.5px] font-mono tracking-widest text-[#8C8273] bg-[#E2D8C0]/70 px-1.5 py-0.5 rounded border border-[#D9CFBB]/90">
+              <span className="hover:text-black">{agency.name}</span>
+              <span className="text-[9.5px] font-mono tracking-widest text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded-sm border border-zinc-200">
                 {agency.code}
               </span>
             </div>
@@ -101,7 +101,7 @@ export const TrustMarquee: React.FC = () => {
 
       {/* Subtle Dividing Hairline */}
       <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)] my-1.5">
-        <div className="w-full h-[1px] bg-[#D9CFBB]/40" aria-hidden="true" />
+        <div className="w-full h-[1px] bg-[#E4E4E7]" aria-hidden="true" />
       </div>
 
       {/* Track 2: Digital Public Infrastructure & Technical Academies (Drifting Right) */}
@@ -121,13 +121,13 @@ export const TrustMarquee: React.FC = () => {
           {TECHNICAL_DIVISIONS.concat(TECHNICAL_DIVISIONS).map((division, idx) => (
             <div
               key={`tech-${idx}`}
-              className="flex items-center gap-3 text-[12px] sm:text-[12.5px] font-sans font-medium uppercase tracking-[0.16em] text-[#3D352B] transition-colors"
+              className="flex items-center gap-3 text-[12px] sm:text-[12.5px] font-sans font-bold uppercase tracking-[0.16em] text-zinc-700 transition-colors"
             >
-              <span className="text-[#C9A24A] text-[9px]" aria-hidden="true">
+              <span className="text-[#AF411E] text-[9px]" aria-hidden="true">
                 ◆
               </span>
-              <span className="hover:text-[#0A0A0A]">{division.name}</span>
-              <span className="text-[9.5px] font-mono tracking-widest text-[#8C8273] bg-[#E2D8C0]/70 px-1.5 py-0.5 rounded border border-[#D9CFBB]/90">
+              <span className="hover:text-black">{division.name}</span>
+              <span className="text-[9.5px] font-mono tracking-widest text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded-sm border border-zinc-200">
                 {division.code}
               </span>
             </div>

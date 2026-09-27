@@ -1,7 +1,23 @@
+import asyncio
+import logging
 import re
 from typing import Any
 from google import genai
 from app.core.config import settings
+
+logger = logging.getLogger("govskill.ai")
+
+_genai_client: genai.Client | None = None
+
+
+def get_genai_client() -> genai.Client | None:
+    """Returns a singleton genai.Client instance if GEMINI_API_KEY is configured."""
+    global _genai_client
+    if not settings.GEMINI_API_KEY:
+        return None
+    if _genai_client is None:
+        _genai_client = genai.Client(api_key=settings.GEMINI_API_KEY)
+    return _genai_client
 
 
 def extract_module_sections(content: str) -> list[str]:
@@ -242,17 +258,29 @@ EMPLOYEE QUESTION:
 Provide a helpful, direct, and professional answer strictly grounded in the training module content above.
 """
 
-    if settings.GEMINI_API_KEY:
+    client = get_genai_client()
+    if client is not None:
         try:
-            client = genai.Client(api_key=settings.GEMINI_API_KEY)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
+            response = await asyncio.wait_for(
+                client.aio.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                ),
+                timeout=6.0,
             )
-            if response and response.text:
+            if response and getattr(response, "text", None):
                 return response.text.strip(), "grounded"
-        except Exception:
-            pass
+        except asyncio.TimeoutError:
+            logger.warning(
+                "Gemini tutor call timed out after 6.0s for module '%s'. Engaging deterministic fallback.",
+                module_title,
+            )
+        except Exception as exc:
+            logger.warning(
+                "Gemini tutor call failed (%s: %s). Engaging deterministic fallback.",
+                type(exc).__name__,
+                exc,
+            )
 
     # Deterministic verified fallback answer when Gemini is unavailable
     fallback_text = get_deterministic_tutor_fallback(module_title, question, mode)
@@ -498,17 +526,29 @@ FAILURE DETAIL: {reason_str or "Field check failed validation criteria."}
 Write a short, polite, 1-2 sentence plain-language explanation to the citizen explaining why this rule failed and what simple corrective action they should take before formal submission.
 Do NOT decide whether the document passes or fails—simply explain the rule failure clearly.
 """
-    if settings.GEMINI_API_KEY:
+    client = get_genai_client()
+    if client is not None:
         try:
-            client = genai.Client(api_key=settings.GEMINI_API_KEY)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
+            response = await asyncio.wait_for(
+                client.aio.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                ),
+                timeout=4.0,
             )
-            if response and response.text:
+            if response and getattr(response, "text", None):
                 return response.text.strip()
-        except Exception:
-            pass
+        except asyncio.TimeoutError:
+            logger.warning(
+                "Gemini rule explanation call timed out after 4.0s for rule '%s'. Engaging deterministic fallback.",
+                failed_rule_name,
+            )
+        except Exception as exc:
+            logger.warning(
+                "Gemini rule explanation call failed (%s: %s). Engaging deterministic fallback.",
+                type(exc).__name__,
+                exc,
+            )
 
     # Deterministic plain-language fallback explanations per rule name
     if failed_rule_name == "Name present":

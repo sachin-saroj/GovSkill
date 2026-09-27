@@ -4,7 +4,7 @@ export interface DisplaySerifProps {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'span' | 'p';
   size?: 'xl' | 'lg' | 'md' | 'h2' | 'h3';
   text: string;
-  /** Exactly one word to receive editorial italic emphasis */
+  /** Single word receiving editorial emphasis */
   italicWord: string;
   className?: string;
   dark?: boolean;
@@ -19,16 +19,16 @@ export const DisplaySerif: React.FC<DisplaySerifProps> = ({
   dark = false,
 }) => {
   const sizeClasses = {
-    xl: 'text-[clamp(72px,11vw,140px)] leading-[0.96] tracking-[-0.03em]',
-    lg: 'text-[clamp(54px,7.5vw,104px)] leading-[1.0] tracking-[-0.025em]',
-    md: 'text-[clamp(38px,5vw,68px)] leading-[1.06] tracking-[-0.02em]',
-    h2: 'text-[clamp(32px,4vw,56px)] leading-[1.12] tracking-[-0.02em]',
-    h3: 'text-[clamp(24px,3vw,38px)] leading-[1.2] tracking-[-0.015em]',
+    xl: 'text-[clamp(64px,10vw,120px)] leading-[0.92] tracking-[-0.035em]',
+    lg: 'text-[clamp(44px,6.5vw,84px)] leading-[0.95] tracking-[-0.03em]',
+    md: 'text-[clamp(32px,4.5vw,56px)] leading-[1.02] tracking-[-0.025em]',
+    h2: 'text-[clamp(28px,3.5vw,48px)] leading-[1.08] tracking-[-0.02em]',
+    h3: 'text-[clamp(22px,2.5vw,34px)] leading-[1.15] tracking-[-0.015em]',
   }[size];
 
-  const colorClass = dark ? 'text-[#F5EFE0]' : 'text-[#0A0A0A]';
+  const colorClass = dark ? 'text-white' : 'text-black';
 
-  // Parse words and apply italic styling to the designated single word
+  // Parse words and apply clean emphasis to the designated word
   const words = text.split(/\s+/);
   const normalizedTarget = italicWord.toLowerCase().replace(/[^a-z0-9]/gi, '');
 
@@ -36,8 +36,7 @@ export const DisplaySerif: React.FC<DisplaySerifProps> = ({
 
   return (
     <Component
-      className={`font-serif font-normal ${sizeClasses} ${colorClass} ${className}`}
-      style={{ fontFamily: '"Fraunces", Georgia, serif' }}
+      className={`font-sans font-black uppercase ${sizeClasses} ${colorClass} ${className}`}
     >
       {words.map((word, index) => {
         const cleanWord = word.toLowerCase().replace(/[^a-z0-9]/gi, '');
@@ -47,9 +46,9 @@ export const DisplaySerif: React.FC<DisplaySerifProps> = ({
           foundMatch = true;
           return (
             <React.Fragment key={index}>
-              <em className="italic font-normal transition-all duration-300">
+              <span className="inline-block text-[#0E50B0] font-black transition-colors">
                 {word}
-              </em>{' '}
+              </span>{' '}
             </React.Fragment>
           );
         }
@@ -73,23 +72,86 @@ export const Eyebrow: React.FC<EyebrowProps> = ({
   dark = false,
   withRule = true,
 }) => {
-  const textColor = dark ? 'text-[#EDE4D0]/70' : 'text-[#6B6357]';
-  const ruleColor = dark ? 'bg-[#EDE4D0]/40' : 'bg-[#0A0A0A]/40';
+  const textColor = dark ? 'text-zinc-400' : 'text-zinc-500';
+  const ruleColor = dark ? 'bg-zinc-600' : 'bg-black';
 
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>
       {withRule && (
         <span
-          className={`w-4 h-[1px] shrink-0 ${ruleColor}`}
+          className={`w-3.5 h-[1.5px] shrink-0 ${ruleColor}`}
           aria-hidden="true"
         />
       )}
       <span
-        className={`text-[11px] font-sans font-medium uppercase tracking-[0.2em] ${textColor} select-none`}
+        className={`text-[11px] font-sans font-bold uppercase tracking-[0.25em] ${textColor} select-none`}
       >
         {children}
       </span>
     </div>
+  );
+};
+
+export interface DisplayNumeralProps {
+  number: string | number;
+  label?: string;
+  className?: string;
+  size?: 'xl' | 'lg' | 'md';
+}
+
+export const DisplayNumeral: React.FC<DisplayNumeralProps> = ({
+  number,
+  label,
+  className = '',
+  size = 'xl',
+}) => {
+  const sizeClasses = {
+    xl: 'text-[clamp(56px,8vw,100px)]',
+    lg: 'text-[clamp(40px,6vw,72px)]',
+    md: 'text-[clamp(28px,4vw,48px)]',
+  }[size];
+
+  const formatted = typeof number === 'number' && number < 10 ? `0${number}` : `${number}`;
+
+  return (
+    <div className={`inline-flex flex-col leading-none ${className}`}>
+      {label && (
+        <span className="text-[10px] font-bold tracking-[0.25em] text-zinc-500 uppercase mb-1">
+          {label}
+        </span>
+      )}
+      <span className={`font-sans font-black tracking-tighter text-black ${sizeClasses}`}>
+        {formatted}
+      </span>
+    </div>
+  );
+};
+
+export interface BrokenLetterProps {
+  word: string;
+  className?: string;
+  color?: 'rust' | 'orange' | 'blue' | 'black';
+}
+
+export const BrokenLetter: React.FC<BrokenLetterProps> = ({
+  word,
+  className = '',
+  color = 'orange',
+}) => {
+  const colorMap = {
+    rust: 'text-[#AF411E]',
+    orange: 'text-[#EE8148]',
+    blue: 'text-[#0E50B0]',
+    black: 'text-black',
+  };
+
+  return (
+    <span
+      className={`font-sans font-black uppercase select-none tracking-[0.5em] inline-block ${colorMap[color]} ${className}`}
+      aria-label={word}
+    >
+      {word.split('').join(' ')}
+    </span>
   );
 };
 
@@ -112,18 +174,18 @@ export const BodyText: React.FC<BodyTextProps> = ({
 }) => {
   const sizeClass = {
     lg: 'text-[clamp(16px,1.2vw,19px)] leading-[1.65]',
-    base: 'text-[16px] leading-[1.62]',
+    base: 'text-[15px] leading-[1.6]',
     sm: 'text-[14px] leading-[1.55]',
     xs: 'text-[12px] leading-[1.5]',
   }[size];
 
   const colorClass = dark
     ? muted
-      ? 'text-[#F5EFE0]/70'
-      : 'text-[#F5EFE0]'
+      ? 'text-zinc-400'
+      : 'text-white'
     : muted
-    ? 'text-[#6B6357]'
-    : 'text-[#0A0A0A]';
+    ? 'text-[#71717A]'
+    : 'text-black';
 
   return (
     <Component
@@ -146,15 +208,14 @@ export const PullQuote: React.FC<PullQuoteProps> = ({
   className = '',
 }) => {
   const colorClass = {
-    terracotta: 'text-[#C97B5A]',
-    ochre: 'text-[#C9A24A]',
-    muted: 'text-[#6B6357]',
+    terracotta: 'text-[#AF411E]',
+    ochre: 'text-[#EE8148]',
+    muted: 'text-[#71717A]',
   }[variant];
 
   return (
     <p
-      className={`font-serif italic text-[clamp(15px,1.2vw,18px)] leading-relaxed ${colorClass} ${className}`}
-      style={{ fontFamily: '"Fraunces", Georgia, serif' }}
+      className={`font-sans font-medium text-[clamp(15px,1.2vw,18px)] leading-relaxed border-l-2 border-current pl-4 ${colorClass} ${className}`}
     >
       {children}
     </p>

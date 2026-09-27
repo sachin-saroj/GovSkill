@@ -105,7 +105,7 @@ describe('Editorial LandingPage Rebuild', () => {
 
     expect(screen.getAllByText(/Serve/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/better./i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByRole('button', { name: /Begin Document Pre-Check/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Get Started/i })).toBeInTheDocument();
     expect(screen.getByText(/DPDP Act 2023 Compliant • Statutory Data Safeguards/i)).toBeInTheDocument();
   });
 });

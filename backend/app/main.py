@@ -1,7 +1,9 @@
+import logging
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.routes import (
     admin,
@@ -16,6 +18,9 @@ from app.api.routes import (
     tutor,
 )
 from app.core.config import settings
+from app.db.session import check_db_health
+
+logger = logging.getLogger("govskill")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -43,6 +48,46 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     )
 
 
+@app.exception_handler(SQLAlchemyError)
+async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
+    logger.error(
+        "Database exception processing %s %s: %s",
+        request.method,
+        request.url.path,
+        exc,
+        exc_info=True,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={
+            "error": {
+                "code": "DATABASE_ERROR",
+                "message": "Database service is temporarily unavailable. Please retry shortly.",
+            }
+        },
+    )
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logger.error(
+        "Unhandled server exception processing %s %s: %s",
+        request.method,
+        request.url.path,
+        exc,
+        exc_info=True,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "An unexpected error occurred. Please retry later.",
+            }
+        },
+    )
+
+
 app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(modules.router, prefix=settings.API_V1_STR)
 app.include_router(tutor.router, prefix=settings.API_V1_STR)
@@ -58,4 +103,18 @@ app.include_router(reports.router, prefix=settings.API_V1_STR)
 @app.get("/health", tags=["health"])
 @app.get(f"{settings.API_V1_STR}/health", tags=["health"])
 async def health_check():
-    return {"status": "ok", "app": settings.PROJECT_NAME}
+    db_healthy = await check_db_health()
+    if not db_healthy:
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "status": "degraded",
+                "app": settings.PROJECT_NAME,
+                "database": "disconnected",
+            },
+        )
+    return {
+        "status": "ok",
+        "app": settings.PROJECT_NAME,
+        "database": "connected",
+    }

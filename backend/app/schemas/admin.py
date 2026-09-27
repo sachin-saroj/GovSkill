@@ -49,3 +49,19 @@ class QuestionUpdate(BaseModel):
 
 class AdminResetPasswordRequest(BaseModel):
     new_password: str = Field(min_length=6)
+
+
+class AdminUserStatusRequest(BaseModel):
+    is_active: bool
+
+
+class DocumentPurgeResponse(BaseModel):
+    status: str
+    retention_days: int
+    cutoff_date: str
+    records_purged: int
+    files_deleted: int
+    bytes_reclaimed: int
+    errors_count: int
+    errors: list[str]
+

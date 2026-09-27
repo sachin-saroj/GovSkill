@@ -5,23 +5,29 @@ import { IllustrationFrame } from '@/components/IllustrationFrame';
 
 export const FeatureB: React.FC = () => {
   return (
-    <section id="curriculum" className="w-full bg-[#F5EFE0] py-[clamp(80px,12vh,160px)] border-t border-[#D9CFBB]/70">
+    <section id="curriculum" className="w-full bg-white py-[clamp(80px,12vh,160px)] border-t border-[#E4E4E7]">
       <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)]">
         {/* Mirrored Asymmetric Split: 5 Cols Left (Content), 7 Cols Right (Dominant UI Frame) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Heading, Body, CTA Link, and Terracotta Pull-Quote (Max 32ch) */}
+          {/* Left Column: Heading, Body, CTA Link, and Cobalt Pull-Quote (Max 32ch) */}
           <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
-            <Eyebrow>Officer Competency Academy</Eyebrow>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs font-bold text-[#0E50B0] tracking-widest uppercase">
+                PART. 06
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0E50B0]" />
+              <Eyebrow>Officer Competency Academy</Eyebrow>
+            </div>
 
             <DisplaySerif
               as="h2"
               size="md"
               text="Certifying public officers through rigorous evaluation."
               italicWord="rigorous"
-              className="text-[#0A0A0A] leading-[1.12]"
+              className="text-black leading-[1.12] tracking-tight font-black uppercase"
             />
 
-            <BodyText size="base" muted className="text-[#6B6357] leading-relaxed">
+            <BodyText size="base" muted className="text-[#71717A] leading-relaxed">
               Evaluation criteria remain strictly server-side. Question scoring is executed
               in isolated API routes, and passing scores generate tamper-evident HMAC-SHA256
               signed digital credentials verifiable across district collectorates.
@@ -31,24 +37,21 @@ export const FeatureB: React.FC = () => {
               <Link
                 to="/module"
                 role="button"
-                className="group relative inline-flex items-center text-[15px] font-medium text-[#0A0A0A] py-1 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2 outline-none"
+                className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-none bg-black text-white text-xs font-bold uppercase tracking-[0.16em] hover:bg-[#0E50B0] transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-black"
               >
-                <span className="relative">
-                  View Administrative Curriculum
-                  <span
-                    className="absolute left-0 -bottom-0.5 w-full h-[1px] bg-[#0A0A0A] origin-left scale-x-0 transition-transform duration-250 ease-out group-hover:scale-x-100"
-                    aria-hidden="true"
-                  />
-                </span>
-                <span className="ml-2 transition-transform duration-200 group-hover:translate-x-1">
+                <span>View Administrative Curriculum</span>
+                <span className="transition-transform duration-200 group-hover:translate-x-1">
                   →
                 </span>
               </Link>
 
-              {/* Small Italic Serif Pull-Quote Below CTA: Max 32ch, Muted Terracotta */}
-              <p className="font-serif italic text-[14px] sm:text-[15px] text-[#C97B5A] leading-relaxed max-w-[32ch] pt-2">
-                “Competency authenticated at the server cannot be diluted or rescinded.”
-              </p>
+              {/* 50 Ambitious Cobalt Accent Bar & Pull-Quote */}
+              <div className="pt-2">
+                <div className="w-12 h-[3px] bg-[#0E50B0] mb-4" aria-hidden="true" />
+                <p className="font-sans font-semibold text-[13px] sm:text-[14px] text-[#0E50B0] tracking-wide uppercase leading-relaxed max-w-[32ch]">
+                  “Competency authenticated at the server cannot be diluted or rescinded.”
+                </p>
+              </div>
             </div>
           </div>
 

@@ -165,47 +165,50 @@ export const ModulePage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-7xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
-      {/* 1. Compact Professional Module Header */}
+      {/* 1. 50 Ambitious Editorial Module Header */}
       <motion.div variants={fadeUpVariants}>
-        <div className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-2 max-w-3xl">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#E4D9C3] border border-[#D9CFBB] text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#0A0A0A]">
-                  <BookOpen className="h-3.5 w-3.5 text-[#C9A24A]" />
+        <div className="bg-white border border-[#E4E4E7] p-6 sm:p-8 shadow-none space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-3 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-2 px-3 py-1 border border-[#0E50B0] bg-[#0E50B0]/5 text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-[#0E50B0]">
+                  <BookOpen className="h-3.5 w-3.5 text-[#0E50B0]" />
                   <span>Administrative Training Curriculum</span>
                 </span>
 
                 {isCurrentCompleted ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30">
-                    <CheckCircle2 className="h-3 w-3 text-[#2A5B4A]" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-300">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                     <span>Curriculum Completed</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#E4D9C3] text-[#0A0A0A] border border-[#D9CFBB]">
+                  <span className="inline-flex items-center px-3 py-1 text-[11px] font-mono font-bold uppercase tracking-wider bg-zinc-100 text-black border border-zinc-200">
                     In Progress
                   </span>
                 )}
               </div>
 
-              <h1 className="font-serif font-bold text-3xl sm:text-4xl tracking-tight text-[#0A0A0A] leading-tight">
+              <h1 className="font-sans font-black text-3xl sm:text-4xl tracking-tight text-black uppercase leading-tight">
                 {selectedModule?.title || 'Digital Document Handling'}
               </h1>
 
-              <p className="text-body text-[#6B6357] leading-relaxed font-normal">
+              <p className="text-body text-[#71717A] leading-relaxed font-normal">
                 Master official workflows for reviewing, verifying, and indexing citizen documents with zero errors.
               </p>
             </div>
 
-            <div className="shrink-0 flex items-center gap-3">
-              <div className="bg-[#F5EFE0] border border-[#D9CFBB] rounded-xl p-3 text-center min-w-[120px]">
-                <span className="text-[10px] font-mono uppercase font-semibold text-[#6B6357] block">
-                  Module
+            <div className="shrink-0 flex items-center gap-4">
+              <div className="bg-white border border-[#E4E4E7] p-4 text-center min-w-[130px]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#71717A] tracking-widest block">
+                  MODULE
                 </span>
-                <span className="font-serif font-bold text-xl text-[#0A0A0A]">
-                  {modules.findIndex((m) => m.id === selectedModule?.id) + 1} of {modules.length}
+                <span className="font-mono font-black text-2xl text-black">
+                  {String(modules.findIndex((m) => m.id === selectedModule?.id) + 1).padStart(2, '0')}{' '}
+                  <span className="text-sm font-normal text-[#71717A]">
+                    / {String(modules.length).padStart(2, '0')}
+                  </span>
                 </span>
               </div>
             </div>
@@ -220,7 +223,7 @@ export const ModulePage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-civic-xl bg-emerald-50 border border-emerald-300 text-caption font-semibold text-emerald-800 flex items-center gap-2 shadow-civic-xs"
+            className="p-4 border border-emerald-500 bg-emerald-50 text-xs font-mono font-bold uppercase tracking-wide text-emerald-900 flex items-center gap-2"
           >
             <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>{statusMessage}</span>
@@ -228,8 +231,8 @@ export const ModulePage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Workspace Grid (Main Reader + Sidebar) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Workspace Grid (Main Reader + Sidebar): 30/70 Asymmetric Disciplined Editorial Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Main Lesson Reader (8 cols on lg) */}
         <motion.div variants={fadeUpVariants} className="lg:col-span-8 space-y-6">
           {selectedModule && (

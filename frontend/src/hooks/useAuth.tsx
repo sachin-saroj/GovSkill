@@ -22,15 +22,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.get<User>('/auth/me');
       setUser(res.data);
       return res.data;
-    } catch {
-      localStorage.removeItem('token');
-      setToken(null);
-      setUser(null);
+    } catch (err: any) {
+      // Differentiate credential failure from temporary network or infrastructure failure:
+      // Invalidate session ONLY if server explicitly rejected credentials (401/403 or Unauthorized)
+      const isAuthError =
+        err?.response?.status === 401 ||
+        err?.response?.status === 403 ||
+        (typeof err?.message === 'string' && err.message.toLowerCase().includes('unauthorized'));
+
+      if (isAuthError) {
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+        return null;
+      }
+      // For network drops, timeouts, or 5xx server glitches, preserve token in localStorage
       return null;
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setToken(null);
+      setUser(null);
+      setIsLoading(false);
+    };
+
+    window.addEventListener('govskill:session_expired', handleSessionExpired);
+    return () => {
+      window.removeEventListener('govskill:session_expired', handleSessionExpired);
+    };
+  }, []);
 
   useEffect(() => {
     if (token) {

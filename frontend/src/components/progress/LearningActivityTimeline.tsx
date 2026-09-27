@@ -27,17 +27,17 @@ export const LearningActivityTimeline: React.FC<LearningActivityTimelineProps> =
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'certification':
-        return <Award className="h-3.5 w-3.5 text-emerald-600" />;
+        return <Award className="h-3.5 w-3.5 text-emerald-700" />;
       case 'quiz_improved':
-        return <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />;
+        return <TrendingUp className="h-3.5 w-3.5 text-emerald-700" />;
       case 'quiz_attempt':
-        return <Target className="h-3.5 w-3.5 text-civic-700" />;
+        return <Target className="h-3.5 w-3.5 text-[#0E50B0]" />;
       case 'lesson_completed':
-        return <BookCheck className="h-3.5 w-3.5 text-blue-600" />;
+        return <BookCheck className="h-3.5 w-3.5 text-[#0E50B0]" />;
       case 'lesson_started':
-        return <PlayCircle className="h-3.5 w-3.5 text-slate-600" />;
+        return <PlayCircle className="h-3.5 w-3.5 text-[#71717A]" />;
       default:
-        return <Clock className="h-3.5 w-3.5 text-slate-500" />;
+        return <Clock className="h-3.5 w-3.5 text-[#71717A]" />;
     }
   };
 
@@ -48,60 +48,60 @@ export const LearningActivityTimeline: React.FC<LearningActivityTimelineProps> =
       case 'quiz_improved':
         return 'bg-emerald-50 text-emerald-800 border-emerald-300';
       case 'quiz_attempt':
-        return 'bg-civic-50 text-civic-800 border-civic-200';
+        return 'bg-blue-50 text-[#0E50B0] border-blue-200';
       case 'lesson_completed':
-        return 'bg-blue-50 text-blue-800 border-blue-200';
+        return 'bg-blue-50 text-[#0E50B0] border-blue-200';
       case 'lesson_started':
-        return 'bg-slate-100 text-slate-700 border-slate-200';
+        return 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]';
       default:
-        return 'bg-slate-50 text-slate-600 border-slate-200';
+        return 'bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]';
     }
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Activity className="h-4 w-4 text-[#C9A24A]" />
-        <h3 className="font-serif font-bold text-xl text-[#0A0A0A] tracking-tight">
+        <Activity className="h-4 w-4 text-[#0E50B0]" />
+        <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
           Learning & Assessment Audit Trail
         </h3>
       </div>
 
       {activities.length === 0 ? (
-        <Card className="p-6 rounded-2xl text-center border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
-          <p className="text-caption text-[#6B6357]">
+        <Card className="p-6 rounded-none text-center border border-[#E4E4E7] bg-white shadow-none">
+          <p className="text-caption text-[#71717A]">
             No recent activity recorded yet. Read module lessons or submit assessments to build your activity audit log.
           </p>
         </Card>
       ) : (
-        <Card className="p-6 rounded-2xl border border-[#D9CFBB] bg-[#EDE4D0] shadow-sm">
-          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[#D9CFBB]">
+        <Card className="p-6 rounded-none border border-[#E4E4E7] bg-white shadow-none">
+          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[#E4E4E7]">
             {activities.map((act, idx) => (
               <div key={idx} className="relative group">
                 {/* Dot */}
-                <div className="absolute -left-[27px] top-0.5 h-6 w-6 rounded-full bg-[#F5EFE0] border-2 border-[#D9CFBB] group-hover:border-[#0A0A0A] flex items-center justify-center transition-colors shadow-sm">
+                <div className="absolute -left-[27px] top-0.5 h-6 w-6 rounded-none bg-white border border-[#E4E4E7] group-hover:border-[#09090B] flex items-center justify-center transition-colors shadow-none">
                   {getActivityIcon(act.activity_type)}
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-caption font-semibold text-[#0A0A0A]">
+                      <span className="text-caption font-bold text-[#09090B]">
                         {act.title}
                       </span>
                       <span
-                        className={`text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getActivityTag(
+                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 border ${getActivityTag(
                           act.activity_type
                         )}`}
                       >
                         {act.module_title}
                       </span>
                     </div>
-                    <span className="text-caption font-mono text-[#6B6357]">
+                    <span className="text-[11px] font-mono text-[#71717A]">
                       {formatDate(act.timestamp)}
                     </span>
                   </div>
-                  <p className="text-caption text-[#6B6357]">
+                  <p className="text-caption text-[#52525B]">
                     {act.detail}
                   </p>
                 </div>

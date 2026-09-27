@@ -60,64 +60,64 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       className="max-w-3xl mx-auto py-8 sm:py-12 px-4 sm:px-6 space-y-8"
     >
       {/* Primary Score & Status Seal Card */}
-      <Card className="text-center p-8 sm:p-10 space-y-6 border-[#D9CFBB] bg-[#EDE4D0] rounded-2xl shadow-xs">
+      <Card className="text-center p-8 sm:p-10 space-y-6 border-[#E4E4E7] bg-white rounded-none shadow-none">
         {/* Outcome Seal */}
         <motion.div
           variants={scaleInVariants}
-          className={`inline-flex p-4 sm:p-5 rounded-2xl shadow-xs border ${
+          className={`inline-flex p-4 sm:p-5 rounded-none border ${
             passed
-              ? 'bg-[#F5EFE0] text-[#2A5B4A] border-[#2A5B4A]/30'
-              : 'bg-[#F5EFE0] text-[#C97B5A] border-[#C97B5A]/30'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+              : 'bg-orange-50 text-[#AF411E] border-[#EE8148]'
           }`}
         >
           <Award className="h-12 w-12" />
         </motion.div>
 
         <motion.div variants={fadeUpVariants} className="space-y-2">
-          <div className="flex items-center justify-center gap-2 text-xs font-mono uppercase tracking-widest text-[#6B6357]">
+          <div className="flex items-center justify-center gap-2 text-xs font-mono uppercase tracking-widest text-[#71717A] font-bold">
             <History className="h-3.5 w-3.5" />
             <span>Attempt #{attempt_number} Evaluation</span>
           </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#0A0A0A] tracking-tight">
+          <h2 className="font-sans text-2xl sm:text-3xl font-black uppercase text-black tracking-tight">
             {passed ? 'Assessment Certified!' : 'Assessment Completed — Review Required'}
           </h2>
-          <p className="text-sm text-[#6B6357] max-w-lg mx-auto leading-relaxed font-sans">
-            Your competency assessment for <strong className="text-[#0A0A0A]">{moduleTitle}</strong> has been evaluated server-side and recorded in your official employee profile.
+          <p className="text-sm text-[#71717A] max-w-lg mx-auto leading-relaxed font-sans">
+            Your competency assessment for <strong className="text-black font-bold">{moduleTitle}</strong> has been evaluated server-side and recorded in your official employee profile.
           </p>
         </motion.div>
 
         {/* Score & Certification Card */}
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] max-w-md mx-auto shadow-xs space-y-4"
+          className="p-6 rounded-none bg-white border border-[#E4E4E7] max-w-md mx-auto space-y-4"
         >
-          <div className="flex items-center justify-between text-xs text-[#6B6357] font-mono border-b border-[#D9CFBB] pb-2">
-            <span>Score: <strong className="font-bold text-[#0A0A0A]">{score} of {total}</strong></span>
-            <span>Passing Threshold: <strong className="font-bold text-[#0A0A0A]">75%</strong></span>
+          <div className="flex items-center justify-between text-xs text-[#71717A] font-mono border-b border-[#E4E4E7] pb-2">
+            <span>Score: <strong className="font-bold text-black">{score} of {total}</strong></span>
+            <span>Passing Threshold: <strong className="font-bold text-black">75%</strong></span>
           </div>
 
-          <div className="font-serif text-5xl font-normal text-[#0A0A0A] tracking-tight py-1">
+          <div className="font-mono text-6xl font-black text-black tracking-tight py-1">
             {percentage}%
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             <span
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-mono uppercase tracking-wider rounded-full border ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-mono uppercase tracking-wider rounded-none border ${
                 passed
-                  ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40 font-semibold'
-                  : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40 font-semibold'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold'
+                  : 'bg-orange-50 text-[#AF411E] border-[#EE8148] font-bold'
               }`}
             >
               {passed ? (
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
               ) : (
-                <AlertTriangle className="h-3.5 w-3.5 text-[#C97B5A]" />
+                <AlertTriangle className="h-3.5 w-3.5 text-[#EE8148]" />
               )}
               <span>{passed ? 'Certified Competency' : 'Needs Review (<75%)'}</span>
             </span>
 
-            <span className="inline-flex items-center gap-1 px-3.5 py-1 text-xs font-mono rounded-full bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB]">
-              <TrendingUp className="h-3 w-3 text-[#6B6357]" />
+            <span className="inline-flex items-center gap-1 px-3.5 py-1 text-xs font-mono rounded-none bg-zinc-100 text-black border border-[#E4E4E7]">
+              <TrendingUp className="h-3 w-3 text-[#71717A]" />
               <span>Best Score: {best_score}/{total} ({bestPercentage}%)</span>
             </span>
           </div>
@@ -126,14 +126,14 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
             <motion.div
               whileHover={shouldReduceMotion ? {} : { scale: 1.01 }}
               whileTap={shouldReduceMotion ? {} : { scale: 0.99 }}
-              className="pt-2 border-t border-[#D9CFBB]"
+              className="pt-2 border-t border-[#E4E4E7]"
             >
               <button
                 type="button"
                 onClick={onViewCertificate}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#2A5B4A] hover:bg-[#2A5B4A]/90 text-[#F5EFE0] text-xs font-mono uppercase tracking-wider font-semibold rounded-full shadow-xs transition-all cursor-pointer min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-black hover:bg-[#0E50B0] text-white text-xs font-mono uppercase tracking-wider font-bold rounded-none shadow-none transition-all cursor-pointer min-h-[44px]"
               >
-                <Award className="h-4 w-4 text-[#F5EFE0]" />
+                <Award className="h-4 w-4 text-white" />
                 <span>View & Print Official Certificate</span>
               </button>
             </motion.div>
@@ -144,33 +144,33 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       {/* Competency-Level Breakdown Card */}
       {competency_breakdown && competency_breakdown.length > 0 && (
         <motion.div variants={fadeUpVariants}>
-          <Card className="p-6 sm:p-8 space-y-5 border-[#D9CFBB] bg-[#EDE4D0] rounded-2xl shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
-              <div className="flex items-center gap-2 text-[#0A0A0A] font-serif text-lg tracking-tight">
-                <Layers className="h-4 w-4 text-[#2A5B4A]" />
+          <Card className="p-6 sm:p-8 space-y-6 border-[#E4E4E7] bg-white rounded-none shadow-none">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-4">
+              <div className="flex items-center gap-2 text-black font-sans font-bold text-lg uppercase tracking-tight">
+                <Layers className="h-4 w-4 text-[#0E50B0]" />
                 <span>Competency Breakdown</span>
               </div>
-              <span className="text-xs font-mono text-[#6B6357]">
+              <span className="text-xs font-mono font-bold text-[#71717A] uppercase tracking-wider">
                 {competency_breakdown.length} Competencies Evaluated
               </span>
             </div>
 
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               {competency_breakdown.map((item, idx) => (
-                <div key={idx} className="p-4 sm:p-5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2.5">
+                <div key={idx} className="p-5 rounded-none bg-white border border-[#E4E4E7] space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <span className="font-serif text-sm font-medium text-[#0A0A0A]">{item.competency}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs text-[#6B6357]">
+                    <span className="font-sans text-sm font-bold text-black uppercase tracking-tight">{item.competency}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs font-bold text-black">
                         {item.score}/{item.total} ({item.percentage}%)
                       </span>
                       <span
-                        className={`text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-none border ${
                           item.mastery_level === 'Mastered' || item.passed
-                            ? 'bg-[#EDE4D0] text-[#2A5B4A] border-[#2A5B4A]/40'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
                             : item.mastery_level === 'Operational'
-                            ? 'bg-[#EDE4D0] text-[#0A0A0A] border-[#D9CFBB]'
-                            : 'bg-[#EDE4D0] text-[#C97B5A] border-[#C97B5A]/40'
+                            ? 'bg-zinc-100 text-black border-zinc-300'
+                            : 'bg-orange-50 text-[#AF411E] border-[#EE8148]'
                         }`}
                       >
                         {item.mastery_level || (item.passed ? 'Mastered' : 'Needs Review')}
@@ -178,38 +178,38 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="w-full bg-[#EDE4D0] rounded-full h-2 overflow-hidden border border-[#D9CFBB]/60">
+                  <div className="w-full bg-zinc-100 rounded-none h-1.5 overflow-hidden border border-[#E4E4E7]">
                     <div
-                      className={`h-2 rounded-full transition-all duration-500 ${
+                      className={`h-full transition-all duration-500 ${
                         item.mastery_level === 'Mastered' || item.passed
-                          ? 'bg-[#2A5B4A]'
+                          ? 'bg-emerald-600'
                           : item.mastery_level === 'Operational'
-                          ? 'bg-[#0A0A0A]'
-                          : 'bg-[#C97B5A]'
+                          ? 'bg-black'
+                          : 'bg-[#EE8148]'
                       }`}
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
 
                   {!item.passed && (
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#D9CFBB] text-xs">
-                      <span className="text-[#C97B5A] font-sans">
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#E4E4E7] text-xs">
+                      <span className="text-[#AF411E] font-sans font-medium">
                         Targeted review recommended before retaking.
                       </span>
                       <div className="flex items-center gap-2">
                         <Link
                           to={`/tutor?competency=${encodeURIComponent(item.competency)}&mode=remediation&prompt=${encodeURIComponent(`I need help understanding ${item.competency}. Can you explain the core rules and give me a practice scenario?`)}`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EDE4D0] hover:bg-[#EDE4D0]/80 text-[#0A0A0A] border border-[#D9CFBB] font-mono text-xs transition-colors shadow-xs"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-none bg-white hover:bg-zinc-50 text-black border border-[#E4E4E7] font-mono text-xs font-bold uppercase tracking-wider transition-colors"
                         >
-                          <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
+                          <Sparkles className="h-3.5 w-3.5 text-[#0E50B0]" />
                           <span>Ask AI Tutor</span>
                         </Link>
                         <button
                           type="button"
                           onClick={onGoToLessons}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EDE4D0] hover:bg-[#EDE4D0]/80 text-[#0A0A0A] border border-[#D9CFBB] font-mono text-xs transition-colors cursor-pointer shadow-xs"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-none bg-white hover:bg-zinc-50 text-black border border-[#E4E4E7] font-mono text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                         >
-                          <BookOpen className="h-3.5 w-3.5 text-[#2A5B4A]" />
+                          <BookOpen className="h-3.5 w-3.5 text-[#0E50B0]" />
                           <span>Review Lesson</span>
                         </button>
                       </div>
@@ -225,44 +225,44 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       {/* Strengths & Weak Areas Grid */}
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Strengths */}
-        <Card className="p-6 border-[#D9CFBB] bg-[#EDE4D0] space-y-3.5 rounded-2xl shadow-xs">
-          <div className="flex items-center gap-2 text-[#2A5B4A] font-serif text-base tracking-tight">
-            <CheckCircle2 className="h-4 w-4 text-[#2A5B4A]" />
+        <Card className="p-6 border-[#E4E4E7] bg-white space-y-4 rounded-none shadow-none">
+          <div className="flex items-center gap-2 text-emerald-700 font-sans font-bold text-base uppercase tracking-tight">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             <span>Validated Strengths</span>
           </div>
           {strengths && strengths.length > 0 ? (
-            <ul className="space-y-2 text-xs font-sans text-[#0A0A0A]">
+            <ul className="space-y-2 text-xs font-sans text-black">
               {strengths.map((st, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-[#F5EFE0] p-2.5 rounded-lg border border-[#D9CFBB]">
-                  <span className="text-[#2A5B4A] font-mono font-bold">✓</span>
+                <li key={idx} className="flex items-start gap-2 bg-emerald-50/50 p-3 rounded-none border border-emerald-200">
+                  <span className="text-emerald-700 font-mono font-bold">✓</span>
                   <span>{st}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-[#6B6357] italic">
+            <p className="text-xs text-[#71717A] italic">
               No strengths validated above 75% on this attempt.
             </p>
           )}
         </Card>
 
         {/* Weak Areas */}
-        <Card className="p-6 border-[#D9CFBB] bg-[#EDE4D0] space-y-3.5 rounded-2xl shadow-xs">
-          <div className="flex items-center gap-2 text-[#C97B5A] font-serif text-base tracking-tight">
-            <AlertTriangle className="h-4 w-4 text-[#C97B5A]" />
+        <Card className="p-6 border-[#E4E4E7] bg-white space-y-4 rounded-none shadow-none">
+          <div className="flex items-center gap-2 text-[#AF411E] font-sans font-bold text-base uppercase tracking-tight">
+            <AlertTriangle className="h-4 w-4 text-[#EE8148]" />
             <span>Areas for Remediation</span>
           </div>
           {weak_areas && weak_areas.length > 0 ? (
-            <ul className="space-y-2 text-xs font-sans text-[#0A0A0A]">
+            <ul className="space-y-2 text-xs font-sans text-black">
               {weak_areas.map((wa, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-[#F5EFE0] p-2.5 rounded-lg border border-[#D9CFBB]">
-                  <span className="text-[#C97B5A] font-mono font-bold">!</span>
+                <li key={idx} className="flex items-start gap-2 bg-orange-50/50 p-3 rounded-none border border-[#EE8148]/30">
+                  <span className="text-[#AF411E] font-mono font-bold">!</span>
                   <span>{wa}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-[#2A5B4A] font-sans font-medium">
+            <p className="text-xs text-emerald-700 font-sans font-semibold">
               No skill gaps detected in this module!
             </p>
           )}
@@ -270,29 +270,29 @@ export const QuizResultView: React.FC<QuizResultViewProps> = ({
       </motion.div>
 
       {/* Action Recommendation Banner */}
-      <motion.div variants={fadeUpVariants} className="p-6 sm:p-7 rounded-2xl bg-[#0A0A0A] text-[#F5EFE0] border border-[#0A0A0A] space-y-2 shadow-xs">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#C9A24A]">
-          <Sparkles className="h-4 w-4" />
+      <motion.div variants={fadeUpVariants} className="p-6 sm:p-7 rounded-none bg-black text-white border border-black space-y-2 shadow-none">
+        <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#0E50B0]">
+          <Sparkles className="h-4 w-4 text-white" />
           <span>Recommended Next Action:</span>
         </div>
-        <p className="text-sm font-sans text-[#EDE4D0] leading-relaxed font-normal">
+        <p className="text-sm font-sans text-[#A1A1AA] leading-relaxed font-normal">
           {recommended_action}
         </p>
       </motion.div>
 
       {/* Footer Navigation Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-[#D9CFBB]">
-        <Button variant="outline" size="md" onClick={onRetake} className="min-h-[44px] rounded-full px-5">
+      <motion.div variants={fadeUpVariants} className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[#E4E4E7]">
+        <Button variant="outline" size="md" onClick={onRetake} className="min-h-[44px] rounded-none px-5 border-[#E4E4E7] text-black hover:bg-zinc-100 font-mono text-xs font-bold uppercase tracking-wider">
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
           <span>Retake Assessment</span>
         </Button>
 
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" size="md" onClick={onGoToProgress} className="min-h-[44px] rounded-full px-5">
-            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#C9A24A]" />
+          <Button variant="outline" size="md" onClick={onGoToProgress} className="min-h-[44px] rounded-none px-5 border-[#E4E4E7] text-black hover:bg-zinc-100 font-mono text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#0E50B0]" />
             <span>View My Skills Dashboard</span>
           </Button>
-          <Button size="md" onClick={onGoToLessons} className="min-h-[44px] rounded-full px-5">
+          <Button size="md" onClick={onGoToLessons} className="min-h-[44px] rounded-none px-5 bg-black hover:bg-[#0E50B0] text-white font-mono text-xs font-bold uppercase tracking-wider">
             <BookOpen className="h-3.5 w-3.5 mr-1.5" />
             <span>Back to Lessons</span>
             <ArrowRight className="h-3.5 w-3.5 ml-1.5" />

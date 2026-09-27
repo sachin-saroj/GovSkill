@@ -1,65 +1,95 @@
 import React from 'react';
-import { Eyebrow, FigureCaption } from '@/design-system/typography';
-import { IllustrationFrame } from '@/components/IllustrationFrame';
+import { Eyebrow } from '@/design-system/typography';
 
 export const Statement: React.FC = () => {
   return (
-    <section className="w-full bg-[#F5EFE0] py-[clamp(80px,12vh,180px)] overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)] space-y-12 sm:space-y-16">
-        <div className="text-left">
+    <section className="w-full bg-white text-black py-[clamp(80px,12vh,180px)] overflow-hidden border-b border-[#E4E4E7]">
+      <div className="max-w-[1440px] mx-auto px-[clamp(20px,5vw,80px)] space-y-10 sm:space-y-14">
+        {/* Chapter marker header */}
+        <div className="flex items-baseline justify-between border-b border-[#E4E4E7] pb-4">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-xs uppercase font-bold tracking-[0.25em] text-zinc-400">
+              Part.
+            </span>
+            <span className="font-sans text-3xl font-black tracking-tighter text-black">
+              03
+            </span>
+          </div>
           <Eyebrow>Institutional Purpose</Eyebrow>
         </div>
 
-        {/* Headline */}
-        <div className="max-w-[980px]">
-          <h2
-            className="font-serif font-normal text-[clamp(44px,6vw,84px)] leading-[1.06] tracking-[-0.03em] text-[#0A0A0A]"
-            style={{ fontFamily: '"Fraunces", Georgia, serif' }}
-          >
-            GovSkill is crafted for the dedicated officers who <em className="italic font-normal">serve</em> the public.
-          </h2>
-          {/* Mobile-only view for closing paragraph */}
-          <p className="sm:hidden font-serif text-[15px] text-[#6B6357] leading-relaxed pt-4">
-            When front-desk officers have verified curriculum, grounded AI guidance, and tamper-evident evaluation, citizens receive statutory decisions with dignity, precision, and transparency.
-          </p>
-        </div>
+        {/* Spread 3 Layout: Mirroring 50 Ambitious Spread 3 */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* Left Column: 50 Standards lockup + Officer Portrait */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="space-y-1">
+              <span className="font-sans text-5xl font-black tracking-tight text-black block">50</span>
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#0E50B0] block">
+                STANDARDS OF CIVIC CRAFT
+              </span>
+            </div>
 
-        {/* Illustration 2 Container with Editorial Inset Overlays */}
-        <div className="relative w-full">
-          <IllustrationFrame
-            src="/illustrations/statement-assembly.jpg"
-            alt="Editorial illustration of a loose crowd of citizens and civil servants walking together across a wide public plaza under a cream sky"
-            aspectRatio="16:9"
-            illustrationKey="statement"
-            variant="clean"
-            caption={
-              <FigureCaption
-                figureNumber="02"
-                title="Collective stewardship and civic responsibility across public plazas"
+            <div className="border border-[#E4E4E7] bg-white p-3 shadow-[4px_4px_0px_rgba(0,0,0,0.06)]">
+              <img
+                src="/illustrations/spread3_officer_portrait.jpg"
+                alt="Editorial illustration of a smiling, capable adult civil service officer"
+                className="w-full h-auto object-cover"
+                loading="lazy"
               />
-            }
-          />
-
-          {/* Overlay: Upper Negative Space Right-Aligned Closing Paragraph (Max 40ch, Ink at 80%) */}
-          <div className="absolute top-6 sm:top-10 right-6 sm:right-10 z-20 max-w-[40ch] text-right pointer-events-none hidden sm:block">
-            <p className="font-serif text-[15px] sm:text-[17px] text-[#0A0A0A]/80 leading-relaxed bg-[#F5EFE0]/85 p-4 rounded-xl backdrop-blur-[2px] border border-[#D9CFBB]/50 shadow-sm">
-              When front-desk officers have verified curriculum, grounded AI guidance, and tamper-evident evaluation, citizens receive statutory decisions with dignity, precision, and transparency.
-            </p>
+              <div className="pt-2 px-1 flex items-center justify-between text-[10px] font-mono text-zinc-500 uppercase tracking-widest border-t border-[#E4E4E7] mt-2">
+                <span>PLATE 03 // OFFICER ACADEMY</span>
+                <span>VERIFIED</span>
+              </div>
+            </div>
           </div>
 
-          {/* Overlay: Bottom-Left Italic Serif Pull-Quote in Terracotta */}
-          <div className="absolute bottom-14 sm:bottom-16 left-6 sm:left-10 z-20 max-w-[36ch] pointer-events-none hidden sm:block">
-            <p className="font-serif italic text-[15px] sm:text-[17px] text-[#C97B5A] leading-snug bg-[#F5EFE0]/90 p-3 rounded-lg backdrop-blur-[2px] border border-[#D9CFBB]/40 shadow-sm">
-              “A republic’s enduring trust begins quietly at the front desk.”
-            </p>
+          {/* Right Column: Statement, Editorial Columns, Studio Mark, & 3 Stacked Plates */}
+          <div className="lg:col-span-7 space-y-8">
+            <div className="max-w-[720px] space-y-4">
+              <h2 className="font-sans font-black uppercase text-[clamp(32px,4vw,60px)] leading-[0.96] tracking-[-0.03em] text-black">
+                GovSkill is crafted for the dedicated officers who <span className="text-[#0E50B0] inline-block font-black">serve</span> the public.
+              </h2>
+              <p className="font-sans text-[15px] text-zinc-600 leading-relaxed">
+                When front-desk officers have verified curriculum, grounded AI guidance, and tamper-evident evaluation, citizens receive statutory decisions with dignity, precision, and transparency.
+              </p>
+            </div>
+
+            {/* Studio Mark & 3 Stacked Thumbnail Plates matching Spread 3 */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 pt-2 items-center border-t border-[#E4E4E7]">
+              {/* Studio Mark */}
+              <div className="sm:col-span-5 space-y-2">
+                <div className="font-mono text-xs font-black uppercase tracking-widest text-black">
+                  GOVSKILL / ACADEMY
+                </div>
+                <p className="font-mono text-[11px] text-zinc-500 uppercase tracking-wider leading-relaxed">
+                  Institutional syllabus curated alongside senior revenue superintendents.
+                </p>
+              </div>
+
+              {/* 3 Stacked Thumbnail Cards with Colored Accents */}
+              <div className="sm:col-span-7 space-y-2">
+                <div className="p-2.5 border border-[#E4E4E7] bg-zinc-50 flex items-center justify-between text-xs font-mono">
+                  <span className="font-bold text-black uppercase">01. Income Certification</span>
+                  <span className="text-[10px] text-[#0E50B0] uppercase font-bold tracking-wider">MODULE A</span>
+                </div>
+                <div className="p-2.5 border border-[#E4E4E7] bg-zinc-50 flex items-center justify-between text-xs font-mono">
+                  <span className="font-bold text-black uppercase">02. Land Registry Folios</span>
+                  <span className="text-[10px] text-[#AF411E] uppercase font-bold tracking-wider">MODULE B</span>
+                </div>
+                <div className="p-2.5 border border-[#E4E4E7] bg-zinc-50 flex items-center justify-between text-xs font-mono">
+                  <span className="font-bold text-black uppercase">03. Commercial Trade Permits</span>
+                  <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-wider">MODULE C</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Editorial Section Break: Horizontal 1px rule with small circular dot at its center-left */}
-        <div className="relative w-full pt-8 pb-2 flex items-center">
-          <div className="w-full h-[1px] bg-[#D9CFBB]" />
+        {/* Editorial Section Break */}
+        <div className="relative w-full pt-6 pb-2 flex items-center">
+          <div className="w-full h-[1px] bg-[#E4E4E7]" />
           <div
-            className="absolute left-[28%] -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-[#0A0A0A]"
+            className="absolute left-[28%] -translate-x-1/2 w-2 h-2 bg-black"
             aria-hidden="true"
           />
         </div>

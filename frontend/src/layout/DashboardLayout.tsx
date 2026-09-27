@@ -21,11 +21,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F5EFE0] text-[#0A0A0A] p-0 lg:p-3 xl:p-5 flex flex-col justify-center selection:bg-[#C9A24A]/25 selection:text-[#0A0A0A]">
+    <div className="min-h-screen bg-[#FAFAFA] text-black p-0 lg:p-4 flex flex-col justify-center selection:bg-[#0E50B0]/15 selection:text-black">
       {/* Accessible Skip to Content Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-[#0A0A0A] text-[#F5EFE0] rounded-full text-xs font-mono font-medium shadow-lg outline-none ring-2 ring-[#0A0A0A] ring-offset-2"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-black text-white text-xs font-mono font-bold shadow-md outline-none ring-2 ring-black"
       >
         Skip to main content
       </a>
@@ -35,14 +35,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         <div className="lg:hidden fixed inset-0 z-50 flex">
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-[#0A0A0A]/40 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-black/60 transition-opacity"
             onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer panel */}
           <div
-            className="relative flex-1 flex flex-col max-w-xs w-full bg-[#EDE4D0] z-10 border-r border-[#D9CFBB] shadow-2xl animate-slide-up"
+            className="relative flex-1 flex flex-col max-w-xs w-full bg-white z-10 border-r border-[#E4E4E7] shadow-xl animate-slide-up"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation drawer"
@@ -52,15 +52,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         </div>
       )}
 
-      {/* 2. Master Floating Canvas Shell */}
-      <div className="w-full max-w-[1580px] mx-auto bg-[#EDE4D0]/30 lg:rounded-[28px] shadow-[0_24px_60px_-15px_rgba(10,10,10,0.08)] border border-[#D9CFBB] flex flex-col lg:flex-row min-h-[calc(100vh-2.5rem)] overflow-hidden">
+      {/* 2. Master Editorial Shell */}
+      <div className="w-full max-w-[1580px] mx-auto bg-white lg:border border-[#E4E4E7] flex flex-col lg:flex-row min-h-[calc(100vh-2rem)] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         {/* Desktop Integrated Sidebar */}
-        <div className="hidden lg:block shrink-0 border-r border-[#D9CFBB]/75 bg-[#EDE4D0]/60">
+        <div className="hidden lg:block shrink-0 border-r border-[#E4E4E7] bg-white">
           <Sidebar />
         </div>
 
         {/* Main Application Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 bg-[#F5EFE0]">
+        <div className="flex-1 flex flex-col min-w-0 bg-white">
           <TopHeader onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)} />
           <main id="main-content" tabIndex={-1} className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-y-auto outline-none">
             {children}

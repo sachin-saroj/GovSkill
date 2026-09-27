@@ -12,17 +12,17 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
   const getActionIcon = () => {
     switch (recommendation.action_type) {
       case 'read_lesson':
-        return <BookOpen className="h-5 w-5 text-civic-700" />;
+        return <BookOpen className="h-5 w-5 text-[#0E50B0]" />;
       case 'take_quiz':
         return <CheckCircle2 className="h-5 w-5 text-emerald-600" />;
       case 'retake_quiz':
-        return <RefreshCw className="h-5 w-5 text-amber-600" />;
+        return <RefreshCw className="h-5 w-5 text-[#AF411E]" />;
       case 'start_training':
-        return <Play className="h-5 w-5 text-civic-700" />;
+        return <Play className="h-5 w-5 text-[#0E50B0]" />;
       case 'all_certified':
         return <Award className="h-5 w-5 text-emerald-600" />;
       default:
-        return <Compass className="h-5 w-5 text-civic-700" />;
+        return <Compass className="h-5 w-5 text-[#0E50B0]" />;
     }
   };
 
@@ -48,23 +48,23 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
 
   return (
     <Card
-      className={`p-6 sm:p-8 border shadow-sm transition-all duration-200 rounded-2xl ${
+      className={`p-6 sm:p-8 border shadow-none transition-all duration-200 rounded-none bg-white ${
         isAllCertified
-          ? 'bg-[#EDE4D0] border-[#2A5B4A]/30'
+          ? 'border-[#E4E4E7] border-l-4 border-l-emerald-600'
           : isHighPriority
-          ? 'bg-[#EDE4D0] border-[#C97B5A]/40'
-          : 'bg-[#EDE4D0] border-[#D9CFBB]'
+          ? 'border-[#E4E4E7] border-l-4 border-l-[#AF411E]'
+          : 'border-[#E4E4E7]'
       }`}
     >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div
-            className={`p-3 rounded-full shrink-0 ${
+            className={`p-3 shrink-0 border ${
               isAllCertified
-                ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border border-[#2A5B4A]/30'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                 : isHighPriority
-                ? 'bg-[#C97B5A]/10 text-[#C97B5A] border border-[#C97B5A]/30'
-                : 'bg-[#E4D9C3] text-[#0A0A0A] border border-[#D9CFBB]'
+                ? 'bg-orange-50 text-[#AF411E] border-orange-200'
+                : 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]'
             }`}
           >
             {getActionIcon()}
@@ -73,26 +73,26 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
           <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] font-mono uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full border ${
+                className={`text-[10px] font-mono uppercase tracking-[0.2em] font-bold px-2 py-0.5 border ${
                   isAllCertified
-                    ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30'
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                     : isHighPriority
-                    ? 'bg-[#C97B5A]/10 text-[#C97B5A] border-[#C97B5A]/30'
-                    : 'bg-[#E4D9C3] text-[#0A0A0A] border-[#D9CFBB]'
+                    ? 'bg-orange-50 text-[#AF411E] border-orange-300'
+                    : 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]'
                 }`}
               >
                 {isAllCertified ? 'Curriculum Complete' : 'Recommended Next Action'}
               </span>
               {isHighPriority && (
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#C97B5A]">• Priority Action</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#AF411E] font-bold">• Priority Action</span>
               )}
             </div>
 
-            <h3 className="font-serif font-bold text-xl text-[#0A0A0A] tracking-tight leading-snug">
+            <h3 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B] leading-snug">
               {recommendation.title}
             </h3>
 
-            <p className="text-body text-[#6B6357] leading-relaxed font-normal">
+            <p className="text-body text-[#52525B] leading-relaxed">
               {recommendation.description}
             </p>
           </div>
@@ -101,10 +101,10 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
         <div className="shrink-0 flex items-center justify-start md:justify-end">
           <Link
             to={recommendation.link}
-            className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-medium min-h-[44px] transition-all shadow-sm cursor-pointer ${
+            className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider min-h-[42px] transition-all cursor-pointer border ${
               isAllCertified
-                ? 'bg-[#2A5B4A] hover:bg-[#1f4336] text-[#F5EFE0]'
-                : 'bg-[#0A0A0A] hover:bg-[#262626] text-[#F5EFE0]'
+                ? 'bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-700'
+                : 'bg-[#09090B] hover:bg-[#27272A] text-white border-[#09090B]'
             }`}
           >
             <span>{getButtonText()}</span>

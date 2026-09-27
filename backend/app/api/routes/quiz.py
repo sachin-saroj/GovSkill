@@ -1,11 +1,13 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select, func
+from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db
 from app.api.routes.modules import get_or_create_default_module
+from app.models.credential import Credential
 from app.models.module import Module
 from app.models.progress import UserProgress
 from app.models.quiz import QuizAttempt, QuizQuestion
@@ -125,9 +127,11 @@ async def get_quiz_questions(
     if questions:
         latest_att = previous_attempts[0] if previous_attempts else None
         is_adaptive_requested = mode.lower() == "adaptive"
+        prev_score = latest_att.score if (latest_att and latest_att.score is not None) else 0
+        prev_total = latest_att.total if (latest_att and latest_att.total is not None) else 0
         has_weak_previous = (
             latest_att is not None
-            and (round((latest_att.score / latest_att.total) * 100) if latest_att.total > 0 else 0) < 75
+            and (round((prev_score / prev_total) * 100) if prev_total > 0 else 0) < 75
         )
 
         if is_adaptive_requested or has_weak_previous:
@@ -288,8 +292,77 @@ async def submit_quiz(
                 "Review the lesson guide thoroughly and retake the assessment."
             )
 
-    # Record attempt in database
     now_utc = datetime.now(timezone.utc)
+
+    # Scenario 18: Idempotency check against rapid duplicate submit within 3 seconds
+    recent_attempt_res = await db.execute(
+        select(QuizAttempt)
+        .where(
+            QuizAttempt.user_id == current_user.id,
+            QuizAttempt.module_id == mod_uuid,
+            QuizAttempt.submitted_at >= now_utc - timedelta(seconds=3),
+        )
+        .order_by(QuizAttempt.submitted_at.desc())
+        .limit(1)
+    )
+    recent_attempt = recent_attempt_res.scalar_one_or_none()
+
+    if recent_attempt and recent_attempt.score == score:
+        # Fetch current progress and return existing attempt without duplicating record
+        prog_res = await db.execute(
+            select(UserProgress).where(
+                UserProgress.user_id == current_user.id,
+                UserProgress.module_id == mod_uuid,
+            )
+        )
+        prog = prog_res.scalar_one_or_none()
+        attempt_count_res = await db.execute(
+            select(func.count(QuizAttempt.id)).where(
+                QuizAttempt.user_id == current_user.id,
+                QuizAttempt.module_id == mod_uuid,
+            )
+        )
+        attempt_number = attempt_count_res.scalar() or 1
+
+        existing_cred_id = None
+        if passed:
+            cred_res = await db.execute(
+                select(Credential).where(
+                    Credential.user_id == current_user.id,
+                    Credential.module_id == mod_uuid,
+                )
+            )
+            existing_cred = cred_res.scalar_one_or_none()
+            if existing_cred:
+                existing_cred_id = existing_cred.credential_id
+            else:
+                new_cred = await issue_or_update_credential(
+                    db=db,
+                    user_id=current_user.id,
+                    module_id=mod_uuid,
+                    score_achieved=score,
+                    total_score=total,
+                )
+                await db.commit()
+                existing_cred_id = new_cred.credential_id
+
+        return QuizSubmitResponse(
+            score=score,
+            total=total,
+            percentage=percentage,
+            passed=passed,
+            attempt_number=attempt_number,
+            best_score=prog.best_score if prog else score,
+            status=prog.status if prog else ("certified" if passed else "in_progress"),
+            competency_breakdown=competency_breakdown,
+            strengths=strengths,
+            weak_areas=weak_areas,
+            recommended_action=recommended_action,
+            submitted_at=recent_attempt.submitted_at.isoformat(),
+            credential_id=existing_cred_id,
+        )
+
+    # Record attempt in database
     attempt = QuizAttempt(
         user_id=current_user.id,
         module_id=mod_uuid,
@@ -330,7 +403,8 @@ async def submit_quiz(
         )
         db.add(prog)
     else:
-        prog.best_score = max(prog.best_score, score)
+        current_best = prog.best_score if prog.best_score is not None else 0
+        prog.best_score = max(current_best, score)
         prog.total_questions = total
         if passed:
             prog.status = "certified"
@@ -348,7 +422,26 @@ async def submit_quiz(
             total_score=total,
         )
 
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        # Atomic recovery if concurrent first-attempt request created user_progress simultaneously
+        await db.rollback()
+        prog_res = await db.execute(
+            select(UserProgress).where(
+                UserProgress.user_id == current_user.id,
+                UserProgress.module_id == mod_uuid,
+            )
+        )
+        prog = prog_res.scalar_one_or_none()
+        if prog:
+            current_best = prog.best_score if prog.best_score is not None else 0
+            prog.best_score = max(current_best, score)
+            prog.total_questions = total
+            if passed:
+                prog.status = "certified"
+            await db.commit()
+
 
     return QuizSubmitResponse(
         score=score,

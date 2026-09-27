@@ -77,7 +77,15 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
             },
         )
 
-    access_token = create_access_token(subject=user.id, role=user.role)
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"error": {"code": "ACCOUNT_DISABLED", "message": "User account has been disabled."}},
+        )
+
+    access_token = create_access_token(
+        subject=user.id, role=user.role, token_version=user.token_version
+    )
     return TokenResponse(access_token=access_token, token_type="bearer")
 
 
@@ -104,6 +112,7 @@ async def change_password(
         )
 
     current_user.password_hash = get_password_hash(payload.new_password)
+    current_user.token_version += 1
     await db.commit()
     await db.refresh(current_user)
 

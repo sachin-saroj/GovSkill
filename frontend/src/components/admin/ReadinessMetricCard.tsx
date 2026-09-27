@@ -24,19 +24,19 @@ export const ReadinessMetricCard: React.FC<ReadinessMetricCardProps> = ({
   badgeVariant,
 }) => {
   return (
-    <Card className="border-[#D9CFBB] p-6 space-y-3.5 bg-[#EDE4D0] hover:border-[#0A0A0A]/40 transition-all duration-200 rounded-2xl shadow-xs">
+    <Card className="border border-[#E4E4E7] p-6 space-y-3.5 bg-white hover:border-[#A1A1AA] transition-all duration-200 rounded-none shadow-none">
       <div className="flex items-start justify-between gap-3">
-        <div className={`p-3 rounded-full shrink-0 shadow-xs border border-[#D9CFBB] ${iconBgClass || 'bg-[#F5EFE0]'} ${iconColorClass || 'text-[#0A0A0A]'}`}>
+        <div className={`p-3 shrink-0 border border-[#E4E4E7] ${iconBgClass || 'bg-[#FAFAFA]'} ${iconColorClass || 'text-[#09090B]'}`}>
           <Icon className="h-5 w-5" />
         </div>
 
         {badgeText && (
-          <span className={`text-[10px] font-mono font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+          <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 border ${
             badgeVariant === 'emerald'
-              ? 'bg-[#2A5B4A]/10 text-[#2A5B4A] border-[#2A5B4A]/30'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
               : badgeVariant === 'saffron'
-              ? 'bg-[#C9A24A]/15 text-[#0A0A0A] border-[#C9A24A]/30'
-              : 'bg-[#F5EFE0] text-[#6B6357] border-[#D9CFBB]'
+              ? 'bg-orange-50 text-[#AF411E] border-orange-200'
+              : 'bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]'
           }`}>
             {badgeText}
           </span>
@@ -44,14 +44,14 @@ export const ReadinessMetricCard: React.FC<ReadinessMetricCardProps> = ({
       </div>
 
       <div>
-        <span className="text-xs font-mono text-[#6B6357] block mb-1">
+        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] font-bold block mb-1">
           {label}
         </span>
-        <div className="font-mono text-3xl font-bold text-[#0A0A0A] tracking-tight">
+        <div className="font-mono text-3xl font-black text-[#09090B] tracking-tight">
           {value}
         </div>
         {subtext && (
-          <p className="text-xs text-[#6B6357] font-sans font-normal mt-1">
+          <p className="text-xs text-[#52525B] font-sans font-medium mt-1">
             {subtext}
           </p>
         )}

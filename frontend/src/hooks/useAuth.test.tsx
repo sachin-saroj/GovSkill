@@ -49,4 +49,21 @@ describe('AuthProvider', () => {
     expect(result.current.isLoading).toBe(false);
     expect(localStorage.getItem('token')).toBeNull();
   });
+
+  it('preserves the stored token when a temporary network or 500 server failure occurs', async () => {
+    localStorage.setItem('token', 'valid-active-token');
+    mockedGet.mockRejectedValue({
+      message: 'Network Error',
+      response: { status: 500, data: { detail: 'Internal Server Error' } },
+    });
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // Token must NOT be wiped due to temporary server or network error
+    expect(localStorage.getItem('token')).toBe('valid-active-token');
+    expect(result.current.token).toBe('valid-active-token');
+    expect(result.current.user).toBeNull();
+  });
 });

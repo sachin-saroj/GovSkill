@@ -48,6 +48,20 @@ async def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": {"code": "UNAUTHORIZED", "message": "User not found"}},
         )
+
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"error": {"code": "ACCOUNT_DISABLED", "message": "User account has been disabled."}},
+        )
+
+    token_v = payload.get("v")
+    if token_v is not None and token_v != user.token_version:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"error": {"code": "TOKEN_REVOKED", "message": "Session has been invalidated. Please log in again."}},
+        )
+
     return user
 
 

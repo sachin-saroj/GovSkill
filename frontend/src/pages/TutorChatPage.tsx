@@ -179,29 +179,29 @@ export const TutorChatPage: React.FC = () => {
       variants={staggerContainerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-5xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
+      className="max-w-6xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* 1. Header Banner & Scope Toolbar */}
-      <motion.div variants={fadeUpVariants} className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#D9CFBB] gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-[#C97B5A]">
-              <Bot className="h-4 w-4 text-[#C97B5A]" />
+      <motion.div variants={fadeUpVariants} className="bg-white rounded-none border border-[#E4E4E7] p-6 sm:p-8 space-y-5 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-[#E4E4E7] gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-[#0E50B0]">
+              <Bot className="h-4 w-4 text-[#0E50B0]" />
               <span>Government Training Assistant</span>
             </div>
-            <h1 className="font-serif font-bold text-3xl sm:text-4xl text-[#0A0A0A] tracking-tight">
+            <h1 className="font-sans font-black text-3xl sm:text-4xl text-black tracking-tight uppercase">
               Administrative Assistant & Copilot
             </h1>
-            <p className="text-body text-[#6B6357] font-normal">
+            <p className="text-body text-[#71717A] font-normal">
               Answers are strictly grounded in approved government training modules and official administrative curriculum.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {/* Module Scope Selector */}
-            <div className="flex items-center gap-2 bg-[#F5EFE0] px-3.5 py-2 rounded-full border border-[#D9CFBB] shadow-sm min-h-[40px]">
-              <BookOpen className="h-4 w-4 text-[#C9A24A] shrink-0" />
-              <label htmlFor="context-select" className="text-caption font-mono font-semibold text-[#6B6357] shrink-0 text-[11px]">
+            <div className="flex items-center gap-2 bg-white px-3.5 py-2 border border-[#E4E4E7] min-h-[40px]">
+              <BookOpen className="h-4 w-4 text-[#0E50B0] shrink-0" />
+              <label htmlFor="context-select" className="text-caption font-mono font-bold uppercase text-[#71717A] shrink-0 text-[11px]">
                 Scope:
               </label>
               <select
@@ -209,7 +209,7 @@ export const TutorChatPage: React.FC = () => {
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
                 disabled={isLoading}
-                className="text-caption font-mono font-medium text-[#0A0A0A] bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-[11px]"
+                className="text-caption font-mono font-medium text-black bg-transparent focus:outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-[11px]"
               >
                 <option value="auto">Auto-Detect Relevant Module ✨</option>
                 {modules.map((mod) => (
@@ -224,7 +224,7 @@ export const TutorChatPage: React.FC = () => {
               type="button"
               onClick={handleResetChat}
               title="Reset conversation"
-              className="flex items-center gap-1.5 px-4 py-2 text-[12px] font-mono font-medium text-[#0A0A0A] border border-[#D9CFBB] rounded-full bg-[#F5EFE0] hover:bg-[#EFE6D2] transition-all shadow-sm cursor-pointer min-h-[40px]"
+              className="flex items-center gap-2 px-4 py-2 text-[12px] font-mono font-bold uppercase tracking-wider text-black border border-[#E4E4E7] bg-white hover:bg-zinc-100 transition-all cursor-pointer min-h-[40px]"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Reset</span>
@@ -233,14 +233,14 @@ export const TutorChatPage: React.FC = () => {
         </div>
 
         {/* 2. Trust & Grounding Indicator Strip */}
-        <div className="flex items-center justify-between px-4 py-2.5 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption text-[#6B6357]">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-50 border border-[#E4E4E7] text-caption text-[#71717A]">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-[#2A5B4A] shrink-0" />
+            <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>
-              <strong className="font-semibold text-[#0A0A0A]">Training scope:</strong> {activeModuleTitle}
+              <strong className="font-bold text-black uppercase font-mono text-xs">Training scope:</strong> {activeModuleTitle}
             </span>
           </div>
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[#2A5B4A] bg-[#2A5B4A]/10 px-2.5 py-0.5 rounded-full border border-[#2A5B4A]/30 hidden sm:inline">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 border border-emerald-300 hidden sm:inline">
             Curriculum Grounded
           </span>
         </div>
@@ -250,17 +250,17 @@ export const TutorChatPage: React.FC = () => {
       {incomingCompetency && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-2xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#0A0A0A] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
+          className="p-6 rounded-none bg-white border border-[#EE8148] text-caption text-black flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-full bg-[#C97B5A]/20 text-[#C97B5A] shrink-0">
-              <Sparkles className="h-5 w-5 text-[#C97B5A]" />
+            <div className="p-2.5 rounded-none bg-orange-100 text-[#AF411E] shrink-0">
+              <Sparkles className="h-5 w-5 text-[#EE8148]" />
             </div>
             <div>
-              <div className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
+              <div className="font-sans font-bold text-base text-black leading-snug uppercase tracking-tight">
                 Targeted Remediation Active: {incomingCompetency}
               </div>
-              <p className="text-caption text-[#6B6357] font-normal">
+              <p className="text-caption text-[#71717A] font-normal">
                 Grounded guidance tailored to resolve this specific operational skill gap.
               </p>
             </div>
@@ -276,7 +276,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-4 py-2 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption font-medium text-[#0A0A0A] hover:bg-[#EFE6D2] transition-colors cursor-pointer disabled:opacity-60 shadow-sm min-h-[38px]"
+              className="px-4 py-2 rounded-none bg-white border border-[#E4E4E7] text-caption font-mono font-bold text-xs uppercase tracking-wider text-black hover:bg-zinc-100 transition-colors cursor-pointer disabled:opacity-60 min-h-[38px]"
             >
               Practice Scenario
             </button>
@@ -289,7 +289,7 @@ export const TutorChatPage: React.FC = () => {
                 )
               }
               disabled={isLoading}
-              className="px-4 py-2 rounded-full bg-[#F5EFE0] border border-[#D9CFBB] text-caption font-medium text-[#0A0A0A] hover:bg-[#EFE6D2] transition-colors cursor-pointer disabled:opacity-60 shadow-sm min-h-[38px]"
+              className="px-4 py-2 rounded-none bg-white border border-[#E4E4E7] text-caption font-mono font-bold text-xs uppercase tracking-wider text-black hover:bg-zinc-100 transition-colors cursor-pointer disabled:opacity-60 min-h-[38px]"
             >
               Red Flags
             </button>
@@ -304,17 +304,17 @@ export const TutorChatPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 rounded-xl bg-[#C97B5A]/10 border border-[#C97B5A]/30 text-caption text-[#C97B5A] flex items-center justify-between gap-2 shadow-sm"
+            className="p-4 rounded-none bg-orange-50 border border-[#EE8148] text-caption text-[#AF411E] flex items-center justify-between gap-2"
           >
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-[#C97B5A] shrink-0" />
+              <AlertCircle className="h-4 w-4 text-[#EE8148] shrink-0" />
               <span>{error}</span>
             </div>
             {lastFailedQuestion && (
               <button
                 type="button"
                 onClick={handleRetryLast}
-                className="flex items-center gap-1.5 px-3.5 py-1 bg-[#F5EFE0] border border-[#D9CFBB] text-[#0A0A0A] rounded-full font-medium hover:bg-[#EFE6D2] text-caption cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3.5 py-1 bg-white border border-[#EE8148] text-black font-mono text-xs font-bold uppercase tracking-wider hover:bg-orange-100 cursor-pointer"
               >
                 <RefreshCw className="h-3 w-3" />
                 <span>Retry</span>
@@ -325,26 +325,26 @@ export const TutorChatPage: React.FC = () => {
       </AnimatePresence>
 
       {/* 70/30 Asymmetric Layout: 70% Conversation + 30% Training Context Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column (8 cols on lg): Conversation Stage */}
         <motion.div variants={fadeUpVariants} className="lg:col-span-8 space-y-4">
-          <Card className="min-h-[560px] flex flex-col justify-between p-6 sm:p-8 bg-[#EDE4D0] border border-[#D9CFBB] shadow-sm rounded-2xl">
+          <Card className="min-h-[560px] flex flex-col justify-between p-6 sm:p-8 bg-white border border-[#E4E4E7] shadow-none rounded-none">
             {/* If only initial greeting message, display editorial artwork empty state */}
             {messages.length <= 1 ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-4 sm:p-6 space-y-6">
-                <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-2xl overflow-hidden shadow-md border border-[#D9CFBB] bg-[#F5EFE0]">
+                <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-none overflow-hidden border border-[#E4E4E7] bg-zinc-100">
                   <img
                     src="/illustrations/copilot_empty_illustration.jpg"
                     alt="Training Copilot"
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center grayscale contrast-125"
                   />
                 </div>
 
                 <div className="space-y-2 max-w-md">
-                  <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#0A0A0A] tracking-tight">
+                  <h3 className="font-sans font-bold text-xl sm:text-2xl text-black uppercase tracking-tight">
                     Ask Anything Regarding Government Workflows
                   </h3>
-                  <p className="text-caption text-[#6B6357] leading-relaxed font-normal">
+                  <p className="text-caption text-[#71717A] leading-relaxed font-normal">
                     {messages[0]?.text || "Hello! I am your official Government Training Copilot. Ask me any question regarding document verification, portal workflows, cybersecurity standards, or record retention. All answers are strictly grounded in approved curriculum."}
                   </p>
                 </div>
@@ -377,14 +377,14 @@ export const TutorChatPage: React.FC = () => {
                       initial={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={shouldReduceMotion ? {} : { opacity: 0, y: 6 }}
-                      className="flex gap-3 items-center text-[#6B6357] text-caption"
+                      className="flex gap-3 items-center text-[#71717A] text-caption"
                     >
-                      <div className="h-8 w-8 rounded-full bg-[#0A0A0A] text-[#F5EFE0] flex items-center justify-center shadow-sm shrink-0 border border-[#D9CFBB]">
-                        <Bot className="h-4 w-4 text-[#C9A24A]" />
+                      <div className="h-8 w-8 rounded-none bg-black text-white flex items-center justify-center shrink-0 border border-black">
+                        <Bot className="h-4 w-4 text-[#0E50B0]" />
                       </div>
-                      <div className="flex items-center gap-2 bg-[#F5EFE0] border border-[#D9CFBB] px-4 py-2.5 rounded-full shadow-sm">
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-[#0A0A0A]" />
-                        <span className="font-mono text-[11px] text-[#0A0A0A]">
+                      <div className="flex items-center gap-2 bg-zinc-50 border border-[#E4E4E7] px-4 py-2.5 rounded-none">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-black" />
+                        <span className="font-mono text-[11px] text-black">
                           Verifying against official training curriculum...
                         </span>
                       </div>
@@ -397,19 +397,19 @@ export const TutorChatPage: React.FC = () => {
             )}
 
             {/* Input Form Bar */}
-            <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-4 border-t border-[#D9CFBB] bg-transparent">
+            <form onSubmit={handleSendMessage} className="flex items-center gap-3 pt-4 border-t border-[#E4E4E7] bg-transparent">
               <Input
                 placeholder="Ask about verification rules, SLA timelines, cybersecurity standards..."
                 value={inputQuestion}
                 onChange={(e) => setInputQuestion(e.target.value)}
                 disabled={isLoading}
-                className="flex-1 text-caption bg-[#F5EFE0] border-[#D9CFBB] focus:bg-[#FAF6ED] rounded-full min-h-[46px] px-5"
+                className="flex-1 text-caption bg-white border-[#E4E4E7] focus:border-black rounded-none min-h-[46px] px-4"
               />
               <Button
                 type="submit"
                 size="md"
                 disabled={isLoading || !inputQuestion.trim()}
-                className="px-6 min-h-[46px] rounded-full shadow-sm shrink-0 cursor-pointer bg-[#0A0A0A] hover:bg-[#262626] text-[#F5EFE0] font-medium text-[13px]"
+                className="px-6 min-h-[46px] rounded-none shrink-0 cursor-pointer bg-black hover:bg-[#0E50B0] text-white font-mono text-xs font-bold uppercase tracking-wider"
               >
                 <Send className="h-4 w-4 mr-1.5" />
                 <span>Send</span>
@@ -420,31 +420,31 @@ export const TutorChatPage: React.FC = () => {
 
         {/* Right Column (4 cols on lg): Contextual Training Intelligence Panel */}
         <motion.div variants={fadeUpVariants} className="lg:col-span-4 space-y-4">
-          <div className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-[#D9CFBB] pb-3">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-[#6B6357]">
+          <div className="bg-white rounded-none border border-[#E4E4E7] p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-[#71717A]">
                 CURRENT TRAINING CONTEXT
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-[#2A5B4A]/10 text-[#2A5B4A] text-[10px] font-mono font-semibold border border-[#2A5B4A]/30">
+              <span className="px-2.5 py-0.5 rounded-none bg-emerald-50 text-emerald-800 text-[10px] font-mono font-bold border border-emerald-300 uppercase">
                 Grounded
               </span>
             </div>
 
-            <div className="space-y-1">
-              <h4 className="text-[10px] font-mono uppercase tracking-wider text-[#6B6357]">
+            <div className="space-y-1.5">
+              <h4 className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] font-bold">
                 Active Training Scope
               </h4>
-              <p className="font-serif font-bold text-base text-[#0A0A0A] leading-snug">
+              <p className="font-sans font-bold text-base text-black leading-snug">
                 {activeModuleTitle}
               </p>
-              <p className="text-[11px] text-[#6B6357]">
+              <p className="text-[11px] text-[#71717A]">
                 Factual responses drawn directly from certified public service training curriculum.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#F5EFE0] border border-[#D9CFBB] space-y-2 text-[11px] text-[#6B6357]">
-              <div className="flex items-center gap-1.5 font-semibold text-[#0A0A0A] text-xs">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#2A5B4A]" />
+            <div className="p-4 rounded-none bg-zinc-50 border border-[#E4E4E7] space-y-2 text-[11px] text-[#71717A]">
+              <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-black text-xs font-mono">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>Anti-Hallucination Policy</span>
               </div>
               <p>
@@ -454,7 +454,7 @@ export const TutorChatPage: React.FC = () => {
 
             {/* Contextual Quick Action Triggers */}
             <div className="space-y-2 pt-1">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B6357] block">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] font-bold block">
                 Targeted Practice
               </span>
 
@@ -467,10 +467,10 @@ export const TutorChatPage: React.FC = () => {
                   )
                 }
                 disabled={isLoading}
-                className="w-full text-left p-3 rounded-xl border border-[#D9CFBB] hover:border-[#0A0A0A] bg-[#F5EFE0] hover:bg-[#FAF6ED] transition-all text-caption font-medium text-[#0A0A0A] flex items-center justify-between group cursor-pointer shadow-sm"
+                className="w-full text-left p-3.5 rounded-none border border-[#E4E4E7] hover:border-black bg-white hover:bg-zinc-50 transition-all text-caption font-mono text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between group cursor-pointer"
               >
                 <span>Practice Workplace Scenario</span>
-                <span className="text-[#6B6357] group-hover:text-[#0A0A0A] font-bold">→</span>
+                <span className="text-[#71717A] group-hover:text-black font-bold">→</span>
               </button>
 
               <button
@@ -482,10 +482,10 @@ export const TutorChatPage: React.FC = () => {
                   )
                 }
                 disabled={isLoading}
-                className="w-full text-left p-3 rounded-xl border border-[#D9CFBB] hover:border-[#0A0A0A] bg-[#F5EFE0] hover:bg-[#FAF6ED] transition-all text-caption font-medium text-[#0A0A0A] flex items-center justify-between group cursor-pointer shadow-sm"
+                className="w-full text-left p-3.5 rounded-none border border-[#E4E4E7] hover:border-black bg-white hover:bg-zinc-50 transition-all text-caption font-mono text-xs font-bold uppercase tracking-wider text-black flex items-center justify-between group cursor-pointer"
               >
                 <span>Inspect Operational Pitfalls</span>
-                <span className="text-[#6B6357] group-hover:text-[#0A0A0A] font-bold">→</span>
+                <span className="text-[#71717A] group-hover:text-black font-bold">→</span>
               </button>
             </div>
           </div>

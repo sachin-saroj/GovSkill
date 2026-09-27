@@ -4,37 +4,46 @@
 
 @layer base {
   :root {
-    --color-cream: #F5EFE0;
-    --color-cream-deep: #EDE4D0;
-    --color-ink: #0A0A0A;
-    --color-rule: #D9CFBB;
-    --color-accent-green: #2A5B4A;
-    --color-terracotta: #C97B5A;
-    --color-ochre: #C9A24A;
+    --color-canvas: #FFFFFF;
+    --color-ink: #000000;
+    --color-ink-muted: #71717A;
+    --color-rule: #E4E4E7;
+    --color-cobalt: #0E50B0;
+    --color-rust: #AF411E;
+    --color-orange: #EE8148;
+
+    /* Backward compatibility mapping */
+    --color-cream: #FFFFFF;
+    --color-cream-deep: #F4F4F5;
+    --color-accent-green: #0E50B0;
+    --color-terracotta: #AF411E;
+    --color-ochre: #EE8148;
   }
 
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #FFFFFF;
+    color: #000000;
   }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #F5EFE0;
-    color: #0A0A0A;
+    background-color: #FFFFFF;
+    color: #000000;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
 
   ::selection {
-    background-color: rgba(201, 162, 74, 0.25);
-    color: #0A0A0A;
+    background-color: rgba(14, 80, 176, 0.15);
+    color: #000000;
   }
 
   :focus-visible {
-    outline: 2px solid #1E40AF;
+    outline: 2px solid #0E50B0;
     outline-offset: 2px;
   }
 
@@ -51,116 +60,55 @@
 }
 
 @layer components {
-  /* Civic Grid Backgrounds */
+  /* 50 Ambitious Editorial Foundations */
+  .bg-editorial-canvas {
+    background-color: #FFFFFF;
+  }
+
   .bg-civic-pattern {
-    background-color: #F8FAFC;
-    background-image: radial-gradient(#CBD5E1 0.75px, transparent 0.75px);
+    background-color: #FAFAFA;
+    background-image: radial-gradient(#E4E4E7 1px, transparent 1px);
     background-size: 24px 24px;
   }
 
   .bg-civic-dark-pattern {
-    background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    background-color: #09090B;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 
   .bg-civic-gradient {
-    background: linear-gradient(135deg, #071322 0%, #0B192C 50%, #133E87 100%);
+    background: #000000;
   }
 
   .bg-civic-card {
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 1px 3px 0 rgba(7, 19, 34, 0.06), 0 1px 2px -1px rgba(7, 19, 34, 0.04);
+    border: 1px solid #E4E4E7;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   }
 
   .civic-focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]/25 focus:border-[#1E4D8C];
-  }
-
-  /* Animated SVG Flow Keyframes */
-  .svg-flow-path {
-    stroke-dasharray: 8 8;
-    animation: flowDash 2.5s linear infinite;
-  }
-
-  .svg-flow-path-reverse {
-    stroke-dasharray: 8 8;
-    animation: flowDashReverse 2.5s linear infinite;
-  }
-
-  @keyframes flowDash {
-    from {
-      stroke-dashoffset: 32;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  @keyframes flowDashReverse {
-    from {
-      stroke-dashoffset: 0;
-    }
-    to {
-      stroke-dashoffset: 32;
-    }
-  }
-
-  /* 3D Transform & Perspective Utilities */
-  .perspective-800 {
-    perspective: 800px;
-  }
-
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .perspective-1200 {
-    perspective: 1200px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-
-  .translate-z-4 {
-    transform: translateZ(16px);
-  }
-
-  .translate-z-8 {
-    transform: translateZ(32px);
-  }
-
-  .translate-z-12 {
-    transform: translateZ(48px);
-  }
-
-  .translate-z-16 {
-    transform: translateZ(64px);
+    @apply focus:outline-none focus:ring-2 focus:ring-[#0E50B0]/25 focus:border-[#0E50B0];
   }
 }
 
-/* Custom Civic Scrollbar */
+/* Custom Editorial Clean Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #EDE4D0;
+  background: #FAFAFA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D9CFBB;
+  background: #D4D4D8;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6B6357;
+  background: #A1A1AA;
 }
 
 /* Print Optimization for Counter Slips & Official Receipts */

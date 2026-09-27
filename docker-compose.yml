@@ -28,7 +28,7 @@ services:
     command: >
       sh -c "alembic upgrade head &&
              python -m app.db.seed_admin &&
-             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+             exec uvicorn app.main:app --host 0.0.0.0 --port 8000"
     environment:
       PROJECT_NAME: "GovSkill"
       API_V1_STR: "/api"

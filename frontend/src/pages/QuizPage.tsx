@@ -33,7 +33,14 @@ export const QuizPage: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [adaptiveMeta, setAdaptiveMeta] = useState<AdaptiveMeta | null>(null);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Record<string, number>>(() => {
+    try {
+      const saved = sessionStorage.getItem(`govskill_quiz_draft_${activeModuleId}`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
   const [flaggedQuestions, setFlaggedQuestions] = useState<Record<string, boolean>>({});
   const [result, setResult] = useState<QuizSubmitResponse | null>(null);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
@@ -75,7 +82,25 @@ export const QuizPage: React.FC = () => {
 
   useEffect(() => {
     fetchQuiz();
+    try {
+      const saved = sessionStorage.getItem(`govskill_quiz_draft_${activeModuleId}`);
+      if (saved) {
+        setAnswers(JSON.parse(saved));
+      }
+    } catch {
+      // ignore
+    }
   }, [activeModuleId]);
+
+  useEffect(() => {
+    if (Object.keys(answers).length > 0 && !result) {
+      try {
+        sessionStorage.setItem(`govskill_quiz_draft_${activeModuleId}`, JSON.stringify(answers));
+      } catch {
+        // ignore
+      }
+    }
+  }, [answers, activeModuleId, result]);
 
   const handleSelectOption = (questionId: string, optionIndex: number) => {
     setAnswers((prev) => ({
@@ -116,6 +141,11 @@ export const QuizPage: React.FC = () => {
         answers: payloadAnswers,
       });
       setResult(res.data);
+      try {
+        sessionStorage.removeItem(`govskill_quiz_draft_${activeModuleId}`);
+      } catch {
+        // ignore
+      }
       setIsSubmitModalOpen(false);
     } catch (err: any) {
       const msg = err.response?.data?.detail?.error?.message || 'Failed to submit assessment';
@@ -130,6 +160,11 @@ export const QuizPage: React.FC = () => {
     setAnswers({});
     setFlaggedQuestions({});
     setResult(null);
+    try {
+      sessionStorage.removeItem(`govskill_quiz_draft_${activeModuleId}`);
+    } catch {
+      // ignore
+    }
     if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -210,34 +245,34 @@ export const QuizPage: React.FC = () => {
       className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* 1. Header Banner & Assessment Progress */}
-      <motion.div variants={fadeUpVariants} className="bg-[#EDE4D0] rounded-2xl border border-[#D9CFBB] p-6 sm:p-8 space-y-4 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#D9CFBB] gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-semibold uppercase tracking-widest text-[#6B6357]">
-              <Award className="h-4 w-4 text-[#2A5B4A]" />
+      <motion.div variants={fadeUpVariants} className="bg-white rounded-none border border-[#E4E4E7] p-6 sm:p-8 space-y-6 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-[#E4E4E7] gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-[#0E50B0]">
+              <Award className="h-4 w-4 text-[#0E50B0]" />
               <span>Competency Assessment</span>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-normal text-[#0A0A0A] tracking-tight">
+            <h1 className="font-sans text-2xl sm:text-3xl font-black uppercase text-black tracking-tight">
               {moduleTitle} Assessment
             </h1>
-            <p className="text-sm text-[#6B6357] font-sans font-normal">
+            <p className="text-sm text-[#71717A] font-sans font-normal">
               Passing threshold is 75%. Server-side scored with competency-level breakdown and official certification.
             </p>
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <div className="hidden md:block w-32 h-20 rounded-xl overflow-hidden border border-[#D9CFBB] bg-[#F5EFE0] shadow-xs">
+            <div className="hidden md:block w-32 h-20 rounded-none overflow-hidden border border-[#E4E4E7] bg-zinc-100">
               <img
                 src="/illustrations/quiz_assessment_examination.jpg"
                 alt="Official Civil Service Examination Desk"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center grayscale contrast-125"
                 loading="lazy"
               />
             </div>
 
             {modules.length > 1 && (
-            <div className="bg-[#F5EFE0] p-3 rounded-xl border border-[#D9CFBB] shrink-0">
-              <label htmlFor="quiz-module-select" className="block text-[10px] font-mono font-semibold uppercase text-[#6B6357] mb-1 tracking-wider">
+            <div className="bg-white p-3 border border-[#E4E4E7] shrink-0">
+              <label htmlFor="quiz-module-select" className="block text-[10px] font-mono font-bold uppercase text-[#71717A] mb-1 tracking-wider">
                 Switch Assessment:
               </label>
               <select
@@ -249,7 +284,7 @@ export const QuizPage: React.FC = () => {
                   setResult(null);
                   navigate(`/quiz/${e.target.value}`);
                 }}
-                className="w-full px-4 py-2 text-xs font-mono text-[#0A0A0A] bg-[#EDE4D0] border border-[#D9CFBB] rounded-full focus:outline-none focus:ring-1 focus:ring-[#0A0A0A] cursor-pointer min-h-[40px]"
+                className="w-full px-3 py-1.5 text-xs font-mono text-black bg-white border border-[#E4E4E7] rounded-none focus:outline-none focus:ring-1 focus:ring-black cursor-pointer min-h-[38px]"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -265,19 +300,19 @@ export const QuizPage: React.FC = () => {
         {/* Answer Progress Meter */}
         <div className="space-y-2 pt-1">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="font-semibold text-[#0A0A0A]">
+            <span className="font-bold text-black uppercase tracking-wider">
               Assessment Progress:
             </span>
-            <span className="text-[#6B6357]">
+            <span className="text-[#71717A] font-semibold">
               {answeredCount} of {questions.length} answered ({progressPct}%)
             </span>
           </div>
-          <div className="w-full bg-[#D9CFBB]/60 rounded-full h-2 overflow-hidden border border-[#D9CFBB]">
+          <div className="w-full bg-zinc-100 rounded-none h-1.5 overflow-hidden border border-[#E4E4E7]">
             <motion.div
               initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
               animate={{ width: `${progressPct}%` }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="h-2 bg-[#0A0A0A] rounded-full"
+              className="h-full bg-black rounded-none"
             />
           </div>
         </div>
@@ -287,27 +322,27 @@ export const QuizPage: React.FC = () => {
       {adaptiveMeta?.is_adaptive && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-2xl bg-[#EDE4D0] border border-[#D9CFBB] space-y-2.5 shadow-xs"
+          className="p-6 rounded-none bg-white border border-[#0E50B0] space-y-3"
         >
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 font-serif text-sm font-semibold text-[#0A0A0A]">
-              <Sparkles className="h-4 w-4 text-[#C9A24A]" />
+          <div className="flex items-center justify-between gap-2 border-b border-[#0E50B0]/20 pb-3">
+            <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-black">
+              <Sparkles className="h-4 w-4 text-[#0E50B0]" />
               <span>Adaptive Question Selection Active</span>
             </div>
-            <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-[#0A0A0A] text-[#F5EFE0]">
+            <span className="px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest bg-[#0E50B0] text-white">
               Targeted Remediation
             </span>
           </div>
-          <p className="text-xs text-[#6B6357] font-sans leading-relaxed">
+          <p className="text-xs text-[#71717A] font-sans leading-relaxed">
             {adaptiveMeta.message}
           </p>
           {adaptiveMeta.focus_competencies.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-xs font-mono text-[#6B6357]">Priority Competencies:</span>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="text-xs font-mono font-bold text-black">Priority Competencies:</span>
               {adaptiveMeta.focus_competencies.map((comp) => (
                 <span
                   key={comp}
-                  className="px-3 py-1 rounded-full text-xs font-mono bg-[#F5EFE0] border border-[#D9CFBB] text-[#0A0A0A]"
+                  className="px-3 py-1 text-xs font-mono bg-zinc-100 border border-[#E4E4E7] text-black"
                 >
                   {comp}
                 </span>
@@ -318,12 +353,12 @@ export const QuizPage: React.FC = () => {
       )}
 
       {/* 3. Instructions & Assessment Rules Bar */}
-      <div className="p-6 rounded-2xl bg-[#EDE4D0] border border-[#D9CFBB] text-xs space-y-2.5 shadow-xs">
-        <div className="flex items-center gap-2 font-serif text-sm font-semibold text-[#0A0A0A]">
-          <ShieldCheck className="h-4 w-4 text-[#2A5B4A]" />
+      <div className="p-6 rounded-none bg-white border border-[#E4E4E7] text-xs space-y-3">
+        <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-black">
+          <ShieldCheck className="h-4 w-4 text-emerald-600" />
           <span>Assessment Guidelines & Instructions:</span>
         </div>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#6B6357] pl-5 list-disc">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#71717A] pl-5 list-disc">
           <li>Answer all {questions.length} questions to maximize your competency score.</li>
           <li>A score of 75% or higher grants official module certification.</li>
           <li>You can flag questions to review before final submission.</li>
@@ -365,12 +400,12 @@ export const QuizPage: React.FC = () => {
       </motion.div>
 
       {/* 6. Bottom Submit Control Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-[#D9CFBB] bg-[#EDE4D0] p-6 rounded-2xl shadow-xs">
-        <div className="flex items-center gap-3 text-xs font-mono text-[#6B6357]">
+      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-[#E4E4E7] bg-white p-6 border shadow-none">
+        <div className="flex items-center gap-3 text-xs font-mono text-[#71717A]">
           <span>{answeredCount} of {questions.length} answered</span>
           {flaggedCount > 0 && (
-            <span className="text-[#C97B5A] font-semibold flex items-center gap-1 bg-[#F5EFE0] px-2.5 py-0.5 rounded-full border border-[#C97B5A]/40">
-              <Flag className="h-3 w-3 fill-[#C97B5A] text-[#C97B5A]" />
+            <span className="text-[#AF411E] font-bold flex items-center gap-1.5 bg-orange-50 px-2.5 py-1 border border-[#EE8148]">
+              <Flag className="h-3 w-3 fill-[#EE8148] text-[#EE8148]" />
               <span>{flaggedCount} flagged</span>
             </span>
           )}
@@ -382,7 +417,7 @@ export const QuizPage: React.FC = () => {
             variant="outline"
             size="md"
             onClick={() => navigate(`/module?id=${activeModuleId}`)}
-            className="min-h-[44px] rounded-full px-5"
+            className="min-h-[44px] rounded-none px-5 border-[#E4E4E7] text-black hover:bg-zinc-100 font-mono text-xs font-bold uppercase tracking-wider"
           >
             <BookOpen className="h-3.5 w-3.5 mr-1.5" />
             <span>Review Lesson</span>
@@ -392,7 +427,7 @@ export const QuizPage: React.FC = () => {
             onClick={handleOpenSubmitModal}
             disabled={isSubmitting}
             size="md"
-            className="min-h-[44px] rounded-full px-6 shadow-xs"
+            className="min-h-[44px] rounded-none px-6 bg-black hover:bg-[#0E50B0] text-white font-mono text-xs font-bold uppercase tracking-wider"
           >
             {isSubmitting ? (
               <>

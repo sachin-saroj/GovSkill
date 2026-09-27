@@ -152,17 +152,17 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
   const isCorrect = selectedOption === checkItem.correctIndex;
 
   return (
-    <div className="rounded-xl border border-[#D9CFBB] bg-[#F5EFE0] p-5 space-y-4 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[#0A0A0A] font-mono font-semibold text-[10px] uppercase tracking-[0.14em]">
-          <HelpCircle className="h-4 w-4 text-[#C9A24A]" />
+    <div className="border border-[#E4E4E7] bg-white p-6 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E7]">
+        <div className="flex items-center gap-2 text-black font-mono font-bold text-[11px] uppercase tracking-[0.14em]">
+          <HelpCircle className="h-4 w-4 text-[#0E50B0]" />
           <span>Quick Understanding Check</span>
         </div>
         {isSubmitted && (
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1 text-[11px] font-mono text-[#6B6357] hover:text-[#0A0A0A] font-medium cursor-pointer"
+            className="flex items-center gap-1.5 text-[11px] font-mono text-[#71717A] hover:text-black font-bold uppercase tracking-wider cursor-pointer"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Try Again</span>
@@ -170,22 +170,22 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
         )}
       </div>
 
-      <p className="font-serif font-bold text-base text-[#0A0A0A]">
+      <p className="font-sans font-bold text-base text-black">
         {checkItem.question}
       </p>
 
       {/* Options List */}
       <div className="space-y-2">
         {checkItem.options.map((option, idx) => {
-          let btnStyle = 'border-[#D9CFBB] bg-[#EDE4D0] hover:bg-[#E4D9C3] text-[#0A0A0A]';
+          let btnStyle = 'border-[#E4E4E7] bg-white hover:bg-zinc-50 text-black';
 
           if (isSubmitted) {
             if (idx === checkItem.correctIndex) {
-              btnStyle = 'border-[#2A5B4A] bg-[#2A5B4A]/10 text-[#2A5B4A] font-semibold';
+              btnStyle = 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold';
             } else if (idx === selectedOption) {
-              btnStyle = 'border-[#C97B5A] bg-[#C97B5A]/10 text-[#C97B5A]';
+              btnStyle = 'border-[#EE8148] bg-orange-50 text-[#AF411E] font-medium';
             } else {
-              btnStyle = 'border-[#D9CFBB] bg-[#EDE4D0] opacity-50 text-[#6B6357]';
+              btnStyle = 'border-[#E4E4E7] bg-zinc-50 opacity-50 text-[#71717A]';
             }
           }
 
@@ -195,14 +195,14 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={isSubmitted}
-              className={`w-full text-left px-4 py-2.5 rounded-full border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default shadow-sm`}
+              className={`w-full text-left px-4 py-3 rounded-none border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default`}
             >
               <span className="leading-snug">{option}</span>
               {isSubmitted && idx === checkItem.correctIndex && (
-                <CheckCircle2 className="h-4 w-4 text-[#2A5B4A] shrink-0" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
               )}
               {isSubmitted && idx === selectedOption && !isCorrect && (
-                <XCircle className="h-4 w-4 text-[#C97B5A] shrink-0" />
+                <XCircle className="h-4 w-4 text-[#EE8148] shrink-0" />
               )}
             </button>
           );
@@ -212,13 +212,13 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
       {/* Feedback Alert */}
       {isSubmitted && (
         <div
-          className={`p-3.5 rounded-xl border text-caption leading-relaxed animate-fade-in shadow-sm ${
+          className={`p-4 rounded-none border text-caption leading-relaxed animate-fade-in ${
             isCorrect
-              ? 'bg-[#2A5B4A]/10 border-[#2A5B4A]/30 text-[#2A5B4A]'
-              : 'bg-[#C97B5A]/10 border-[#C97B5A]/30 text-[#C97B5A]'
+              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+              : 'bg-orange-50 border-orange-300 text-[#AF411E]'
           }`}
         >
-          <p className="font-serif font-bold mb-0.5">
+          <p className="font-sans font-bold mb-1">
             {isCorrect ? '✓ Correct Understanding!' : '⚠ Concept Clarification:'}
           </p>
           <p className="text-caption font-normal">{checkItem.explanation}</p>

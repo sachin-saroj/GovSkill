@@ -5,89 +5,93 @@
 
 export const tokens = {
   colors: {
-    // Core Backgrounds & Typography
-    cream: '#F5EFE0',
-    creamDeep: '#EDE4D0',
-    ink: '#0A0A0A',
-    inkMuted: '#6B6357',
-    rule: '#D9CFBB',
-    stage: '#111111',
-    stageText: '#F5EFE0',
+    // "50 Ambitious" Core Canvas & Ink
+    canvas: '#FFFFFF',
+    ink: '#000000',
+    inkMuted: '#71717A',
+    rule: '#E4E4E7',
+    stage: '#000000',
+    stageText: '#FFFFFF',
 
-    // Section Accents
-    accentGreen: '#2A5B4A', // Metric strip only
-    accentWarm: '#E8964A',  // Editorial warm dot & CTA glow
+    // "50 Ambitious" Strict Accent Families
+    accentRust: '#AF411E',   // Darker rust/terracotta accent
+    accentOrange: '#EE8148', // Vibrant warm orange accent
+    accentBlue: '#0E50B0',   // Deep cobalt/royal blue accent
 
-    // Strict Editorial Illustration Palette
-    terracotta: '#C97B5A',
-    olive: '#7B7A4E',
-    ochre: '#C9A24A',
-    dustyBlue: '#6B8299',
-    paper: '#EFE6D2',
+    // Backward-Compatible Editorial Aliases
+    cream: '#FFFFFF',
+    creamDeep: '#F4F4F5',
+    accentGreen: '#0E50B0',
+    accentWarm: '#EE8148',
+    terracotta: '#AF411E',
+    olive: '#52525B',
+    ochre: '#EE8148',
+    dustyBlue: '#0E50B0',
+    paper: '#FFFFFF',
 
     // Semantic Status Systems
     status: {
       success: {
-        solid: '#2A5B4A',
-        bg: '#2A5B4A1F',
-        border: '#2A5B4A4D',
-        text: '#1E4537',
+        solid: '#15803D',
+        bg: '#F0FDF4',
+        border: '#BBF7D0',
+        text: '#166534',
       },
       warning: {
-        solid: '#C9A24A',
-        bg: '#C9A24A26',
-        border: '#C9A24A66',
-        text: '#7A5B14',
+        solid: '#EE8148',
+        bg: '#FFF7ED',
+        border: '#FED7AA',
+        text: '#C2410C',
       },
       danger: {
-        solid: '#C97B5A',
-        bg: '#C97B5A26',
-        border: '#C97B5A66',
-        text: '#8F3E22',
+        solid: '#AF411E',
+        bg: '#FEF2F2',
+        border: '#FECACA',
+        text: '#991B1B',
       },
       info: {
-        solid: '#0A0A0A',
-        bg: '#EDE4D0',
-        border: '#D9CFBB',
-        text: '#0A0A0A',
+        solid: '#0E50B0',
+        bg: '#EFF6FF',
+        border: '#BFDBFE',
+        text: '#0E50B0',
       },
       neutral: {
-        solid: '#6B6357',
-        bg: '#EFE6D299',
-        border: '#D9CFBB',
-        text: '#6B6357',
+        solid: '#71717A',
+        bg: '#F4F4F5',
+        border: '#E4E4E7',
+        text: '#18181B',
       },
     },
 
     // Semantic Surfaces
     surfaces: {
-      canvas: '#F5EFE0',
-      subtle: '#EDE4D0',
-      paper: '#EFE6D2',
+      canvas: '#FFFFFF',
+      subtle: '#FAFAFA',
+      paper: '#FFFFFF',
       pure: '#FFFFFF',
-      dark: '#111111',
-      darkElevated: '#1A1A1A',
+      dark: '#000000',
+      darkElevated: '#18181B',
     },
 
     // Semantic Text
     text: {
-      primary: '#0A0A0A',
-      secondary: '#6B6357',
-      muted: '#8C827A',
-      onDark: '#F5EFE0',
-      onDarkMuted: '#EDE4D099',
+      primary: '#000000',
+      secondary: '#71717A',
+      muted: '#A1A1AA',
+      onDark: '#FFFFFF',
+      onDarkMuted: '#A1A1AA',
     },
 
     // Semantic Borders
     borders: {
-      subtle: '#D9CFBB80',
-      default: '#D9CFBB',
-      strong: '#0A0A0A33',
-      onDark: 'rgba(255, 255, 255, 0.08)',
+      subtle: '#F4F4F5',
+      default: '#E4E4E7',
+      strong: '#000000',
+      onDark: 'rgba(255, 255, 255, 0.15)',
     },
   },
   typography: {
-    fontSerif: '"Fraunces", Georgia, serif',
+    fontSerif: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     fontSans: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     displayXl: 'clamp(72px, 11vw, 140px)',
     displayLg: 'clamp(56px, 8vw, 112px)',

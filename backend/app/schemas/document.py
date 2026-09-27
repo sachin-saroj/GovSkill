@@ -4,8 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RuleResultSchema(BaseModel):
-    ruleName: str
-    passed: bool
+    ruleName: str = "Unknown Rule"
+    passed: bool = False
     field: str | None = None
     reason: str | None = None
     severity: str | None = "critical"

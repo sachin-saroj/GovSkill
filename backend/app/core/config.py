@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/govskill"
+    DB_POOL_SIZE: int = 15
+    DB_MAX_OVERFLOW: int = 10
+    DB_POOL_TIMEOUT: float = 10.0
+    DB_POOL_RECYCLE: int = 1800
     GEMINI_API_KEY: str = ""
     ALLOWED_ORIGINS: Union[list[str], str] = [
         "http://localhost:5173",
