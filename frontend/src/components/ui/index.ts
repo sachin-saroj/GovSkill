@@ -15,4 +15,5 @@ export * from './EmptyState';
 export * from './ErrorAlert';
 export * from './EditorialDetails';
 export * from './Skeleton';
+export * from './Tooltip';
 export * from './icons';

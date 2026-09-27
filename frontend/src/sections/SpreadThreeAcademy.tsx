@@ -20,31 +20,33 @@ export const SpreadThreeAcademy: React.FC = () => {
       <div id="curriculum" className="absolute -top-24 left-0 w-0 h-0" aria-hidden="true" />
       <div className="relative h-full w-full max-w-[1440px] mx-auto flex flex-col justify-between flex-1">
 
-        {/* ── Main Composition: Far-left vertical tag + Center text + Right figure ── */}
-        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 my-auto">
-
-          {/* ── Far Left: Vertical Rotated Tag ── */}
-          <div className="hidden sm:flex items-center justify-center py-2 px-1 border-r border-zinc-300 pr-5 shrink-0 self-stretch my-auto">
-            <span
-              className="font-sans text-[10px] font-black uppercase tracking-[0.32em] text-zinc-400 bg-zinc-100/90 px-1 py-4"
-              style={{ writingMode: 'vertical-rl' }}
-            >
-              COMPETENCY
-            </span>
-          </div>
-
-          {/* ── Center-Left: Editorial Text & Typography Column ── */}
-          <div className="w-full lg:w-[50%] flex flex-col justify-center space-y-4 sm:space-y-5 lg:pl-2">
-
-            {/* "Part. 03" Header Lockup */}
-            <div className="flex items-baseline gap-3">
-              <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-zinc-400">
+        {/* ── Top Row: Part. 03 Sequential Lockup & Platform Rail ── */}
+        <div className="flex items-start justify-between shrink-0 relative z-20 pt-2 border-b border-zinc-200/80 pb-3">
+          <div className="flex items-center gap-4 text-left">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
                 Part.
               </span>
-              <span className="font-sans text-[clamp(72px,9.5vw,120px)] font-black text-black leading-none tracking-tighter -mt-3">
+              <span className="font-sans text-3xl sm:text-4xl font-black text-black leading-none">
                 03
               </span>
             </div>
+            <div className="space-y-0.5 border-l border-zinc-300 pl-3">
+              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#0E50B0]">
+                Platform Infrastructure
+              </span>
+              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-zinc-400">
+                Civic Workflow Architecture
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Main Composition: Left Editorial Column + Right Real Platform Showcase ── */}
+        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 my-auto py-4">
+
+          {/* ── Left Side: Editorial Text & Typography Column ── */}
+          <div className="w-full lg:w-[48%] flex flex-col justify-center space-y-4 sm:space-y-5 z-20">
 
             {/* Dominant Display Typography */}
             <div className="space-y-1.5">
@@ -114,14 +116,16 @@ export const SpreadThreeAcademy: React.FC = () => {
             </div>
           </div>
 
-          {/* ── Right Side: Female Officer Portrait (Officer Ananya) ── */}
-          <div className="w-full lg:w-[46%] flex items-center justify-center lg:justify-end select-none relative">
-            <img
-              src="/illustrations/spread3_ananya_platform.png"
-              alt="Editorial hand-drawn ink and watercolor portrait of Officer Ananya in a cobalt blazer looking toward the civic platform"
-              className="max-h-[35vh] sm:max-h-[52vh] lg:max-h-[74vh] w-auto max-w-full object-contain pointer-events-none mix-blend-multiply drop-shadow-sm"
-              loading="eager"
-            />
+          {/* ── Right Side: Real Platform Dashboard Showcase (Browser Framed) ── */}
+          <div className="w-full lg:w-[52%] flex items-center justify-center lg:justify-end select-none relative">
+            <div className="w-full max-w-[580px] rounded-2xl shadow-xl border border-zinc-300/80 bg-white overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+              <img
+                src="/illustrations/spread3_platform_dashboard.png"
+                alt="Real GovSkill platform interface showcase displaying the employee digital competency ledger, operational readiness, and curriculum modules"
+                className="max-h-[38vh] sm:max-h-[55vh] lg:max-h-[70vh] w-auto max-w-full object-contain pointer-events-none drop-shadow-sm"
+                loading="eager"
+              />
+            </div>
           </div>
 
         </div>

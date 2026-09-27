@@ -86,7 +86,7 @@ export const SpreadOneFoundation: React.FC = () => {
             <Link
               to="/citizen"
               role="button"
-              className="font-mono text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-zinc-500 hover:text-[#AF411E] underline decoration-1 underline-offset-4 cursor-pointer transition-colors"
+              className="skiper40-link font-mono text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-zinc-500 hover:text-[#AF411E] cursor-pointer transition-colors"
             >
               <span>Pre-check a citizen document</span>
             </Link>

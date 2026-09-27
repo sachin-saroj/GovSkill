@@ -19,21 +19,11 @@ export const SpreadTwoDiligence: React.FC = () => {
     >
       <div className="relative h-full w-full max-w-[1440px] mx-auto flex flex-col justify-between flex-1">
 
-        {/* ── Main Composition: Left-anchored illustration + Right text column ── */}
-        <div className="flex-1 flex flex-col lg:flex-row items-end lg:items-center justify-between gap-8 lg:gap-14 my-auto">
+        {/* ── Main Composition: Left Editorial Column + Right Visual Stage ── */}
+        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 my-auto py-4">
 
-          {/* ── Left Side: Anchored Officer Illustration (Officer Ananya at desk) ── */}
-          <div className="w-full lg:w-[50%] flex flex-col justify-end items-center lg:items-start select-none relative">
-            <img
-              src="/illustrations/spread2_ananya_diligence.png"
-              alt="Editorial hand-drawn watercolor illustration of Officer Ananya studying statutory revenue records at her municipal desk"
-              className="max-h-[38vh] sm:max-h-[55vh] lg:max-h-[76vh] w-auto max-w-full object-contain object-bottom pointer-events-none mix-blend-multiply drop-shadow-sm"
-              loading="eager"
-            />
-          </div>
-
-          {/* ── Right Side: "Part. 02" Lockup + Editorial Statement ── */}
-          <div className="w-full lg:w-[48%] flex flex-col justify-center space-y-4 lg:space-y-6 lg:pl-2">
+          {/* ── Left Side: "Part. 02" Lockup + Editorial Statement ── */}
+          <div className="w-full lg:w-[48%] flex flex-col justify-center space-y-4 lg:space-y-6 z-20">
 
             {/* "Part. 02" Header Lockup */}
             <div className="flex items-baseline gap-3">
@@ -68,27 +58,29 @@ export const SpreadTwoDiligence: React.FC = () => {
               Officers navigate statutory procedures with precision, not guesswork.
             </p>
 
-            {/* Traditional vs GovSkill Contrast Editorial Annotations */}
-            <div className="space-y-2 text-[10px] font-mono uppercase tracking-wider pt-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-zinc-500 font-medium">⚠ The Traditional Process</span>
-                <span className="text-zinc-300">•</span>
-                <span className="font-black text-[#0E50B0]">✓ The GovSkill Standard</span>
-              </div>
-              <div className="flex items-center gap-2 pt-0.5">
-                <span className="inline-block font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 border border-emerald-200 text-[9px]">
-                  0 Surprise Rejections
-                </span>
-                <span className="text-zinc-300">•</span>
-                <span className="text-[9px] text-zinc-400 font-bold">Procedural Integrity</span>
-              </div>
+            {/* Clear, Complete Comparative Sentence (Replaces badge clutter) */}
+            <div className="pt-2 border-t border-zinc-200/80">
+              <p className="font-sans text-[12px] sm:text-[13px] text-zinc-600 leading-relaxed max-w-[440px]">
+                Unlike <span className="font-semibold text-zinc-800">The Traditional Process</span> burdened by counter delays and surprise rejections, <span className="font-semibold text-[#0E50B0]">The GovSkill Standard</span> enforces statutory pre-checks so every submitted certificate passes procedural review.
+              </p>
             </div>
 
             {/* Secondary footer marker */}
-            <div className="pt-2 text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-400">
+            <div className="pt-1 text-[9px] font-mono uppercase tracking-[0.22em] text-zinc-400">
               <span>Officer Training View</span>
             </div>
           </div>
+
+          {/* ── Right Side: Anchored Officer Illustration (Officer Ananya at desk) ── */}
+          <div className="w-full lg:w-[52%] flex flex-col justify-end items-center lg:items-end select-none relative">
+            <img
+              src="/illustrations/spread2_ananya_diligence.png"
+              alt="Editorial hand-drawn watercolor illustration of Officer Ananya studying statutory revenue records at her municipal desk"
+              className="max-h-[38vh] sm:max-h-[55vh] lg:max-h-[72vh] w-auto max-w-full object-contain object-bottom pointer-events-none mix-blend-multiply drop-shadow-sm"
+              loading="eager"
+            />
+          </div>
+
         </div>
 
       </div>

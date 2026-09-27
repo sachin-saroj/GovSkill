@@ -8,7 +8,7 @@ export const Nav: React.FC = () => {
   return (
     <nav
       aria-label="Presentation Navigation"
-      className="inline-flex items-center gap-3 sm:gap-5 px-3 py-1.5 rounded-full bg-[#18181B] border border-white/10 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.35)] text-white select-none transition-all"
+      className="inline-flex items-center gap-3 sm:gap-5 px-3 py-1.5 rounded-full bg-[#18181B]/95 backdrop-blur-md border border-white/10 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.35)] text-white select-none transition-all"
     >
       {/* ── Left Editorial Identity ── */}
       <a
@@ -20,29 +20,29 @@ export const Nav: React.FC = () => {
         <span className="font-sans font-black text-xs sm:text-sm tracking-tight text-white">GovSkill.</span>
       </a>
 
-      {/* ── Editorial Section Navigation Links ── */}
+      {/* ── Editorial Section Navigation Links (with Skiper40 animated hover) ── */}
       <div className="flex items-center gap-4 sm:gap-6 px-1">
         <a
           href="#spread-01"
-          className="text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
+          className="skiper40-link text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
         >
           Project
         </a>
         <a
           href="#spread-03"
-          className="text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
+          className="skiper40-link text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
         >
           Platform
         </a>
         <a
           href="#spread-04"
-          className="text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
+          className="skiper40-link text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
         >
           GovAssist
         </a>
         <a
           href="#spread-05"
-          className="text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
+          className="skiper40-link text-xs sm:text-[13px] font-sans font-medium text-zinc-300 hover:text-white transition-colors outline-none focus-visible:ring-1 focus-visible:ring-white"
         >
           Outcome
         </a>

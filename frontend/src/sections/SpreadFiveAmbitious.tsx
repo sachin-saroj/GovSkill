@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Tooltip } from '../components/ui';
 
 /**
  * SPREAD 05 — OUTCOME / AMBITIOUS
@@ -78,7 +79,7 @@ export const SpreadFiveAmbitious: React.FC = () => {
               <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400">
                 <span>Officer & Supervisor Gateway</span>
                 <span>•</span>
-                <Link to="/citizen" className="hover:text-black underline underline-offset-2 transition-colors">
+                <Link to="/citizen" className="skiper40-link font-medium text-zinc-600 hover:text-black">
                   Citizen Pre-Check
                 </Link>
               </div>
@@ -104,9 +105,14 @@ export const SpreadFiveAmbitious: React.FC = () => {
             <span className="text-base leading-none">↓</span>
             <span className="hidden sm:inline text-[9px]">GovSkill Administrative Platform</span>
           </div>
-          <span className="font-medium text-zinc-600">
-            DPDP Act 2023 Compliant • Statutory Data Safeguards • Kerala State IT Mission
-          </span>
+          <div className="font-medium text-zinc-600">
+            <Tooltip content="Digital Personal Data Protection Act, 2023: Citizen document data isolation, ephemeral processing, and zero PII leakage safeguards.">
+              <span className="cursor-help underline decoration-dotted underline-offset-4">
+                DPDP Act 2023 Compliant • Statutory Data Safeguards
+              </span>
+            </Tooltip>
+            <span> • Kerala State IT Mission</span>
+          </div>
         </div>
 
       </div>

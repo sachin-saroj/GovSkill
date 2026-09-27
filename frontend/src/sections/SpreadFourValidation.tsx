@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Tooltip } from '../components/ui';
 
 /**
  * SPREAD 04 — CITIZEN PRE-CHECK (GOVASSIST)
  * Full-width editorial artboard:
- * - Top-left: vibrant horizontal emerald accent bar + Part. 04 lockup
- * - Center: character illustration of citizen reviewing official documents
- * - Left side: dominant display typography, concise explanation, process pipeline, and CTA
- * - Right side: Field Dispatches quote & deterministic rule standards
+ * - Top-left: vibrant horizontal emerald accent bar + Part. 04 sequential lockup
+ * - Uniform 2-column editorial rhythm: Left Text & Action (48%) + Right Visual Stage (52%)
+ * - Left side: dominant display typography, concise narrative, interactive process pipeline, CTA, and Field Dispatches
+ * - Right side: hand-drawn citizen audit illustration at consistent editorial scale
  * - Bottom-right: emerald green accent square
  * - Symmetrical, balanced editorial rhythm on warm ivory paper
  */
@@ -40,11 +41,11 @@ export const SpreadFourValidation: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Main Integrated Composition ── */}
-        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 my-auto py-4">
+        {/* ── Main Composition: Left Editorial & Action Column + Right Citizen Visual Stage ── */}
+        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 my-auto py-4">
 
-          {/* ── Left Side: Dominant Display Typography & Action ── */}
-          <div className="w-full lg:w-[35%] flex flex-col justify-center space-y-4 lg:pr-2">
+          {/* ── Left Side: Dominant Display Typography, Action & Field Dispatches ── */}
+          <div className="w-full lg:w-[48%] flex flex-col justify-center space-y-4 sm:space-y-5 z-20 lg:pr-2">
             <div className="space-y-1">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#AF411E] block">
                 Citizen Pre-Submission Validation
@@ -55,15 +56,17 @@ export const SpreadFourValidation: React.FC = () => {
               </h2>
             </div>
 
-            <p className="font-sans text-[12px] sm:text-[13px] text-zinc-600 leading-relaxed max-w-[340px]">
+            <p className="font-sans text-[13px] sm:text-[14px] text-zinc-600 leading-relaxed max-w-[420px]">
               Self-service document verification before the counter queue. OCR extraction, 4 deterministic rules, AI-powered failure explanations.
             </p>
 
-            {/* Minimal Process Pipeline */}
-            <div className="flex items-center gap-2 font-mono text-[9px] uppercase font-bold tracking-wider text-zinc-400 select-none py-1">
+            {/* Minimal Process Pipeline with Tooltip on OCR */}
+            <div className="flex items-center gap-2.5 font-mono text-[9px] uppercase font-bold tracking-wider text-zinc-400 select-none py-1">
               <span className="text-black">Document</span>
               <span>→</span>
-              <span className="text-[#0E50B0]">OCR</span>
+              <Tooltip content="Optical Character Recognition: Automated statutory text extraction from citizen documents">
+                <span className="text-[#0E50B0] underline decoration-dotted underline-offset-2 cursor-help">OCR</span>
+              </Tooltip>
               <span>→</span>
               <span className="text-emerald-700">Rules</span>
               <span>→</span>
@@ -81,40 +84,38 @@ export const SpreadFourValidation: React.FC = () => {
                 <span>→</span>
               </Link>
             </div>
+
+            {/* Field Dispatches & Rule Standards Annotation */}
+            <div className="pt-3 border-t border-zinc-200/80 space-y-3">
+              <div className="space-y-1 border-l-2 border-emerald-600/60 pl-3">
+                <div className="text-[9px] font-mono uppercase tracking-wider text-zinc-400">
+                  <span className="font-extrabold text-[#0E50B0]">Field Dispatches</span>
+                  <span> • Voices from the <span className="text-[#AF411E] font-bold">field.</span></span>
+                </div>
+                <blockquote className="text-[12px] sm:text-[13px] text-zinc-600 italic leading-snug">
+                  "Citizens arrive with verified documents. Rejection rates dropped."
+                </blockquote>
+              </div>
+
+              <div className="text-[9px] font-mono uppercase tracking-wider text-zinc-500 flex flex-wrap items-center justify-between gap-2">
+                <span className="font-bold text-black">
+                  Deterministic Rule Processing
+                </span>
+                <span className="text-[#AF411E] font-bold">
+                  Passing Standard for Certification
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* ── Center: Dominant Citizen Artwork ── */}
-          <div className="w-full lg:w-[42%] flex items-center justify-center select-none relative">
+          {/* ── Right Side: Dominant Citizen Artwork at Consistent Scale ── */}
+          <div className="w-full lg:w-[52%] flex items-center justify-center lg:justify-end select-none relative">
             <img
               src="/illustrations/spread4_citizen_audit_v2.png"
               alt="Editorial hand-drawn illustration of an Indian citizen carefully examining an official document"
-              className="max-h-[32vh] sm:max-h-[50vh] lg:max-h-[68vh] w-auto max-w-full object-contain pointer-events-none mix-blend-multiply drop-shadow-sm"
+              className="max-h-[38vh] sm:max-h-[55vh] lg:max-h-[72vh] w-auto max-w-full object-contain pointer-events-none mix-blend-multiply drop-shadow-sm"
               loading="eager"
             />
-          </div>
-
-          {/* ── Right Side: Editorial Field Dispatches & Rule Standards Annotation ── */}
-          <div className="w-full lg:w-[23%] flex flex-col justify-center space-y-5 lg:pl-3">
-            {/* Field Dispatches */}
-            <div className="space-y-1.5 border-l-2 border-emerald-600/40 pl-3">
-              <div className="text-[9px] font-mono uppercase tracking-wider text-zinc-400">
-                <span className="font-extrabold text-[#0E50B0]">Field Dispatches</span>
-                <span> • Voices from the <span className="text-[#AF411E] font-bold">field.</span></span>
-              </div>
-              <blockquote className="text-[12px] sm:text-[13px] text-zinc-600 italic leading-snug">
-                "Citizens arrive with verified documents. Rejection rates dropped."
-              </blockquote>
-            </div>
-
-            {/* Deterministic Rule Standards */}
-            <div className="space-y-1 text-[9px] font-mono uppercase tracking-wider pt-3 border-t border-zinc-200/80 text-zinc-500">
-              <span className="block font-black text-black">
-                Deterministic Rule Processing
-              </span>
-              <span className="block text-[#AF411E] font-bold">
-                Passing Standard for Certification
-              </span>
-            </div>
           </div>
 
         </div>
