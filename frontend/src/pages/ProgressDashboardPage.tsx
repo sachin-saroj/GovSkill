@@ -59,9 +59,9 @@ export const ProgressDashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-[#71717A]">
-        <Loader2 className="h-6 w-6 animate-spin text-[#09090B]" />
-        <span className="font-mono text-xs uppercase tracking-wider text-[#09090B] font-bold">
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-ink-muted">
+        <Loader2 className="h-6 w-6 animate-spin text-ink" />
+        <span className="font-mono text-xs uppercase tracking-wider text-ink font-bold">
           Loading your digital skill profile...
         </span>
       </div>
@@ -105,11 +105,11 @@ export const ProgressDashboardPage: React.FC = () => {
       <motion.div variants={fadeUpVariants} className="grid grid-cols-12 gap-6">
         {/* Column 1: Assigned Learning / Recommended Modules (5 cols on lg) */}
         <div className="col-span-12 lg:col-span-5 space-y-3">
-          <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
-            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
+          <div className="flex items-center justify-between pb-1 border-b border-border-warm">
+            <h2 className="font-serif font-bold text-base tracking-tight text-ink">
               Assigned Modules
             </h2>
-            <Link to="/module" className="font-mono text-[10px] uppercase font-bold text-[#71717A] hover:text-[#09090B] transition-colors">
+            <Link to="/module" className="font-mono text-[10px] uppercase font-bold text-ink-muted hover:text-ink transition-colors">
               All Curriculum ▾
             </Link>
           </div>
@@ -122,20 +122,20 @@ export const ProgressDashboardPage: React.FC = () => {
                 return (
                   <div
                     key={skill.module_id}
-                    className="flex items-center justify-between p-3.5 bg-white border border-[#E4E4E7] hover:border-[#A1A1AA] transition-all group"
+                    className="flex items-center justify-between p-3.5 bg-surface border border-border-warm rounded-xl hover:border-ink-muted/30 transition-all group"
                   >
                     <div className="flex items-center gap-3 min-w-0 pr-2">
-                      <div className="w-9 h-9 bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                      <div className="w-9 h-9 bg-surface-light border border-border-warm rounded-lg text-ink font-mono font-bold text-xs flex items-center justify-center shrink-0">
                         {String(idx + 1).padStart(2, '0')}
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-xs font-bold uppercase tracking-tight text-[#09090B] truncate">
+                        <h3 className="text-xs font-bold text-ink truncate">
                           {skill.module_title}
                         </h3>
-                        <div className="flex items-center gap-2 text-[10px] font-mono text-[#71717A]">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-ink-muted">
                           <span>{skill.score_percentage ? `${skill.score_percentage}% Score` : '4 Sections'}</span>
                           <span>•</span>
-                          <span className={isCert ? 'text-emerald-700 font-bold' : 'text-[#71717A]'}>
+                          <span className={isCert ? 'text-sage-700 font-bold' : 'text-ink-muted'}>
                             {isCert ? 'Certified' : skill.lessons_completed ? 'Lessons Read' : 'In Progress'}
                           </span>
                         </div>
@@ -144,7 +144,7 @@ export const ProgressDashboardPage: React.FC = () => {
 
                     <Link
                       to={`/module?id=${skill.module_id}`}
-                      className="shrink-0 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#09090B] border border-[#E4E4E7] hover:bg-[#09090B] hover:text-white hover:border-[#09090B] transition-all"
+                      className="shrink-0 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-ink border border-border-warm rounded-full hover:bg-ink hover:text-surface-light hover:border-ink transition-all"
                     >
                       View Module
                     </Link>
@@ -152,7 +152,7 @@ export const ProgressDashboardPage: React.FC = () => {
                 );
               })
             ) : (
-              <p className="text-[11px] font-mono text-[#71717A] p-4 bg-[#FAFAFA] border border-[#E4E4E7]">
+              <p className="text-[11px] font-mono text-ink-muted p-4 bg-surface rounded-xl border border-border-warm">
                 No modules assigned yet.
               </p>
             )}
@@ -161,22 +161,22 @@ export const ProgressDashboardPage: React.FC = () => {
 
         {/* Column 2: Current Activity & Trajectory (4 cols on lg) */}
         <div className="col-span-12 lg:col-span-4 space-y-3">
-          <div className="pb-1 border-b border-[#E4E4E7]">
-            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
+          <div className="pb-1 border-b border-border-warm">
+            <h2 className="font-serif font-bold text-base tracking-tight text-ink">
               Current Activity & Analytics
             </h2>
           </div>
 
           {/* Archival Stage Plate Trajectory Chart Card */}
-          <div className="bg-white border border-[#E4E4E7] p-4 text-[#09090B] space-y-2.5">
+          <div className="bg-surface border border-border-warm rounded-xl p-4 text-ink space-y-2.5">
             <div className="flex justify-between items-start">
               <div>
-                <span className="font-sans font-bold text-xs uppercase tracking-tight block text-[#09090B]">
+                <span className="font-sans font-bold text-xs tracking-tight block text-ink">
                   Assessment Trajectory
                 </span>
-                <span className="font-mono text-[10px] text-[#71717A]">75% Target Certification Benchmark</span>
+                <span className="font-mono text-[10px] text-ink-muted">75% Target Certification Benchmark</span>
               </div>
-              <span className="font-mono text-[9px] uppercase tracking-wider bg-[#FAFAFA] text-[#0E50B0] border border-[#E4E4E7] px-2 py-0.5 font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-wider bg-surface-light text-azure-800 border border-border-warm px-2 py-0.5 rounded-full font-bold">
                 Telemetry
               </span>
             </div>
@@ -185,16 +185,16 @@ export const ProgressDashboardPage: React.FC = () => {
             <div className="h-14 w-full pt-1 flex items-end">
               <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
                 {/* Target benchmark line at 75% (y=10) */}
-                <line x1="0" y1="10" x2="100" y2="10" stroke="#E4E4E7" strokeDasharray="3 3" strokeWidth="1" />
+                <line x1="0" y1="10" x2="100" y2="10" stroke="#BE123C" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
                 {/* Smooth curve */}
                 <path
                   d="M0 35 Q 25 32, 45 22 T 75 16 T 100 8"
                   fill="none"
-                  stroke="#0E50B0"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
-                <circle cx="100" cy="8" r="3" fill="#0E50B0" stroke="#FFFFFF" strokeWidth="1.5" />
+                <circle cx="100" cy="8" r="3" fill="#2563EB" stroke="#FAF4E4" strokeWidth="1.5" />
               </svg>
             </div>
           </div>
@@ -202,35 +202,35 @@ export const ProgressDashboardPage: React.FC = () => {
           {/* Dual Archival Milestone Blocks */}
           <div className="grid grid-cols-2 gap-3">
             {/* 1. Certified Milestone */}
-            <div className="bg-white border border-[#E4E4E7] p-3.5 text-[#09090B] flex flex-col justify-between min-h-[90px]">
+            <div className="bg-surface border border-border-warm rounded-xl p-3.5 text-ink flex flex-col justify-between min-h-[90px]">
               <div>
-                <span className="font-mono text-2xl font-black tracking-tight block text-[#09090B]">
+                <span className="font-mono text-2xl font-black tracking-tight block text-ink">
                   {certifiedCount}/{totalCount}
                 </span>
-                <span className="font-mono text-[10px] uppercase font-bold text-[#71717A] block">
+                <span className="font-mono text-[10px] uppercase font-bold text-ink-muted block">
                   Certified Modules
                 </span>
               </div>
               <div className="flex justify-end">
-                <span className="p-1 bg-[#FAFAFA] border border-[#E4E4E7]">
-                  <ArrowRight className="h-3 w-3 text-[#09090B] -rotate-45" />
+                <span className="p-1.5 bg-surface-light border border-border-warm rounded-full">
+                  <ArrowRight className="h-3 w-3 text-ink -rotate-45" />
                 </span>
               </div>
             </div>
 
             {/* 2. Priority Gaps */}
-            <div className="bg-white border border-[#E4E4E7] p-3.5 text-[#09090B] flex flex-col justify-between min-h-[90px]">
+            <div className="bg-surface border border-border-warm rounded-xl p-3.5 text-ink flex flex-col justify-between min-h-[90px]">
               <div>
-                <span className="font-mono text-2xl font-black tracking-tight block text-[#AF411E]">
+                <span className="font-mono text-2xl font-black tracking-tight block text-rose-700">
                   {data?.skill_gaps?.length ?? 0}
                 </span>
-                <span className="font-mono text-[10px] uppercase font-bold text-[#71717A] block">
+                <span className="font-mono text-[10px] uppercase font-bold text-ink-muted block">
                   Priority Action Gaps
                 </span>
               </div>
               <div className="flex justify-end">
-                <span className="p-1 bg-orange-50 border border-orange-200">
-                  <ArrowRight className="h-3 w-3 text-[#AF411E]" />
+                <span className="p-1.5 bg-rose-500/15 border border-rose-500/30 rounded-full">
+                  <ArrowRight className="h-3 w-3 text-rose-700" />
                 </span>
               </div>
             </div>
@@ -239,11 +239,11 @@ export const ProgressDashboardPage: React.FC = () => {
 
         {/* Column 3: Recent Learning Activity / Signals (3 cols on lg) */}
         <div className="col-span-12 lg:col-span-3 space-y-3">
-          <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
-            <h2 className="font-sans font-black text-sm uppercase tracking-wider text-[#09090B]">
+          <div className="flex items-center justify-between pb-1 border-b border-border-warm">
+            <h2 className="font-serif font-bold text-base tracking-tight text-ink">
               Recent Signals
             </h2>
-            <span className="font-mono text-[10px] text-[#71717A] uppercase tracking-wider font-bold">Audit</span>
+            <span className="font-mono text-[10px] text-ink-muted uppercase tracking-wider font-bold">Audit</span>
           </div>
 
           <div className="space-y-2">
@@ -251,17 +251,17 @@ export const ProgressDashboardPage: React.FC = () => {
               data.recent_activity.slice(0, 4).map((act, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-2.5 bg-white border border-[#E4E4E7] hover:border-[#A1A1AA] transition-colors"
+                  className="flex items-center justify-between p-2.5 bg-surface border border-border-warm rounded-xl hover:border-ink-muted/30 transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0 pr-2">
-                    <div className="w-7 h-7 bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] flex items-center justify-center shrink-0 font-mono text-[10px]">
+                    <div className="w-7 h-7 bg-surface-light border border-border-warm rounded-full text-ink flex items-center justify-center shrink-0 font-mono text-[10px]">
                       {act.activity_type === 'certification' ? '🏆' : act.activity_type === 'quiz_attempt' ? '🎯' : '📖'}
                     </div>
                     <div className="min-w-0">
-                      <span className="text-xs font-bold text-[#09090B] block truncate uppercase">
+                      <span className="text-xs font-bold text-ink block truncate">
                         {act.module_title || act.title}
                       </span>
-                      <span className="text-[10px] font-mono text-[#71717A] block truncate">
+                      <span className="text-[10px] font-mono text-ink-muted block truncate">
                         {act.detail || new Date(act.timestamp).toLocaleDateString()}
                       </span>
                     </div>
@@ -269,14 +269,14 @@ export const ProgressDashboardPage: React.FC = () => {
 
                   <Link
                     to="/module"
-                    className="shrink-0 px-2 py-0.5 text-[9px] font-mono uppercase font-bold text-[#09090B] border border-[#E4E4E7] hover:bg-[#09090B] hover:text-white transition-all"
+                    className="shrink-0 px-2.5 py-0.5 text-[9px] font-mono uppercase font-bold text-ink border border-border-warm rounded-full hover:bg-ink hover:text-surface-light transition-all"
                   >
                     Review
                   </Link>
                 </div>
               ))
             ) : (
-              <div className="p-4 bg-[#FAFAFA] border border-[#E4E4E7] text-center text-[11px] font-mono text-[#71717A]">
+              <div className="p-4 bg-surface rounded-xl border border-border-warm text-center text-[11px] font-mono text-ink-muted">
                 <span>No recent activity signals.</span>
               </div>
             )}
@@ -293,17 +293,17 @@ export const ProgressDashboardPage: React.FC = () => {
 
       {/* 4. Full Detailed Curriculum Roadmap Grid */}
       <motion.div variants={fadeUpVariants} className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E4E4E7]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border-warm">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] font-bold uppercase px-2 py-0.5 bg-[#FAFAFA] border border-[#E4E4E7] text-[#71717A]">
+              <span className="font-mono text-[10px] font-bold uppercase px-2 py-0.5 bg-surface-light border border-border-warm rounded-full text-ink-muted">
                 § 02
               </span>
-              <h2 className="font-sans text-xl font-black uppercase tracking-tight text-[#09090B]">
+              <h2 className="font-serif text-xl font-bold tracking-tight text-ink">
                 Full Curriculum Roadmap & Certifications
               </h2>
             </div>
-            <p className="text-[13px] text-[#71717A]">
+            <p className="text-[13px] text-ink-muted">
               Comprehensive module objectives, lesson reader shortcuts, and assessment status
             </p>
           </div>
@@ -313,9 +313,9 @@ export const ProgressDashboardPage: React.FC = () => {
             whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
             whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
             onClick={fetchSkillProgress}
-            className="self-start sm:self-center flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] bg-white border border-[#E4E4E7] hover:bg-[#FAFAFA] transition-all cursor-pointer"
+            className="self-start sm:self-center flex items-center gap-1.5 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider text-ink bg-surface border border-border-warm rounded-full hover:bg-surface-strong transition-all cursor-pointer min-h-[38px]"
           >
-            <RefreshCw className="h-3.5 w-3.5 text-[#09090B]" />
+            <RefreshCw className="h-3.5 w-3.5 text-ink" />
             <span>Refresh</span>
           </motion.button>
         </div>
@@ -357,16 +357,16 @@ export const ProgressDashboardPage: React.FC = () => {
       {/* 6. Official Digital Credentials Section */}
       {credentials.length > 0 && (
         <motion.div variants={fadeUpVariants} className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-[#E4E4E7]">
+          <div className="flex items-center justify-between pb-2 border-b border-border-warm">
             <div className="flex items-center gap-2.5">
-              <div className="p-1 bg-[#09090B] text-white">
-                <Award className="h-4 w-4 text-[#0E50B0]" />
+              <div className="p-1.5 bg-ink text-surface-light rounded-lg">
+                <Award className="h-4 w-4 text-azure-400" />
               </div>
-              <h2 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
+              <h2 className="font-serif font-bold text-lg tracking-tight text-ink">
                 Official Digital Credentials
               </h2>
             </div>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 border border-emerald-300">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-sage-800 bg-sage-500/15 px-3 py-1 border border-sage-500/30 rounded-full">
               {credentials.length} Cryptographically Signed
             </span>
           </div>
@@ -375,24 +375,24 @@ export const ProgressDashboardPage: React.FC = () => {
             {credentials.map((cred) => (
               <div
                 key={cred.credential_id}
-                className="bg-white p-6 border border-[#E4E4E7] shadow-none flex flex-col justify-between gap-4 relative"
+                className="bg-surface p-6 rounded-2xl border border-border-warm shadow-none flex flex-col justify-between gap-4 relative"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#09090B] bg-[#FAFAFA] px-2 py-0.5 border border-[#E4E4E7]">
-                      <ShieldCheck className="h-3 w-3 text-emerald-700" />
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-ink bg-surface-light px-2.5 py-0.5 rounded-full border border-border-warm">
+                      <ShieldCheck className="h-3 w-3 text-sage-700" />
                       {cred.credential_id}
                     </span>
-                    <span className="font-mono text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200">
+                    <span className="font-mono text-[11px] font-bold text-sage-800 bg-sage-500/15 px-2.5 py-0.5 border border-sage-500/25 rounded-full">
                       Score: {cred.percentage}%
                     </span>
                   </div>
 
-                  <h3 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B] leading-snug">
+                  <h3 className="font-sans font-bold text-base tracking-tight text-ink leading-snug">
                     {cred.module_title}
                   </h3>
 
-                  <p className="font-mono text-[11px] text-[#71717A]">
+                  <p className="font-mono text-[11px] text-ink-muted">
                     Issued on {new Date(cred.issued_at).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
@@ -401,9 +401,9 @@ export const ProgressDashboardPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between pt-3.5 border-t border-[#E4E4E7] gap-2">
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-800">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-700" />
+                <div className="flex flex-wrap items-center justify-between pt-3.5 border-t border-border-warm gap-2">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-sage-800">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-sage-700" />
                     Signature Verified
                   </span>
 
@@ -411,9 +411,9 @@ export const ProgressDashboardPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedCredentialForModal(cred)}
-                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-[#09090B] bg-white hover:bg-[#FAFAFA] px-3 py-1.5 border border-[#E4E4E7] transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-ink bg-surface-light hover:bg-surface-strong px-3 py-1.5 rounded-full border border-border-warm transition-colors cursor-pointer min-h-[36px]"
                     >
-                      <Award className="h-3.5 w-3.5 text-[#0E50B0]" />
+                      <Award className="h-3.5 w-3.5 text-azure-700" />
                       <span>View Certificate</span>
                     </button>
 
@@ -421,7 +421,7 @@ export const ProgressDashboardPage: React.FC = () => {
                       href={`/verify/${cred.credential_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-white bg-[#09090B] hover:bg-[#27272A] px-3 py-1.5 border border-[#09090B] transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-surface-light bg-ink hover:bg-ink-muted px-3.5 py-1.5 rounded-full border border-ink transition-colors min-h-[36px]"
                     >
                       <span>Verify Online</span>
                       <ExternalLink className="h-3 w-3" />

@@ -152,17 +152,17 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
   const isCorrect = selectedOption === checkItem.correctIndex;
 
   return (
-    <div className="border border-[#E4E4E7] bg-white p-6 space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E7]">
-        <div className="flex items-center gap-2 text-black font-mono font-bold text-[11px] uppercase tracking-[0.14em]">
-          <HelpCircle className="h-4 w-4 text-[#0E50B0]" />
+    <div className="border border-border-warm bg-surface rounded-2xl p-6 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-border-warm">
+        <div className="flex items-center gap-2 text-ink font-mono font-bold text-[11px] uppercase tracking-[0.14em]">
+          <HelpCircle className="h-4 w-4 text-azure-600" />
           <span>Quick Understanding Check</span>
         </div>
         {isSubmitted && (
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-[11px] font-mono text-[#71717A] hover:text-black font-bold uppercase tracking-wider cursor-pointer"
+            className="flex items-center gap-1.5 text-[11px] font-mono text-ink-muted hover:text-ink font-bold uppercase tracking-wider cursor-pointer rounded-full px-2.5 py-1 hover:bg-surface-light border border-transparent hover:border-border-warm transition-colors"
           >
             <RotateCcw className="h-3 w-3" />
             <span>Try Again</span>
@@ -170,22 +170,22 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
         )}
       </div>
 
-      <p className="font-sans font-bold text-base text-black">
+      <p className="font-sans font-bold text-base text-ink">
         {checkItem.question}
       </p>
 
       {/* Options List */}
       <div className="space-y-2">
         {checkItem.options.map((option, idx) => {
-          let btnStyle = 'border-[#E4E4E7] bg-white hover:bg-zinc-50 text-black';
+          let btnStyle = 'border-border-warm bg-surface-light hover:bg-surface-elevated text-ink hover:border-ink/20';
 
           if (isSubmitted) {
             if (idx === checkItem.correctIndex) {
-              btnStyle = 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold';
+              btnStyle = 'border-sage-500 bg-sage-500/15 text-sage-900 font-bold';
             } else if (idx === selectedOption) {
-              btnStyle = 'border-[#EE8148] bg-orange-50 text-[#AF411E] font-medium';
+              btnStyle = 'border-rose-500 bg-rose-500/15 text-rose-900 font-medium';
             } else {
-              btnStyle = 'border-[#E4E4E7] bg-zinc-50 opacity-50 text-[#71717A]';
+              btnStyle = 'border-border-warm/60 bg-surface/50 opacity-40 text-ink-muted';
             }
           }
 
@@ -195,14 +195,14 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={isSubmitted}
-              className={`w-full text-left px-4 py-3 rounded-none border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default`}
+              className={`w-full text-left px-4 py-3 rounded-xl border text-caption transition-all flex items-center justify-between gap-3 ${btnStyle} cursor-pointer disabled:cursor-default`}
             >
               <span className="leading-snug">{option}</span>
               {isSubmitted && idx === checkItem.correctIndex && (
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="h-4 w-4 text-sage-600 shrink-0" />
               )}
               {isSubmitted && idx === selectedOption && !isCorrect && (
-                <XCircle className="h-4 w-4 text-[#EE8148] shrink-0" />
+                <XCircle className="h-4 w-4 text-rose-600 shrink-0" />
               )}
             </button>
           );
@@ -212,10 +212,10 @@ export const SectionSelfCheck: React.FC<SectionSelfCheckProps> = ({
       {/* Feedback Alert */}
       {isSubmitted && (
         <div
-          className={`p-4 rounded-none border text-caption leading-relaxed animate-fade-in ${
+          className={`p-4 rounded-xl border text-caption leading-relaxed animate-fade-in ${
             isCorrect
-              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
-              : 'bg-orange-50 border-orange-300 text-[#AF411E]'
+              ? 'bg-sage-500/15 border-sage-500/30 text-sage-900'
+              : 'bg-rose-500/15 border-rose-500/30 text-rose-900'
           }`}
         >
           <p className="font-sans font-bold mb-1">

@@ -44,64 +44,64 @@ export const LearningActivityTimeline: React.FC<LearningActivityTimelineProps> =
   const getActivityTag = (type: string) => {
     switch (type) {
       case 'certification':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-300';
+        return 'bg-sage-500/15 text-sage-800 border-sage-500/30';
       case 'quiz_improved':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-300';
+        return 'bg-sage-500/15 text-sage-800 border-sage-500/30';
       case 'quiz_attempt':
-        return 'bg-blue-50 text-[#0E50B0] border-blue-200';
+        return 'bg-azure-500/15 text-azure-800 border-azure-500/30';
       case 'lesson_completed':
-        return 'bg-blue-50 text-[#0E50B0] border-blue-200';
+        return 'bg-azure-500/15 text-azure-800 border-azure-500/30';
       case 'lesson_started':
-        return 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]';
+        return 'bg-surface-light text-ink border-border-warm';
       default:
-        return 'bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]';
+        return 'bg-surface-light text-ink-muted border-border-warm';
     }
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Activity className="h-4 w-4 text-[#0E50B0]" />
-        <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
+        <Activity className="h-4 w-4 text-azure-700" />
+        <h3 className="font-serif font-bold text-xl tracking-tight text-ink">
           Learning & Assessment Audit Trail
         </h3>
       </div>
 
       {activities.length === 0 ? (
-        <Card className="p-6 rounded-none text-center border border-[#E4E4E7] bg-white shadow-none">
-          <p className="text-caption text-[#71717A]">
+        <Card className="p-6 rounded-2xl text-center border border-border-warm bg-surface shadow-none">
+          <p className="text-caption text-ink-muted">
             No recent activity recorded yet. Read module lessons or submit assessments to build your activity audit log.
           </p>
         </Card>
       ) : (
-        <Card className="p-6 rounded-none border border-[#E4E4E7] bg-white shadow-none">
-          <div className="relative pl-6 space-y-5 before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[#E4E4E7]">
+        <Card className="p-6 sm:p-8 rounded-2xl border border-border-warm bg-surface shadow-none">
+          <div className="relative pl-6 space-y-5 before:absolute before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-border-warm">
             {activities.map((act, idx) => (
               <div key={idx} className="relative group">
                 {/* Dot */}
-                <div className="absolute -left-[27px] top-0.5 h-6 w-6 rounded-none bg-white border border-[#E4E4E7] group-hover:border-[#09090B] flex items-center justify-center transition-colors shadow-none">
+                <div className="absolute -left-[29px] top-0.5 h-7 w-7 rounded-full bg-surface-light border border-border-warm group-hover:border-ink flex items-center justify-center transition-colors shadow-none">
                   {getActivityIcon(act.activity_type)}
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-caption font-bold text-[#09090B]">
+                      <span className="text-caption font-bold text-ink">
                         {act.title}
                       </span>
                       <span
-                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 border ${getActivityTag(
+                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${getActivityTag(
                           act.activity_type
                         )}`}
                       >
                         {act.module_title}
                       </span>
                     </div>
-                    <span className="text-[11px] font-mono text-[#71717A]">
+                    <span className="text-[11px] font-mono text-ink-muted">
                       {formatDate(act.timestamp)}
                     </span>
                   </div>
-                  <p className="text-caption text-[#52525B]">
+                  <p className="text-caption text-ink-muted leading-relaxed font-normal">
                     {act.detail}
                   </p>
                 </div>

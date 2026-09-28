@@ -21,27 +21,27 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
   // If there is insufficient historical data, show intentional empty state. Do NOT fabricate chart points.
   if (sortedAttempts.length < 2) {
     return (
-      <Card className={`p-6 rounded-none border border-[#E4E4E7] bg-white shadow-none space-y-3 ${className}`}>
+      <Card className={`p-6 rounded-2xl border border-border-warm bg-surface shadow-none space-y-3 ${className}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-[#0E50B0]" />
-            <h3 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B]">
+            <TrendingUp className="h-4 w-4 text-azure-700" />
+            <h3 className="font-serif font-bold text-base tracking-tight text-ink">
               Competency Growth Trajectory
             </h3>
           </div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] font-bold">
+          <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-ink-muted font-bold">
             Trajectory
           </span>
         </div>
 
-        <div className="py-8 px-4 rounded-none bg-[#FAFAFA] border border-dashed border-[#E4E4E7] text-center space-y-2">
-          <div className="inline-flex p-2.5 bg-white text-[#71717A] border border-[#E4E4E7]">
+        <div className="py-8 px-4 rounded-xl bg-surface-light border border-dashed border-border-warm text-center space-y-2">
+          <div className="inline-flex p-2.5 bg-surface text-ink-muted border border-border-warm rounded-lg">
             <FileQuestion className="h-5 w-5" />
           </div>
-          <h4 className="font-sans font-bold text-sm uppercase tracking-tight text-[#09090B]">
+          <h4 className="font-sans font-bold text-sm tracking-tight text-ink">
             Insufficient Historical Trajectory
           </h4>
-          <p className="text-[12px] text-[#71717A] max-w-xs mx-auto">
+          <p className="text-[12px] text-ink-muted max-w-xs mx-auto">
             Complete at least 2 scored assessments to plot your verified attempt-over-attempt score growth curve.
           </p>
         </div>
@@ -83,15 +83,15 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
   const benchmarkY = paddingY + chartHeight - (75 / 100) * chartHeight;
 
   return (
-    <Card className={`p-6 rounded-none border border-[#E4E4E7] bg-white shadow-none space-y-4 ${className}`}>
+    <Card className={`p-6 rounded-2xl border border-border-warm bg-surface shadow-none space-y-4 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-4 w-4 text-[#0E50B0]" />
-          <h3 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B]">
+          <TrendingUp className="h-4 w-4 text-azure-700" />
+          <h3 className="font-serif font-bold text-base tracking-tight text-ink">
             Competency Growth Trajectory
           </h3>
         </div>
-        <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 border border-emerald-200 font-bold">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-sage-800 bg-sage-500/15 px-2.5 py-0.5 border border-sage-500/30 rounded-full font-bold">
           {sortedAttempts.length} Evaluations
         </span>
       </div>
@@ -105,8 +105,8 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
         >
           <defs>
             <linearGradient id="curveGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0E50B0" stopOpacity="0.1" />
-              <stop offset="100%" stopColor="#0E50B0" stopOpacity="0" />
+              <stop offset="0%" stopColor="#2563EB" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
             </linearGradient>
           </defs>
 
@@ -116,7 +116,7 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
             y1={benchmarkY}
             x2={width - paddingX}
             y2={benchmarkY}
-            stroke="#AF411E"
+            stroke="#BE123C"
             strokeDasharray="4 3"
             strokeWidth="1.2"
             opacity="0.85"
@@ -126,7 +126,7 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
             y={benchmarkY - 4}
             textAnchor="end"
             fontSize="9"
-            fill="#AF411E"
+            fill="#BE123C"
             fontWeight="bold"
             fontFamily="monospace"
           >
@@ -140,8 +140,8 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
           <motion.path
             d={pathD}
             fill="none"
-            stroke="#09090B"
-            strokeWidth="2"
+            stroke="#121212"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             initial={{ pathLength: shouldReduceMotion ? 1 : 0 }}
@@ -162,9 +162,9 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
                 <circle
                   cx={x}
                   cy={y}
-                  r={isHovered ? 5 : 3.5}
-                  fill={attempt.passed ? '#16A34A' : '#09090B'}
-                  stroke="#FFFFFF"
+                  r={isHovered ? 5.5 : 4}
+                  fill={attempt.passed ? '#15803D' : '#121212'}
+                  stroke="#FAF4E4"
                   strokeWidth="2"
                   className="transition-all duration-150"
                 />
@@ -175,21 +175,21 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({ history, className
 
         {/* Hover Tooltip Card */}
         {hoveredPoint && (
-          <div className="mt-2 p-2.5 rounded-none bg-[#09090B] text-white text-[11px] shadow-lg space-y-0.5 animate-fade-in border border-[#E4E4E7]">
+          <div className="mt-2 p-3 rounded-xl bg-ink text-surface-light text-[11px] shadow-lg space-y-0.5 animate-fade-in border border-border-warm/30">
             <div className="flex items-center justify-between font-bold">
-              <span className="truncate max-w-[180px] font-sans uppercase">{hoveredPoint.module_title}</span>
-              <span className={hoveredPoint.passed ? 'text-emerald-400 font-mono' : 'text-orange-400 font-mono'}>
+              <span className="truncate max-w-[180px] font-sans">{hoveredPoint.module_title}</span>
+              <span className={hoveredPoint.passed ? 'text-sage-400 font-mono' : 'text-rose-400 font-mono'}>
                 {hoveredPoint.score_percentage}%
               </span>
             </div>
-            <p className="text-[#A1A1AA] text-[10px] font-mono">
+            <p className="text-surface/70 text-[10px] font-mono">
               Attempt #{hoveredPoint.attempt_number} • Score: {hoveredPoint.score}/{hoveredPoint.total}
             </p>
           </div>
         )}
       </div>
 
-      <div className="flex items-center justify-between text-[11px] text-[#71717A] pt-1 border-t border-[#E4E4E7] font-mono">
+      <div className="flex items-center justify-between text-[11px] text-ink-muted pt-1 border-t border-border-warm font-mono">
         <span>Initial Evaluation</span>
         <span>Latest Attempt</span>
       </div>
