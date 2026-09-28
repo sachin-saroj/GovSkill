@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: "ci-secret-key-for-testing-purposes-only-12345"
+      CREDENTIAL_SIGNING_KEY: "ci-credential-signing-key-for-testing-only-67890"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
