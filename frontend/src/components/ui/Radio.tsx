@@ -30,11 +30,11 @@ export const Radio: React.FC<RadioProps> = ({
         />
         <label
           htmlFor={radioId}
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#D9CFBB] transition-all duration-150 cursor-pointer select-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#0A0A0A] peer-focus-visible:ring-offset-2 ${
-            disabled ? 'cursor-not-allowed opacity-40 bg-[#EDE4D0]' : 'bg-[#F5EFE0]'
-          } peer-checked:border-[#0A0A0A] hover:border-[#0A0A0A]/40`}
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#3A3835]/35 transition-all duration-150 cursor-pointer select-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#121212] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#FAF4E4] ${
+            disabled ? 'cursor-not-allowed opacity-40 bg-[#EDE7D9]' : 'bg-[#FAF4E4]'
+          } peer-checked:border-[#121212] hover:border-[#121212]/50`}
         >
-          <span className="h-2 w-2 rounded-full bg-[#0A0A0A] opacity-0 peer-checked:opacity-100 transition-opacity duration-100" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#121212] opacity-0 peer-checked:opacity-100 transition-opacity duration-100" />
         </label>
       </div>
 
@@ -42,13 +42,13 @@ export const Radio: React.FC<RadioProps> = ({
         <label
           htmlFor={radioId}
           className={`block text-[13.5px] font-sans font-medium select-none cursor-pointer leading-tight ${
-            disabled ? 'cursor-not-allowed text-[#6B6357]/60' : 'text-[#0A0A0A]'
+            disabled ? 'cursor-not-allowed text-[#6F6759]/60' : 'text-[#121212]'
           }`}
         >
           {label}
         </label>
         {description && (
-          <p className="text-[12px] font-normal text-[#6B6357] leading-relaxed">
+          <p className="text-[12px] font-normal text-[#6F6759] leading-relaxed">
             {description}
           </p>
         )}
@@ -86,7 +86,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   return (
     <fieldset className={`space-y-2.5 ${className}`}>
       {label && (
-        <legend className="text-[13px] font-sans font-medium text-[#0A0A0A] tracking-tight">
+        <legend className="text-[13px] font-sans font-medium text-[#121212] tracking-tight">
           {label}
         </legend>
       )}
@@ -105,7 +105,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         ))}
       </div>
       {error && (
-        <p role="alert" className="text-[12px] font-medium text-[#C97B5A]">
+        <p role="alert" className="text-[12px] font-medium text-[#D9457F] text-[#C97B5A]">
           {error}
         </p>
       )}

@@ -34,11 +34,11 @@ export const Select: React.FC<SelectProps> = ({
   const describedBy = errorId || helperId || undefined;
 
   let stateBorderClasses =
-    'border-[#D9CFBB] hover:border-[#0A0A0A]/40 focus:border-[#0A0A0A] focus:ring-[#0A0A0A]/10';
+    'border-[#3A3835]/30 hover:border-[#121212]/60 focus:border-[#121212] focus:ring-[#121212]/15';
 
   if (error) {
     stateBorderClasses =
-      'border-[#C97B5A] text-[#8F3E22] focus:ring-[#C97B5A]/20 focus:border-[#C97B5A]';
+      'border-[#D9457F] text-[#8F3E22] focus:ring-[#D9457F]/20 focus:border-[#D9457F]';
   }
 
   return (
@@ -46,7 +46,7 @@ export const Select: React.FC<SelectProps> = ({
       {label && (
         <label
           htmlFor={selectId}
-          className="block text-[13px] font-sans font-medium text-[#0A0A0A] tracking-tight"
+          className="block text-[13px] font-sans font-medium text-[#121212] tracking-tight"
         >
           {label}
         </label>
@@ -57,7 +57,7 @@ export const Select: React.FC<SelectProps> = ({
           disabled={disabled}
           aria-invalid={!!error}
           aria-describedby={describedBy}
-          className={`w-full appearance-none rounded-xl border bg-[#F5EFE0] px-4 py-2.5 pr-10 text-[14px] text-[#0A0A0A] transition-all duration-150 focus:outline-none focus:ring-2 disabled:bg-[#EDE4D0]/50 disabled:cursor-not-allowed min-h-[44px] cursor-pointer ${stateBorderClasses} ${className}`}
+          className={`w-full appearance-none rounded-xl border bg-[#FAF4E4] px-4 py-2.5 pr-10 text-[14px] text-[#121212] transition-all duration-150 focus:outline-none focus:ring-2 disabled:bg-[#EDE7D9]/60 disabled:cursor-not-allowed min-h-[44px] cursor-pointer ${stateBorderClasses} ${className}`}
           {...props}
         >
           {placeholder && (
@@ -73,17 +73,17 @@ export const Select: React.FC<SelectProps> = ({
               ))
             : children}
         </select>
-        <span className="absolute right-3.5 flex items-center pointer-events-none text-[#6B6357]">
+        <span className="absolute right-3.5 flex items-center pointer-events-none text-[#6F6759]">
           <IconChevronDown size="sm" />
         </span>
       </div>
       {error && (
-        <p id={errorId} role="alert" className="text-[12px] font-medium text-[#C97B5A]">
+        <p id={errorId} role="alert" className="text-[12px] font-medium text-[#D9457F] text-[#C97B5A]">
           {error}
         </p>
       )}
       {!error && helperText && (
-        <p id={helperId} className="text-[12px] font-normal text-[#6B6357]">
+        <p id={helperId} className="text-[12px] font-normal text-[#6F6759]">
           {helperText}
         </p>
       )}

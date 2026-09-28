@@ -1,25 +1,58 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --cream: #F5EFE0;
-  --cream-deep: #EDE4D0;
-  --ink: #0A0A0A;
-  --ink-muted: #6B6357;
-  --rule: #D9CFBB;
-  --stage: #111111;
-  --stage-text: #F5EFE0;
-  --accent-green: #2A5B4A;
-  --accent-warm: #E8964A;
+  /* GovSkill Internal / Operational Editorial Design System Tokens */
+  --canvas: #FAF4E4;
+  --ink: #121212;
+  --on-ink: #FAF4E4;
+  --surface: #EDE7D9;
+  --surface-light: #F5EFDF;
+  --surface-subtle: #F7F2E7;
 
-  /* Editorial Illustration Palette Tokens */
-  --terracotta: #C97B5A;
-  --olive: #7B7A4E;
-  --ochre: #C9A24A;
-  --dusty-blue: #6B8299;
-  --paper: #EFE6D2;
+  /* Civic Semantic Pastel Accents */
+  --sage: #98AD60;
+  --sage-soft: #E8EED8;
+  --sage-dark: #2D4512;
+  --azure: #B6CAEB;
+  --azure-soft: #E3ECF8;
+  --azure-dark: #14325E;
+  --gold: #F6D868;
+  --gold-soft: #FBF1C9;
+  --gold-dark: #594102;
+  --rose: #F5B8DA;
+  --rose-soft: #FBE9F2;
+  --rose-dark: #5C163C;
+  --danger: #D9457F;
+  --danger-soft: #F8D0DF;
+  --danger-dark: #7A1843;
+
+  /* Typography & Contrast (WCAG AA Safe) */
+  --text-primary: #121212;
+  --text-secondary: #2D2A28;
+  --text-muted: #6F6759;
+  --text-muted-aa: #6F6759;
+  --text-faint: #9E9585;
+  --border-frame: #3A3835;
+  --border-default: #DCD5C5;
+  --border-subtle: #E8E2D4;
+
+  /* Backward Compatibility */
+  --cream: #FAF4E4;
+  --cream-deep: #EDE7D9;
+  --rule: #DCD5C5;
+  --stage: #121212;
+  --stage-text: #FAF4E4;
+  --accent-green: #98AD60;
+  --accent-warm: #F6D868;
+  --terracotta: #D9457F;
+  --olive: #52525B;
+  --ochre: #F6D868;
+  --dusty-blue: #B6CAEB;
+  --paper: #EDE7D9;
 
   --font-serif: "Fraunces", Georgia, serif;
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
 }
 
 html {

@@ -17,3 +17,5 @@ export * from './EditorialDetails';
 export * from './Skeleton';
 export * from './Tooltip';
 export * from './icons';
+export * from './CategoryIconCircle';
+export * from './IconButton';

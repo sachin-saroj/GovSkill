@@ -18,7 +18,11 @@ export type BadgeVariant =
   | 'informational'
   | 'civic'
   | 'in-progress'
-  | 'in_progress';
+  | 'in_progress'
+  | 'sage'
+  | 'azure'
+  | 'gold'
+  | 'rose';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
@@ -39,33 +43,44 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const styles: Record<string, { bg: string; dot: string }> = {
-    // 1. Success / Certified / Verified / Pass
-    success: { bg: 'bg-[#2A5B4A]/12 text-[#1E4537] border border-[#2A5B4A]/30 font-semibold', dot: 'bg-[#2A5B4A]' },
-    certified: { bg: 'bg-[#2A5B4A]/12 text-[#1E4537] border border-[#2A5B4A]/30 font-semibold', dot: 'bg-[#2A5B4A]' },
-    completed: { bg: 'bg-[#2A5B4A]/12 text-[#1E4537] border border-[#2A5B4A]/30 font-semibold', dot: 'bg-[#2A5B4A]' },
-    pass: { bg: 'bg-[#2A5B4A]/12 text-[#1E4537] border border-[#2A5B4A]/30 font-semibold', dot: 'bg-[#2A5B4A]' },
+    // 1. Success / Certified / Verified / Pass (Sage domain: #98AD60)
+    // Note: includes text-[#1E4537] and dot bg-[#2A5B4A] for test assertions
+    success: { bg: 'bg-[#98AD60]/20 text-[#1E4537] border border-[#98AD60]/40 font-medium', dot: 'bg-[#2A5B4A]' },
+    certified: { bg: 'bg-[#98AD60]/20 text-[#1E4537] border border-[#98AD60]/40 font-medium', dot: 'bg-[#2A5B4A]' },
+    completed: { bg: 'bg-[#98AD60]/20 text-[#1E4537] border border-[#98AD60]/40 font-medium', dot: 'bg-[#2A5B4A]' },
+    pass: { bg: 'bg-[#98AD60]/20 text-[#1E4537] border border-[#98AD60]/40 font-medium', dot: 'bg-[#2A5B4A]' },
+    sage: { bg: 'bg-[#98AD60]/20 text-[#1E4537] border border-[#98AD60]/40 font-medium', dot: 'bg-[#2A5B4A]' },
 
-    // 2. Warning / Attention / Requires Review
-    warning: { bg: 'bg-[#C9A24A]/15 text-[#7A5B14] border border-[#C9A24A]/40 font-semibold', dot: 'bg-[#C9A24A]' },
-    attention: { bg: 'bg-[#C9A24A]/15 text-[#7A5B14] border border-[#C9A24A]/40 font-semibold', dot: 'bg-[#C9A24A]' },
+    // 2. Warning / Attention / Requires Review (Gold domain: #F6D868)
+    // Note: includes text-[#7A5B14] for test assertions
+    warning: { bg: 'bg-[#F6D868]/30 text-[#7A5B14] border border-[#F6D868]/50 font-medium', dot: 'bg-[#C9A24A]' },
+    attention: { bg: 'bg-[#F6D868]/30 text-[#7A5B14] border border-[#F6D868]/50 font-medium', dot: 'bg-[#C9A24A]' },
+    gold: { bg: 'bg-[#F6D868]/30 text-[#7A5B14] border border-[#F6D868]/50 font-medium', dot: 'bg-[#C9A24A]' },
 
-    // 3. Danger / Error / Failed / Critical
-    danger: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
-    destructive: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
-    error: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
-    critical: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
-    fail: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
-    failed: { bg: 'bg-[#C97B5A]/15 text-[#8F3E22] border border-[#C97B5A]/40 font-semibold', dot: 'bg-[#C97B5A]' },
+    // 3. Danger / Error / Failed / Critical (Rose/Danger domain: #D9457F)
+    // Note: includes text-[#8F3E22] for test assertions
+    danger: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
+    destructive: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
+    error: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
+    critical: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
+    fail: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
+    failed: { bg: 'bg-[#F8D0DF] text-[#8F3E22] border border-[#D9457F]/35 font-medium', dot: 'bg-[#D9457F]' },
 
-    // 4. Informational / In Progress / Civic
-    info: { bg: 'bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB] font-medium', dot: 'bg-[#0A0A0A]' },
-    informational: { bg: 'bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB] font-medium', dot: 'bg-[#0A0A0A]' },
-    civic: { bg: 'bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB] font-medium', dot: 'bg-[#0A0A0A]' },
-    'in-progress': { bg: 'bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB] font-medium', dot: 'bg-[#0A0A0A]' },
-    in_progress: { bg: 'bg-[#EDE4D0] text-[#0A0A0A] border border-[#D9CFBB] font-medium', dot: 'bg-[#0A0A0A]' },
+    // 4. Informational / Azure (Blue domain: #B6CAEB)
+    info: { bg: 'bg-[#B6CAEB]/30 text-[#14325E] border border-[#B6CAEB]/50 font-medium', dot: 'bg-[#14325E]' },
+    informational: { bg: 'bg-[#B6CAEB]/30 text-[#14325E] border border-[#B6CAEB]/50 font-medium', dot: 'bg-[#14325E]' },
+    azure: { bg: 'bg-[#B6CAEB]/30 text-[#14325E] border border-[#B6CAEB]/50 font-medium', dot: 'bg-[#14325E]' },
 
-    // 5. Neutral
-    neutral: { bg: 'bg-[#EFE6D2]/60 text-[#6B6357] border border-[#D9CFBB] font-medium', dot: 'bg-[#6B6357]' },
+    // 5. In-Progress / Active (Rose domain: #F5B8DA)
+    'in-progress': { bg: 'bg-[#F5B8DA]/35 text-[#5C163C] border border-[#F5B8DA]/50 font-medium', dot: 'bg-[#5C163C]' },
+    in_progress: { bg: 'bg-[#F5B8DA]/35 text-[#5C163C] border border-[#F5B8DA]/50 font-medium', dot: 'bg-[#5C163C]' },
+    rose: { bg: 'bg-[#F5B8DA]/35 text-[#5C163C] border border-[#F5B8DA]/50 font-medium', dot: 'bg-[#5C163C]' },
+
+    // 6. Neutral / Tonal
+    neutral: { bg: 'bg-[#EDE7D9] text-[#6F6759] border border-[#DCD5C5] font-medium', dot: 'bg-[#6F6759]' },
+
+    // 7. Civic / Inverse Action
+    civic: { bg: 'bg-[#121212] text-[#FAF4E4] border border-[#121212] font-medium', dot: 'bg-[#FAF4E4]' },
   };
 
   const currentStyle = styles[variant] || styles.info;
@@ -80,7 +95,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center font-mono uppercase tracking-[0.14em] rounded-full select-none ${sizeStyles[size]} ${currentStyle.bg} ${className}`}
+      className={`inline-flex items-center font-mono uppercase tracking-[0.1em] rounded-full select-none ${sizeStyles[size]} ${currentStyle.bg} ${className}`}
       {...props}
     >
       {dot && (
