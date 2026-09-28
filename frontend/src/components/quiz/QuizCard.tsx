@@ -30,19 +30,19 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   return (
     <Card
       id={`question-card-${questionIndex}`}
-      className={`border-[#E4E4E7] p-6 sm:p-8 space-y-6 bg-white rounded-none shadow-none transition-all ${
+      className={`border border-border-warm p-6 sm:p-8 space-y-6 bg-surface rounded-2xl shadow-none transition-all ${
         disabled ? 'opacity-70' : ''
-      } ${isFlagged ? 'border-[#EE8148] ring-1 ring-[#EE8148]' : ''}`}
+      } ${isFlagged ? 'border-rose-500/60 ring-1 ring-rose-500/60' : ''}`}
     >
       {/* Question Header & Action Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E4E4E7] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-warm pb-4">
         <div className="flex items-center gap-3">
-          <span className="h-7 w-7 bg-black text-white flex items-center justify-center font-mono font-bold text-xs shrink-0">
+          <span className="h-7 w-7 bg-ink text-on-ink flex items-center justify-center font-mono font-bold text-xs shrink-0 rounded-lg">
             {String(questionIndex + 1).padStart(2, '0')}
           </span>
           {question.competency && (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-[#0E50B0] bg-[#0E50B0]/5 px-3 py-1 border border-[#0E50B0]/20">
-              <Award className="h-3 w-3 text-[#0E50B0]" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-azure-900 bg-azure-500/10 px-3 py-1 border border-azure-500/25 rounded-full">
+              <Award className="h-3 w-3 text-azure-700" />
               <span>{question.competency}</span>
             </span>
           )}
@@ -53,20 +53,20 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             type="button"
             onClick={onToggleFlag}
             disabled={disabled}
-            className={`inline-flex items-center gap-2 px-3 py-1 text-xs font-mono font-bold uppercase tracking-wider rounded-none border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-2 px-3.5 py-1 text-xs font-mono font-bold uppercase tracking-wider rounded-full border transition-all cursor-pointer ${
               isFlagged
-                ? 'bg-orange-50 text-[#AF411E] border-[#EE8148]'
-                : 'bg-white hover:bg-zinc-50 text-[#71717A] border-[#E4E4E7]'
+                ? 'bg-rose-500/15 text-rose-900 border-rose-500/40'
+                : 'bg-surface-light hover:bg-surface-elevated text-ink-muted border-border-warm'
             }`}
           >
-            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-[#AF411E] fill-[#AF411E]' : 'text-[#71717A]'}`} />
+            <Flag className={`h-3.5 w-3.5 ${isFlagged ? 'text-rose-600 fill-rose-600' : 'text-ink-muted'}`} />
             <span>{isFlagged ? 'Flagged for Review' : 'Flag Question'}</span>
           </button>
         )}
       </div>
 
       {/* Question Text */}
-      <h2 className="font-sans text-lg sm:text-xl font-bold text-black leading-snug tracking-tight">
+      <h2 className="font-sans text-lg sm:text-xl font-bold text-ink leading-snug tracking-tight">
         {question.question}
       </h2>
 
@@ -80,12 +80,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             <motion.label
               key={idx}
               whileHover={shouldReduceMotion || disabled ? {} : { x: 2 }}
-              className={`flex items-center gap-4 p-4 rounded-none border transition-all duration-150 ${
+              className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-150 ${
                 disabled
-                  ? 'border-[#E4E4E7] bg-zinc-50 text-[#71717A] cursor-not-allowed'
+                  ? 'border-border-warm/60 bg-surface/50 text-ink-muted cursor-not-allowed'
                   : isSelected
-                  ? 'border-black bg-zinc-50 text-black font-bold ring-1 ring-black cursor-pointer'
-                  : 'border-[#E4E4E7] bg-white hover:border-black/50 text-black cursor-pointer'
+                  ? 'border-ink bg-ink text-on-ink font-semibold shadow-xs cursor-pointer'
+                  : 'border-border-warm bg-surface-light hover:border-ink/20 hover:bg-surface-elevated text-ink cursor-pointer'
               }`}
             >
               <input
@@ -95,19 +95,19 @@ export const QuizCard: React.FC<QuizCardProps> = ({
                 checked={isSelected}
                 onChange={() => !disabled && onSelectOption(idx)}
                 disabled={disabled}
-                className="h-4 w-4 text-black focus:ring-black accent-black disabled:cursor-not-allowed"
+                className="h-4 w-4 text-ink focus:ring-ink accent-ink disabled:cursor-not-allowed"
               />
               <span
                 aria-hidden="true"
-                className={`h-6 w-6 rounded-none flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-colors ${
+                className={`h-6 w-6 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-colors ${
                   isSelected
-                    ? 'bg-black text-white'
-                    : 'bg-zinc-100 text-[#71717A] border border-[#E4E4E7]'
+                    ? 'bg-white/20 text-on-ink'
+                    : 'bg-surface text-ink-muted border border-border-warm'
                 }`}
               >
                 {letter}
               </span>
-              <span className="text-sm font-sans font-normal leading-relaxed">
+              <span className={`text-sm font-sans leading-relaxed ${isSelected ? 'text-on-ink font-medium' : 'text-ink font-normal'}`}>
                 {option}
               </span>
             </motion.label>

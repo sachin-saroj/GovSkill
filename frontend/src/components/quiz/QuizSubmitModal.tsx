@@ -27,48 +27,48 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
   const hasUnanswered = unansweredCount > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="bg-[#EDE4D0] rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#D9CFBB] space-y-5 animate-scale-in">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-ink/60 backdrop-blur-xs animate-fade-in">
+      <div className="bg-surface rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-border-warm space-y-5 animate-scale-in">
         {/* Header Icon */}
         <div className="flex items-center gap-3">
           <div
-            className={`h-11 w-11 rounded-full flex items-center justify-center shrink-0 border ${
-              hasUnanswered ? 'bg-[#F5EFE0] text-[#C97B5A] border-[#C97B5A]/40' : 'bg-[#F5EFE0] text-[#2A5B4A] border-[#2A5B4A]/40'
+            className={`h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 border ${
+              hasUnanswered ? 'bg-rose-500/15 text-rose-900 border-rose-500/30' : 'bg-sage-500/15 text-sage-900 border-sage-500/30'
             }`}
           >
             {hasUnanswered ? (
-              <AlertTriangle className="h-6 w-6 text-[#C97B5A]" />
+              <AlertTriangle className="h-5 w-5 text-rose-700" />
             ) : (
-              <CheckCircle2 className="h-6 w-6 text-[#2A5B4A]" />
+              <CheckCircle2 className="h-5 w-5 text-sage-700" />
             )}
           </div>
           <div>
-            <h3 className="font-serif text-xl font-normal text-[#0A0A0A] leading-snug tracking-tight">
+            <h3 className="font-serif text-xl font-bold text-ink leading-snug tracking-tight">
               Confirm Assessment Submission
             </h3>
-            <p className="text-xs text-[#6B6357]">
+            <p className="text-xs text-ink-muted">
               Your answers will be evaluated server-side for official competency scoring.
             </p>
           </div>
         </div>
 
         {/* Assessment Status Summary Box */}
-        <div className="bg-[#F5EFE0] p-4 sm:p-5 rounded-xl border border-[#D9CFBB] space-y-2.5 text-xs font-mono">
-          <div className="flex justify-between items-center text-[#6B6357]">
+        <div className="bg-surface-light p-4 sm:p-5 rounded-2xl border border-border-warm space-y-2.5 text-xs font-mono">
+          <div className="flex justify-between items-center text-ink-muted">
             <span>Total Questions:</span>
-            <span className="font-bold text-[#0A0A0A]">{totalQuestions}</span>
+            <span className="font-bold text-ink">{totalQuestions}</span>
           </div>
-          <div className="flex justify-between items-center text-[#6B6357]">
+          <div className="flex justify-between items-center text-ink-muted">
             <span>Answered:</span>
-            <span className="font-bold text-[#2A5B4A]">
+            <span className="font-bold text-sage-900">
               {answeredCount} of {totalQuestions}
             </span>
           </div>
 
           {flaggedCount > 0 && (
-            <div className="flex justify-between items-center text-[#C97B5A] bg-[#EDE4D0] px-3.5 py-1.5 rounded-full border border-[#C97B5A]/40">
+            <div className="flex justify-between items-center text-rose-900 bg-rose-500/10 px-3.5 py-1.5 rounded-full border border-rose-500/30">
               <span className="inline-flex items-center gap-1.5">
-                <Flag className="h-3.5 w-3.5 text-[#C97B5A] fill-[#C97B5A]" />
+                <Flag className="h-3.5 w-3.5 text-rose-600 fill-rose-600" />
                 <span>Flagged for Review:</span>
               </span>
               <span className="font-bold">{flaggedCount}</span>
@@ -76,10 +76,10 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
           )}
 
           {hasUnanswered && (
-            <div className="p-3.5 rounded-xl bg-[#EDE4D0] border border-[#C97B5A]/40 text-[#0A0A0A] flex items-start gap-2 font-sans">
-              <AlertTriangle className="h-4 w-4 text-[#C97B5A] shrink-0 mt-0.5" />
-              <p className="text-xs leading-relaxed font-normal text-[#0A0A0A]">
-                <strong className="font-semibold text-[#C97B5A]">Notice:</strong> You have <strong>{unansweredCount}</strong> unanswered question(s). Unanswered questions will receive 0 points.
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-950 flex items-start gap-2 font-sans">
+              <AlertTriangle className="h-4 w-4 text-rose-700 shrink-0 mt-0.5" />
+              <p className="text-xs leading-relaxed font-normal text-rose-900">
+                <strong className="font-semibold text-rose-950">Notice:</strong> You have <strong>{unansweredCount}</strong> unanswered question(s). Unanswered questions will receive 0 points.
               </p>
             </div>
           )}
@@ -93,7 +93,7 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
             size="sm"
             onClick={onCancel}
             disabled={isSubmitting}
-            className="rounded-full"
+            className="rounded-full min-h-[40px] px-4 font-mono text-xs uppercase tracking-wider"
           >
             Keep Reviewing
           </Button>
@@ -102,7 +102,7 @@ export const QuizSubmitModal: React.FC<QuizSubmitModalProps> = ({
             size="sm"
             onClick={onConfirmSubmit}
             disabled={isSubmitting}
-            className="rounded-full"
+            className="rounded-full min-h-[40px] px-5 bg-ink text-on-ink hover:bg-ink/90 font-mono text-xs uppercase tracking-wider font-bold"
           >
             {isSubmitting ? (
               <>

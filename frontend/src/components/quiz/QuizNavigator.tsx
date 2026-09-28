@@ -22,24 +22,24 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
   const unansweredCount = questions.length - answeredCount;
 
   return (
-    <div className="bg-white p-5 rounded-none border border-[#E4E4E7] space-y-4 shadow-none">
+    <div className="bg-surface p-5 rounded-2xl border border-border-warm space-y-4 shadow-none">
       {/* Navigator Summary Row */}
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-        <span className="font-sans font-bold text-black uppercase tracking-wider">Question Navigator:</span>
-        <div className="flex items-center gap-4 text-xs font-mono">
-          <span className="inline-flex items-center gap-1.5 text-emerald-700 font-bold uppercase">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+        <span className="font-sans font-bold text-ink uppercase tracking-wider">Question Navigator:</span>
+        <div className="flex flex-wrap items-center gap-2.5 text-xs font-mono">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-500/15 text-sage-900 border border-sage-500/30 font-bold uppercase">
+            <CheckCircle2 className="h-3.5 w-3.5 text-sage-700" />
             <span>{answeredCount} Answered</span>
           </span>
           {unansweredCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 text-[#71717A] uppercase">
-              <AlertCircle className="h-3.5 w-3.5 text-[#71717A]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-light text-ink-muted border border-border-warm uppercase">
+              <AlertCircle className="h-3.5 w-3.5 text-ink-muted" />
               <span>{unansweredCount} Unanswered</span>
             </span>
           )}
           {flaggedCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 text-[#AF411E] font-bold uppercase">
-              <Flag className="h-3.5 w-3.5 text-[#EE8148] fill-[#EE8148]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 text-rose-900 border border-rose-500/30 font-bold uppercase">
+              <Flag className="h-3.5 w-3.5 text-rose-600 fill-rose-600" />
               <span>{flaggedCount} Flagged</span>
             </span>
           )}
@@ -52,11 +52,11 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
           const isAnswered = answers[q.id] !== undefined;
           const isFlagged = Boolean(flaggedQuestions[q.id]);
 
-          let btnClass = 'bg-white text-[#71717A] hover:bg-zinc-50 border-[#E4E4E7]';
+          let btnClass = 'bg-surface-light text-ink-muted hover:bg-surface-elevated hover:text-ink border-border-warm';
           if (isFlagged) {
-            btnClass = 'bg-orange-50 text-[#AF411E] border-[#EE8148] font-bold';
+            btnClass = 'bg-rose-500/15 text-rose-900 border-rose-500/40 font-bold ring-1 ring-rose-500/30';
           } else if (isAnswered) {
-            btnClass = 'bg-black text-white border-black font-bold';
+            btnClass = 'bg-ink text-on-ink border-ink font-bold shadow-xs';
           }
 
           return (
@@ -65,7 +65,7 @@ export const QuizNavigator: React.FC<QuizNavigatorProps> = ({
               type="button"
               onClick={() => onJumpToQuestion(idx)}
               disabled={disabled}
-              className={`h-8 min-w-[36px] px-2.5 rounded-none border text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 ${btnClass}`}
+              className={`h-8 min-w-[38px] px-2.5 rounded-xl border text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ink ${btnClass}`}
               title={`Jump to Question ${idx + 1}${isFlagged ? ' (Flagged)' : ''}${isAnswered ? ' (Answered)' : ''}`}
             >
               <span>{String(idx + 1).padStart(2, '0')}</span>

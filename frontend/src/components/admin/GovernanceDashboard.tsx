@@ -56,17 +56,17 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
   return (
     <motion.div variants={fadeUpVariants} className="space-y-8">
       {/* SECTION 1: WORKFORCE COMPLIANCE & CREDENTIAL AUDIT */}
-      <div className="bg-white rounded-none p-6 sm:p-8 border border-[#E4E4E7] shadow-none space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E4E7] pb-5">
+      <div className="bg-surface rounded-2xl p-6 sm:p-8 border border-border-warm shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-warm/70 pb-5">
           <div className="space-y-1 max-w-xl">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-[#71717A] uppercase tracking-[0.2em]">
-              <FileSpreadsheet className="h-4 w-4 text-[#0E50B0]" />
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-ink-muted uppercase tracking-[0.2em]">
+              <FileSpreadsheet className="h-4 w-4 text-civic" />
               <span>Statutory Compliance & Audit</span>
             </div>
-            <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
+            <h3 className="font-sans font-bold text-xl uppercase tracking-tight text-ink">
               Workforce Certification & Compliance Audit
             </h3>
-            <p className="text-xs text-[#52525B] font-sans">
+            <p className="text-xs text-ink-muted font-sans leading-relaxed">
               Generate structured audit trails of all enrolled officers, completion status, evaluation scores, and cryptographic credential verification IDs.
             </p>
           </div>
@@ -77,13 +77,13 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
               type="button"
               disabled={isExporting !== null}
               onClick={() => onExport('csv')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-[#FAFAFA] disabled:opacity-50 text-[#09090B] text-xs font-mono font-bold uppercase tracking-wider rounded-none border border-[#E4E4E7] shadow-none transition-all cursor-pointer min-h-[40px]"
+              className="flex items-center gap-2 px-4 py-2 bg-surface-light hover:bg-surface-elevated disabled:opacity-50 text-ink text-xs font-mono font-bold uppercase tracking-wider rounded-full border border-border-warm shadow-xs transition-all cursor-pointer min-h-[40px]"
               title="Export Workforce Compliance Report as CSV"
             >
               {isExporting === 'csv' ? (
-                <Loader2 className="h-4 w-4 animate-spin text-[#09090B]" />
+                <Loader2 className="h-4 w-4 animate-spin text-ink" />
               ) : (
-                <Download className="h-4 w-4 text-[#0E50B0]" />
+                <Download className="h-4 w-4 text-civic" />
               )}
               <span>Export Audit (CSV)</span>
             </button>
@@ -92,13 +92,13 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
               type="button"
               disabled={isExporting !== null}
               onClick={() => onExport('json')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-[#FAFAFA] disabled:opacity-50 text-[#09090B] text-xs font-mono font-bold uppercase tracking-wider rounded-none border border-[#E4E4E7] shadow-none transition-all cursor-pointer min-h-[40px]"
+              className="flex items-center gap-2 px-4 py-2 bg-surface-light hover:bg-surface-elevated disabled:opacity-50 text-ink text-xs font-mono font-bold uppercase tracking-wider rounded-full border border-border-warm shadow-xs transition-all cursor-pointer min-h-[40px]"
               title="Export Full Compliance Audit Trail as JSON"
             >
               {isExporting === 'json' ? (
-                <Loader2 className="h-4 w-4 animate-spin text-[#09090B]" />
+                <Loader2 className="h-4 w-4 animate-spin text-ink" />
               ) : (
-                <FileJson className="h-4 w-4 text-[#0E50B0]" />
+                <FileJson className="h-4 w-4 text-civic" />
               )}
               <span>Export JSON</span>
             </button>
@@ -107,95 +107,95 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
 
         {/* Compliance Error Alert */}
         {complianceError && (
-          <div className="p-4 bg-white border-l-4 border-l-[#AF411E] border-[#E4E4E7] flex items-center gap-2.5 text-xs text-[#AF411E]">
-            <AlertCircle className="h-4 w-4 text-[#AF411E] shrink-0" />
+          <div className="p-4 bg-surface-light border-l-4 border-l-rose border-border-warm rounded-r-xl flex items-center gap-2.5 text-xs text-rose">
+            <AlertCircle className="h-4 w-4 text-rose shrink-0" />
             <span className="font-bold">{complianceError}</span>
           </div>
         )}
 
         {/* Compliance Statistics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-            <span className="text-[#71717A] font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
-              <Users className="h-3 w-3 text-[#71717A]" /> Workforce Size
+          <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+            <span className="text-ink-muted font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
+              <Users className="h-3 w-3 text-ink-muted" /> Workforce Size
             </span>
-            <p className="font-mono text-2xl font-black text-[#09090B]">{totalEmployees} Officers</p>
-            <span className="text-xs text-[#71717A] font-sans">Enrolled in active training</span>
+            <p className="font-mono text-2xl font-bold text-ink">{totalEmployees} Officers</p>
+            <span className="text-xs text-ink-muted font-sans">Enrolled in active training</span>
           </div>
 
-          <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-            <span className="text-emerald-800 font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
-              <Award className="h-3 w-3 text-emerald-700" /> Verified Credentials
+          <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+            <span className="text-sage font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
+              <Award className="h-3 w-3 text-sage" /> Verified Credentials
             </span>
-            <p className="font-mono text-2xl font-black text-emerald-700">{totalCertifications} Certificates</p>
-            <span className="text-xs text-emerald-800 font-sans">≥ 75% evaluation threshold</span>
+            <p className="font-mono text-2xl font-bold text-sage">{totalCertifications} Certificates</p>
+            <span className="text-xs text-sage/80 font-sans">≥ 75% evaluation threshold</span>
           </div>
 
-          <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-            <span className="text-[#71717A] font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
-              <ShieldCheck className="h-3 w-3 text-[#0E50B0]" /> Overall Compliance
+          <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+            <span className="text-ink-muted font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
+              <ShieldCheck className="h-3 w-3 text-civic" /> Overall Compliance
             </span>
-            <p className="font-mono text-2xl font-black text-[#09090B]">{overallComplianceRate}%</p>
-            <span className="text-xs text-[#71717A] font-sans">Workforce certification coverage</span>
+            <p className="font-mono text-2xl font-bold text-ink">{overallComplianceRate}%</p>
+            <span className="text-xs text-ink-muted font-sans">Workforce certification coverage</span>
           </div>
 
-          <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-            <span className="text-[#AF411E] font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
-              <AlertTriangle className="h-3 w-3 text-[#AF411E]" /> Attention Required
+          <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+            <span className="text-rose font-mono font-bold uppercase text-[10px] flex items-center gap-1 tracking-wider">
+              <AlertTriangle className="h-3 w-3 text-rose" /> Attention Required
             </span>
-            <p className="font-mono text-2xl font-black text-[#AF411E]">{uncertifiedRecords} Modules</p>
-            <span className="text-xs text-[#AF411E] font-sans">Pending certification / review</span>
+            <p className="font-mono text-2xl font-bold text-rose">{uncertifiedRecords} Modules</p>
+            <span className="text-xs text-rose/80 font-sans">Pending certification / review</span>
           </div>
         </div>
 
         {/* Live Compliance Records Preview */}
         {isLoadingCompliance ? (
-          <div className="flex items-center justify-center py-8 gap-2 text-[#71717A] text-xs font-mono">
-            <Loader2 className="h-4 w-4 animate-spin text-[#09090B]" />
+          <div className="flex items-center justify-center py-8 gap-2 text-ink-muted text-xs font-mono">
+            <Loader2 className="h-4 w-4 animate-spin text-ink" />
             <span>Loading compliance records...</span>
           </div>
         ) : complianceReport && complianceReport.records.length > 0 ? (
           <div className="space-y-3 pt-2">
-            <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
-              <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-[#09090B]">
+            <div className="flex items-center justify-between pb-1 border-b border-border-warm/70">
+              <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-ink">
                 Workforce Module Certification Ledger ({complianceReport.records.length} Records)
               </h4>
-              <span className="text-xs text-[#71717A] font-mono">
+              <span className="text-xs text-ink-muted font-mono">
                 Last Generated: {new Date(complianceReport.generated_at).toLocaleTimeString()}
               </span>
             </div>
 
-            <div className="overflow-x-auto border border-[#E4E4E7] shadow-none">
+            <div className="overflow-x-auto rounded-xl border border-border-warm shadow-xs">
               <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-[#FAFAFA] border-b border-[#E4E4E7] text-[#71717A] font-mono font-bold text-[10px] uppercase tracking-[0.15em]">
+                <thead className="bg-surface-light/60 border-b border-border-warm/70 text-ink-muted font-mono font-bold text-[10px] uppercase tracking-[0.12em]">
                   <tr>
-                    <th className="px-4 py-3 border-r border-[#E4E4E7]">Officer Email</th>
-                    <th className="px-4 py-3 border-r border-[#E4E4E7]">Module</th>
-                    <th className="px-4 py-3 text-center border-r border-[#E4E4E7]">Score</th>
-                    <th className="px-4 py-3 text-center border-r border-[#E4E4E7]">Status</th>
+                    <th className="px-4 py-3 border-r border-border-warm/50">Officer Email</th>
+                    <th className="px-4 py-3 border-r border-border-warm/50">Module</th>
+                    <th className="px-4 py-3 text-center border-r border-border-warm/50">Score</th>
+                    <th className="px-4 py-3 text-center border-r border-border-warm/50">Status</th>
                     <th className="px-4 py-3">Credential Verification</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4E4E7] font-normal">
+                <tbody className="divide-y divide-border-warm/50 font-normal">
                   {complianceReport.records.slice(0, 10).map((r, idx) => (
-                    <tr key={`${r.employee_email}-${r.module_title}-${idx}`} className="hover:bg-[#FAFAFA] transition-colors">
-                      <td className="px-4 py-3 font-mono font-bold text-[#09090B] border-r border-[#E4E4E7]">
+                    <tr key={`${r.employee_email}-${r.module_title}-${idx}`} className="hover:bg-surface-light/80 transition-colors">
+                      <td className="px-4 py-3 font-mono font-bold text-ink border-r border-border-warm/50">
                         {r.employee_email}
                       </td>
-                      <td className="px-4 py-3 text-[#09090B] font-sans border-r border-[#E4E4E7]">
+                      <td className="px-4 py-3 text-ink font-sans border-r border-border-warm/50">
                         {r.module_title}
                       </td>
-                      <td className="px-4 py-3 text-center font-mono font-bold text-[#09090B] border-r border-[#E4E4E7]">
+                      <td className="px-4 py-3 text-center font-mono font-bold text-ink border-r border-border-warm/50">
                         {r.percentage}% ({r.best_score}/{r.total_score})
                       </td>
-                      <td className="px-4 py-3 text-center border-r border-[#E4E4E7]">
+                      <td className="px-4 py-3 text-center border-r border-border-warm/50">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold border ${
+                          className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full border ${
                             r.certified
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                              ? 'bg-sage/15 text-sage border-sage/30'
                               : r.progress_status === 'in_progress'
-                              ? 'bg-blue-50 text-[#0E50B0] border-blue-200'
-                              : 'bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]'
+                              ? 'bg-civic/15 text-civic border-civic/30'
+                              : 'bg-surface-light text-ink-muted border-border-warm'
                           }`}
                         >
                           {r.certified ? 'CERTIFIED' : r.progress_status.toUpperCase()}
@@ -205,14 +205,14 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                         {r.credential_id ? (
                           <Link
                             to={`/verify/${r.credential_id}`}
-                            className="inline-flex items-center gap-1 text-[#09090B] underline hover:text-[#0E50B0] font-bold"
+                            className="inline-flex items-center gap-1 text-ink underline hover:text-civic font-bold"
                             title="Verify cryptographic credential"
                           >
                             <span>{r.credential_id}</span>
                             <ExternalLink className="h-3 w-3" />
                           </Link>
                         ) : (
-                          <span className="text-[#71717A] italic font-normal">Not Certified</span>
+                          <span className="text-ink-muted italic font-normal">Not Certified</span>
                         )}
                       </td>
                     </tr>
@@ -222,37 +222,37 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
             </div>
 
             {complianceReport.records.length > 10 && (
-              <p className="text-xs text-[#71717A] italic text-center pt-1 font-sans">
+              <p className="text-xs text-ink-muted italic text-center pt-1 font-sans">
                 Showing top 10 records. Use the "Export Audit (CSV)" button above to download the full {complianceReport.records.length}-record audit trail.
               </p>
             )}
           </div>
         ) : (
-          <div className="text-center py-6 text-xs text-[#71717A] bg-[#FAFAFA] border border-[#E4E4E7] font-sans">
+          <div className="text-center py-6 text-xs text-ink-muted bg-surface-light rounded-xl border border-border-warm font-sans">
             No compliance records found.
           </div>
         )}
       </div>
 
       {/* SECTION 2: GOVASSIST CITIZEN PRE-SUBMISSION DEFECT TELEMETRY */}
-      <div className="bg-white rounded-none p-6 sm:p-8 border border-[#E4E4E7] shadow-none space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E4E7] pb-5">
+      <div className="bg-surface rounded-2xl p-6 sm:p-8 border border-border-warm shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-warm/70 pb-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-[#AF411E] uppercase tracking-[0.2em]">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-rose uppercase tracking-[0.2em]">
               <Activity className="h-4 w-4" />
               <span>Citizen Self-Service Quality Intelligence</span>
             </div>
-            <h3 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
+            <h3 className="font-sans font-bold text-xl uppercase tracking-tight text-ink">
               GovAssist Pre-Check Defect Telemetry
             </h3>
-            <p className="text-xs text-[#52525B] font-sans">
+            <p className="text-xs text-ink-muted font-sans leading-relaxed">
               Real-time analytics on citizen document quality and defect patterns across the 4 deterministic pre-submission rules.
             </p>
           </div>
 
           {citizenTelemetry && (
-            <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1 border border-emerald-300 text-xs font-mono font-bold text-emerald-800 shrink-0 uppercase">
-              <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+            <div className="flex items-center gap-2 bg-sage/15 px-3 py-1.5 rounded-full border border-sage/30 text-xs font-mono font-bold text-sage shrink-0 uppercase">
+              <CheckCircle2 className="h-4 w-4 text-sage" />
               <span>{citizenTelemetry.pass_rate_pct}% First-Pass Rate</span>
             </div>
           )}
@@ -260,67 +260,67 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
 
         {/* Telemetry Error Alert */}
         {telemetryError && (
-          <div className="p-4 bg-white border-l-4 border-l-[#AF411E] border-[#E4E4E7] flex items-center gap-2.5 text-xs text-[#AF411E]">
-            <AlertCircle className="h-4 w-4 text-[#AF411E] shrink-0" />
+          <div className="p-4 bg-surface-light border-l-4 border-l-rose border-border-warm rounded-r-xl flex items-center gap-2.5 text-xs text-rose">
+            <AlertCircle className="h-4 w-4 text-rose shrink-0" />
             <span className="font-bold">{telemetryError}</span>
           </div>
         )}
 
         {isLoadingTelemetry ? (
-          <div className="flex items-center justify-center py-10 gap-2 text-[#71717A] text-xs font-mono">
-            <Loader2 className="h-5 w-5 animate-spin text-[#09090B]" />
+          <div className="flex items-center justify-center py-10 gap-2 text-ink-muted text-xs font-mono">
+            <Loader2 className="h-5 w-5 animate-spin text-ink" />
             <span>Loading citizen defect telemetry...</span>
           </div>
         ) : citizenTelemetry && citizenTelemetry.total_submissions > 0 ? (
           <div className="space-y-6">
             {/* Metrics Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-                <span className="text-[#71717A] font-mono font-bold uppercase text-[10px] tracking-wider">Total Pre-Checks</span>
-                <p className="font-mono text-2xl font-black text-[#09090B]">{citizenTelemetry.total_submissions}</p>
-                <span className="text-xs text-[#71717A] font-sans">Documents evaluated</span>
+              <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+                <span className="text-ink-muted font-mono font-bold uppercase text-[10px] tracking-wider">Total Pre-Checks</span>
+                <p className="font-mono text-2xl font-bold text-ink">{citizenTelemetry.total_submissions}</p>
+                <span className="text-xs text-ink-muted font-sans">Documents evaluated</span>
               </div>
 
-              <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-                <span className="text-emerald-800 font-mono font-bold uppercase text-[10px] tracking-wider">Passed Ready for Filing</span>
-                <p className="font-mono text-2xl font-black text-emerald-700">{citizenTelemetry.passed_count}</p>
-                <span className="text-xs text-emerald-800 font-sans">100% compliant submissions</span>
+              <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+                <span className="text-sage font-mono font-bold uppercase text-[10px] tracking-wider">Passed Ready for Filing</span>
+                <p className="font-mono text-2xl font-bold text-sage">{citizenTelemetry.passed_count}</p>
+                <span className="text-xs text-sage/80 font-sans">100% compliant submissions</span>
               </div>
 
-              <div className="p-5 bg-[#FAFAFA] border border-[#E4E4E7] space-y-1 shadow-none">
-                <span className="text-[#AF411E] font-mono font-bold uppercase text-[10px] tracking-wider">Action Required / Rectified</span>
-                <p className="font-mono text-2xl font-black text-[#AF411E]">{citizenTelemetry.action_required_count}</p>
-                <span className="text-xs text-[#AF411E] font-sans">Defects caught pre-filing</span>
+              <div className="p-5 bg-surface-light rounded-xl border border-border-warm space-y-1 shadow-xs">
+                <span className="text-rose font-mono font-bold uppercase text-[10px] tracking-wider">Action Required / Rectified</span>
+                <p className="font-mono text-2xl font-bold text-rose">{citizenTelemetry.action_required_count}</p>
+                <span className="text-xs text-rose/80 font-sans">Defects caught pre-filing</span>
               </div>
             </div>
 
             {/* 4-Rule Defect Breakdown */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between pb-1 border-b border-[#E4E4E7]">
-                <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-[#09090B]">
+              <div className="flex items-center justify-between pb-1 border-b border-border-warm/70">
+                <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-ink">
                   Deterministic Rule Failure Distribution
                 </h4>
-                <span className="text-xs font-mono text-[#71717A]">4 Core Validation Rules</span>
+                <span className="text-xs font-mono text-ink-muted">4 Core Validation Rules</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {citizenTelemetry.defects_by_rule.map((rule) => (
                   <div
                     key={rule.rule_name}
-                    className="p-5 border border-[#E4E4E7] bg-white space-y-2.5 shadow-none"
+                    className="p-5 border border-border-warm bg-surface-light rounded-xl space-y-2.5 shadow-xs"
                   >
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-sans font-bold text-[#09090B] uppercase">{rule.rule_name}</span>
-                      <span className={`font-mono font-bold ${rule.failure_count > 0 ? 'text-[#AF411E]' : 'text-emerald-700'}`}>
+                      <span className="font-sans font-bold text-ink uppercase">{rule.rule_name}</span>
+                      <span className={`font-mono font-bold ${rule.failure_count > 0 ? 'text-rose' : 'text-sage'}`}>
                         {rule.failure_count} failures ({rule.failure_rate_pct}%)
                       </span>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="h-1.5 w-full bg-[#E4E4E7] overflow-hidden">
+                    <div className="h-1.5 w-full bg-border-warm rounded-full overflow-hidden">
                       <div
-                        className={`h-full transition-all ${
-                          rule.failure_count === 0 ? 'bg-emerald-600' : 'bg-[#AF411E]'
+                        className={`h-full rounded-full transition-all ${
+                          rule.failure_count === 0 ? 'bg-sage' : 'bg-rose'
                         }`}
                         style={{
                           width: `${Math.min(100, Math.max(rule.failure_rate_pct, rule.failure_count > 0 ? 8 : 0))}%`,
@@ -328,9 +328,9 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
                       />
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#71717A]">
-                      <span>Target Field: <code className="font-mono text-[#09090B] font-bold">{rule.field}</code></span>
-                      <span className="font-mono font-bold uppercase tracking-wider text-[10px] px-2 py-0.5 bg-[#FAFAFA] text-[#71717A] border border-[#E4E4E7]">
+                    <div className="flex items-center justify-between text-xs text-ink-muted">
+                      <span>Target Field: <code className="font-mono text-ink font-bold">{rule.field}</code></span>
+                      <span className="font-mono font-bold uppercase tracking-wider text-[10px] px-2 py-0.5 bg-surface-elevated text-ink-muted border border-border-warm rounded-full">
                         {rule.severity}
                       </span>
                     </div>
@@ -342,61 +342,61 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
             {/* Recent Pre-Check Inspection Logs */}
             {citizenTelemetry.recent_inspections && citizenTelemetry.recent_inspections.length > 0 && (
               <div className="space-y-3 pt-2">
-                <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-[#09090B]">
+                <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-ink">
                   Recent Pre-Submission Inspections
                 </h4>
 
-                <div className="overflow-x-auto border border-[#E4E4E7] shadow-none">
+                <div className="overflow-x-auto rounded-xl border border-border-warm shadow-xs">
                   <table className="w-full text-left text-xs border-collapse">
-                    <thead className="bg-[#FAFAFA] border-b border-[#E4E4E7] text-[#71717A] font-mono font-bold text-[10px] uppercase tracking-[0.15em]">
+                    <thead className="bg-surface-light/60 border-b border-border-warm/70 text-ink-muted font-mono font-bold text-[10px] uppercase tracking-[0.12em]">
                       <tr>
-                        <th className="px-4 py-3 border-r border-[#E4E4E7]">Document Reference</th>
-                        <th className="px-4 py-3 border-r border-[#E4E4E7]">Detected Applicant</th>
-                        <th className="px-4 py-3 text-center border-r border-[#E4E4E7]">Pre-Check Status</th>
-                        <th className="px-4 py-3 border-r border-[#E4E4E7]">Identified Defects</th>
+                        <th className="px-4 py-3 border-r border-border-warm/50">Document Reference</th>
+                        <th className="px-4 py-3 border-r border-border-warm/50">Detected Applicant</th>
+                        <th className="px-4 py-3 text-center border-r border-border-warm/50">Pre-Check Status</th>
+                        <th className="px-4 py-3 border-r border-border-warm/50">Identified Defects</th>
                         <th className="px-4 py-3 text-right">Timestamp</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E4E4E7] font-normal">
+                    <tbody className="divide-y divide-border-warm/50 font-normal">
                       {citizenTelemetry.recent_inspections.map((doc) => (
-                        <tr key={doc.document_id} className="hover:bg-[#FAFAFA] transition-colors">
-                          <td className="px-4 py-3 font-mono text-xs border-r border-[#E4E4E7]">
+                        <tr key={doc.document_id} className="hover:bg-surface-light/80 transition-colors">
+                          <td className="px-4 py-3 font-mono text-xs border-r border-border-warm/50">
                             <Link
                               to={`/citizen?id=${doc.document_id}`}
-                              className="text-[#09090B] underline hover:text-[#0E50B0] font-bold inline-flex items-center gap-1"
+                              className="text-ink underline hover:text-civic font-bold inline-flex items-center gap-1"
                               title="Inspect citizen document in GovAssist pre-checker"
                             >
                               <span>{doc.document_id.slice(0, 8)}...</span>
                               <ExternalLink className="h-3 w-3" />
                             </Link>
                           </td>
-                          <td className="px-4 py-3 font-bold text-[#09090B] border-r border-[#E4E4E7]">
-                            {doc.extracted_name || <span className="text-[#71717A] italic font-normal">Unidentified Scan</span>}
+                          <td className="px-4 py-3 font-bold text-ink border-r border-border-warm/50">
+                            {doc.extracted_name || <span className="text-ink-muted italic font-normal">Unidentified Scan</span>}
                           </td>
-                          <td className="px-4 py-3 text-center border-r border-[#E4E4E7]">
+                          <td className="px-4 py-3 text-center border-r border-border-warm/50">
                             <span
-                              className={`inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold border ${
+                              className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full border ${
                                 doc.overall_status === 'PASSED'
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-orange-50 text-[#AF411E] border-orange-200'
+                                  ? 'bg-sage/15 text-sage border-sage/30'
+                                  : 'bg-rose/15 text-rose border-rose/30'
                               }`}
                             >
                               {doc.overall_status}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-xs text-[#71717A] border-r border-[#E4E4E7]">
+                          <td className="px-4 py-3 text-xs text-ink-muted border-r border-border-warm/50">
                             {doc.failed_rules.length > 0 ? (
-                              <span className="text-[#AF411E] font-bold font-mono">
+                              <span className="text-rose font-bold font-mono">
                                 {doc.failed_rules.join(', ')}
                               </span>
                             ) : (
-                              <span className="text-emerald-800 font-bold flex items-center gap-1">
-                                <CheckCircle2 className="h-3 w-3 text-emerald-700" />
+                              <span className="text-sage font-bold flex items-center gap-1">
+                                <CheckCircle2 className="h-3 w-3 text-sage" />
                                 All 4 checks compliant
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-right text-[#71717A] font-mono text-xs">
+                          <td className="px-4 py-3 text-right text-ink-muted font-mono text-xs">
                             {new Date(doc.uploaded_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -413,7 +413,7 @@ export const GovernanceDashboard: React.FC<GovernanceDashboardProps> = ({
             )}
           </div>
         ) : (
-          <div className="text-center py-8 text-xs text-[#71717A] bg-[#FAFAFA] border border-[#E4E4E7] font-sans">
+          <div className="text-center py-8 text-xs text-ink-muted bg-surface-light rounded-xl border border-border-warm font-sans">
             No citizen pre-submission records recorded yet.
           </div>
         )}

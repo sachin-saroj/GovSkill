@@ -363,10 +363,10 @@ export const AdminDashboardPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 bg-white border-l-4 border-l-[#AF411E] border-[#E4E4E7] text-caption text-[#AF411E] flex items-center justify-between"
+            className="p-4 bg-surface border-l-4 border-l-rose border-border-warm rounded-r-xl text-caption text-rose flex items-center justify-between shadow-xs"
           >
             <span className="font-bold">{error}</span>
-            <button type="button" onClick={() => setError(null)} className="p-1 hover:bg-[#FAFAFA] cursor-pointer">
+            <button type="button" onClick={() => setError(null)} className="p-1 hover:bg-surface-light rounded-full cursor-pointer text-ink-muted hover:text-ink">
               <X className="h-4 w-4" />
             </button>
           </motion.div>
@@ -380,10 +380,10 @@ export const AdminDashboardPage: React.FC = () => {
             initial={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? {} : { opacity: 0, y: -6 }}
-            className="p-4 bg-white border-l-4 border-l-emerald-600 border-[#E4E4E7] text-caption text-emerald-800 flex items-center justify-between"
+            className="p-4 bg-surface border-l-4 border-l-sage border-border-warm rounded-r-xl text-caption text-sage flex items-center justify-between shadow-xs"
           >
             <span className="font-bold">{successMsg}</span>
-            <button type="button" onClick={() => setSuccessMsg(null)} className="p-1 hover:bg-[#FAFAFA] cursor-pointer">
+            <button type="button" onClick={() => setSuccessMsg(null)} className="p-1 hover:bg-surface-light rounded-full cursor-pointer text-ink-muted hover:text-ink">
               <X className="h-4 w-4" />
             </button>
           </motion.div>
@@ -394,8 +394,8 @@ export const AdminDashboardPage: React.FC = () => {
       <motion.div variants={fadeUpVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <ReadinessMetricCard
           icon={Users}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-[#09090B]"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-ink"
           label="Enrolled Employees"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_employees ?? 0)}
           subtext="Municipal office workforce"
@@ -405,8 +405,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={BookOpen}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-[#0E50B0]"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-civic"
           label="Training Modules"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_modules ?? 0)}
           subtext="Standardized curriculum courses"
@@ -416,8 +416,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={CheckCircle2}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-emerald-700"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-sage"
           label="Quiz Attempts Logged"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_quiz_attempts ?? 0)}
           subtext="Server-scored evaluations"
@@ -427,8 +427,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Sparkles}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-[#0E50B0]"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-civic"
           label="Avg Assessment Score"
           value={isLoadingOverview ? '...' : `${skillsOverview?.average_quiz_score_pct ?? 0}%`}
           subtext="System-wide quiz average"
@@ -438,8 +438,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Award}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-emerald-700"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-sage"
           label="Total Certifications"
           value={isLoadingOverview ? '...' : (skillsOverview?.total_certifications ?? 0)}
           subtext="Verified credentials earned"
@@ -449,8 +449,8 @@ export const AdminDashboardPage: React.FC = () => {
 
         <ReadinessMetricCard
           icon={Sparkles}
-          iconBgClass="bg-[#FAFAFA]"
-          iconColorClass="text-[#0E50B0]"
+          iconBgClass="bg-surface-light"
+          iconColorClass="text-civic"
           label="Certification Rate"
           value={isLoadingOverview ? '...' : `${skillsOverview?.overall_certification_rate ?? 0}%`}
           subtext="Workforce completion progress"
@@ -461,57 +461,57 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Workforce Competency Health & Intervention Priority */}
       {skillsOverview?.competency_health && skillsOverview.competency_health.length > 0 && (
-        <motion.div variants={fadeUpVariants} className="bg-white rounded-none border border-[#E4E4E7] shadow-none p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E4E4E7] pb-4">
+        <motion.div variants={fadeUpVariants} className="bg-surface rounded-2xl border border-border-warm shadow-sm p-6 sm:p-8 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-warm/70 pb-4">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#0E50B0]" />
-                <h2 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
+                <ShieldCheck className="h-4 w-4 text-civic" />
+                <h2 className="font-sans font-bold text-lg uppercase tracking-tight text-ink">
                   Workforce Competency Health & Intervention Priority
                 </h2>
               </div>
-              <p className="text-xs text-[#71717A] font-sans">
+              <p className="text-xs text-ink-muted font-sans">
                 Aggregated mastery telemetry across all local government employee assessment attempts
               </p>
             </div>
             {skillsOverview.lowest_performing_competency && (
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-orange-50 border border-orange-200 text-xs font-mono font-bold text-[#AF411E] shrink-0 uppercase">
-                <Sparkles className="h-3.5 w-3.5 text-[#AF411E]" />
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-rose/15 border border-rose/30 rounded-full text-xs font-mono font-bold text-rose shrink-0 uppercase">
+                <Sparkles className="h-3.5 w-3.5 text-rose" />
                 <span>Priority Focus: {skillsOverview.lowest_performing_competency}</span>
               </div>
             )}
           </div>
 
-          <div className="overflow-x-auto border border-[#E4E4E7]">
+          <div className="overflow-x-auto rounded-xl border border-border-warm shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#E4E4E7] text-[10px] font-mono font-bold text-[#71717A] uppercase tracking-[0.15em] bg-[#FAFAFA]">
-                  <th className="py-3 px-3 border-r border-[#E4E4E7]">Competency</th>
-                  <th className="py-3 px-3 border-r border-[#E4E4E7]">Module</th>
-                  <th className="py-3 px-3 border-r border-[#E4E4E7]">Avg Mastery</th>
-                  <th className="py-3 px-3 text-center border-r border-[#E4E4E7]">Mastered (≥75%)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#E4E4E7]">Developing (&lt;75%)</th>
+                <tr className="border-b border-border-warm/70 text-[10px] font-mono font-bold text-ink-muted uppercase tracking-[0.12em] bg-surface-light/60">
+                  <th className="py-3 px-3 border-r border-border-warm/50">Competency</th>
+                  <th className="py-3 px-3 border-r border-border-warm/50">Module</th>
+                  <th className="py-3 px-3 border-r border-border-warm/50">Avg Mastery</th>
+                  <th className="py-3 px-3 text-center border-r border-border-warm/50">Mastered (≥75%)</th>
+                  <th className="py-3 px-3 text-center border-r border-border-warm/50">Developing (&lt;75%)</th>
                   <th className="py-3 px-3 text-right">Health Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E4E7] font-normal text-[#09090B]">
+              <tbody className="divide-y divide-border-warm/50 font-normal text-ink">
                 {skillsOverview.competency_health.map((item) => (
-                  <tr key={item.competency} className="hover:bg-[#FAFAFA] transition-colors">
-                    <td className="py-3 px-3 font-bold text-[#09090B] border-r border-[#E4E4E7]">{item.competency}</td>
-                    <td className="py-3 px-3 text-[#52525B] border-r border-[#E4E4E7]">{item.module_title}</td>
-                    <td className="py-3 px-3 font-mono font-bold text-[#09090B] border-r border-[#E4E4E7]">{item.average_mastery_pct}%</td>
-                    <td className="py-3 px-3 text-center font-mono font-bold text-emerald-700 border-r border-[#E4E4E7]">{item.employees_mastered}</td>
-                    <td className="py-3 px-3 text-center font-mono font-bold text-[#AF411E] border-r border-[#E4E4E7]">{item.employees_developing}</td>
+                  <tr key={item.competency} className="hover:bg-surface-light/80 transition-colors">
+                    <td className="py-3 px-3 font-bold text-ink border-r border-border-warm/50">{item.competency}</td>
+                    <td className="py-3 px-3 text-ink-muted border-r border-border-warm/50">{item.module_title}</td>
+                    <td className="py-3 px-3 font-mono font-bold text-ink border-r border-border-warm/50">{item.average_mastery_pct}%</td>
+                    <td className="py-3 px-3 text-center font-mono font-bold text-sage border-r border-border-warm/50">{item.employees_mastered}</td>
+                    <td className="py-3 px-3 text-center font-mono font-bold text-rose border-r border-border-warm/50">{item.employees_developing}</td>
                     <td className="py-3 px-3 text-right">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold border ${
+                        className={`inline-flex items-center px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full border ${
                           item.status === 'Healthy'
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                            ? 'bg-sage/15 text-sage border-sage/30'
                             : item.status === 'Needs Attention'
-                            ? 'bg-orange-50 text-[#AF411E] border-orange-200'
+                            ? 'bg-rose/15 text-rose border-rose/30'
                             : item.status === 'Unassessed'
-                            ? 'bg-[#FAFAFA] text-[#71717A] border-[#E4E4E7]'
-                            : 'bg-orange-50 text-[#AF411E] border-orange-200'
+                            ? 'bg-surface-light text-ink-muted border-border-warm'
+                            : 'bg-rose/15 text-rose border-rose/30'
                         }`}
                       >
                         {item.status}
@@ -525,15 +525,15 @@ export const AdminDashboardPage: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Navigation Tabs (Sharp Monospace Segmented Controls) */}
-      <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-1 p-1 bg-[#FAFAFA] border border-[#E4E4E7] w-fit">
+      {/* Navigation Tabs (Operational Editorial Pill Segmented Controls) */}
+      <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-1.5 p-1.5 bg-surface border border-border-warm rounded-full w-fit shadow-xs">
         <button
           type="button"
           onClick={() => setActiveTab('attempts')}
-          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${
+          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 rounded-full transition-all cursor-pointer min-h-[38px] ${
             activeTab === 'attempts'
-              ? 'bg-[#09090B] text-white'
-              : 'text-[#71717A] hover:text-[#09090B] hover:bg-white'
+              ? 'bg-ink text-on-ink shadow-xs'
+              : 'text-ink-muted hover:text-ink hover:bg-surface-light'
           }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -543,10 +543,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('modules')}
-          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${
+          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 rounded-full transition-all cursor-pointer min-h-[38px] ${
             activeTab === 'modules'
-              ? 'bg-[#09090B] text-white'
-              : 'text-[#71717A] hover:text-[#09090B] hover:bg-white'
+              ? 'bg-ink text-on-ink shadow-xs'
+              : 'text-ink-muted hover:text-ink hover:bg-surface-light'
           }`}
         >
           <BookOpen className="h-4 w-4" />
@@ -556,10 +556,10 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('questions')}
-          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${
+          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 rounded-full transition-all cursor-pointer min-h-[38px] ${
             activeTab === 'questions'
-              ? 'bg-[#09090B] text-white'
-              : 'text-[#71717A] hover:text-[#09090B] hover:bg-white'
+              ? 'bg-ink text-on-ink shadow-xs'
+              : 'text-ink-muted hover:text-ink hover:bg-surface-light'
           }`}
         >
           <HelpCircle className="h-4 w-4" />
@@ -569,13 +569,13 @@ export const AdminDashboardPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('governance')}
-          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${
+          className={`px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 rounded-full transition-all cursor-pointer min-h-[38px] ${
             activeTab === 'governance'
-              ? 'bg-[#09090B] text-white'
-              : 'text-[#71717A] hover:text-[#09090B] hover:bg-white'
+              ? 'bg-ink text-on-ink shadow-xs'
+              : 'text-ink-muted hover:text-ink hover:bg-surface-light'
           }`}
         >
-          <ShieldCheck className="h-4 w-4 text-[#0E50B0]" />
+          <ShieldCheck className="h-4 w-4 text-civic" />
           <span>Workforce Governance & Telemetry</span>
         </button>
       </motion.div>
@@ -606,12 +606,12 @@ export const AdminDashboardPage: React.FC = () => {
       {/* TAB 2: MODULE CMS */}
       {activeTab === 'modules' && (
         <motion.div variants={fadeUpVariants} className="space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E7]">
+          <div className="flex items-center justify-between pb-3 border-b border-border-warm/70">
             <div>
-              <h2 className="font-sans font-black text-xl uppercase tracking-tight text-[#09090B]">
+              <h2 className="font-sans font-bold text-xl uppercase tracking-tight text-ink">
                 Training Modules Management
               </h2>
-              <p className="text-xs text-[#71717A]">
+              <p className="text-xs text-ink-muted">
                 Create, update, and manage official training curriculum modules
               </p>
             </div>
@@ -619,7 +619,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenModuleModal()}
-              className="flex items-center gap-1.5 px-5 py-2.5 bg-[#09090B] text-white text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#27272A] transition-all cursor-pointer min-h-[40px] border border-[#09090B]"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-ink text-on-ink text-xs font-mono font-bold uppercase tracking-wider hover:bg-ink/90 rounded-full transition-all cursor-pointer min-h-[40px] shadow-xs"
             >
               <Plus className="h-4 w-4" />
               <span>Create New Module</span>
@@ -630,35 +630,35 @@ export const AdminDashboardPage: React.FC = () => {
             {modules.map((mod) => (
               <div key={mod.id}>
                 <Card
-                  className="p-6 flex flex-col justify-between space-y-4 border border-[#E4E4E7] shadow-none bg-white hover:border-[#A1A1AA] transition-all rounded-none"
+                  className="p-6 flex flex-col justify-between space-y-4 border border-border-warm shadow-sm bg-surface hover:border-border-warm/80 transition-all rounded-2xl"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B]">
+                      <h3 className="font-sans font-bold text-base uppercase tracking-tight text-ink">
                         {mod.title}
                       </h3>
-                      <span className="text-[10px] font-mono bg-[#FAFAFA] px-2 py-0.5 text-[#71717A] border border-[#E4E4E7] shrink-0 font-bold">
+                      <span className="text-[10px] font-mono bg-surface-light px-2.5 py-1 text-ink-muted border border-border-warm rounded-full shrink-0 font-bold">
                         {mod.id.substring(0, 8)}...
                       </span>
                     </div>
-                    <p className="text-xs text-[#3F3F46] line-clamp-3 whitespace-pre-line font-mono bg-[#FAFAFA] p-3 border border-[#E4E4E7]">
+                    <p className="text-xs text-ink-muted line-clamp-3 whitespace-pre-line font-mono bg-surface-light p-3.5 rounded-xl border border-border-warm">
                       {mod.content.substring(0, 150)}...
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E4E4E7] text-xs font-mono font-bold uppercase">
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-border-warm/70 text-xs font-mono font-bold uppercase">
                     <button
                       type="button"
                       onClick={() => handleOpenModuleModal(mod)}
-                      className="flex items-center gap-1 text-[#09090B] hover:underline cursor-pointer"
+                      className="flex items-center gap-1 text-ink hover:underline cursor-pointer"
                     >
-                      <Edit2 className="h-3.5 w-3.5 text-[#0E50B0]" />
+                      <Edit2 className="h-3.5 w-3.5 text-civic" />
                       <span>Edit</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDeleteModule(mod.id)}
-                      className="flex items-center gap-1 text-[#AF411E] hover:underline cursor-pointer ml-2"
+                      className="flex items-center gap-1 text-rose hover:underline cursor-pointer ml-2"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       <span>Delete</span>
@@ -674,16 +674,16 @@ export const AdminDashboardPage: React.FC = () => {
       {/* TAB 3: QUIZ MANAGEMENT CMS */}
       {activeTab === 'questions' && (
         <motion.div variants={fadeUpVariants} className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 border border-[#E4E4E7] shadow-none">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface p-5 rounded-2xl border border-border-warm shadow-sm">
             <div className="flex items-center gap-3">
-              <label htmlFor="admin-module-select" className="text-[10px] font-mono font-bold text-[#71717A] uppercase tracking-wider">
+              <label htmlFor="admin-module-select" className="text-[10px] font-mono font-bold text-ink-muted uppercase tracking-wider">
                 Select Module:
               </label>
               <select
                 id="admin-module-select"
                 value={selectedModuleId}
                 onChange={(e) => setSelectedModuleId(e.target.value)}
-                className="px-3.5 py-2 text-xs font-mono font-bold text-[#09090B] border border-[#E4E4E7] bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-[#09090B] cursor-pointer min-h-[40px]"
+                className="px-4 py-2 text-xs font-mono font-bold text-ink border border-border-warm bg-surface-light rounded-full focus:outline-none focus:ring-1 focus:ring-ink cursor-pointer min-h-[40px]"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -696,7 +696,7 @@ export const AdminDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleOpenQuestionModal()}
-              className="flex items-center gap-1.5 px-5 py-2.5 bg-[#09090B] text-white text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#27272A] transition-all shadow-none cursor-pointer min-h-[40px] border border-[#09090B]"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-ink text-on-ink text-xs font-mono font-bold uppercase tracking-wider hover:bg-ink/90 rounded-full transition-all shadow-xs cursor-pointer min-h-[40px]"
             >
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
@@ -704,37 +704,37 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           {isLoadingQuestions ? (
-            <div className="p-12 text-center text-xs font-mono text-[#71717A] flex items-center justify-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-[#09090B]" />
+            <div className="p-12 text-center text-xs font-mono text-ink-muted flex items-center justify-center gap-2 bg-surface rounded-2xl border border-border-warm">
+              <Loader2 className="h-4 w-4 animate-spin text-ink" />
               <span>Loading module questions...</span>
             </div>
           ) : questions.length === 0 ? (
-            <div className="p-12 text-center text-xs font-sans text-[#71717A] bg-white border border-[#E4E4E7]">
+            <div className="p-12 text-center text-xs font-sans text-ink-muted bg-surface rounded-2xl border border-border-warm">
               No questions found for this module. Click "Add Question" above to create one.
             </div>
           ) : (
             <div className="space-y-4">
               {questions.map((q, qIdx) => (
-                <Card key={q.id} className="p-6 space-y-3.5 border border-[#E4E4E7] shadow-none bg-white rounded-none">
+                <Card key={q.id} className="p-6 space-y-4 border border-border-warm shadow-sm bg-surface rounded-2xl">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-2.5">
-                      <span className="font-mono font-bold text-[#09090B] text-xs mt-0.5">Q{qIdx + 1}.</span>
-                      <h4 className="font-sans font-bold text-base uppercase tracking-tight text-[#09090B]">{q.question}</h4>
+                      <span className="font-mono font-bold text-ink text-xs mt-0.5">Q{qIdx + 1}.</span>
+                      <h4 className="font-sans font-bold text-base uppercase tracking-tight text-ink">{q.question}</h4>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         type="button"
                         onClick={() => handleOpenQuestionModal(q)}
-                        className="text-xs font-mono text-[#09090B] font-bold uppercase hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-xs font-mono text-ink font-bold uppercase hover:underline flex items-center gap-1 cursor-pointer"
                       >
-                        <Edit2 className="h-3.5 w-3.5 text-[#0E50B0]" />
+                        <Edit2 className="h-3.5 w-3.5 text-civic" />
                         <span>Edit</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteQuestion(q.id)}
-                        className="text-xs font-mono text-[#AF411E] font-bold uppercase hover:underline flex items-center gap-1 ml-2 cursor-pointer"
+                        className="text-xs font-mono text-rose font-bold uppercase hover:underline flex items-center gap-1 ml-2 cursor-pointer"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         <span>Delete</span>
@@ -742,23 +742,23 @@ export const AdminDashboardPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-[#E4E4E7]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-border-warm/70">
                     {q.options.map((opt, optIdx) => {
                       const isCorrect = optIdx === q.correct_option_index;
                       return (
                         <div
                           key={optIdx}
-                          className={`p-3 text-xs flex items-center justify-between border transition-colors ${
+                          className={`p-3.5 rounded-xl text-xs flex items-center justify-between border transition-colors ${
                             isCorrect
-                              ? 'bg-emerald-50 border-emerald-300 font-bold text-[#09090B]'
-                              : 'bg-[#FAFAFA] border-[#E4E4E7] text-[#09090B]'
+                              ? 'bg-sage/15 border-sage/30 font-bold text-ink'
+                              : 'bg-surface-light border-border-warm text-ink'
                           }`}
                         >
                           <span className="leading-snug">
                             <strong className="mr-1 font-mono">{String.fromCharCode(65 + optIdx)}.</strong> {opt}
                           </span>
                           {isCorrect && (
-                            <span className="flex items-center gap-1 text-[10px] font-mono bg-emerald-700 text-white px-2 py-0.5 font-bold uppercase tracking-wider shrink-0 ml-2">
+                            <span className="flex items-center gap-1 text-[10px] font-mono bg-sage text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider shrink-0 ml-2">
                               <Check className="h-3 w-3" /> Answer
                             </span>
                           )}
@@ -791,23 +791,23 @@ export const AdminDashboardPage: React.FC = () => {
       {/* MODULE MODAL with AnimatePresence */}
       <AnimatePresence>
         {isModuleModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
             <motion.div
               variants={scaleInVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="bg-white max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl border border-[#E4E4E7]"
+              className="bg-surface max-w-lg w-full p-6 sm:p-8 space-y-5 rounded-3xl shadow-2xl border border-border-warm text-ink"
             >
-              <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
-                <h3 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
+              <div className="flex items-center justify-between border-b border-border-warm/70 pb-3">
+                <h3 className="font-sans font-bold text-lg uppercase tracking-tight text-ink">
                   {editingModule ? 'Edit Training Module' : 'Create Training Module'}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsModuleModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-[#FAFAFA] text-[#71717A] hover:text-[#09090B] cursor-pointer"
+                  className="p-1.5 hover:bg-surface-light rounded-full text-ink-muted hover:text-ink cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -815,7 +815,7 @@ export const AdminDashboardPage: React.FC = () => {
 
               <form onSubmit={handleSaveModule} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] mb-1">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1.5">
                     Module Title
                   </label>
                   <input
@@ -823,13 +823,13 @@ export const AdminDashboardPage: React.FC = () => {
                     required
                     value={moduleFormTitle}
                     onChange={(e) => setModuleFormTitle(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs font-sans text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] focus:ring-1 focus:ring-[#09090B] focus:border-[#09090B] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs font-sans text-ink bg-surface-light border border-border-warm rounded-xl focus:ring-1 focus:ring-ink focus:border-ink focus:outline-none"
                     placeholder="e.g. Cybersecurity Basics"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] mb-1">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1.5">
                     Markdown Lesson Content
                   </label>
                   <textarea
@@ -837,22 +837,22 @@ export const AdminDashboardPage: React.FC = () => {
                     rows={8}
                     value={moduleFormContent}
                     onChange={(e) => setModuleFormContent(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs font-mono text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] focus:ring-1 focus:ring-[#09090B] focus:border-[#09090B] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs font-mono text-ink bg-surface-light border border-border-warm rounded-xl focus:ring-1 focus:ring-ink focus:border-ink focus:outline-none"
                     placeholder="# Lesson 1: Overview..."
                   />
                 </div>
 
-                <div className="flex justify-end gap-2.5 pt-3 border-t border-[#E4E4E7]">
+                <div className="flex justify-end gap-2.5 pt-3 border-t border-border-warm/70">
                   <button
                     type="button"
                     onClick={() => setIsModuleModalOpen(false)}
-                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] border border-[#E4E4E7] hover:bg-[#FAFAFA] cursor-pointer min-h-[40px]"
+                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-ink border border-border-warm hover:bg-surface-light rounded-full cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-[#09090B] hover:bg-[#27272A] shadow-none cursor-pointer min-h-[40px] border border-[#09090B]"
+                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-on-ink bg-ink hover:bg-ink/90 rounded-full shadow-xs cursor-pointer min-h-[40px]"
                   >
                     Save Module
                   </button>
@@ -866,23 +866,23 @@ export const AdminDashboardPage: React.FC = () => {
       {/* QUESTION MODAL with AnimatePresence */}
       <AnimatePresence>
         {isQuestionModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
             <motion.div
               variants={scaleInVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="bg-white max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl border border-[#E4E4E7]"
+              className="bg-surface max-w-lg w-full p-6 sm:p-8 space-y-5 rounded-3xl shadow-2xl border border-border-warm text-ink"
             >
-              <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
-                <h3 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B]">
+              <div className="flex items-center justify-between border-b border-border-warm/70 pb-3">
+                <h3 className="font-sans font-bold text-lg uppercase tracking-tight text-ink">
                   {editingQuestion ? 'Edit Quiz Question' : 'Add Quiz Question'}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsQuestionModalOpen(false)}
                   aria-label="Close modal"
-                  className="p-1 hover:bg-[#FAFAFA] text-[#71717A] hover:text-[#09090B] cursor-pointer"
+                  className="p-1.5 hover:bg-surface-light rounded-full text-ink-muted hover:text-ink cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -890,7 +890,7 @@ export const AdminDashboardPage: React.FC = () => {
 
               <form onSubmit={handleSaveQuestion} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] mb-1">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1.5">
                     Question Text
                   </label>
                   <input
@@ -898,13 +898,13 @@ export const AdminDashboardPage: React.FC = () => {
                     required
                     value={qText}
                     onChange={(e) => setQText(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs font-sans text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] focus:ring-1 focus:ring-[#09090B] focus:border-[#09090B] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs font-sans text-ink bg-surface-light border border-border-warm rounded-xl focus:ring-1 focus:ring-ink focus:border-ink focus:outline-none"
                     placeholder="e.g. What is the minimum certificate number length?"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-[#09090B]">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-ink">
                     Options (Select Correct Answer Radio)
                   </label>
                   {qOptions.map((opt, idx) => (
@@ -915,7 +915,7 @@ export const AdminDashboardPage: React.FC = () => {
                         aria-label={`Mark Option ${String.fromCharCode(65 + idx)} as correct`}
                         checked={qCorrectIdx === idx}
                         onChange={() => setQCorrectIdx(idx)}
-                        className="h-4 w-4 text-[#09090B] accent-[#09090B] cursor-pointer"
+                        className="h-4 w-4 text-ink accent-ink cursor-pointer"
                       />
                       <input
                         type="text"
@@ -926,24 +926,24 @@ export const AdminDashboardPage: React.FC = () => {
                           updated[idx] = e.target.value;
                           setQOptions(updated);
                         }}
-                        className="w-full px-3.5 py-2 text-xs font-sans text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] focus:outline-none focus:ring-1 focus:ring-[#09090B]"
+                        className="w-full px-3.5 py-2 text-xs font-sans text-ink bg-surface-light border border-border-warm rounded-xl focus:outline-none focus:ring-1 focus:ring-ink"
                         placeholder={`Option ${String.fromCharCode(65 + idx)}${idx >= 2 ? ' (Optional)' : ''}`}
                       />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-end gap-2.5 pt-3 border-t border-[#E4E4E7]">
+                <div className="flex justify-end gap-2.5 pt-3 border-t border-border-warm/70">
                   <button
                     type="button"
                     onClick={() => setIsQuestionModalOpen(false)}
-                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-[#09090B] border border-[#E4E4E7] hover:bg-[#FAFAFA] cursor-pointer min-h-[40px]"
+                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-ink border border-border-warm hover:bg-surface-light rounded-full cursor-pointer min-h-[40px]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white bg-[#09090B] hover:bg-[#27272A] shadow-none cursor-pointer min-h-[40px] border border-[#09090B]"
+                    className="px-5 py-2 text-xs font-mono font-bold uppercase tracking-wider text-on-ink bg-ink hover:bg-ink/90 rounded-full shadow-xs cursor-pointer min-h-[40px]"
                   >
                     Save Question
                   </button>

@@ -118,6 +118,16 @@ export const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/quiz/:moduleId"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <QuizPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Route 07: Supervisor Governance Telemetry */}
         <Route

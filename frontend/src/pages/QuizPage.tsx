@@ -176,8 +176,8 @@ export const QuizPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-[#6B6357]">
-        <Loader2 className="h-6 w-6 animate-spin text-[#0A0A0A]" />
+      <div className="flex items-center justify-center min-h-[60vh] gap-3 text-ink-muted">
+        <Loader2 className="h-6 w-6 animate-spin text-ink" />
         <span className="font-mono text-xs">Loading competency assessment...</span>
       </div>
     );
@@ -245,23 +245,23 @@ export const QuizPage: React.FC = () => {
       className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 space-y-8"
     >
       {/* 1. Header Banner & Assessment Progress */}
-      <motion.div variants={fadeUpVariants} className="bg-white rounded-none border border-[#E4E4E7] p-6 sm:p-8 space-y-6 shadow-none">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-[#E4E4E7] gap-6">
+      <motion.div variants={fadeUpVariants} className="bg-surface rounded-2xl border border-border-warm p-6 sm:p-8 space-y-6 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border-warm gap-6">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-widest text-[#0E50B0]">
-              <Award className="h-4 w-4 text-[#0E50B0]" />
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest text-azure-900 bg-azure-500/10 px-3 py-1 border border-azure-500/25 rounded-full">
+              <Award className="h-3.5 w-3.5 text-azure-700" />
               <span>Competency Assessment</span>
             </div>
-            <h1 className="font-sans text-2xl sm:text-3xl font-black uppercase text-black tracking-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-ink tracking-tight">
               {moduleTitle} Assessment
             </h1>
-            <p className="text-sm text-[#71717A] font-sans font-normal">
+            <p className="text-sm text-ink-muted font-sans font-normal">
               Passing threshold is 75%. Server-side scored with competency-level breakdown and official certification.
             </p>
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <div className="hidden md:block w-32 h-20 rounded-none overflow-hidden border border-[#E4E4E7] bg-zinc-100">
+            <div className="hidden md:block w-32 h-20 rounded-xl overflow-hidden border border-border-warm bg-surface-light">
               <img
                 src="/illustrations/quiz_assessment_examination.jpg"
                 alt="Official Civil Service Examination Desk"
@@ -271,8 +271,8 @@ export const QuizPage: React.FC = () => {
             </div>
 
             {modules.length > 1 && (
-            <div className="bg-white p-3 border border-[#E4E4E7] shrink-0">
-              <label htmlFor="quiz-module-select" className="block text-[10px] font-mono font-bold uppercase text-[#71717A] mb-1 tracking-wider">
+            <div className="bg-surface-light p-3 border border-border-warm rounded-xl shrink-0">
+              <label htmlFor="quiz-module-select" className="block text-[10px] font-mono font-bold uppercase text-ink-muted mb-1 tracking-wider">
                 Switch Assessment:
               </label>
               <select
@@ -284,7 +284,7 @@ export const QuizPage: React.FC = () => {
                   setResult(null);
                   navigate(`/quiz/${e.target.value}`);
                 }}
-                className="w-full px-3 py-1.5 text-xs font-mono text-black bg-white border border-[#E4E4E7] rounded-none focus:outline-none focus:ring-1 focus:ring-black cursor-pointer min-h-[38px]"
+                className="w-full px-3 py-1.5 text-xs font-mono text-ink bg-surface border border-border-warm rounded-lg focus:outline-none focus:ring-1 focus:ring-ink cursor-pointer min-h-[38px]"
               >
                 {modules.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -300,19 +300,19 @@ export const QuizPage: React.FC = () => {
         {/* Answer Progress Meter */}
         <div className="space-y-2 pt-1">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="font-bold text-black uppercase tracking-wider">
+            <span className="font-bold text-ink uppercase tracking-wider">
               Assessment Progress:
             </span>
-            <span className="text-[#71717A] font-semibold">
+            <span className="text-ink-muted font-semibold">
               {answeredCount} of {questions.length} answered ({progressPct}%)
             </span>
           </div>
-          <div className="w-full bg-zinc-100 rounded-none h-1.5 overflow-hidden border border-[#E4E4E7]">
+          <div className="w-full bg-surface-light rounded-full h-2 overflow-hidden border border-border-warm">
             <motion.div
               initial={shouldReduceMotion ? { width: `${progressPct}%` } : { width: '0%' }}
               animate={{ width: `${progressPct}%` }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="h-full bg-black rounded-none"
+              className="h-full bg-ink rounded-full"
             />
           </div>
         </div>
@@ -322,27 +322,27 @@ export const QuizPage: React.FC = () => {
       {adaptiveMeta?.is_adaptive && (
         <motion.div
           variants={fadeUpVariants}
-          className="p-6 rounded-none bg-white border border-[#0E50B0] space-y-3"
+          className="p-6 rounded-2xl bg-surface border border-azure-500/40 space-y-3"
         >
-          <div className="flex items-center justify-between gap-2 border-b border-[#0E50B0]/20 pb-3">
-            <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-black">
-              <Sparkles className="h-4 w-4 text-[#0E50B0]" />
+          <div className="flex items-center justify-between gap-2 border-b border-azure-500/20 pb-3">
+            <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-ink">
+              <Sparkles className="h-4 w-4 text-azure-700" />
               <span>Adaptive Question Selection Active</span>
             </div>
-            <span className="px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest bg-[#0E50B0] text-white">
+            <span className="px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest bg-azure-500/15 text-azure-900 border border-azure-500/30 rounded-full">
               Targeted Remediation
             </span>
           </div>
-          <p className="text-xs text-[#71717A] font-sans leading-relaxed">
+          <p className="text-xs text-ink-muted font-sans leading-relaxed">
             {adaptiveMeta.message}
           </p>
           {adaptiveMeta.focus_competencies.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="text-xs font-mono font-bold text-black">Priority Competencies:</span>
+              <span className="text-xs font-mono font-bold text-ink">Priority Competencies:</span>
               {adaptiveMeta.focus_competencies.map((comp) => (
                 <span
                   key={comp}
-                  className="px-3 py-1 text-xs font-mono bg-zinc-100 border border-[#E4E4E7] text-black"
+                  className="px-3 py-1 text-xs font-mono bg-surface-light border border-border-warm text-ink rounded-full"
                 >
                   {comp}
                 </span>
@@ -353,12 +353,12 @@ export const QuizPage: React.FC = () => {
       )}
 
       {/* 3. Instructions & Assessment Rules Bar */}
-      <div className="p-6 rounded-none bg-white border border-[#E4E4E7] text-xs space-y-3">
-        <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-black">
-          <ShieldCheck className="h-4 w-4 text-emerald-600" />
+      <div className="p-6 rounded-2xl bg-surface border border-border-warm text-xs space-y-3">
+        <div className="flex items-center gap-2 font-sans text-sm font-bold uppercase tracking-wider text-ink">
+          <ShieldCheck className="h-4 w-4 text-sage-700" />
           <span>Assessment Guidelines & Instructions:</span>
         </div>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#71717A] pl-5 list-disc">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-ink-muted pl-5 list-disc">
           <li>Answer all {questions.length} questions to maximize your competency score.</li>
           <li>A score of 75% or higher grants official module certification.</li>
           <li>You can flag questions to review before final submission.</li>
@@ -400,12 +400,12 @@ export const QuizPage: React.FC = () => {
       </motion.div>
 
       {/* 6. Bottom Submit Control Bar */}
-      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-[#E4E4E7] bg-white p-6 border shadow-none">
-        <div className="flex items-center gap-3 text-xs font-mono text-[#71717A]">
+      <motion.div variants={fadeUpVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-border-warm bg-surface p-6 border rounded-2xl shadow-none">
+        <div className="flex items-center gap-3 text-xs font-mono text-ink-muted">
           <span>{answeredCount} of {questions.length} answered</span>
           {flaggedCount > 0 && (
-            <span className="text-[#AF411E] font-bold flex items-center gap-1.5 bg-orange-50 px-2.5 py-1 border border-[#EE8148]">
-              <Flag className="h-3 w-3 fill-[#EE8148] text-[#EE8148]" />
+            <span className="text-rose-900 font-bold flex items-center gap-1.5 bg-rose-500/15 px-3 py-1 rounded-full border border-rose-500/30">
+              <Flag className="h-3 w-3 fill-rose-600 text-rose-600" />
               <span>{flaggedCount} flagged</span>
             </span>
           )}
@@ -417,7 +417,7 @@ export const QuizPage: React.FC = () => {
             variant="outline"
             size="md"
             onClick={() => navigate(`/module?id=${activeModuleId}`)}
-            className="min-h-[44px] rounded-none px-5 border-[#E4E4E7] text-black hover:bg-zinc-100 font-mono text-xs font-bold uppercase tracking-wider"
+            className="min-h-[44px] rounded-full px-5 border-border-warm text-ink hover:bg-surface-elevated font-mono text-xs font-bold uppercase tracking-wider"
           >
             <BookOpen className="h-3.5 w-3.5 mr-1.5" />
             <span>Review Lesson</span>
@@ -427,7 +427,7 @@ export const QuizPage: React.FC = () => {
             onClick={handleOpenSubmitModal}
             disabled={isSubmitting}
             size="md"
-            className="min-h-[44px] rounded-none px-6 bg-black hover:bg-[#0E50B0] text-white font-mono text-xs font-bold uppercase tracking-wider"
+            className="min-h-[44px] rounded-full px-6 bg-ink hover:bg-ink/90 text-on-ink font-mono text-xs font-bold uppercase tracking-wider"
           >
             {isSubmitting ? (
               <>

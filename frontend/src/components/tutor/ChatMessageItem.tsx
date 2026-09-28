@@ -56,43 +56,43 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     >
       {!isUser && (
         <div
-          className={`h-8 w-8 rounded-none flex items-center justify-center shrink-0 mt-0.5 ${
-            isOutOfScope ? 'bg-[#AF411E] text-white' : 'bg-black text-white'
+          className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${
+            isOutOfScope ? 'bg-rose-500/20 text-rose-900 border-rose-500/40' : 'bg-surface text-ink border-border-warm shadow-xs'
           }`}
         >
-          {isOutOfScope ? <AlertTriangle className="h-4 w-4 text-white" /> : <Bot className="h-4 w-4 text-[#0E50B0]" />}
+          {isOutOfScope ? <AlertTriangle className="h-4 w-4 text-rose-700" /> : <Bot className="h-4 w-4 text-azure-700" />}
         </div>
       )}
 
       <div
-        className={`max-w-[90%] sm:max-w-[85%] rounded-none px-5 py-4 text-body leading-relaxed transition-all space-y-3 ${
+        className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-5 py-4 text-body leading-relaxed transition-all space-y-3 ${
           isUser
-            ? 'bg-black text-white font-sans'
+            ? 'bg-ink text-on-ink font-sans rounded-tr-xs shadow-xs'
             : isOutOfScope
-            ? 'bg-orange-50 border border-[#EE8148] text-black font-sans'
-            : 'bg-white border border-[#E4E4E7] text-black font-sans'
+            ? 'bg-rose-500/10 border border-rose-500/30 text-ink font-sans rounded-tl-xs shadow-none'
+            : 'bg-surface-light border border-border-warm text-ink font-sans rounded-tl-xs shadow-none'
         }`}
       >
         {/* Source Reference & Grounding Status Strip */}
         {!isUser && msg.matched_module_title && (
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#E4E4E7]">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-border-warm">
             <div className="flex flex-wrap items-center gap-2">
               {/* Grounding Status Pill */}
               {isOutOfScope ? (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#AF411E] bg-orange-100/50 px-2.5 py-1 border border-[#EE8148]">
-                  <AlertTriangle className="h-3 w-3 text-[#AF411E]" />
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-rose-900 bg-rose-500/15 px-2.5 py-1 border border-rose-500/30 rounded-full">
+                  <AlertTriangle className="h-3 w-3 text-rose-700" />
                   <span>Unverified / Out of Scope</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 border border-emerald-300">
-                  <ShieldCheck className="h-3 w-3 text-emerald-600" />
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-sage-900 bg-sage-500/15 px-2.5 py-1 border border-sage-500/30 rounded-full">
+                  <ShieldCheck className="h-3 w-3 text-sage-700" />
                   <span>{isFallback ? 'Verified Training Guide' : 'Grounded Curriculum'}</span>
                 </span>
               )}
 
               {/* Matched Module Name */}
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase text-black bg-zinc-100 px-2.5 py-1 border border-[#E4E4E7]">
-                <BookOpen className="h-3 w-3 text-[#0E50B0]" />
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase text-ink bg-surface px-2.5 py-1 border border-border-warm rounded-full">
+                <BookOpen className="h-3 w-3 text-azure-700" />
                 <span className="truncate max-w-[200px]">{msg.matched_module_title}</span>
               </span>
             </div>
@@ -100,7 +100,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             {matchedModule && (
               <Link
                 to={`/module?id=${matchedModule.id}`}
-                className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase text-black hover:text-[#0E50B0] transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase text-ink hover:text-ink-muted transition-colors rounded-full px-2 py-0.5"
               >
                 <span>Open Lesson</span>
                 <ArrowRight className="h-3 w-3" />
@@ -111,12 +111,12 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
         {/* Source Sections Tags */}
         {!isUser && msg.source_sections && msg.source_sections.length > 0 && !isOutOfScope && (
-          <div className="flex flex-wrap items-center gap-1.5 text-caption text-[#71717A] font-mono text-[11px]">
-            <span className="font-bold text-black uppercase">Source sections:</span>
+          <div className="flex flex-wrap items-center gap-1.5 text-caption text-ink-muted font-mono text-[11px]">
+            <span className="font-bold text-ink uppercase">Source sections:</span>
             {msg.source_sections.map((sec, idx) => (
               <span
                 key={idx}
-                className="px-2 py-0.5 bg-zinc-100 text-black font-medium border border-[#E4E4E7] text-[10px]"
+                className="px-2.5 py-0.5 bg-surface text-ink font-medium border border-border-warm rounded-full text-[10px]"
               >
                 {sec}
               </span>
@@ -125,50 +125,50 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         )}
 
         {/* Message Content Body */}
-        <div className={`whitespace-pre-line leading-relaxed ${isUser ? 'text-white' : 'text-black'} text-body font-normal`}>
+        <div className={`whitespace-pre-line leading-relaxed ${isUser ? 'text-on-ink' : 'text-ink'} text-body font-normal`}>
           {msg.text}
         </div>
 
         {/* Quick Action Mode Chips (for tutor messages) */}
         {!isUser && !isOutOfScope && msg.matched_module_title && onSelectModeAction && (
-          <div className="pt-2 border-t border-[#E4E4E7] flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#71717A] mr-1">
+          <div className="pt-2 border-t border-border-warm flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-muted mr-1">
               Actions:
             </span>
             <button
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'simple')}
               disabled={disabled}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-100 text-black border border-[#E4E4E7] text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface hover:bg-surface-elevated text-ink border border-border-warm rounded-full text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
-              <HelpCircle className="h-3.5 w-3.5 text-[#0E50B0]" />
+              <HelpCircle className="h-3.5 w-3.5 text-azure-700" />
               <span>Explain simpler</span>
             </button>
             <button
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'procedure')}
               disabled={disabled}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-100 text-black border border-[#E4E4E7] text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface hover:bg-surface-elevated text-ink border border-border-warm rounded-full text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
-              <ListOrdered className="h-3.5 w-3.5 text-[#0E50B0]" />
+              <ListOrdered className="h-3.5 w-3.5 text-azure-700" />
               <span>Give procedure</span>
             </button>
             <button
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'pitfalls')}
               disabled={disabled}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-100 text-black border border-[#E4E4E7] text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface hover:bg-surface-elevated text-ink border border-border-warm rounded-full text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
-              <AlertOctagon className="h-3.5 w-3.5 text-[#EE8148]" />
+              <AlertOctagon className="h-3.5 w-3.5 text-rose-600" />
               <span>What to avoid</span>
             </button>
             <button
               type="button"
               onClick={() => onSelectModeAction(msg.text, 'example')}
               disabled={disabled}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-zinc-100 text-black border border-[#E4E4E7] text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface hover:bg-surface-elevated text-ink border border-border-warm rounded-full text-caption font-mono text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
-              <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
+              <BookOpen className="h-3.5 w-3.5 text-sage-700" />
               <span>Workplace scenario</span>
             </button>
           </div>
@@ -176,8 +176,8 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
 
         {/* Suggested Follow-up Pills */}
         {!isUser && msg.suggested_followups && msg.suggested_followups.length > 0 && onSelectFollowup && (
-          <div className="pt-2 border-t border-[#E4E4E7] space-y-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#71717A] block">
+          <div className="pt-2 border-t border-border-warm space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-muted block">
               Suggested Follow-ups:
             </span>
             <div className="flex flex-wrap gap-2">
@@ -187,7 +187,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                   type="button"
                   onClick={() => onSelectFollowup(followup)}
                   disabled={disabled}
-                  className="text-left text-caption px-3 py-1 bg-white hover:bg-zinc-100 text-black border border-[#E4E4E7] transition-all font-mono text-xs cursor-pointer disabled:opacity-50"
+                  className="text-left text-caption px-3.5 py-1.5 bg-surface hover:bg-surface-elevated text-ink border border-border-warm rounded-full transition-all font-mono text-xs cursor-pointer disabled:opacity-50"
                 >
                   💬 {followup}
                 </button>
@@ -199,7 +199,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         {/* Timestamp */}
         <span
           className={`block text-[10px] pt-1 font-mono uppercase tracking-wider ${
-            isUser ? 'text-zinc-400 text-right' : 'text-[#71717A]'
+            isUser ? 'text-[#FAF4E4]/70 text-right' : 'text-ink-muted'
           }`}
         >
           {msg.timestamp}
@@ -207,8 +207,8 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
       </div>
 
       {isUser && (
-        <div className="h-8 w-8 rounded-none bg-black text-white flex items-center justify-center shrink-0 mt-0.5 border border-black">
-          <User className="h-4 w-4 text-white" />
+        <div className="h-8 w-8 rounded-full bg-ink text-on-ink flex items-center justify-center shrink-0 mt-0.5 border border-border-warm/40 shadow-xs">
+          <User className="h-4 w-4 text-on-ink" />
         </div>
       )}
     </motion.div>
