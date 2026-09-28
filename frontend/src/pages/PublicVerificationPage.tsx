@@ -102,8 +102,8 @@ export const PublicVerificationPage: React.FC = () => {
           animate={shouldReduceMotion ? {} : 'visible'}
           className="text-center space-y-3 print:hidden"
         >
-          <div className="flex justify-center mb-1">
-            <GovSkillLogo size={52} variant="icon" />
+          <div className="flex justify-center mb-3">
+            <GovSkillLogo size={88} variant="icon" />
           </div>
           <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#71717A] block">
             SOVEREIGN CREDENTIAL REPOSITORY

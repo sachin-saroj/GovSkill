@@ -120,7 +120,8 @@ export default {
         appBorderStrong: "#000000",
       },
       fontFamily: {
-        serif: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        serif: ["Fraunces", "Georgia", "Times New Roman", "serif"],
+        display: ["Fraunces", "Georgia", "serif"],
         sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["JetBrains Mono", "Fira Code", "Consolas", "monospace"],
       },

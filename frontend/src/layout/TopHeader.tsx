@@ -116,8 +116,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
           <Menu className="h-5 w-5" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <GovSkillLogo size={24} variant="icon" />
+        <div className="flex items-center gap-3">
+          <GovSkillLogo size={44} variant="icon" />
           <div className="hidden sm:flex flex-col">
             <span className="font-mono text-[9px] uppercase tracking-[0.2em] font-bold text-zinc-400">
               GovSkill Platform

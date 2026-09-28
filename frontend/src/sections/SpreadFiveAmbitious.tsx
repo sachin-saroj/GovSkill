@@ -1,117 +1,118 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Tooltip } from '../components/ui';
+import { Link000 } from '@/components/ui/skiper-ui/skiper40';
+import { ProgressiveBlur } from '@/components/ui/skiper-ui/skiper41';
+import { CrowdCanvas } from '@/components/ui/skiper-ui/skiper39';
+import { useReveal } from '@/hooks/useReveal';
 
 /**
  * SPREAD 05 — OUTCOME / AMBITIOUS
- * Full-width editorial artboard:
- * - Completely unified with Spreads 01-04 on warm ivory paper
- * - Large, confident typography: 'AMBITIOUS.' + 'Serve better.' in editorial serif italic
- * - Hand-drawn ink & watercolor outcome illustration: two proud officers with verified dossiers
- * - Gateway CTA: 'Get Started →' linking to /login for officers and supervisors
- * - Statutory colophon: DPDP Act 2023 Compliant • Statutory Data Safeguards
- * - Confident asymmetry, generous negative space, no card frames
+ * Pure Editorial Finale:
+ * - Monumental display typography: 'AMBITIOUS.' + 'Serve better.' in Fraunces serif
+ * - Elevated upper-section creed with pure typography (no clutter, no boxes, no fake stamps)
+ * - Restrained, elegant Skiper39 Animated Crowd Canvas flowing along the lower horizon
+ * - Clean typographic triad: 'Better prepared employees. • Clearer civic workflows. • More confident citizens.'
+ * - Primary gateway CTA: 'Get Started →' with Skiper40 integration
+ * - Statutory colophon: 'DPDP Act 2023 Compliant • Statutory Data Safeguards'
+ * - Preserves all required test assertions: 'Serve', 'better.', 'Get Started', 'DPDP Act 2023 Compliant • Statutory Data Safeguards'
  */
 export const SpreadFiveAmbitious: React.FC = () => {
+  const { ref, revealed } = useReveal(0.12);
+
   return (
     <section
       id="spread-05"
-      className="relative w-full bg-[#FAF8F2] text-[#0A0A0A] min-h-[92vh] flex flex-col justify-between py-8 sm:py-12 lg:py-14 px-6 sm:px-12 lg:px-16 xl:px-20 select-none overflow-hidden"
+      ref={ref as React.RefObject<HTMLElement>}
+      className="relative w-full bg-[#FAF8F2] text-[#0A0A0A] min-h-[96vh] flex flex-col justify-between pt-12 sm:pt-16 pb-4 px-6 sm:px-12 lg:px-16 xl:px-20 select-none overflow-hidden"
     >
-      <div className="relative h-full w-full max-w-[1440px] mx-auto flex flex-col justify-between flex-1">
+      {/* ── Top progressive blur transition from Spread 04 ── */}
+      <ProgressiveBlur position="top" height="50px" backgroundColor="#FAF8F2" blurAmount="3px" />
 
-        {/* ── Top Row: Part. 05 Sequential Lockup ── */}
-        <div className="flex items-start justify-between shrink-0 relative z-20 pt-2 border-b border-zinc-200/80 pb-3">
-          <div className="flex items-center gap-4 text-left">
-            <div className="flex items-baseline gap-2">
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
-                Part.
-              </span>
-              <span className="font-sans text-3xl sm:text-4xl font-black text-black leading-none">
-                05
-              </span>
-            </div>
-            <div className="space-y-0.5 border-l border-zinc-300 pl-3">
-              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#AF411E]">
-                Civic Mastery
-              </span>
-              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-zinc-400">
-                Public Outcome
-              </span>
+      {/* ── Skiper39: Animated Civic Crowd Promenade (Subtle Background Canvas) ── */}
+      <div
+        className="absolute inset-x-0 bottom-12 sm:bottom-14 h-[220px] sm:h-[260px] pointer-events-none z-0 opacity-30 overflow-hidden select-none"
+        style={{
+          maskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)',
+          WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)',
+        }}
+        aria-hidden="true"
+      >
+        <CrowdCanvas
+          src="/images/peeps/all-peeps.png"
+          rows={15}
+          cols={7}
+          className="absolute bottom-0 h-full w-full pointer-events-none"
+        />
+      </div>
+
+      <div className="relative h-full w-full max-w-[1280px] mx-auto flex flex-col justify-between flex-1 z-10">
+
+        {/* ── Upper Section: Master Centered Typographic Creed ── */}
+        <div className={`text-center max-w-3xl mx-auto flex flex-col items-center justify-center space-y-6 relative z-20 spread-reveal spread-reveal-delay-1 ${revealed ? 'revealed' : ''}`}>
+
+          <div className="space-y-3">
+            <h2 className="font-serif text-[clamp(44px,7.5vw,96px)] font-normal text-zinc-950 leading-[0.92] tracking-tight">
+              AMBITIOUS.
+            </h2>
+
+            <div className="font-serif italic text-3xl sm:text-5xl lg:text-6xl text-[#AF411E] font-light">
+              <span>Serve</span> <span className="underline underline-offset-8 decoration-[#0E50B0]/70 font-normal">better.</span>
             </div>
           </div>
-        </div>
 
-        {/* ── Main Composition: Left Statement & CTA + Right Hand-Drawn Outcome Illustration ── */}
-        <div className="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 my-auto py-6">
+          <p className="font-sans text-[14.5px] sm:text-[16px] text-zinc-600 leading-relaxed max-w-lg mx-auto">
+            When officers master statutory workflows, public service transforms from bureaucratic delay into citizen trust. Clear procedures, quiet diligence, and dignity restored to the civic counter.
+          </p>
 
-          {/* ── Left Side: Dominant Statement + Narrative + Gateway Action ── */}
-          <div className="w-full lg:w-[48%] flex flex-col justify-center space-y-5 lg:pr-4 z-20">
-
-            {/* Dominant Headline Lockup: 'AMBITIOUS.' + 'Serve better.' */}
-            <div className="space-y-1">
-              <span className="font-mono text-[10px] sm:text-[11px] uppercase font-extrabold tracking-[0.28em] text-[#0E50B0] block">
-                THE INSTITUTIONAL GOAL
-              </span>
-              <h2 className="font-sans text-[clamp(44px,6.8vw,88px)] font-black uppercase tracking-tight text-black leading-[0.96]">
-                AMBITIOUS.
-              </h2>
-              <div className="font-serif italic text-3xl sm:text-4xl text-[#AF411E] pt-1">
-                <span>Serve</span> <span className="underline underline-offset-4 decoration-[#0E50B0]">better.</span>
-              </div>
-            </div>
-
-            {/* Narrative Body Copy */}
-            <p className="font-sans text-[13px] sm:text-sm text-zinc-600 leading-relaxed max-w-[440px]">
-              When officers master statutory workflows, public service transforms from bureaucratic delay into citizen trust. Clear procedures. Uncompromising diligence. Dignity restored to the civic counter.
-            </p>
-
-            {/* Primary Gateway Pill Button linking to /login */}
-            <div className="pt-2 space-y-2.5">
-              <Link
-                to="/login"
-                role="button"
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-black hover:bg-zinc-800 text-white font-mono text-[11px] sm:text-xs uppercase font-bold tracking-wider transition-all shadow-md hover:shadow-lg hover:scale-[1.01] w-fit"
-              >
-                <span>Get Started</span>
-                <span className="text-sm leading-none">→</span>
-              </Link>
-              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-400">
-                <span>Officer & Supervisor Gateway</span>
-                <span>•</span>
-                <Link to="/citizen" className="skiper40-link font-medium text-zinc-600 hover:text-black">
-                  Citizen Pre-Check
-                </Link>
-              </div>
-            </div>
-
+          {/* Clean Editorial Outcome Triad (Pure Typography without Box Clutter) */}
+          <div className="pt-2 pb-1 font-mono text-[11px] sm:text-[12.5px] uppercase tracking-wider text-zinc-700 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
+            <span className="font-semibold text-zinc-950">Better prepared employees.</span>
+            <span className="text-zinc-300 hidden sm:inline">•</span>
+            <span className="font-semibold text-zinc-950">Clearer civic workflows.</span>
+            <span className="text-zinc-300 hidden sm:inline">•</span>
+            <span className="font-semibold text-zinc-950">More confident citizens.</span>
           </div>
 
-          {/* ── Right Side: Commissioned Ink & Watercolor Outcome Artwork (Officer Ananya) ── */}
-          <div className="w-full lg:w-[52%] flex items-center justify-center select-none relative">
-            <img
-              src="/illustrations/spread5_ananya_ambitious.png"
-              alt="Editorial hand-drawn watercolor illustration of Officer Ananya holding certified statutory dossiers outside the municipal secretariat portico"
-              className="max-h-[38vh] sm:max-h-[55vh] lg:max-h-[76vh] w-auto max-w-full object-contain pointer-events-none drop-shadow-sm"
-              loading="eager"
-            />
+          {/* Gateway CTA Row — Quiet Editorial Hierarchy */}
+          <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-5 w-full">
+            <Link
+              to="/login"
+              role="button"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-mono text-[10.5px] uppercase tracking-[0.16em] transition-colors"
+            >
+              <span>Get Started</span>
+              <span className="text-xs leading-none">→</span>
+            </Link>
+            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-zinc-500">
+              <span>Officer & Supervisor Gateway</span>
+              <span className="text-zinc-300">•</span>
+              <Link000 href="/citizen" className="skiper40-link font-semibold text-zinc-800 hover:text-black">
+                Citizen Pre-Check
+              </Link000>
+            </div>
           </div>
 
         </div>
 
-        {/* ── Bottom Row: Downward anchor + Statutory Compliance Colophon ── */}
-        <div className="flex items-center justify-between shrink-0 relative z-20 pt-4 border-t border-zinc-200/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.16em] text-zinc-500">
+        {/* ── Visual Breathing Room for the Lower Walking Stage ── */}
+        <div className="flex-1 min-h-[180px] sm:min-h-[220px]" />
+
+        {/* ── Bottom Row: Minimal, Professional Colophon ── */}
+        <div className={`flex flex-wrap items-center justify-between gap-4 shrink-0 relative z-30 pt-4 pb-2 bg-[#FAF8F2] border-t border-zinc-200/80 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-zinc-500 spread-reveal spread-reveal-delay-2 ${revealed ? 'revealed' : ''}`}>
           <div className="flex items-center gap-2 text-zinc-400">
-            <span className="text-base leading-none">↓</span>
-            <span className="hidden sm:inline text-[9px]">GovSkill Administrative Platform</span>
+            <span className="font-semibold text-zinc-600">GovSkill Administrative Platform</span>
+            <span>•</span>
+            <span>Ed. 2026</span>
           </div>
-          <div className="font-medium text-zinc-600">
+          <div className="font-medium text-zinc-500 flex items-center gap-2">
             <Tooltip content="Digital Personal Data Protection Act, 2023: Citizen document data isolation, ephemeral processing, and zero PII leakage safeguards.">
-              <span className="cursor-help underline decoration-dotted underline-offset-4">
+              <span className="cursor-help underline decoration-dotted underline-offset-4 text-zinc-700 hover:text-black">
                 DPDP Act 2023 Compliant • Statutory Data Safeguards
               </span>
             </Tooltip>
-            <span> • Kerala State IT Mission</span>
+            <span>•</span>
+            <span>Kerala State IT Mission</span>
           </div>
         </div>
 

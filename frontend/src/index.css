@@ -21,7 +21,6 @@
   }
 
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #FFFFFF;
@@ -35,6 +34,23 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+
+  /* Lenis Smooth Scroll Integration Styles */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 
   ::selection {
@@ -113,6 +129,36 @@
   .skiper40-link:focus-visible::after {
     transform: scaleX(1);
     transform-origin: bottom left;
+  }
+
+  /* Editorial Display Typography */
+  .display-serif {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+  }
+
+  /* Spread reveal — subtle, performant entrance without scroll jitter or layout shift */
+  .spread-reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.45s ease-out, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    backface-visibility: hidden;
+  }
+  .spread-reveal.revealed {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.45s ease-out;
+  }
+  .spread-reveal-delay-1 { transition-delay: 0.04s; }
+  .spread-reveal-delay-2 { transition-delay: 0.08s; }
+  .spread-reveal-delay-3 { transition-delay: 0.12s; }
+  .spread-reveal-delay-4 { transition-delay: 0.16s; }
+
+  /* Hardware-accelerated image stability utility */
+  .image-stable {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: auto;
   }
 }
 

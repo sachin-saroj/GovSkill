@@ -12,7 +12,6 @@ import CounterSlipModal from '@/components/citizen/CounterSlipModal';
 import {
   FileText,
   UploadCloud,
-  FileCheck,
   AlertCircle,
   Search,
   Copy,
@@ -240,10 +239,13 @@ export const CitizenUploadPage: React.FC = () => {
         <div className="relative overflow-hidden bg-white border border-[#E4E4E7] p-6 sm:p-8 space-y-4 shadow-none">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#AF411E]" />
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7] pt-1">
-            <div className="flex items-center gap-3">
-              <span className="h-9 w-9 bg-[#FAFAFA] text-[#09090B] border border-[#E4E4E7] flex items-center justify-center font-bold">
-                <FileCheck className="h-5 w-5 text-[#AF411E]" />
-              </span>
+            <div className="flex items-center gap-3.5">
+              <img
+                src="/govskill-icon.png"
+                alt="GovSkill Logo"
+                className="h-14 w-14 sm:h-16 sm:w-16 object-contain drop-shadow-sm shrink-0"
+                loading="eager"
+              />
               <div>
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#71717A] block">
                   GovAssist Citizen Self-Service

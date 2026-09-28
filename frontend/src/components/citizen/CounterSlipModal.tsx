@@ -152,8 +152,8 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
             {/* Header: DPI & Service Heading with Sovereign Logo */}
             <div className="border-b border-[#E4E4E7] pb-5 text-center space-y-2">
               <div className="flex items-center justify-center gap-3">
-                <GovSkillLogo size={32} variant="icon" />
-                <div className="inline-flex items-center gap-2 px-3 py-0.5 bg-[#09090B] text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] print:bg-black print:text-white">
+                <GovSkillLogo size={48} variant="icon" />
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#09090B] text-white font-mono text-[10px] font-bold uppercase tracking-[0.2em] print:bg-black print:text-white">
                   <span>National Digital Public Infrastructure • Local Governance Platform</span>
                 </div>
               </div>

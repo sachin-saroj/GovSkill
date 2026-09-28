@@ -119,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
             onClick={onCloseMobile}
             className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-black rounded-md p-0.5"
           >
-            <GovSkillLogo size={30} variant="icon" />
+            <GovSkillLogo size={52} variant="icon" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="font-sans text-[18px] font-black tracking-tight text-black">

@@ -94,8 +94,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             {/* Header / Sovereign GovSkill Seal */}
-            <div className="flex justify-center mb-3">
-              <GovSkillLogo size={52} variant="icon" />
+            <div className="flex justify-center mb-4">
+              <GovSkillLogo size={76} variant="icon" />
             </div>
 
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#71717A] mb-1">

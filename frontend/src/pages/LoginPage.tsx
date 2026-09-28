@@ -8,7 +8,6 @@ import {
   User,
   Lock,
   AlertCircle,
-  Zap,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
@@ -80,8 +79,13 @@ export const LoginPage: React.FC = () => {
             >
               ← GovSkill
             </Link>
-            <div className="w-8 h-8 flex items-center justify-center">
-              <Zap className="h-5 w-5 fill-black text-black" />
+            <div className="flex items-center justify-center my-1">
+              <img
+                src="/govskill-logo.png"
+                alt="GovSkill Logo"
+                className="h-20 sm:h-24 w-auto object-contain drop-shadow-md transition-transform hover:scale-105"
+                loading="eager"
+              />
             </div>
           </div>
 
