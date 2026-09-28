@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import DashboardLayout from '@/layout/DashboardLayout';
 
 vi.mock('@/hooks/useAuth', () => ({
@@ -14,6 +14,10 @@ vi.mock('@/hooks/useAuth', () => ({
 }));
 
 describe('DashboardLayout & Navigation Shell', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('renders sidebar navigation, brand wordmark, and top utility header with search', () => {
     render(
       <BrowserRouter>
@@ -22,6 +26,9 @@ describe('DashboardLayout & Navigation Shell', () => {
         </DashboardLayout>
       </BrowserRouter>
     );
+
+    // Skip link
+    expect(screen.getByText('Skip to main content')).toBeInTheDocument();
 
     // Sidebar branding & navigation
     expect(screen.getAllByText('GovSkill').length).toBeGreaterThan(0);
@@ -35,6 +42,9 @@ describe('DashboardLayout & Navigation Shell', () => {
     expect(screen.getByRole('button', { name: /search modules, skills, and tools/i })).toBeInTheDocument();
     expect(screen.getByText('Services Operational')).toBeInTheDocument();
     expect(screen.getByText('Main Dashboard Content')).toBeInTheDocument();
+
+    // Admin-only route is hidden for employee role
+    expect(screen.queryByText('Workforce Admin')).not.toBeInTheDocument();
   });
 
   it('opens and closes quick search overlay on button click or Escape key', () => {
@@ -54,5 +64,47 @@ describe('DashboardLayout & Navigation Shell', () => {
     // Escape closes modal
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(screen.queryByText('Select item to navigate')).not.toBeInTheDocument();
+  });
+
+  it('toggles sidebar collapse state and updates localStorage', () => {
+    render(
+      <BrowserRouter>
+        <DashboardLayout>
+          <div>Content</div>
+        </DashboardLayout>
+      </BrowserRouter>
+    );
+
+    const collapseButton = screen.getByRole('button', { name: /collapse navigation sidebar/i });
+    expect(collapseButton).toBeInTheDocument();
+
+    // Collapse
+    fireEvent.click(collapseButton);
+    expect(localStorage.getItem('govskill_sidebar_collapsed')).toBe('true');
+
+    // Expand
+    const expandButton = screen.getByRole('button', { name: /expand navigation sidebar/i });
+    expect(expandButton).toBeInTheDocument();
+    fireEvent.click(expandButton);
+    expect(localStorage.getItem('govskill_sidebar_collapsed')).toBe('false');
+  });
+
+  it('opens mobile drawer on menu toggle and closes on Escape', () => {
+    render(
+      <BrowserRouter>
+        <DashboardLayout>
+          <div>Content</div>
+        </DashboardLayout>
+      </BrowserRouter>
+    );
+
+    const menuButton = screen.getByRole('button', { name: /open navigation menu/i });
+    fireEvent.click(menuButton);
+
+    expect(screen.getByRole('dialog', { name: /navigation drawer/i })).toBeInTheDocument();
+
+    // Press Escape to close
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog', { name: /navigation drawer/i })).not.toBeInTheDocument();
   });
 });
