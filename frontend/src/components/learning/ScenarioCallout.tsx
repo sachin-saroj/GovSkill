@@ -165,34 +165,34 @@ export const ScenarioCallout: React.FC<ScenarioCalloutProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
       {/* Practical Scenario Card */}
-      <div className="bg-white border border-[#E4E4E7] p-5 space-y-3">
-        <div className="flex items-center gap-2 text-black font-sans font-bold text-xs uppercase tracking-wider">
-          <Building2 className="h-4 w-4 text-[#0E50B0] shrink-0" />
+      <div className="bg-surface-light border border-border-warm rounded-xl p-5 space-y-3">
+        <div className="flex items-center gap-2 text-ink font-sans font-bold text-xs uppercase tracking-wider">
+          <Building2 className="h-4 w-4 text-azure-700 shrink-0" />
           <span>Workplace Scenario & Operational Impact</span>
         </div>
-        <p className="text-caption text-[#71717A] leading-relaxed font-normal">
-          <strong className="text-black font-bold">Scenario: </strong>
+        <p className="text-caption text-ink-muted leading-relaxed font-normal">
+          <strong className="text-ink font-bold">Scenario: </strong>
           {context.scenario}
         </p>
-        <div className="pt-2 border-t border-[#E4E4E7] text-caption text-[#71717A] flex items-start gap-2 font-normal">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="pt-2 border-t border-border-warm text-caption text-ink-muted flex items-start gap-2 font-normal">
+          <CheckCircle2 className="h-4 w-4 text-sage-700 shrink-0 mt-0.5" />
           <span>
-            <strong className="font-bold text-black">Why it matters: </strong>
+            <strong className="font-bold text-ink">Why it matters: </strong>
             {context.workplaceImportance}
           </span>
         </div>
       </div>
 
       {/* Common Mistakes & Red Flags */}
-      <div className="bg-white border border-[#EE8148]/40 p-5 space-y-3">
-        <div className="flex items-center gap-2 text-[#AF411E] font-mono font-bold text-xs uppercase tracking-wider">
-          <ShieldAlert className="h-4 w-4 text-[#EE8148] shrink-0" />
+      <div className="bg-surface-light border border-rose-500/30 rounded-xl p-5 space-y-3">
+        <div className="flex items-center gap-2 text-rose-800 font-mono font-bold text-xs uppercase tracking-wider">
+          <ShieldAlert className="h-4 w-4 text-rose-700 shrink-0" />
           <span>Common Mistakes & Red Flags to Avoid</span>
         </div>
-        <ul className="space-y-2 text-caption text-black font-normal">
+        <ul className="space-y-2 text-caption text-ink font-normal">
           {context.commonMistakes.map((mistake, idx) => (
             <li key={idx} className="flex items-start gap-2">
-              <AlertTriangle className="h-3.5 w-3.5 text-[#EE8148] shrink-0 mt-0.5" />
+              <AlertTriangle className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
               <span className="leading-snug">{mistake}</span>
             </li>
           ))}

@@ -48,23 +48,23 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
 
   return (
     <Card
-      className={`p-6 sm:p-8 border shadow-none transition-all duration-200 rounded-none bg-white ${
+      className={`p-6 sm:p-8 border shadow-none transition-all duration-200 rounded-2xl bg-surface ${
         isAllCertified
-          ? 'border-[#E4E4E7] border-l-4 border-l-emerald-600'
+          ? 'border-border-warm border-l-4 border-l-sage-600'
           : isHighPriority
-          ? 'border-[#E4E4E7] border-l-4 border-l-[#AF411E]'
-          : 'border-[#E4E4E7]'
+          ? 'border-border-warm border-l-4 border-l-rose-500'
+          : 'border-border-warm'
       }`}
     >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div
-            className={`p-3 shrink-0 border ${
+            className={`p-3 shrink-0 rounded-xl border ${
               isAllCertified
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                ? 'bg-sage-500/15 text-sage-800 border-sage-500/30'
                 : isHighPriority
-                ? 'bg-orange-50 text-[#AF411E] border-orange-200'
-                : 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]'
+                ? 'bg-rose-500/15 text-rose-800 border-rose-500/30'
+                : 'bg-surface-light text-ink border-border-warm'
             }`}
           >
             {getActionIcon()}
@@ -73,26 +73,26 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
           <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] font-mono uppercase tracking-[0.2em] font-bold px-2 py-0.5 border ${
+                className={`text-[10px] font-mono uppercase tracking-[0.16em] font-bold px-2.5 py-0.5 rounded-full border ${
                   isAllCertified
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                    ? 'bg-sage-500/15 text-sage-800 border-sage-500/30'
                     : isHighPriority
-                    ? 'bg-orange-50 text-[#AF411E] border-orange-300'
-                    : 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7]'
+                    ? 'bg-rose-500/15 text-rose-800 border-rose-500/30'
+                    : 'bg-surface-light text-ink-muted border-border-warm'
                 }`}
               >
                 {isAllCertified ? 'Curriculum Complete' : 'Recommended Next Action'}
               </span>
               {isHighPriority && (
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#AF411E] font-bold">• Priority Action</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-rose-700 font-bold">• Priority Action</span>
               )}
             </div>
 
-            <h3 className="font-sans font-black text-lg uppercase tracking-tight text-[#09090B] leading-snug">
+            <h3 className="font-serif font-bold text-lg tracking-tight text-ink leading-snug">
               {recommendation.title}
             </h3>
 
-            <p className="text-body text-[#52525B] leading-relaxed">
+            <p className="text-body text-ink-muted leading-relaxed font-normal">
               {recommendation.description}
             </p>
           </div>
@@ -101,10 +101,10 @@ export const RecommendedActionCard: React.FC<RecommendedActionCardProps> = ({ re
         <div className="shrink-0 flex items-center justify-start md:justify-end">
           <Link
             to={recommendation.link}
-            className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider min-h-[42px] transition-all cursor-pointer border ${
+            className={`inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider min-h-[42px] transition-all cursor-pointer ${
               isAllCertified
-                ? 'bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-700'
-                : 'bg-[#09090B] hover:bg-[#27272A] text-white border-[#09090B]'
+                ? 'bg-sage-700 hover:bg-sage-800 text-white'
+                : 'bg-ink hover:bg-ink-muted text-surface-light hover:text-white'
             }`}
           >
             <span>{getButtonText()}</span>
