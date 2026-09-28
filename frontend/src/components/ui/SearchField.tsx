@@ -28,13 +28,13 @@ export const SearchField: React.FC<SearchFieldProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-[13px] font-sans font-medium text-[#0A0A0A] tracking-tight"
+          className="block text-[13px] font-sans font-medium text-text-primary text-[#0A0A0A] tracking-tight"
         >
           {label}
         </label>
       )}
       <div className="relative flex items-center">
-        <span className="absolute left-3.5 flex items-center pointer-events-none text-[#6B6357]">
+        <span className="absolute left-3.5 flex items-center pointer-events-none text-text-muted-aa text-[#6B6357]">
           <IconSearch size="sm" />
         </span>
         <input
@@ -44,7 +44,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
           onChange={onChange}
           disabled={disabled}
           placeholder={placeholder}
-          className="w-full rounded-full border border-[#D9CFBB] bg-[#F5EFE0] pl-10 pr-10 py-2.5 text-[14px] text-[#0A0A0A] placeholder-[#6B6357]/50 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#0A0A0A]/10 focus:border-[#0A0A0A] hover:border-[#0A0A0A]/40 disabled:bg-[#EDE4D0]/50 disabled:cursor-not-allowed min-h-[44px]"
+          className="w-full rounded-full border border-border-warm border-[#D9CFBB] bg-canvas bg-[#FAF4E4] pl-10 pr-10 py-2.5 text-[14px] text-text-primary text-[#0A0A0A] placeholder-text-muted-aa/50 placeholder-[#6B6357]/50 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-ink focus:border-ink focus:ring-[#0A0A0A]/20 hover:border-border-strong hover:border-[#0A0A0A]/40 disabled:bg-surface/50 disabled:bg-[#EDE4D0]/50 disabled:cursor-not-allowed min-h-[44px]"
           {...props}
         />
         {hasValue && onClear && !disabled && (
@@ -52,7 +52,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
             type="button"
             onClick={onClear}
             aria-label="Clear search query"
-            className="absolute right-3.5 flex items-center justify-center p-1 rounded-full text-[#6B6357] hover:text-[#0A0A0A] hover:bg-[#EDE4D0] transition-colors cursor-pointer"
+            className="absolute right-3.5 flex items-center justify-center p-1 rounded-full text-text-muted-aa text-[#6B6357] hover:text-ink hover:text-[#0A0A0A] hover:bg-surface hover:bg-[#EDE4D0] transition-colors cursor-pointer"
           >
             <IconClose size="xs" />
           </button>

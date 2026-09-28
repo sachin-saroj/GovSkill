@@ -4,33 +4,73 @@
 
 @layer base {
   :root {
-    --color-canvas: #FFFFFF;
-    --color-ink: #000000;
-    --color-ink-muted: #71717A;
-    --color-rule: #E4E4E7;
-    --color-cobalt: #0E50B0;
-    --color-rust: #AF411E;
-    --color-orange: #EE8148;
+    /* GovSkill Internal / Operational Editorial Design System Tokens */
+    --canvas: #FAF4E4;
+    --ink: #121212;
+    --on-ink: #FAF4E4;
+    --surface: #EDE7D9;
+    --surface-light: #F5EFDF;
+    --surface-subtle: #F7F2E7;
+
+    /* Semantic Pastel Accents (GovSkill Civic Domain Mapped) */
+    --sage: #98AD60;
+    --sage-soft: #E8EED8;
+    --sage-dark: #2D4512;
+    --azure: #B6CAEB;
+    --azure-soft: #E3ECF8;
+    --azure-dark: #14325E;
+    --gold: #F6D868;
+    --gold-soft: #FBF1C9;
+    --gold-dark: #594102;
+    --rose: #F5B8DA;
+    --rose-soft: #FBE9F2;
+    --rose-dark: #5C163C;
+    --danger: #D9457F;
+    --danger-soft: #F8D0DF;
+    --danger-dark: #7A1843;
+
+    /* Typography & Contrast (WCAG AA Safe) */
+    --text-primary: #121212;
+    --text-secondary: #2D2A28;
+    --text-muted: #6F6759; /* ~5:1 contrast on canvas */
+    --text-faint: #9E9585;
+
+    /* Borders & Hairlines */
+    --border-frame: #3A3835;
+    --border-default: #DCD5C5;
+    --border-subtle: #E8E2D4;
+
+    /* Motion */
+    --ease-editorial: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --dur-fast: 120ms;
+    --dur-normal: 160ms;
 
     /* Backward compatibility mapping */
-    --color-cream: #FFFFFF;
-    --color-cream-deep: #F4F4F5;
-    --color-accent-green: #0E50B0;
-    --color-terracotta: #AF411E;
-    --color-ochre: #EE8148;
+    --color-canvas: #FAF4E4;
+    --color-ink: #121212;
+    --color-ink-muted: #6F6759;
+    --color-rule: #DCD5C5;
+    --color-cobalt: #B6CAEB;
+    --color-rust: #D9457F;
+    --color-orange: #F6D868;
+    --color-cream: #FAF4E4;
+    --color-cream-deep: #EDE7D9;
+    --color-accent-green: #98AD60;
+    --color-terracotta: #D9457F;
+    --color-ochre: #F6D868;
   }
 
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #FFFFFF;
-    color: #000000;
+    background-color: #FAF4E4;
+    color: #121212;
   }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #FFFFFF;
-    color: #000000;
+    background-color: #FAF4E4;
+    color: #121212;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -54,12 +94,19 @@
   }
 
   ::selection {
-    background-color: rgba(14, 80, 176, 0.15);
-    color: #000000;
+    background-color: rgba(245, 184, 218, 0.45);
+    color: #121212;
   }
 
   :focus-visible {
-    outline: 2px solid #0E50B0;
+    outline: 2px solid #121212;
+    outline-offset: 2px;
+  }
+
+  .dark :focus-visible,
+  [data-surface="ink"] :focus-visible,
+  .surface-ink :focus-visible {
+    outline: 2px solid #F5B8DA;
     outline-offset: 2px;
   }
 
@@ -159,6 +206,30 @@
     transform: translateZ(0);
     backface-visibility: hidden;
     will-change: auto;
+  }
+
+  /* Core Design System Text Utilities for Dark & Light Tonal Surfaces */
+  .text-on-ink {
+    color: #FAF4E4 !important;
+  }
+  .text-surface-light {
+    color: #F5EFDF;
+  }
+  .text-canvas {
+    color: #FAF4E4;
+  }
+  .border-border-warm,
+  .border-warm {
+    border-color: #DCD5C5;
+  }
+  .bg-surface {
+    background-color: #EDE7D9;
+  }
+  .bg-surface-light {
+    background-color: #F5EFDF;
+  }
+  .bg-surface-elevated {
+    background-color: #EDE7D9;
   }
 }
 

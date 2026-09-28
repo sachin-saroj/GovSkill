@@ -7,40 +7,92 @@ export default {
   theme: {
     extend: {
       colors: {
-        // "50 Ambitious" Editorial Design System Foundation
-        canvas: "#FFFFFF",
-        ink: "#000000",
-        "ink-muted": "#71717A",
-        "ink-subtle": "#A1A1AA",
-        "ink-border": "#E4E4E7",
-        "accent-rust": "#AF411E",
-        "accent-orange": "#EE8148",
-        "accent-blue": "#0E50B0",
+        // GovSkill Internal / Operational Editorial Design System Foundation
+        canvas: "#FAF4E4",
+        ink: "#121212",
+        "on-ink": "#FAF4E4",
+        surface: {
+          DEFAULT: "#EDE7D9",
+          light: "#F5EFDF",
+          subtle: "#F7F2E7",
+          card: "#EDE7D9",
+          hover: "#E4DECF",
+          active: "#DAD3C2",
+          elevated: "#EDE7D9",
+          muted: "#F5EFDF",
+        },
+        // Civic Semantic Pastel Accents (Intelly-derived, GovSkill domain mapped)
+        sage: {
+          DEFAULT: "#98AD60",
+          soft: "#E8EED8",
+          dark: "#2D4512",
+          border: "#98AD6080",
+        },
+        azure: {
+          DEFAULT: "#B6CAEB",
+          soft: "#E3ECF8",
+          dark: "#14325E",
+          border: "#B6CAEB99",
+        },
+        gold: {
+          DEFAULT: "#F6D868",
+          soft: "#FBF1C9",
+          dark: "#594102",
+          border: "#F6D86899",
+        },
+        rose: {
+          DEFAULT: "#F5B8DA",
+          soft: "#FBE9F2",
+          dark: "#5C163C",
+          border: "#F5B8DA99",
+        },
+        // WCAG AA safe text colors on canvas/surface
+        "text-primary": "#121212",
+        "text-secondary": "#2D2A28",
+        "text-muted-aa": "#6F6759", // ~5:1 on canvas
+        "border-frame": "#3A3835",
+        "border-subtle": "#E8E2D4",
+        "border-default": "#DCD5C5",
+        "border-warm": "#DCD5C5",
+        border: {
+          warm: "#DCD5C5",
+          subtle: "#E8E2D4",
+          frame: "#3A3835",
+          default: "#DCD5C5",
+        },
 
-        // Backward-compatible Editorial Tokens remapped to 50 Ambitious Palette
+        // Legacy / Editorial compatibility tokens
+        "ink-muted": "#6F6759",
+        "ink-subtle": "#9E9585",
+        "ink-border": "#DCD5C5",
+        "accent-rust": "#D9457F",
+        "accent-orange": "#F6D868",
+        "accent-blue": "#B6CAEB",
+
+        // Backward-compatible Editorial Tokens
         editorial: {
-          cream: "#FFFFFF",
-          creamDeep: "#F4F4F5",
-          paper: "#FFFFFF",
-          ink: "#000000",
-          inkMuted: "#71717A",
-          inkSubtle: "#A1A1AA",
-          rule: "#E4E4E7",
-          stage: "#000000",
-          stageText: "#FFFFFF",
-          green: "#0E50B0",
-          warm: "#EE8148",
-          terracotta: "#AF411E",
-          ochre: "#EE8148",
-          dustyBlue: "#0E50B0",
+          cream: "#FAF4E4",
+          creamDeep: "#EDE7D9",
+          paper: "#EDE7D9",
+          ink: "#121212",
+          inkMuted: "#6F6759",
+          inkSubtle: "#9E9585",
+          rule: "#DCD5C5",
+          stage: "#121212",
+          stageText: "#FAF4E4",
+          green: "#98AD60",
+          warm: "#F6D868",
+          terracotta: "#D9457F",
+          ochre: "#F6D868",
+          dustyBlue: "#B6CAEB",
           olive: "#52525B",
         },
         // Target Design Token Architecture
         brand: {
-          DEFAULT: "#0E50B0",
-          hover: "#0A3C85",
-          surface: "#FFFFFF",
-          border: "#E4E4E7",
+          DEFAULT: "#121212",
+          hover: "#2A2A2A",
+          surface: "#EDE7D9",
+          border: "#DCD5C5",
         },
         // Civic palette remapped to pure ink & cobalt
         civic: {
@@ -105,13 +157,6 @@ export default {
           hover: "#C2410C",
           light: "#FFF7ED",
         },
-        surface: {
-          DEFAULT: "#FFFFFF",
-          subtle: "#F4F4F5",
-          card: "#FFFFFF",
-          elevated: "#FFFFFF",
-          muted: "#F4F4F5",
-        },
         appbg: "#FFFFFF",
         textPrimary: "#000000",
         textSecondary: "#71717A",
@@ -150,6 +195,15 @@ export default {
         "civic-glow-saffron": "0 0 25px -5px rgba(238, 129, 72, 0.25)",
       },
       borderRadius: {
+        // Intelly-derived geometric radius system
+        "xs": "6px",
+        "sm": "12px",
+        "md": "16px",
+        "lg": "20px",
+        "xl": "24px",
+        "2xl": "28px",
+        "full": "9999px",
+        // Backward-compatible tokens
         "editorial-sm": "0.25rem", // 4px
         "editorial-md": "0.375rem", // 6px
         "editorial-card": "0.5rem", // 8px

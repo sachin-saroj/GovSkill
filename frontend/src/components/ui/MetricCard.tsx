@@ -15,6 +15,7 @@ export interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
     invertColors?: boolean;
   };
   dark?: boolean;
+  variant?: 'default' | 'sage' | 'azure' | 'gold' | 'rose' | 'inverted';
   cornerBrackets?: boolean;
 }
 
@@ -26,13 +27,30 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   suffix = '',
   trend,
   dark = false,
+  variant,
   cornerBrackets = false,
   className = '',
   ...props
 }) => {
+  // Map variant to Card variant
+  let cardVariant: 'default' | 'inverted' | 'metric' | 'kpi-sage' | 'kpi-azure' | 'kpi-gold' | 'kpi-rose' = 'metric';
+  if (dark || variant === 'inverted') {
+    cardVariant = 'inverted';
+  } else if (variant === 'sage') {
+    cardVariant = 'kpi-sage';
+  } else if (variant === 'azure') {
+    cardVariant = 'kpi-azure';
+  } else if (variant === 'gold') {
+    cardVariant = 'kpi-gold';
+  } else if (variant === 'rose') {
+    cardVariant = 'kpi-rose';
+  }
+
+  const isDark = cardVariant === 'inverted';
+
   return (
     <Card
-      variant={dark ? 'inverted' : 'metric'}
+      variant={cardVariant}
       cornerBrackets={cornerBrackets}
       className={`flex flex-col justify-between ${className}`}
       {...props}
@@ -41,7 +59,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         <div className="flex items-start justify-between gap-2">
           <span
             className={`font-mono text-[11px] uppercase tracking-[0.16em] font-medium ${
-              dark ? 'text-[#EDE4D0]/60' : 'text-[#6B6357]'
+              isDark ? 'text-[#EDE4D0]/60' : 'text-text-muted-aa text-[#6B6357]'
             }`}
           >
             {label}
@@ -59,7 +77,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
         <div
           className={`font-serif text-[clamp(28px,3.5vw,44px)] font-normal leading-tight tracking-[-0.025em] ${
-            dark ? 'text-[#F5EFE0]' : 'text-[#0A0A0A]'
+            isDark ? 'text-[#F5EFE0]' : 'text-text-primary text-[#0A0A0A]'
           }`}
           style={{ fontFamily: '"Fraunces", Georgia, serif' }}
         >
@@ -72,9 +90,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       {context && (
         <p
           className={`text-[12.5px] font-sans font-normal leading-relaxed pt-3 mt-3 border-t ${
-            dark
+            isDark
               ? 'border-white/10 text-[#EDE4D0]/50'
-              : 'border-[#D9CFBB]/60 text-[#6B6357]'
+              : 'border-border-warm/60 border-[#D9CFBB]/60 text-text-muted-aa text-[#6B6357]'
           }`}
         >
           {context}
