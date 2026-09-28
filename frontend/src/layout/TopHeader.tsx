@@ -104,32 +104,34 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
   };
 
   return (
-    <header className="h-16 bg-white border-b border-[#E4E4E7] px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 select-none">
+    <header className="h-16 bg-canvas/95 backdrop-blur-xs border-b border-border-warm/60 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 select-none">
       {/* Left: Mobile Sidebar Toggle & Contextual Section Heading */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onToggleMobileSidebar}
-          className="lg:hidden p-2 rounded-md text-zinc-600 hover:text-black hover:bg-zinc-100 transition-colors cursor-pointer"
+          className="lg:hidden p-2 rounded-full text-text-primary hover:bg-surface border border-border-warm transition-colors cursor-pointer"
           aria-label="Open navigation menu"
         >
           <Menu className="h-5 w-5" />
         </button>
 
         <div className="flex items-center gap-3">
-          <GovSkillLogo size={44} variant="icon" />
+          <div className="lg:hidden flex items-center gap-2">
+            <GovSkillLogo size={32} variant="icon" />
+          </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] font-bold text-zinc-400">
-              GovSkill Platform
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] font-medium text-text-muted-aa">
+              GovSkill Workspace
             </span>
-            <h2 className="font-sans text-[15px] font-bold text-black tracking-tight">
+            <h2 className="font-sans text-[15px] font-semibold text-text-primary tracking-tight">
               {getPageTitle()}
             </h2>
           </div>
         </div>
       </div>
 
-      {/* Center: Search Field Trigger */}
+      {/* Center: Search Field Trigger (Pill Shape) */}
       <div className="flex-1 max-w-md mx-auto">
         <button
           type="button"
@@ -137,24 +139,24 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
             setSearchOpen(true);
             setTimeout(() => searchInputRef.current?.focus(), 50);
           }}
-          className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-md bg-zinc-50 hover:bg-zinc-100 border border-[#E4E4E7] text-[13px] font-sans text-zinc-500 hover:text-black transition-all cursor-pointer shadow-xs"
+          className="w-full flex items-center justify-between px-4 py-2 rounded-full bg-surface/70 hover:bg-surface border border-border-warm hover:border-border-strong text-[13px] font-sans text-text-muted-aa hover:text-text-primary transition-all cursor-pointer shadow-none min-h-[42px]"
           aria-label="Search modules, skills, and tools"
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <Search className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+            <Search className="h-3.5 w-3.5 text-text-muted-aa shrink-0" />
             <span className="truncate">Search lessons, assessments, tools...</span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] font-mono font-bold text-zinc-500 bg-white border border-[#E4E4E7] rounded-sm">
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[9.5px] font-mono font-medium text-text-muted-aa bg-surface-light border border-border-warm rounded-full">
             ⌘K
           </kbd>
         </button>
       </div>
 
-      {/* Right Utility Controls: Notifications & User Profile */}
-      <div className="flex items-center gap-3 shrink-0" ref={dropdownRef}>
-        {/* National DPI Status indicator */}
-        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-emerald-50 border border-emerald-200 text-[10px] font-mono uppercase tracking-wider text-emerald-800 font-bold">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+      {/* Right Utility Controls: Operational Status, Notifications & User Profile */}
+      <div className="flex items-center gap-2.5 shrink-0" ref={dropdownRef}>
+        {/* National DPI Operational Status Badge */}
+        <div className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-50 border border-sage-200/60 text-[11px] font-mono text-sage-800 font-medium select-none">
+          <span className="h-2 w-2 rounded-full bg-sage-500 animate-pulse" aria-hidden="true" />
           <span>Services Operational</span>
         </div>
 
@@ -163,30 +165,30 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
           <button
             type="button"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="p-2 rounded-md text-zinc-500 hover:text-black hover:bg-zinc-100 transition-colors relative cursor-pointer border border-transparent hover:border-[#E4E4E7]"
+            className="p-2 rounded-full text-text-muted-aa hover:text-text-primary hover:bg-surface border border-transparent hover:border-border-warm transition-colors relative cursor-pointer"
             aria-label="View system notifications"
             aria-expanded={notificationsOpen}
           >
             <Bell className="h-4 w-4" />
-            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-[#EE8148]" />
+            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-rose-400" aria-hidden="true" />
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-72 rounded-md bg-white border border-[#E4E4E7] shadow-xl py-2 z-50 animate-fade-in">
-              <div className="px-4 py-2 border-b border-[#E4E4E7] flex items-center justify-between">
-                <span className="font-sans text-[13px] font-bold text-black">Notifications</span>
-                <span className="font-mono text-[9px] uppercase font-bold text-zinc-500">Live</span>
+            <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-surface border border-border-warm p-3 z-50 animate-fade-in space-y-2">
+              <div className="px-2 py-1 border-b border-border-warm/60 flex items-center justify-between">
+                <span className="font-sans text-[13px] font-semibold text-text-primary">Notifications</span>
+                <span className="font-mono text-[9px] uppercase font-bold text-sage-700 bg-sage-100 px-1.5 py-0.5 rounded-full">
+                  Live
+                </span>
               </div>
-              <div className="p-3 space-y-2">
-                <div className="p-2.5 rounded-md bg-zinc-50 border border-[#E4E4E7] space-y-1">
-                  <div className="flex items-center gap-1.5 text-[12px] font-semibold text-black">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                    <span>DPI Services Live</span>
-                  </div>
-                  <p className="text-[11px] font-sans text-zinc-500">
-                    Local governance training curricula & GovAssist validation active.
-                  </p>
+              <div className="p-2.5 rounded-xl bg-surface-light border border-border-warm/60 space-y-1">
+                <div className="flex items-center gap-1.5 text-[12px] font-medium text-text-primary">
+                  <span className="h-1.5 w-1.5 rounded-full bg-sage-500" aria-hidden="true" />
+                  <span>DPI Framework Active</span>
                 </div>
+                <p className="text-[11px] font-sans text-text-muted-aa leading-relaxed">
+                  Competency records, quiz evaluation, and pre-submission validation engines operational.
+                </p>
               </div>
             </div>
           )}
@@ -198,37 +200,37 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
             <button
               type="button"
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-md bg-white shadow-xs border border-[#E4E4E7] hover:border-black transition-all cursor-pointer"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-surface border border-border-warm hover:border-border-strong transition-all cursor-pointer"
               aria-label="User account menu"
               aria-expanded={profileDropdownOpen}
             >
-              <div className="h-6 w-6 rounded-full bg-black text-white font-bold text-[11px] flex items-center justify-center">
+              <div className="h-6 w-6 rounded-full bg-ink text-surface-light font-bold text-[11px] flex items-center justify-center select-none shadow-2xs">
                 {user.email.charAt(0).toUpperCase()}
               </div>
               <div className="hidden sm:flex flex-col text-left pr-1">
-                <span className="text-[12px] font-bold text-black leading-tight">
+                <span className="text-[12px] font-medium text-text-primary leading-tight">
                   {user.email.split('@')[0]}
                 </span>
-                <span className="text-[9.5px] font-mono text-zinc-500 uppercase tracking-wider">
+                <span className="text-[9px] font-mono text-text-muted-aa uppercase tracking-wider">
                   {user.role} Track
                 </span>
               </div>
-              <ChevronDown className="h-3 w-3 text-zinc-500 hidden sm:inline-block" />
+              <ChevronDown className="h-3 w-3 text-text-muted-aa hidden sm:inline-block" />
             </button>
 
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-md bg-white border border-[#E4E4E7] shadow-xl py-1.5 z-50 animate-fade-in space-y-1">
-                <div className="px-4 py-2.5 border-b border-[#E4E4E7]">
-                  <p className="text-[12px] font-bold text-black truncate">{user.email}</p>
-                  <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">{user.role} Track</p>
+              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-surface border border-border-warm p-1.5 z-50 animate-fade-in space-y-1">
+                <div className="px-3.5 py-2 border-b border-border-warm/60">
+                  <p className="text-[12px] font-semibold text-text-primary truncate">{user.email}</p>
+                  <p className="text-[9.5px] font-mono text-text-muted-aa uppercase tracking-wider">{user.role} Track</p>
                 </div>
 
                 <Link
                   to="/progress"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-sans font-medium text-black hover:bg-zinc-100"
+                  className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-sans font-medium text-text-primary hover:bg-surface-light rounded-xl transition-colors"
                 >
-                  <Sparkles className="h-4 w-4 text-[#0E50B0]" />
+                  <Sparkles className="h-4 w-4 text-azure-600" />
                   <span>My Skills Dashboard</span>
                 </Link>
 
@@ -236,14 +238,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
                   <Link
                     to="/admin"
                     onClick={() => setProfileDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-sans font-medium text-black hover:bg-zinc-100"
+                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-sans font-medium text-text-primary hover:bg-surface-light rounded-xl transition-colors"
                   >
-                    <LayoutDashboard className="h-4 w-4 text-[#AF411E]" />
+                    <LayoutDashboard className="h-4 w-4 text-gold-600" />
                     <span>Workforce Admin</span>
                   </Link>
                 )}
 
-                <div className="pt-1 border-t border-[#E4E4E7]">
+                <div className="pt-1 border-t border-border-warm/60">
                   <button
                     type="button"
                     onClick={() => {
@@ -251,7 +253,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
                       setProfileDropdownOpen(false);
                       navigate('/login');
                     }}
-                    className="flex items-center gap-2.5 w-full text-left px-4 py-2 text-[13px] font-sans font-semibold text-[#AF411E] hover:bg-red-50 cursor-pointer"
+                    className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-[13px] font-sans font-medium text-danger-700 hover:bg-danger-50 rounded-xl transition-colors cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
                     <span>Sign Out</span>
@@ -263,7 +265,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
         ) : (
           <Link
             to="/login"
-            className="px-3.5 py-1.5 rounded-md bg-black text-white text-[12px] font-sans font-bold shadow-xs hover:bg-zinc-800 transition-colors"
+            className="px-4 py-1.5 rounded-full bg-ink text-surface-light text-[12px] font-sans font-medium hover:bg-[#252525] transition-colors"
           >
             Sign In
           </Link>
@@ -273,36 +275,36 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
       {/* Quick Search Modal Overlay */}
       {searchOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-start justify-center pt-20 px-4"
+          className="fixed inset-0 bg-ink/50 backdrop-blur-xs z-50 flex items-start justify-center pt-20 px-4"
           onClick={() => setSearchOpen(false)}
         >
           <div
-            className="w-full max-w-lg bg-white rounded-md border border-[#E4E4E7] shadow-2xl overflow-hidden animate-slide-up"
+            className="w-full max-w-lg bg-surface rounded-2xl border border-border-warm overflow-hidden animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-[#E4E4E7] bg-zinc-50">
-              <Search className="h-4 w-4 text-zinc-500 shrink-0" />
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border-warm bg-surface-light">
+              <Search className="h-4 w-4 text-text-muted-aa shrink-0" />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search modules, assessments, tools..."
-                className="w-full text-[14px] bg-transparent text-black placeholder-zinc-400 focus:outline-none font-medium"
+                className="w-full text-[14px] bg-transparent text-text-primary placeholder:text-text-muted-aa focus:outline-none font-medium"
               />
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-md text-zinc-500 hover:text-black hover:bg-zinc-200"
+                className="p-1 rounded-full text-text-muted-aa hover:text-text-primary hover:bg-surface transition-colors cursor-pointer"
                 aria-label="Close search"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="max-h-80 overflow-y-auto p-2 divide-y divide-[#E4E4E7]">
+            <div className="max-h-80 overflow-y-auto p-2 divide-y divide-border-warm/40">
               {filteredItems.length === 0 ? (
-                <div className="p-6 text-center text-[13px] text-zinc-500">
+                <div className="p-6 text-center text-[13px] text-text-muted-aa">
                   No matching lessons or tools found for "{searchQuery}".
                 </div>
               ) : (
@@ -313,24 +315,26 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onToggleMobileSidebar }) =
                       key={item.path}
                       type="button"
                       onClick={() => handleSelectSearchItem(item.path)}
-                      className="w-full flex items-center justify-between p-2.5 rounded-md hover:bg-zinc-100 text-left transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-light text-left transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-md bg-zinc-100 text-black border border-[#E4E4E7]">
+                        <span className="p-2 rounded-lg bg-surface-light border border-border-warm text-text-primary group-hover:bg-surface">
                           <Icon className="h-4 w-4" />
                         </span>
                         <div>
-                          <p className="text-[13px] font-bold text-black">{item.title}</p>
-                          <p className="text-[11px] font-mono text-zinc-500">{item.category}</p>
+                          <p className="text-[13px] font-medium text-text-primary">{item.title}</p>
+                          <p className="text-[11px] font-mono text-text-muted-aa">{item.category}</p>
                         </div>
                       </div>
-                      <span className="text-[11px] font-mono font-bold text-zinc-600">Jump →</span>
+                      <span className="text-[11px] font-mono font-medium text-text-muted-aa group-hover:text-text-primary">
+                        Jump →
+                      </span>
                     </button>
                   );
                 })
               )}
             </div>
-            <div className="p-2.5 bg-zinc-50 border-t border-[#E4E4E7] flex items-center justify-between text-[11px] font-mono text-zinc-500">
+            <div className="p-3 bg-surface-light border-t border-border-warm flex items-center justify-between text-[11px] font-mono text-text-muted-aa">
               <span>Select item to navigate</span>
               <span>ESC to close</span>
             </div>

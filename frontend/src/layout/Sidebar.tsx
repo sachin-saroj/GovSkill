@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { GovSkillLogo } from '@/components/GovSkillLogo';
+import Tooltip from '@/components/ui/Tooltip';
 import {
   Sparkles,
   BookOpen,
@@ -12,12 +13,16 @@ import {
   LayoutDashboard,
   LogOut,
   X,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
 } from 'lucide-react';
 
-interface SidebarProps {
+export interface SidebarProps {
   onCloseMobile?: () => void;
   isMobile?: boolean;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 interface NavItem {
@@ -26,16 +31,22 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
   adminOnly?: boolean;
   badge?: string;
-  badgeVariant?: 'mint' | 'saffron' | 'civic';
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = false }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  onCloseMobile,
+  isMobile = false,
+  isCollapsed = false,
+  onToggleCollapse,
+}) => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+    if (path === '/module') return location.pathname.startsWith('/module');
+    if (path === '/quiz') return location.pathname.startsWith('/quiz');
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   const learningNavItems: NavItem[] = [
@@ -60,49 +71,66 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
 
     return (
       <div className="space-y-1 pt-3 first:pt-0">
-        <h4 className="px-3 font-mono text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 select-none">
-          {title}
-        </h4>
-        <nav className="space-y-0.5" aria-label={title}>
+        {!isCollapsed && (
+          <h4 className="px-3 font-mono text-[10px] uppercase tracking-[0.18em] font-medium text-white/40 select-none">
+            {title}
+          </h4>
+        )}
+        {isCollapsed && <div className="w-8 mx-auto h-[1px] bg-white/10 my-2" aria-hidden="true" />}
+        <nav className="space-y-1" aria-label={title}>
           {visibleItems.map((item) => {
             const active = isActive(item.path);
             const Icon = item.icon;
-            return (
+
+            const linkContent = (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={onCloseMobile}
-                className={`group flex items-center justify-between px-3 py-2 rounded-md text-[13px] font-sans transition-all duration-150 relative ${
+                className={`group flex items-center ${
+                  isCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
+                } rounded-xl text-[13px] font-sans transition-all duration-150 relative select-none ${
                   active
-                    ? 'bg-black text-white font-semibold shadow-xs'
-                    : 'text-zinc-600 hover:text-black hover:bg-zinc-100'
+                    ? 'bg-white/15 text-white font-medium'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
                 }`}
                 aria-current={active ? 'page' : undefined}
+                aria-label={isCollapsed ? item.name : undefined}
               >
-                <div className="flex items-center gap-2.5">
+                <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} min-w-0`}>
                   <span
-                    className={`flex items-center justify-center h-6 w-6 rounded-md transition-colors ${
-                      active
-                        ? 'text-white'
-                        : 'text-zinc-500 group-hover:text-black'
+                    className={`flex items-center justify-center shrink-0 transition-colors ${
+                      active ? 'text-white' : 'text-white/60 group-hover:text-white'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
                   </span>
-                  <span>{item.name}</span>
+                  {!isCollapsed && <span className="truncate">{item.name}</span>}
                 </div>
 
-                {item.badge && (
-                  <span className={`px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-sm ${
-                    active
-                      ? 'bg-zinc-800 text-white border border-zinc-700'
-                      : 'bg-zinc-100 text-black border border-zinc-300'
-                  }`}>
+                {!isCollapsed && item.badge && (
+                  <span
+                    className={`px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded-full ${
+                      active
+                        ? 'bg-azure-200 text-azure-900 border border-azure-300'
+                        : 'bg-white/10 text-white/80 border border-white/15'
+                    }`}
+                  >
                     {item.badge}
                   </span>
                 )}
               </Link>
             );
+
+            if (isCollapsed) {
+              return (
+                <Tooltip key={item.path} content={item.name} position="bottom" className="w-full justify-center">
+                  {linkContent}
+                </Tooltip>
+              );
+            }
+
+            return linkContent;
           })}
         </nav>
       </div>
@@ -110,40 +138,64 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
   };
 
   return (
-    <aside className="w-64 h-full flex flex-col justify-between bg-white p-4 select-none overflow-y-auto">
-      {/* Top Branding & Close Button */}
-      <div className="space-y-5">
-        <div className="flex items-center justify-between px-2 pt-1">
+    <aside
+      className={`h-full flex flex-col justify-between bg-ink text-white p-3.5 select-none overflow-y-auto overflow-x-hidden rounded-3xl border border-white/5 transition-all duration-200 ${
+        isCollapsed ? 'w-[72px]' : 'w-64'
+      }`}
+    >
+      {/* Top Branding & Collapse Control */}
+      <div className="space-y-4">
+        <div
+          className={`flex items-center ${
+            isCollapsed ? 'flex-col gap-2.5' : 'justify-between'
+          } px-1.5 pt-1 min-h-[40px]`}
+        >
           <Link
             to="/"
             onClick={onCloseMobile}
-            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-black rounded-md p-0.5"
+            className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2.5'} group focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-xl p-1`}
+            aria-label="GovSkill Home"
           >
-            <GovSkillLogo size={52} variant="icon" />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-sans text-[18px] font-black tracking-tight text-black">
-                  GovSkill
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0E50B0]" aria-hidden="true" />
-                <span className="text-[9px] font-mono uppercase font-bold tracking-wider px-1.5 py-0.2 rounded-sm bg-zinc-100 text-zinc-600 border border-zinc-300">
-                  DPI
+            <GovSkillLogo size={36} variant="icon" />
+            {!isCollapsed && (
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-sans text-[17px] font-bold tracking-tight text-white">
+                    GovSkill
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-azure-400" aria-hidden="true" />
+                  <span className="text-[9px] font-mono uppercase font-bold tracking-wider px-1.5 py-0.2 rounded-full bg-white/10 text-white/80 border border-white/15">
+                    DPI
+                  </span>
+                </div>
+                <span className="text-[10.5px] font-sans text-white/50 font-normal truncate">
+                  Digital Competency
                 </span>
               </div>
-              <span className="text-[11px] font-sans text-zinc-500 font-medium">
-                Digital Competency
-              </span>
-            </div>
+            )}
           </Link>
 
+          {/* Desktop Collapse Toggle Button */}
+          {!isMobile && onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors cursor-pointer shrink-0"
+              aria-label={isCollapsed ? 'Expand navigation sidebar' : 'Collapse navigation sidebar'}
+            >
+              {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+            </button>
+          )}
+
+          {/* Mobile Drawer Close Button */}
           {isMobile && onCloseMobile && (
             <button
               type="button"
               onClick={onCloseMobile}
-              className="p-1.5 rounded-md text-zinc-500 hover:text-black hover:bg-zinc-100 transition-colors"
+              className="p-1.5 rounded-full bg-white/10 text-white/70 hover:text-white hover:bg-white/20 transition-colors"
               aria-label="Close navigation sidebar"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -156,75 +208,56 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
         </div>
       </div>
 
-      {/* Bottom Section: Editorial Learning CTA Card + User Profile */}
-      <div className="pt-3 space-y-3">
-        {/* Editorial Learning CTA Card */}
-        <div className="bg-zinc-50 border border-[#E4E4E7] rounded-md p-3.5 text-black relative overflow-hidden shadow-xs">
-          <div className="h-20 w-full rounded-sm overflow-hidden bg-white mb-2.5 flex items-center justify-center border border-[#E4E4E7]">
-            <img
-              src="/illustrations/sidebar_cta_illustration.jpg"
-              alt="Continuous Learning"
-              className="h-full w-full object-cover object-center"
-              loading="lazy"
-            />
-          </div>
-          <div className="space-y-0.5">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#AF411E] block font-bold">
-              Curriculum Goal
-            </span>
-            <p className="font-sans text-[13px] font-bold leading-snug text-black">
-              Advance Public Service Mastery
-            </p>
-          </div>
-          <Link
-            to="/module"
-            onClick={onCloseMobile}
-            className="mt-2.5 block w-full py-1.5 bg-black text-white font-sans text-[12px] font-bold rounded-sm text-center shadow-xs hover:bg-zinc-800 transition-colors"
-          >
-            Continue Curriculum →
-          </Link>
-        </div>
-
-        {/* User & System Status Card */}
-        <div className="pt-2 border-t border-[#E4E4E7] space-y-2.5">
+      {/* Bottom Section: User Profile & Actions */}
+      <div className="pt-3 border-t border-white/10 space-y-2">
         {user ? (
-          <div className="p-2.5 rounded-md bg-zinc-50 border border-[#E4E4E7] shadow-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="h-6 w-6 rounded-full bg-black text-white font-bold text-[11px] flex items-center justify-center shrink-0">
-                  {user.email.charAt(0).toUpperCase()}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[12px] font-sans font-bold text-black truncate">
-                    {user.email}
-                  </div>
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-                    {user.role}
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={logout}
-                className="p-1 rounded-sm text-zinc-500 hover:text-black hover:bg-zinc-200 transition-colors"
-                title="Log out"
-                aria-label="Log out"
+          <div
+            className={`rounded-2xl bg-white/5 border border-white/10 p-2.5 transition-all ${
+              isCollapsed ? 'flex flex-col items-center gap-2 p-2' : 'flex items-center justify-between gap-2'
+            }`}
+          >
+            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2.5'} min-w-0`}>
+              <div
+                className="h-7 w-7 rounded-full bg-white text-ink font-bold text-[11px] flex items-center justify-center shrink-0 select-none shadow-xs"
+                title={user.email}
               >
-                <LogOut className="h-4 w-4" />
-              </button>
+                {user.email.charAt(0).toUpperCase()}
+              </div>
+              {!isCollapsed && (
+                <div className="min-w-0 flex-1">
+                  <div className="text-[12px] font-sans font-medium text-white truncate">
+                    {user.email.split('@')[0]}
+                  </div>
+                  <div className="text-[9.5px] font-mono uppercase tracking-wider text-white/50">
+                    {user.role} Track
+                  </div>
+                </div>
+              )}
             </div>
+
+            <button
+              type="button"
+              onClick={logout}
+              className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              title="Log out"
+              aria-label="Log out"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
           </div>
         ) : (
           <Link
             to="/login"
             onClick={onCloseMobile}
-            className="flex items-center justify-center gap-2 w-full py-2 bg-black text-white rounded-md text-[12px] font-sans font-bold shadow-xs hover:bg-zinc-800 transition-colors"
+            className={`flex items-center justify-center gap-2 w-full py-2.5 bg-white text-ink rounded-full text-[12px] font-sans font-medium transition-colors hover:bg-surface-light ${
+              isCollapsed ? 'px-2' : 'px-4'
+            }`}
+            aria-label="Sign In"
           >
-            <span>Sign In to GovSkill</span>
+            {!isCollapsed && <span>Sign In</span>}
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
         )}
-        </div>
       </div>
     </aside>
   );
