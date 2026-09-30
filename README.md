@@ -1,4 +1,9 @@
-# GovSkill — Digital Skill Support for Local Government Offices
+# GovSkill — Digital Skill Support & Document Intelligence Platform
+
+[![Live App](https://img.shields.io/badge/Live%20Demo-govskill--frontend.onrender.com-success?style=for-the-badge&logo=render&logoColor=white)](https://govskill-frontend.onrender.com)
+[![API Status](https://img.shields.io/badge/API%20Status-Healthy%20200%20OK-00C853?style=for-the-badge&logo=fastapi&logoColor=white)](https://govskill-backend.onrender.com/health)
+[![Backend Tests](https://img.shields.io/badge/Backend%20Tests-118%20Passed-blue?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
+[![Frontend Tests](https://img.shields.io/badge/Frontend%20Tests-114%20Passed-blueviolet?style=for-the-badge&logo=vitest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
@@ -6,10 +11,39 @@
 [![Tailwind CSS 3](https://img.shields.io/badge/Styling-Tailwind%20CSS%203-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB.svg?style=flat&logo=python)](https://python.org/)
 [![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1.svg?style=flat&logo=postgresql)](https://www.postgresql.org/)
+[![PostgreSQL 16](https://img.shields.io/badge/Database-PostgreSQL%2016-4169E1.svg?style=flat&logo=postgresql)](https://www.postgresql.org/)
 [![Google Gemini API](https://img.shields.io/badge/AI-Google%20Gemini-8E44AD.svg?style=flat&logo=google)](https://ai.google.dev/)
+[![Docker](https://img.shields.io/badge/Deployment-Docker-2496ED.svg?style=flat&logo=docker)](https://www.docker.com/)
 
-**GovSkill** is a modern, full-stack web application built for local government offices. It features a **Core Employee Training Module** equipped with an interactive AI Tutor and a server-scored Quiz with an Admin Dashboard, plus **GovAssist** — a citizen self-service pre-submission document validator for Income Certificates.
+**GovSkill** is a production-deployed, full-stack sovereign civic platform designed for local government revenue and administrative offices. It solves two critical municipal challenges within a unified, high-integrity architecture:
+
+1. **GovAssist (Citizen Document Pre-Submission Intelligence):** A zero-registration self-service portal where citizens pre-validate government certificates (Income, Domicile, Caste) before visiting municipal counters. Powered by an OCR text extraction pipeline, a **100% deterministic 4-rule code validation engine**, plain-language Gemini AI remediation, and printable anti-fraud counter slips with cryptographic QR verification.
+2. **Civil Servant Competency & Qualification Engine:** A departmental staff training suite featuring structured legislative curriculum modules, a **Dual-Mode AI Mentor** (Grounded Curriculum Tutor vs. Multilingual General Administrative Copilot), server-evaluated anti-tamper examinations, HMAC-SHA256 digitally signed completion credentials, and supervisor administrative analytics.
+
+---
+
+## 🌐 Live Production Deployment
+
+GovSkill is deployed in production on Render with a containerized Docker backend, a managed PostgreSQL 16 cluster, and a global CDN static frontend.
+
+| Resource | Production URL | Status | Health Probe |
+|---|---|---|---|
+| **Frontend Web Application** | **[https://govskill-frontend.onrender.com](https://govskill-frontend.onrender.com)** | 🟢 `Active` | HTTP 200 (Render Global CDN) |
+| **Backend REST API Engine** | **[https://govskill-backend.onrender.com](https://govskill-backend.onrender.com)** | 🟢 `Active` | [Probe `/health`](https://govskill-backend.onrender.com/health) |
+| **Interactive API Documentation** | **[https://govskill-backend.onrender.com/docs](https://govskill-backend.onrender.com/docs)** | 🟢 `Active` | OpenAPI 3.0 / Swagger UI |
+| **Managed Database** | `Render Managed PostgreSQL 16` | 🟢 `Connected` | 6/6 Alembic Migrations Synced |
+
+### 🔑 Demo Evaluation Credentials
+
+Test accounts are pre-seeded in the production database for immediate evaluation:
+
+| Role | Email Address | Password | Portal Privileges |
+|---|---|---|---|
+| **Department Supervisor / Admin** | `admin@govskill.local` | `AdminPass123!` | Departmental readiness analytics, quiz attempt logs, curriculum management, CSV/JSON governance reporting exports. |
+| **Civil Servant / Staff Employee** | `employee@govskill.local` | `Employee123!` | Curriculum lesson reader, Dual-Mode AI Mentor, server-scored qualification quizzes, tamper-evident certificate issuance. |
+| **Public Citizen** | *(No Login Required)* | *(No Password)* | Open access to GovAssist pre-submission document validator (`/citizen`) and public certificate verification (`/verify`). |
+
+---
 
 <div align="center">
   <img src="docs/screenshots/00-hero-banner.png" alt="GovSkill Sovereign Civic Platform Banner" width="100%" />
@@ -18,168 +52,174 @@
 
 ---
 
-## 📸 Platform Interface & Visual Tour
+## 📸 Platform Interface Tour
 
-### 1. Civil Servant Competency & Learning Experience
+### 1. GovAssist: Document Intelligence & Anti-Fraud Verification
 
-| Screen | Highlights & Architecture |
+| Screen | Architectural Details & Capabilities |
 |---|---|
-| **Employee Competency Dashboard (`/progress`)**<br><br><img src="docs/screenshots/02-employee-competency-dashboard.png" alt="Employee Competency Dashboard" width="100%" /> | **Deterministic Skills Ledger**<br>• Benchmark comparison against the 75% qualification threshold.<br>• Identifies strongest & weakest competency domains with transparent scoring explainer.<br>• Module readiness states with multi-attempt score growth deltas (`+X% Growth`).<br>• Chronological assessment audit history & learning activity timeline. |
-| **Interactive Curriculum & Lesson Reader (`/module`)**<br><br><img src="docs/screenshots/04-curriculum-lesson-reader.png" alt="Curriculum Folio & Lesson Reader" width="100%" /> | **Museum-Grade Lesson Folio**<br>• Structured reading layout with estimated completion times and reading objectives.<br>• Section deep-linking support (`?section=X`) for targeted remediation.<br>• Integrated circular archives and administrative manual excerpts. |
-| **Grounded AI Tutor Copilot (`/tutor`)**<br><br><img src="docs/screenshots/03-grounded-ai-tutor-copilot.png" alt="Grounded AI Tutor Copilot" width="100%" /> | **Pedagogical Civic Copilot**<br>• Powered by Google Gemini 2.5 Flash, strictly grounded in official lesson manuals.<br>• Code-driven relevance keyword routing (`find_relevant_modules`) across modules.<br>• Contextual remediation mode delivering rule summaries, workplace scenarios, and red flags. |
-| **Server-Scored Quiz Examination (`/quiz`)**<br><br><img src="docs/screenshots/05-server-scored-quiz.png" alt="Server-Scored Quiz Examination" width="100%" /> | **Anti-Tamper Assessment Engine**<br>• 8-question competency examination with answer keys held strictly server-side.<br>• Interactive jump navigator and progress tracking.<br>• Post-quiz competency feedback with direct "Ask AI Tutor" and "Review Lesson" paths. |
+| **Multi-Document Pre-Submission Checker (`/citizen`)**<br><br><img src="docs/screenshots/06-govassist-document-intelligence.png" alt="GovAssist Multi-Document Intelligence Checker" width="100%" /> | **Multi-Type Document Intelligence**<br>• Public access with zero citizen registration (complete PII isolation).<br>• Automatic document classification (Income, Caste, Residence/Domicile) with confidence scores.<br>• Contrast-boosting binarization and preprocessing for degraded photocopies and mobile camera scans.<br>• Drag-and-drop support with client-side 5MB payload caps. |
+| **Deterministic Rule Engine Results (`/citizen`)**<br><br><img src="docs/screenshots/11-document-validation-engine.png" alt="Deterministic Rule Validation Breakdown" width="100%" /> | **100% Code-Driven Validation**<br>• Strict deterministic evaluation: Name presence, Certificate format regex, Validity/Expiry verification, and Seal/Authority completeness.<br>• **Zero LLM Hallucinations:** Validation pass/fail decisions are strictly executed in Python code.<br>• Plain-language Gemini AI remediation explanations for identified deficiencies.<br>• Extracted field audit table displaying extraction confidence and source metadata. |
+| **Printable Anti-Fraud Counter Slip (`/citizen`)**<br><br><img src="docs/screenshots/10-counter-slip-qr-modal.png" alt="Printable Counter Slip with Verification QR" width="100%" /> | **Pre-Submission Counter Slip**<br>• Instant printable slip designed for citizens to present at physical municipal service counters.<br>• Dynamic QR code embedding cryptographic document tracking hash.<br>• Summarizes checklist readiness, counter queue classification, and official timestamps. |
+| **Public Certificate Verification (`/verify`)**<br><br><img src="docs/screenshots/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **HMAC-SHA256 Credential Auditing**<br>• Public registry verifying official digital qualification credentials issued to civil servants.<br>• Validates certificate ID, officer name, issuing authority, and cryptographic signature digest.<br>• Instantly detects modified scores, forged dates, or tampered credentials. |
 
 ---
 
-### 2. GovAssist: Citizen Self-Service & Public Verification
+### 2. Civil Servant Competency & Dual-Mode AI Mentor
 
-| Screen | Highlights & Architecture |
+| Screen | Architectural Details & Capabilities |
 |---|---|
-| **GovAssist Citizen Pre-Submission Checker (`/citizen`)**<br><br><img src="docs/screenshots/06-govassist-citizen-precheck.png" alt="GovAssist Citizen Pre-Submission Checker" width="100%" /> | **Self-Service Pre-Check Tool**<br>• Public access with zero citizen registration required (complete data isolation).<br>• Automated OCR text extraction via Tesseract with contrast boosting and binarization.<br>• 100% deterministic 4-rule engine checking name, certificate format, validity, and seals.<br>• Plain-language AI remediation guidance for failed rules before official counter submission.<br>• Printable pre-submission counter slip with QR verification. |
-| **Public Certificate Verification Portal (`/verify`)**<br><br><img src="docs/screenshots/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **Cryptographic Credential Verification**<br>• Instant public authenticity verification for issued officer certificates.<br>• Tamper-evident credential check using cryptographic signatures.<br>• Clean civic portal interface optimized for mobile and desktop scrutiny. |
+| **Dual-Mode AI Mentor Copilot (`/tutor`)**<br><br><img src="docs/screenshots/03-dual-mode-ai-mentor.png" alt="Dual-Mode AI Mentor Copilot" width="100%" /> | **Context-Isolated Civic Copilot**<br>• **Grounded Training Mode:** Strictly bounded to departmental manuals and circulars (`find_relevant_modules`). Refuses out-of-scope inquiries to prevent curriculum deviation.<br>• **General AI Mode:** Multilingual conversational assistant (Hindi/English) powered by Google Gemini for broader governance queries, workflow guidance, and public administration questions.<br>• Independent chat histories with real-time mode toggle and persistent session storage. |
+| **Competency & Growth Ledger (`/progress`)**<br><br><img src="docs/screenshots/02-employee-competency-dashboard.png" alt="Employee Competency Dashboard" width="100%" /> | **Deterministic Skills Tracking**<br>• Departmental benchmark tracking against the mandatory 75% qualification threshold.<br>• Competency radar identifying strongest and weakest performance domains.<br>• Longitudinal multi-attempt score delta tracking (`+X% Growth`).<br>• Chronological assessment audit history. |
+| **Curriculum Reader & Departmental Folio (`/module`)**<br><br><img src="docs/screenshots/04-curriculum-lesson-reader.png" alt="Curriculum Folio & Lesson Reader" width="100%" /> | **Editorial Lesson Folio**<br>• High-legibility serif typography engineered for extended reading of administrative circulars.<br>• Deep-link section navigation (`?section=X`) enabling targeted quiz remediation.<br>• In-line statutory callouts, circular citations, and process flowcharts. |
+| **Server-Evaluated Examination (`/quiz`)**<br><br><img src="docs/screenshots/05-server-scored-quiz.png" alt="Server-Scored Quiz Examination" width="100%" /> | **Tamper-Proof Assessment Engine**<br>• 8-question competency examination where answer keys (`correct_option_index`) are **never transmitted to the client**.<br>• Evaluated exclusively server-side in `/api/quiz/{module_id}/submit`.<br>• Interactive question grid navigator and domain-specific remediation links. |
 
 ---
 
-### 3. Administrative Governance & Civic Portal
+### 3. Departmental Administration & Governance
 
-| Screen | Highlights & Architecture |
+| Screen | Architectural Details & Capabilities |
 |---|---|
-| **Supervisor Admin & CMS Dashboard (`/admin`)**<br><br><img src="docs/screenshots/08-admin-governance-dashboard.png" alt="Supervisor Admin & Governance Dashboard" width="100%" /> | **Workforce Readiness Intelligence**<br>• Real-time tracking of employee quiz attempts, average scores, and qualification rates.<br>• Module and question CMS manager for departmental curriculum updates.<br>• Citizen document validation audit log and CSV/JSON governance reporting exports. |
-| **Civic Authentication Portal (`/login`)**<br><br><img src="docs/screenshots/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Role-Based Civic Authentication**<br>• Strict separation of `employee` and `admin` roles via JWT Bearer authentication.<br>• Default unchecked statutory consent and DPDP Act 2023 age verification.<br>• High-contrast accessible design with visible focus rings and WCAG 2.2 compliance. |
+| **Supervisor Governance Dashboard (`/admin`)**<br><br><img src="docs/screenshots/08-admin-governance-dashboard.png" alt="Supervisor Admin & Governance Dashboard" width="100%" /> | **Workforce Readiness Intelligence**<br>• Real-time departmental metrics: employee participation, pass rates, average attempts, and domain competency gaps.<br>• Curriculum CMS for updating lesson modules, circular excerpts, and question pools.<br>• Citizen document validation audit log with CSV and JSON data export capabilities. |
+| **Role-Based Civic Authentication (`/login`)**<br><br><img src="docs/screenshots/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Accessible Civic Security**<br>• JWT Bearer authentication with separate privileges for `employee` and `admin` roles.<br>• DPDP Act 2023 compliance notices and statutory consent toggles.<br>• Full WCAG 2.2 AA accessibility with visible focus rings and high-contrast color tokens. |
 
 ---
 
-<details>
-<summary><b>📜 Click to view Full Editorial Landing Page (Complete 13,000px High-Resolution Scroll)</b></summary>
-<br>
-
-<div align="center">
-  <img src="docs/screenshots/01-editorial-landing-page.png" alt="GovSkill Full Landing Page Showcase" width="100%" />
-</div>
-
-</details>
-
----
-
-## 🌟 Key Features
-
-### 1. Core Employee Training Module
-- **Structured Lesson Reader**: Interactive interface for local government staff to complete official digital workflow training ("Digital Document Handling").
-- **Grounded AI Tutor**: Context-aware AI chatbot powered by Google Gemini (`gemini-2.5-flash`), strictly grounded in lesson content to assist employees when stuck.
-- **Server-Scored Quiz**: 8-question MCQ quiz evaluated strictly server-side to prevent answer tampering.
-- **Supervisor Admin Dashboard**: Metrics dashboard providing real-time tracking of employee quiz attempts, average scores, and pass rates (≥75%).
-
-### 2. GovAssist (Citizen Pre-Submission Checker)
-- **Public Self-Service Portal**: No citizen login required.
-- **OCR Text Extraction**: Automated text extraction from uploaded Income Certificate scans (PNG, JPG, PDF, TXT) via Tesseract OCR and regex parsing.
-- **Deterministic 4-Rule Validation Engine**: 100% code-driven rule engine checking:
-  1. *Name Present*
-  2. *Certificate Number Format* (Alphanumeric, ≥6 characters)
-  3. *Certificate Validity / Expiry Date*
-  4. *All Required Fields Extracted*
-- **AI Explanation Layer**: Plain-language explanations generated by Gemini for any failed validation rules to guide citizens before official submission.
-
----
-
-## 🏗 System Architecture
+## 🌟 Core System Highlights
 
 ```mermaid
 graph TD
-    Client[Browser / React 18 SPA] -->|HTTP REST / Axios| API[FastAPI Backend Engine]
+    User([Citizen / Employee / Admin]) --> Frontend[React 18 + Vite SPA Client]
     
-    subgraph Backend Services
-        API --> Auth[JWT & Bcrypt Auth Service]
-        API --> Training[Module & Server-Scored Quiz Service]
-        API --> OCR[Tesseract OCR & Field Parser]
-        API --> RuleEngine[Deterministic Rule Engine]
-        API --> AIService[Google Gemini 2.5 Flash Layer]
+    subgraph Frontend Layer
+        Frontend --> Router[Client Router / SPA Rewrites]
+        Router --> AuthState[JWT Auth Context]
+        Router --> GovAssistUI[GovAssist Document Scanner]
+        Router --> TutorUI[Dual-Mode AI Mentor UI]
     end
     
-    subgraph Data Store
-        Auth --> DB[(PostgreSQL / SQLite Fallback)]
-        Training --> DB
-        OCR --> DB
+    Frontend -->|HTTPS REST API Calls| Backend[FastAPI Async Engine]
+    
+    subgraph Backend Services
+        Backend --> CORS[Least-Privilege CORS Middleware]
+        Backend --> Security[JWT Token Verifier & Bcrypt Hash]
+        Backend --> DocService[Document Registry & File Handler]
+        Backend --> OCR[Tesseract OCR & Contrast Preprocessing]
+        Backend --> RuleEngine{100% Deterministic Rule Engine}
+        Backend --> GeminiGateway[Google Gemini 2.5 Flash Gateway]
+        Backend --> CertEngine[HMAC-SHA256 Digital Credential Signer]
+    end
+    
+    RuleEngine -->|Failed Rules Only| GeminiGateway
+    TutorUI -->|Grounded / General Mode| GeminiGateway
+    
+    subgraph Persistence Layer
+        Security --> Postgres[(Managed PostgreSQL 16)]
+        DocService --> Postgres
+        DocService --> Uploads[(Encrypted File Storage)]
+        Backend --> Alembic[Alembic Migration System]
     end
 ```
 
+### 1. GovAssist Document Intelligence Engine
+- **Multi-Document Support:** Automatically classifies Income Certificates, Caste Certificates, Domicile/Residence Certificates, and general civic records.
+- **Local OCR Extraction:** Leverages Tesseract OCR with adaptive image preprocessing (contrast enhancement and thresholding) to extract text reliably from low-quality scans.
+- **Deterministic 4-Rule Engine:** Strict Python code enforces:
+  1. *Citizen Name Match & Extraction.*
+  2. *Standard Certificate Number Format.*
+  3. *Valid Issuance & Non-Expired Term.*
+  4. *Issuing Authority Seal & Signature Verification.*
+- **Zero-Hallucination AI Explanations:** Gemini is strictly prevented from deciding whether a document passes or fails. AI is invoked only *after* deterministic code marks a rule as failed, translating technical regex failures into actionable citizen guidance (e.g., *"Your certificate expired on 31/03/2024. Please submit a renewal application at the Tehsil office before proceeding."*).
+
+### 2. Civil Servant Dual-Mode AI Mentor
+- **Grounded Training Mode:** Restricts AI responses strictly to approved lesson curriculum and departmental circulars. Queries without curriculum relevance are rejected to prevent training deviations.
+- **General AI Mode:** Allows staff to interact in natural language (Hindi or English) for broader public administration questions, terminology explanations, and workflow troubleshooting.
+- **Session Isolation:** Mode toggling maintains separate conversation threads and persists context in `localStorage` without leaking state.
+
+### 3. Anti-Tamper Security & Digital Signatures
+- **Server-Side Quiz Grading:** Answer keys are never serialized in API payloads. The frontend sends only selected option indices, which are scored against the server database.
+- **HMAC-SHA256 Credential Signing:** When an officer qualifies (≥75%), a cryptographically signed completion certificate is issued. Any alteration to the certificate ID, officer name, or score invalidates the public verification check (`/verify`).
+- **Strict Data Isolation:** Citizen documents uploaded to GovAssist have **zero foreign key relationship** to internal user accounts, guaranteeing complete privacy and DPDP Act compliance.
+
 ---
 
-## 🛠 Tech Stack
+## 🛠 Tech Stack & Architecture
 
-| Layer | Technology | Description |
-|---|---|---|
-| **Backend Framework** | FastAPI (Python 3.11+) | Async REST API engine with OpenAPI interactive docs |
-| **Database & ORM** | PostgreSQL 15 + SQLAlchemy 2.0 Async | Relational database with SQLite async fallback for dev/tests |
-| **Database Migrations**| Alembic | Automated schema migrations |
-| **Authentication** | JWT (`python-jose`) + Bcrypt (`passlib`) | Role-based Bearer token authentication (`employee` & `admin`) |
-| **OCR & Processing** | Tesseract OCR (`pytesseract`) + Pillow | Local image text extraction & regex field parsing |
-| **AI Integration** | Google Gemini API (`google-genai`) | Single-turn Q&A tutor and plain-language failed rule explanation |
-| **Frontend Framework**| React 18 + Vite (TypeScript) | Fast client-side SPA architecture |
-| **Styling & UI** | Tailwind CSS 3 + Lucide Icons | Responsive, clean public-sector aesthetic |
-| **HTTP Client** | Axios | Request interceptors with auto Bearer token handling |
-| **Testing** | Pytest + pytest-asyncio + httpx | Asynchronous end-to-end integration and unit testing |
+| Layer | Component | Version | Rationale & Architectural Purpose |
+|---|---|---|---|
+| **Backend** | FastAPI | 0.115+ | High-throughput asynchronous Python REST framework with native Pydantic v2 validation and OpenAPI documentation. |
+| **Database** | PostgreSQL | 16.x | Relational database with strict type enforcement and ACID guarantees. Handled via SQLAlchemy 2.0 async. |
+| **Fallback DB** | SQLite (`aiosqlite`) | 3.x | Zero-configuration asynchronous relational fallback for rapid local development and isolated unit testing. |
+| **Migrations** | Alembic | 1.14+ | Versioned database schema migrations with automated upgrade execution on container startup. |
+| **OCR Pipeline** | Tesseract OCR + Pillow | 5.x | Open-source, self-hosted text recognition engine avoiding costly third-party cloud vision dependencies. |
+| **AI Integration** | Google Gemini API | 2.5 Flash | Cost-efficient, high-reasoning multilingual generative model via official `google-genai` SDK. |
+| **Authentication** | JWT + Bcrypt | HS256 | Stateless Bearer token authentication with password hashing cost ≥ 12. |
+| **Frontend** | React 18 + TypeScript | Strict | Modular, componentized Single Page Application with end-to-end type safety. |
+| **Build Tool** | Vite | 5.x | Sub-second HMR development server and optimized Rollup production asset compilation. |
+| **Styling** | Tailwind CSS | 3.x | Utility-first CSS implementing the GovSkill archival civic design system. |
+| **HTTP Client** | Axios | 1.7+ | Configured request/response interceptors with automatic Bearer token injection and session recovery. |
+| **Container** | Docker | Multi-stage | Python 3.11 slim container with system Tesseract OCR and unprivileged non-root execution (`appuser`). |
 
 ---
 
-## 📁 Project Directory Layout
+## 📁 Repository Structure
 
 ```text
 GovSkill/
-├── AGENTS.md                   # AI agent instructions & non-negotiable rules
-├── README.md                   # Main project documentation & setup guide
-├── push_to_github.bat          # Automated deployment script for GitHub
+├── render.yaml                 # Infrastructure as Code: 1-click Render Blueprint specification
+├── AGENTS.md                   # Strict architectural conventions & non-negotiable rules
+├── README.md                   # Comprehensive project documentation
 │
-├── docs/                       # Comprehensive Architecture & Project Docs
-│   ├── PROJECT.md              # Vision, target personas, and feature breakdown
-│   ├── ARCHITECTURE.md         # Detailed technical design & schema documentation
-│   ├── CURRENT_STATE.md        # Live project dashboard, status, and known bugs
-│   ├── DECISIONS.md            # Key architectural decision records (ADRs)
-│   ├── ROADMAP.md              # Technical roadmap & future priorities
-│   ├── SPECIFICATION.md        # Original product requirements document
-│   └── DEBUG_LOG.md            # Master debug & stabilization history
+├── docs/                       # Technical Specifications & Architectural Records
+│   ├── PROJECT.md              # Vision, target personas, and functional requirements
+│   ├── ARCHITECTURE.md         # Schema definitions, data flows, and design patterns
+│   ├── CURRENT_STATE.md        # Live project tracking and verification dashboard
+│   ├── DECISIONS.md            # Architectural Decision Records (ADRs)
+│   ├── ROADMAP.md              # Milestones & planned feature expansions
+│   └── screenshots/            # Verified high-resolution UI screen assets
 │
-├── backend/                    # FastAPI Backend Application
-│   ├── alembic/                # Database migrations
-│   ├── app/
-│   │   ├── main.py             # FastAPI app entrypoint & middleware
-│   │   ├── api/                # API routes & dependency injection
-│   │   ├── core/               # Configuration & Security (JWT/Bcrypt)
-│   │   ├── db/                 # Database engine & session management
-│   │   ├── models/             # SQLAlchemy ORM database models
-│   │   ├── schemas/            # Pydantic v2 validation schemas
-│   │   ├── services/           # OCR, Rule Engine, and Gemini AI services
-│   │   └── tests/              # Pytest end-to-end test suite
-│   ├── uploads/                # Uploaded citizen document storage
-│   ├── alembic.ini
-│   ├── requirements.txt        # Python backend dependencies
-│   └── .env.example
+├── backend/                    # FastAPI Backend Engine
+│   ├── entrypoint.sh           # Container startup: executes Alembic migrations, admin seed, uvicorn
+│   ├── Dockerfile              # Multi-stage production container with Tesseract OCR
+│   ├── requirements.txt        # Frozen Python dependencies
+│   ├── alembic/                # Version-controlled database schema migrations
+│   │   ├── env.py              # Async migration runner with PostgreSQL / SQLite compatibility
+│   │   └── versions/           # 6 linear migration files (001 to 006)
+│   └── app/
+│       ├── main.py             # FastAPI factory, CORS regex middleware, exception handlers
+│       ├── api/                # REST API routers (auth, modules, tutor, quiz, documents, admin)
+│       ├── core/               # Configuration (Pydantic settings), security, rate limiting
+│       ├── db/                 # Async session maker, health checks, admin user seeder
+│       ├── models/             # SQLAlchemy declarative ORM models
+│       ├── schemas/            # Pydantic v2 validation schemas
+│       ├── services/           # OCR extraction, deterministic rule engine, Gemini AI gateway
+│       └── tests/              # 118 automated pytest test cases
 │
 └── frontend/                   # React 18 + Vite Frontend Application
-    ├── src/
-    │   ├── App.tsx             # Main router & protected routes
-    │   ├── main.tsx            # Application entry point
-    │   ├── components/         # UI primitives, quiz, and document components
-    │   ├── hooks/              # Global Auth context (`useAuth.tsx`)
-    │   ├── layout/             # Top Navigation Header
-    │   ├── lib/                # Axios API client setup
-    │   ├── pages/              # App views (Login, Module, Tutor, Quiz, Admin, Citizen)
-    │   └── types/              # TypeScript interfaces & type definitions
-    ├── package.json
-    ├── tailwind.config.js
-    └── vite.config.ts
+    ├── Dockerfile              # Multi-stage Nginx production container
+    ├── package.json            # Node dependencies and scripts
+    ├── vite.config.ts          # Vite build configuration with SPA proxy rules
+    ├── tailwind.config.js      # GovSkill archival design tokens & typography palette
+    └── src/
+        ├── App.tsx             # Application router & role-protected route guards
+        ├── main.tsx            # React DOM mounting entrypoint
+        ├── components/         # Reusable UI primitives, modals, charts, and document widgets
+        ├── pages/              # Views: Landing, Login, Module, Tutor, Quiz, Progress, Citizen, Admin
+        ├── lib/                # Axios client with dynamic API base URL resolution
+        └── types/              # TypeScript schema and API contract interfaces
 ```
 
 ---
 
-## 🚀 Quick Start & Setup Guide
+## 🚀 Local Development Setup
 
 ### Prerequisites
 - **Python 3.11+**
 - **Node.js 18+** & `npm`
-- **Tesseract OCR** binary installed on system PATH
-  - *Windows*: Download installer from UB-Mannheim Tesseract OCR and add `C:\Program Files\Tesseract-OCR` to System PATH.
-
----
+- **Tesseract OCR** installed on system PATH:
+  - *Windows:* Download UB-Mannheim installer and add `C:\Program Files\Tesseract-OCR` to PATH.
+  - *Linux:* `sudo apt-get install tesseract-ocr tesseract-ocr-eng libgl1`
+  - *macOS:* `brew install tesseract`
 
 ### 1. Backend Setup
 
@@ -187,35 +227,30 @@ GovSkill/
 # Navigate to backend directory
 cd backend
 
-# Create & activate Python virtual environment
+# Create and activate Python virtual environment
 python -m venv venv
+.\venv\Scripts\activate       # Windows PowerShell
+# source venv/bin/activate    # Linux / macOS
 
-# Windows PowerShell:
-.\venv\Scripts\activate
-# Linux/macOS:
-source venv/bin/activate
-
-# Install backend dependencies
+# Install Python dependencies
 pip install -r requirements.txt
 
-# Copy environment variables
-copy .env.example .env
-
-# Run database migrations
+# Run database migrations (creates SQLite database govskill.db automatically)
 alembic upgrade head
 
+# Seed initial admin and employee accounts
+python -m app.db.seed_admin
+
 # Start FastAPI development server
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Verify backend health at: [http://localhost:8000/health](http://localhost:8000/health)
-
----
+Verify backend health at: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
 ### 2. Frontend Setup
 
 ```bash
-# Open a new terminal and navigate to frontend directory
+# In a new terminal, navigate to frontend directory
 cd frontend
 
 # Install Node dependencies
@@ -225,83 +260,45 @@ npm install
 npm run dev
 ```
 
-Open application in browser: [http://localhost:3000](http://localhost:3000)
+Open the application at: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## ⚙️ Environment Variables
+## 🧪 Quality Gates & Verification
 
-The application is configured through environment variables loaded from a `.env` file or container environment. The table below lists all variables, their purpose, requirement status, and default or example values:
-
-| Variable | Purpose / Description | Required / Optional | Default / Example |
-|---|---|---|---|
-| `SECRET_KEY` | High-entropy cryptographic secret used to sign and verify JWT session authentication tokens. The backend validates and strictly rejects empty values or insecure placeholder defaults. | **Required** | Generated via `python -c "import secrets; print(secrets.token_hex(32))"` |
-| `CREDENTIAL_SIGNING_KEY` | Dedicated cryptographic HMAC-SHA256 signing key used exclusively to issue and verify tamper-evident official digital completion certificates. Must be separate from `SECRET_KEY`. | **Required** | Generated via `python -c "import secrets; print(secrets.token_hex(32))"` |
-| `DATABASE_URL` | Asynchronous SQLAlchemy database connection URI. In development, defaults to local SQLite with zero setup; for production, points to PostgreSQL. | Optional | `sqlite+aiosqlite:///./govskill.db` *(dev default)*<br>`postgresql+asyncpg://user:password@localhost:5432/govskill` *(prod)* |
-| `POSTGRES_USER` | PostgreSQL superuser username for Docker Compose multi-container deployments. | Optional (Compose) | `govskill_user` |
-| `POSTGRES_PASSWORD` | PostgreSQL database password for Docker Compose. Must be supplied before starting containers. | **Required** (Compose) | Explicit secure password (no default) |
-| `POSTGRES_DB` | PostgreSQL database name for Docker Compose. | Optional (Compose) | `govskill` |
-| `ADMIN_EMAIL` | Administrator email address used for automatic initial administrator seed generation (`seed_admin.py`). | Optional | `admin@govskill.local` |
-| `ADMIN_PASSWORD` | Initial administrator account password for seed generation. | **Required** (Compose) | Explicit secure password (no default) |
-| `GEMINI_API_KEY` | Google Gemini API key used by the AI Training Copilot and GovAssist plain-language validation explanation service. | Optional | Free API key from [Google AI Studio](https://aistudio.google.com/app/apikey). If omitted, the system falls back to offline/deterministic mode. |
-| `ALLOWED_ORIGINS` | Comma-separated list of permitted frontend client origins enforced by the CORS middleware. | Optional | `http://localhost:5173,http://localhost:3000,http://localhost:3001,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:3001` |
-| `ALGORITHM` | Cryptographic algorithm used for JWT token signing. | Optional | `HS256` |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiration duration in minutes before requiring re-authentication. | Optional | `1440` (24 hours) |
-| `PROJECT_NAME` | Project display name reflected in OpenAPI / Swagger documentation. | Optional | `GovSkill` |
-| `API_V1_STR` | URL prefix route for all version 1 REST API endpoints. | Optional | `/api` |
-| `VITE_API_URL` | Base backend API endpoint URL consumed by the React/Axios frontend client. | Optional (Frontend) | `http://localhost:8000` |
-
----
-
-## 📡 API Endpoint Reference
-
-| Method | Path | Description | Access |
-|---|---|---|---|
-| `GET` | `/health` | Application health check | Public |
-| `POST` | `/api/auth/register` | Register new employee or admin user | Public |
-| `POST` | `/api/auth/login` | Login and receive JWT access token | Public |
-| `GET` | `/api/auth/me` | Fetch authenticated user profile | Bearer Token |
-| `GET` | `/api/modules/{id}` | Get lesson content for a training module | Bearer Token |
-| `POST` | `/api/tutor/ask` | Submit question to Gemini AI Tutor | Bearer Token |
-| `GET` | `/api/quiz/{module_id}` | Fetch quiz questions (answer key stripped) | Bearer Token |
-| `POST` | `/api/quiz/{module_id}/submit` | Submit quiz answers for server-side evaluation | Bearer Token |
-| `GET` | `/api/admin/attempts` | Fetch all employee quiz score history | Admin Only |
-| `POST` | `/api/documents/upload` | Upload Income Certificate for OCR & Rule Engine check | Public (GovAssist) |
-| `GET` | `/api/documents/{id}` | Retrieve pre-check result by document ID | Public (GovAssist) |
-
----
-
-## 🧪 Testing & Verification
-
-Run the automated test suites to verify backend functionality, authentication, rule engine execution, AI tutor fallbacks, and frontend accessibility/component contracts:
+Every component is subjected to strict automated verification before deployment:
 
 ```bash
-# 1. Backend Pytest Suite (38/38 passing)
+# 1. Run Backend Pytest Suite (118 tests passed)
 cd backend
-.\venv\Scripts\activate
 pytest -v
 
-# 2. Frontend Vitest Suite (93/93 passing across 20 test files)
+# 2. Run Backend Linter (Ruff)
+ruff check .
+
+# 3. Run Frontend Vitest Suite (114 tests passed across 23 test files)
 cd ../frontend
 npm test
 
-# 3. Frontend Production Build & TypeScript Verification
+# 4. Verify TypeScript & Production Build
 npm run build
 ```
 
 ---
 
-## 📜 Documentation Sitemap
+## ⚙️ Environment Variables Reference
 
-For detailed architectural and implementation information, consult the `docs/` directory:
-- [AGENTS.md](AGENTS.md) — AI agent conventions and strict development rules.
-- [PROJECT.md](docs/PROJECT.md) — Product requirements, user journeys, and target personas.
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — Technical specifications, database models, and design patterns.
-- [CURRENT_STATE.md](docs/CURRENT_STATE.md) — Live project status dashboard and current focus.
-- [DECISIONS.md](docs/DECISIONS.md) — Key architectural decision records (ADRs).
-- [ROADMAP.md](docs/ROADMAP.md) — Technical roadmap and future priorities.
+| Variable | Description | Required? | Default / Example |
+|---|---|---|---|
+| `DATABASE_URL` | Async database URI. Automatically converts `postgres://` to `postgresql+asyncpg://`. Defaults to SQLite locally. | Optional | `sqlite+aiosqlite:///./govskill.db` |
+| `SECRET_KEY` | Cryptographic secret for signing JWT session tokens. Insecure defaults are strictly rejected. | **Required** | `64-char hex string` |
+| `CREDENTIAL_SIGNING_KEY` | Dedicated HMAC-SHA256 key for issuing digital certificates. Separate from `SECRET_KEY`. | **Required** | `64-char hex string` |
+| `GEMINI_API_KEY` | Google Gemini API key for the AI Mentor and rule explanations. | Optional | From [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins. | Optional | `http://localhost:3000,http://localhost:5173` |
+| `VITE_API_BASE_URL` | Base API URL consumed by the frontend client. Defaults to `/api` for same-origin proxying. | Optional | `https://govskill-backend.onrender.com/api` |
 
 ---
 
-## 📄 License
-This project is developed for educational and local government office support purposes.
+## 📄 License & Attribution
+
+Developed for local government office digitalization, administrative capability building, and public civic service verification under sovereign digital governance standards.
