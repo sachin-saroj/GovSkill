@@ -26,7 +26,6 @@ services:
     region: singapore
     rootDir: backend
     dockerfilePath: ./Dockerfile
-    dockerCommand: sh -c "alembic upgrade head && python -m app.db.seed_admin && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"
     healthCheckPath: /health
     autoDeployTrigger: commit
     envVars:

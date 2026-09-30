@@ -32,14 +32,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application source code and migration assets
 COPY --chown=appuser:appuser . /app/
 
-# Ensure workspace and uploads directory are writable by appuser
-RUN mkdir -p /app/uploads && chown -R appuser:appuser /app && chmod -R 775 /app
+# Ensure workspace and uploads directory are writable by appuser and entrypoint is executable
+RUN mkdir -p /app/uploads && chown -R appuser:appuser /app && chmod -R 775 /app && chmod +x /app/entrypoint.sh
 
 # Switch to non-root user
 USER appuser
 
-# Expose FastAPI default port
-EXPOSE 8000
+# Expose FastAPI default port and Render internal port
+EXPOSE 8000 10000
 
-# Production startup command
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Production startup entrypoint (runs alembic migrations, admin seed, and uvicorn)
+CMD ["/app/entrypoint.sh"]
