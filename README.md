@@ -46,9 +46,15 @@ Test accounts are pre-seeded in the production database for immediate evaluation
 ---
 
 <div align="center">
-  <img src="docs/screenshots/00-hero-banner.png" alt="GovSkill Sovereign Civic Platform Banner" width="100%" />
+  <img src="docs/screenshots/v2/00-hero-banner.png" alt="GovSkill Sovereign Civic Platform Banner" width="100%" />
   <p><em>Archival Museum-Grade Editorial Design System for Sovereign Civic Governance, Employee Qualification, and Citizen Services</em></p>
 </div>
+
+<details>
+<summary><b>📜 Click to view complete Editorial Landing Page (Full Viewport)</b></summary>
+<br>
+<img src="docs/screenshots/v2/01-editorial-landing-page.png" alt="GovSkill Sovereign Civic Editorial Landing Page" width="100%" />
+</details>
 
 ---
 
@@ -58,10 +64,10 @@ Test accounts are pre-seeded in the production database for immediate evaluation
 
 | Screen | Architectural Details & Capabilities |
 |---|---|
-| **Multi-Document Pre-Submission Checker (`/citizen`)**<br><br><img src="docs/screenshots/06-govassist-document-intelligence.png" alt="GovAssist Multi-Document Intelligence Checker" width="100%" /> | **Multi-Type Document Intelligence**<br>• Public access with zero citizen registration (complete PII isolation).<br>• Automatic document classification (Income, Caste, Residence/Domicile) with confidence scores.<br>• Contrast-boosting binarization and preprocessing for degraded photocopies and mobile camera scans.<br>• Drag-and-drop support with client-side 5MB payload caps. |
-| **Deterministic Rule Engine Results (`/citizen`)**<br><br><img src="docs/screenshots/11-document-validation-engine.png" alt="Deterministic Rule Validation Breakdown" width="100%" /> | **100% Code-Driven Validation**<br>• Strict deterministic evaluation: Name presence, Certificate format regex, Validity/Expiry verification, and Seal/Authority completeness.<br>• **Zero LLM Hallucinations:** Validation pass/fail decisions are strictly executed in Python code.<br>• Plain-language Gemini AI remediation explanations for identified deficiencies.<br>• Extracted field audit table displaying extraction confidence and source metadata. |
-| **Printable Anti-Fraud Counter Slip (`/citizen`)**<br><br><img src="docs/screenshots/10-counter-slip-qr-modal.png" alt="Printable Counter Slip with Verification QR" width="100%" /> | **Pre-Submission Counter Slip**<br>• Instant printable slip designed for citizens to present at physical municipal service counters.<br>• Dynamic QR code embedding cryptographic document tracking hash.<br>• Summarizes checklist readiness, counter queue classification, and official timestamps. |
-| **Public Certificate Verification (`/verify`)**<br><br><img src="docs/screenshots/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **HMAC-SHA256 Credential Auditing**<br>• Public registry verifying official digital qualification credentials issued to civil servants.<br>• Validates certificate ID, officer name, issuing authority, and cryptographic signature digest.<br>• Instantly detects modified scores, forged dates, or tampered credentials. |
+| **Multi-Document Pre-Submission Checker (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-govassist-document-intelligence.png" alt="GovAssist Multi-Document Intelligence Checker" width="100%" /> | **Multi-Type Document Intelligence**<br>• Public access with zero citizen registration (complete PII isolation).<br>• Automatic document classification (Income, Caste, Residence/Domicile) with confidence scores.<br>• Contrast-boosting binarization and preprocessing for degraded photocopies and mobile camera scans.<br>• Drag-and-drop support with client-side 5MB payload caps. |
+| **Deterministic Rule Engine Results (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-deterministic-rule-validation.png" alt="Deterministic Rule Validation Breakdown" width="100%" /> | **100% Code-Driven Validation**<br>• Strict deterministic evaluation: Name presence, Certificate format regex, Validity/Expiry verification, and Seal/Authority completeness.<br>• **Zero LLM Hallucinations:** Validation pass/fail decisions are strictly executed in Python code.<br>• Plain-language Gemini AI remediation explanations for identified deficiencies.<br>• Extracted field audit table displaying extraction confidence and source metadata. |
+| **Printable Anti-Fraud Counter Slip (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-counter-slip-qr-modal.png" alt="Printable Counter Slip with Verification QR" width="100%" /> | **Pre-Submission Counter Slip**<br>• Instant printable slip designed for citizens to present at physical municipal service counters.<br>• Dynamic QR code embedding cryptographic document tracking hash.<br>• Summarizes checklist readiness, counter queue classification, and official timestamps. |
+| **Public Certificate Verification (`/verify`)**<br><br><img src="docs/screenshots/v2/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **HMAC-SHA256 Credential Auditing**<br>• Public registry verifying official digital qualification credentials issued to civil servants.<br>• Validates certificate ID, officer name, issuing authority, and cryptographic signature digest.<br>• Instantly detects modified scores, forged dates, or tampered credentials. |
 
 ---
 
@@ -69,10 +75,10 @@ Test accounts are pre-seeded in the production database for immediate evaluation
 
 | Screen | Architectural Details & Capabilities |
 |---|---|
-| **Dual-Mode AI Mentor Copilot (`/tutor`)**<br><br><img src="docs/screenshots/03-dual-mode-ai-mentor.png" alt="Dual-Mode AI Mentor Copilot" width="100%" /> | **Context-Isolated Civic Copilot**<br>• **Grounded Training Mode:** Strictly bounded to departmental manuals and circulars (`find_relevant_modules`). Refuses out-of-scope inquiries to prevent curriculum deviation.<br>• **General AI Mode:** Multilingual conversational assistant (Hindi/English) powered by Google Gemini for broader governance queries, workflow guidance, and public administration questions.<br>• Independent chat histories with real-time mode toggle and persistent session storage. |
-| **Competency & Growth Ledger (`/progress`)**<br><br><img src="docs/screenshots/02-employee-competency-dashboard.png" alt="Employee Competency Dashboard" width="100%" /> | **Deterministic Skills Tracking**<br>• Departmental benchmark tracking against the mandatory 75% qualification threshold.<br>• Competency radar identifying strongest and weakest performance domains.<br>• Longitudinal multi-attempt score delta tracking (`+X% Growth`).<br>• Chronological assessment audit history. |
-| **Curriculum Reader & Departmental Folio (`/module`)**<br><br><img src="docs/screenshots/04-curriculum-lesson-reader.png" alt="Curriculum Folio & Lesson Reader" width="100%" /> | **Editorial Lesson Folio**<br>• High-legibility serif typography engineered for extended reading of administrative circulars.<br>• Deep-link section navigation (`?section=X`) enabling targeted quiz remediation.<br>• In-line statutory callouts, circular citations, and process flowcharts. |
-| **Server-Evaluated Examination (`/quiz`)**<br><br><img src="docs/screenshots/05-server-scored-quiz.png" alt="Server-Scored Quiz Examination" width="100%" /> | **Tamper-Proof Assessment Engine**<br>• 8-question competency examination where answer keys (`correct_option_index`) are **never transmitted to the client**.<br>• Evaluated exclusively server-side in `/api/quiz/{module_id}/submit`.<br>• Interactive question grid navigator and domain-specific remediation links. |
+| **Dual-Mode AI Mentor Copilot (`/tutor`)**<br><br><img src="docs/screenshots/v2/03-dual-mode-ai-mentor.png" alt="Dual-Mode AI Mentor Copilot" width="100%" /><br><br><img src="docs/screenshots/v2/03-ai-conversational-dialogue.png" alt="Conversational AI Assistant Dialogue" width="100%" /> | **Context-Isolated Civic Copilot**<br>• **Grounded Training Mode:** Strictly bounded to departmental manuals and circulars (`find_relevant_modules`). Refuses out-of-scope inquiries to prevent curriculum deviation.<br>• **General AI Mode:** Multilingual conversational assistant (Hindi/English) powered by Google Gemini for broader governance queries, workflow guidance, and public administration questions.<br>• Independent chat histories with real-time mode toggle and persistent session storage. |
+| **Competency & Growth Ledger (`/progress`)**<br><br><img src="docs/screenshots/v2/02-employee-competency-dashboard.png" alt="Employee Competency Dashboard" width="100%" /> | **Deterministic Skills Tracking**<br>• Departmental benchmark tracking against the mandatory 75% qualification threshold.<br>• Competency radar identifying strongest and weakest performance domains.<br>• Longitudinal multi-attempt score delta tracking (`+X% Growth`).<br>• Chronological assessment audit history. |
+| **Curriculum Reader & Departmental Folio (`/module`)**<br><br><img src="docs/screenshots/v2/04-curriculum-lesson-reader.png" alt="Curriculum Folio & Lesson Reader" width="100%" /> | **Editorial Lesson Folio**<br>• High-legibility serif typography engineered for extended reading of administrative circulars.<br>• Deep-link section navigation (`?section=X`) enabling targeted quiz remediation.<br>• In-line statutory callouts, circular citations, and process flowcharts. |
+| **Server-Evaluated Examination (`/quiz`)**<br><br><img src="docs/screenshots/v2/05-server-scored-quiz.png" alt="Server-Scored Quiz Examination" width="100%" /> | **Tamper-Proof Assessment Engine**<br>• 8-question competency examination where answer keys (`correct_option_index`) are **never transmitted to the client**.<br>• Evaluated exclusively server-side in `/api/quiz/{module_id}/submit`.<br>• Interactive question grid navigator and domain-specific remediation links. |
 
 ---
 
@@ -80,8 +86,8 @@ Test accounts are pre-seeded in the production database for immediate evaluation
 
 | Screen | Architectural Details & Capabilities |
 |---|---|
-| **Supervisor Governance Dashboard (`/admin`)**<br><br><img src="docs/screenshots/08-admin-governance-dashboard.png" alt="Supervisor Admin & Governance Dashboard" width="100%" /> | **Workforce Readiness Intelligence**<br>• Real-time departmental metrics: employee participation, pass rates, average attempts, and domain competency gaps.<br>• Curriculum CMS for updating lesson modules, circular excerpts, and question pools.<br>• Citizen document validation audit log with CSV and JSON data export capabilities. |
-| **Role-Based Civic Authentication (`/login`)**<br><br><img src="docs/screenshots/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Accessible Civic Security**<br>• JWT Bearer authentication with separate privileges for `employee` and `admin` roles.<br>• DPDP Act 2023 compliance notices and statutory consent toggles.<br>• Full WCAG 2.2 AA accessibility with visible focus rings and high-contrast color tokens. |
+| **Supervisor Governance Dashboard (`/admin`)**<br><br><img src="docs/screenshots/v2/08-admin-governance-dashboard.png" alt="Supervisor Admin & Governance Dashboard" width="100%" /> | **Workforce Readiness Intelligence**<br>• Real-time departmental metrics: employee participation, pass rates, average attempts, and domain competency gaps.<br>• Curriculum CMS for updating lesson modules, circular excerpts, and question pools.<br>• Citizen document validation audit log with CSV and JSON data export capabilities. |
+| **Role-Based Civic Authentication (`/login`)**<br><br><img src="docs/screenshots/v2/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Accessible Civic Security**<br>• JWT Bearer authentication with separate privileges for `employee` and `admin` roles.<br>• DPDP Act 2023 compliance notices and statutory consent toggles.<br>• Full WCAG 2.2 AA accessibility with visible focus rings and high-contrast color tokens. |
 
 ---
 
@@ -176,7 +182,7 @@ GovSkill/
 │   ├── CURRENT_STATE.md        # Live project tracking and verification dashboard
 │   ├── DECISIONS.md            # Architectural Decision Records (ADRs)
 │   ├── ROADMAP.md              # Milestones & planned feature expansions
-│   └── screenshots/            # Verified high-resolution UI screen assets
+│   └── screenshots/v2/         # Verified high-resolution UI screen assets (v2 Editorial UI)
 │
 ├── backend/                    # FastAPI Backend Engine
 │   ├── entrypoint.sh           # Container startup: executes Alembic migrations, admin seed, uvicorn
