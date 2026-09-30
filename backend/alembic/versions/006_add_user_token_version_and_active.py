@@ -1,6 +1,6 @@
 """add_user_token_version_and_active
 
-Revision ID: 006_add_user_token_version_and_active
+Revision ID: 006_token_version_active
 Revises: 005_add_credentials_table
 Create Date: 2026-09-25 21:00:00.000000
 
@@ -11,7 +11,7 @@ from alembic import op
 import sqlalchemy as sa
 
 
-revision: str = "006_add_user_token_version_and_active"
+revision: str = "006_token_version_active"
 down_revision: Union[str, None] = "005_add_credentials_table"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
