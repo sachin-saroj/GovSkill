@@ -1,0 +1,62 @@
+# ==============================================================================
+# GovSkill — Render Blueprint Specification (Infrastructure as Code)
+# ==============================================================================
+# Provisions:
+# 1. Managed PostgreSQL Database (PostgreSQL 16, free tier, Singapore)
+# 2. FastAPI Docker Web Service (backend with Tesseract OCR, Alembic migrations, admin seed)
+# 3. Static Site Web Service (Vite + React frontend with client-side SPA routing)
+# ==============================================================================
+
+databases:
+  - name: govskill-db
+    databaseName: govskill
+    user: govskill
+    plan: free
+    region: singapore
+    postgresMajorVersion: "16"
+
+services:
+  # ----------------------------------------------------------------------------
+  # Backend API & Document Processing Engine
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: govskill-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerCommand: sh -c "alembic upgrade head && python -m app.db.seed_admin && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: govskill-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CREDENTIAL_SIGNING_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://govskill-frontend.onrender.com,http://localhost:5173,http://localhost:3000
+
+  # ----------------------------------------------------------------------------
+  # Frontend Single-Page Application (Vite + React + Tailwind)
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: govskill-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://govskill-backend.onrender.com/api
