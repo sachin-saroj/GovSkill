@@ -72,7 +72,7 @@ def generate_all_fixtures():
     missing_png_path = os.path.join(FIXTURES_DIR, "missing-field.png")
     missing_pdf_path = os.path.join(FIXTURES_DIR, "missing-field.pdf")
     missing_lines = [
-        "OFFICIAL CERTIFICATE",
+        "OFFICIAL INCOME CERTIFICATE",
         "Expiry Date: 2027-01-01",
     ]
     create_text_image(missing_lines, missing_png_path)

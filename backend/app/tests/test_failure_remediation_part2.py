@@ -45,7 +45,9 @@ async def test_scenario_11_expired_jwt_rejected():
         expires_delta=timedelta(seconds=-30),
     )
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        resp = await client.get("/api/auth/me", headers={"Authorization": f"Bearer {expired_token}"})
+        resp = await client.get(
+            "/api/auth/me", headers={"Authorization": f"Bearer {expired_token}"}
+        )
         assert resp.status_code == 401
         data = resp.json()
         assert data["detail"]["error"]["code"] == "UNAUTHORIZED"
@@ -89,7 +91,9 @@ async def test_scenario_13_password_change_revokes_old_tokens():
         assert change_resp.status_code == 200
 
         # Step 3: Old token is now rejected because token_version was incremented
-        check_resp = await client.get("/api/auth/me", headers={"Authorization": f"Bearer {old_token}"})
+        check_resp = await client.get(
+            "/api/auth/me", headers={"Authorization": f"Bearer {old_token}"}
+        )
         assert check_resp.status_code == 401
         data = check_resp.json()
         assert data["detail"]["error"]["code"] == "TOKEN_REVOKED"
@@ -136,7 +140,11 @@ async def test_scenario_15_disk_exhaustion_preflight(tmp_path, monkeypatch):
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         file_payload = {
-            "file": ("sample.txt", io.BytesIO(b"NAME: Jane Doe\nCERT: INC123456\nEXP: 2028-01-01\n"), "text/plain")
+            "file": (
+                "sample.txt",
+                io.BytesIO(b"NAME: Jane Doe\nCERT: INC123456\nEXP: 2028-01-01\n"),
+                "text/plain",
+            )
         }
         resp = await client.post("/api/documents/upload", files=file_payload)
         assert resp.status_code == 507
@@ -200,9 +208,7 @@ async def test_scenario_18_quiz_submission_debouncing():
         app.dependency_overrides[get_current_user] = lambda: user
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        submit_payload = {
-            "answers": [{"question_id": str(q.id), "selected_option_index": 0}]
-        }
+        submit_payload = {"answers": [{"question_id": str(q.id), "selected_option_index": 0}]}
         resp1 = await client.post(f"/api/quiz/{mod.id}/submit", json=submit_payload)
         assert resp1.status_code == 200
         data1 = resp1.json()

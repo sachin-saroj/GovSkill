@@ -1,9 +1,45 @@
 # CURRENT STATE
 
 Last Updated:
-2026-09-27
+2026-09-29
 
 ## Working
+
+- **Multilingual Conversational AI Mentor & Generic GovAssist Pre-Check Architecture (Completed 2026-09-29)**:
+  - **Part A: Multilingual Conversational AI Mentor**:
+    - **Dual-Mode Architecture**:
+      - `GROUNDED_TRAINING`: Anti-hallucination guardrail strictly enforced against approved training modules with formal out-of-scope refusal disclaimers.
+      - `GENERAL_CHAT`: Genuine conversational AI assistant powered by Google Gemini via central `AIGateway` for greetings, technical explanations, programming, drafting, and open Q&A without curriculum refusals.
+    - **Multilingual & Code-Switching Support**: Automatic language and register preservation (English, Hindi in Devanagari, Marathi in Devanagari, Hinglish, Marathi-English mixed).
+    - **Multi-Turn Contextual Memory**: Current session history preserved across turns (`TutorChatMessage` with sender and text), enabling natural pronoun resolution ("isko simple words mein samjha").
+    - **Mode Isolation**: Explicit mode switching prevents cross-contamination so grounded curriculum training queries never inherit general-chat context.
+    - **Single Canonical Secret**: Centralized behind `AIGateway` using canonical `GEMINI_API_KEY`. Zero frontend API key exposure.
+  - **Part B: Generic GovAssist Document Intelligence & Pre-Check Platform**:
+    - **Multi-Document Registry**: 15 civic document types supported (`income_certificate`, `caste_certificate`, `domicile_certificate`, `residence_certificate`, `birth_certificate`, `aadhaar`, `pan`, `voter_id`, `driving_license`, `passport`, `education_certificate`, `marriage_certificate`, `disability_certificate`, `unknown_document`, `unsupported_document`).
+    - **Classification & Extraction Pipeline**: Multi-keyword scoring and fallback regex classification, local OCR first + Gemini Vision fallback on incomplete extraction.
+    - **Deterministic Rules & Disclaimers**: Income Certificate 4-rule engine remains 100% authoritative and unchanged. Non-statutory documents (PAN, Aadhaar, etc.) validate format consistency and explicitly report: *"Document extracted successfully; official authenticity/legal validity was not verified."*
+    - **Sensitive PII Masking**: Aadhaar (`XXXX-XXXX-1234`) and PAN (`ABCDE****F`) masked across API payloads, database models, logs, and frontend UI.
+    - **8 Supported Result States**: `VERIFIED AGAINST AVAILABLE RULES`, `ACTION REQUIRED`, `EXTRACTION INCOMPLETE`, `SUPPORTED FOR EXTRACTION — FORMAL VALIDATION UNAVAILABLE`, `UNKNOWN DOCUMENT`, `UNSUPPORTED DOCUMENT`, `AI VISION ASSISTED`, `AI SERVICE UNAVAILABLE — LOCAL OCR RESULT`.
+    - **Dynamic Frontend & Counter Slip**: Generic identity ("GOVASSIST DOCUMENT PRE-CHECK", "Upload Citizen Document"), dynamic "DOCUMENT DETECTED [Type]" banner, adaptive field grid, and multi-document pre-submission counter slip.
+  - **Verification & Quality Gates**:
+    - Backend Pytest: 115/115 passing tests with 0 errors.
+    - Backend Ruff: All checks passed with 0 errors (`ruff check .`).
+    - Frontend Vitest: 112/112 passing tests across 23 test suites.
+    - Frontend Production Build: Clean Vite production build in 21.08s (`tsc && vite build`, 0 errors).
+    - Live Browser & DevTools QA: Full interactive validation with captured screenshots:
+      - General AI "hey" greeting (Gemini-backed response, no refusal).
+      - Hindi Machine Learning query (fluent Devanagari explanation).
+      - Marathi types of ML query (fluent Devanagari structured explanation).
+      - Hinglish contextual follow-up ("isko simple words mein samjha", pronoun resolved).
+      - Grounded Training curriculum answer (four mandatory rules with lesson sources).
+      - Grounded Training out-of-scope refusal ("chocolate cake recipe", strict anti-hallucination refusal).
+      - PAN Card upload (masked `ABCDE****F`, format checks, statutory disclaimer).
+      - Aadhaar Card upload (masked `XXXX-XXXX-9012`, UIDAI non-authenticity disclaimer).
+      - Valid Income Certificate upload (4/4 rules passed, counter slip generated).
+      - Expired Income Certificate upload (Rule 3 failed, actionable remediation).
+      - Unknown Document upload (unrecognized document advisory).
+
+
 
 - **Editorial Landing Page Refinements & Skiper UI Integration**:
   - **Task 1 (Badge Clutter Purge)**: Removed cramped inline badge fragments (`"THE TRADITIONAL PROCESS · THE GOVSKILL STANDARD"` and `"0 SURPRISE REJECTIONS"`) from `SpreadTwoDiligence.tsx`. Replaced with a clear, complete, verifiable comparative sentence: *"Unlike The Traditional Process burdened by counter delays and surprise rejections, The GovSkill Standard enforces statutory pre-checks so every submitted certificate passes procedural review."*
@@ -191,5 +227,5 @@ Last Updated:
 
 ## Current Blockers
 
-- **None**: Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (38/38 Pytest, 60/60 Vitest) are fully operational.
+- **None**: Final Production Readiness, Security, Performance, Reliability, and Cross-Phase Audit completed with zero P0/P1 blockers. Local server execution, SQLite/PostgreSQL database connections, frontend Vite build, and full automated test suites (92/92 Pytest, 111/111 Vitest across 23 test suites) are fully operational and verified.
 

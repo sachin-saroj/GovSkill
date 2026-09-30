@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     DB_POOL_TIMEOUT: float = 10.0
     DB_POOL_RECYCLE: int = 1800
     GEMINI_API_KEY: str = ""
+    AI_PROVIDER: str = "gemini"
+    AI_MODEL: str = "gemini-3.5-flash-lite"
+    AI_TIMEOUT_SECONDS: float = 25.0
+    AI_MAX_CONCURRENCY: int = 3
+    AI_VISION_ENABLED: bool = False
     ALLOWED_ORIGINS: Union[list[str], str] = [
         "http://localhost:5173",
         "http://localhost:3000",
@@ -71,5 +76,17 @@ class Settings(BaseSettings):
             return [i.strip() for i in v.split(",") if i.strip()]
         return v
 
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_database_url(cls, v: str) -> str:
+        if isinstance(v, str):
+            if v.startswith("postgres://"):
+                return v.replace("postgres://", "postgresql+asyncpg://", 1)
+            if v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
+                return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
 
 settings = Settings()
+
+

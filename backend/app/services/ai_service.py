@@ -1,23 +1,20 @@
-import asyncio
 import logging
 import re
 from typing import Any
-from google import genai
-from app.core.config import settings
+from app.core.ai_gateway import get_ai_gateway
 
 logger = logging.getLogger("govskill.ai")
 
-_genai_client: genai.Client | None = None
+_genai_client: Any = None
 
 
-def get_genai_client() -> genai.Client | None:
-    """Returns a singleton genai.Client instance if GEMINI_API_KEY is configured."""
+def get_genai_client() -> Any:
+    """Backward-compatible proxy returning the central AIGateway's genai.Client instance."""
     global _genai_client
-    if not settings.GEMINI_API_KEY:
-        return None
-    if _genai_client is None:
-        _genai_client = genai.Client(api_key=settings.GEMINI_API_KEY)
-    return _genai_client
+    gateway = get_ai_gateway()
+    client = gateway.get_client()
+    _genai_client = client
+    return client
 
 
 def extract_module_sections(content: str) -> list[str]:
@@ -234,9 +231,8 @@ async def generate_tutor_answer(
         "pitfalls": "Highlight critical red flags, common mistakes, and errors the officer must avoid.",
         "example": "Provide a realistic workplace administrative scenario illustrating this concept in action.",
         "test_understanding": "Provide a quick check-for-understanding scenario followed by the correct answer explanation.",
-        "remediation": "Provide a targeted 4-part remediation: 1. Core Rule Summary, 2. Workplace Administrative Scenario, 3. Critical Mistakes to Avoid, 4. Self-Check Practice Scenario with Explanation.",
+        "remediation": "Start your response with the title '### Targeted Remediation: Verification Standards' and provide 4 structured parts: 1. Core Rule Summary, 2. Workplace Administrative Scenario, 3. Critical Mistakes to Avoid, 4. Self-Check Practice Scenario with Explanation.",
     }.get(mode, "Provide professional, structured step-by-step guidance with clear bullet points.")
-
 
     prompt = f"""You are an official Government Training Copilot assisting a local government office employee.
 You must strictly ground your response in the official training curriculum provided below.
@@ -258,29 +254,14 @@ EMPLOYEE QUESTION:
 Provide a helpful, direct, and professional answer strictly grounded in the training module content above.
 """
 
-    client = get_genai_client()
-    if client is not None:
-        try:
-            response = await asyncio.wait_for(
-                client.aio.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt,
-                ),
-                timeout=6.0,
-            )
-            if response and getattr(response, "text", None):
-                return response.text.strip(), "grounded"
-        except asyncio.TimeoutError:
-            logger.warning(
-                "Gemini tutor call timed out after 6.0s for module '%s'. Engaging deterministic fallback.",
-                module_title,
-            )
-        except Exception as exc:
-            logger.warning(
-                "Gemini tutor call failed (%s: %s). Engaging deterministic fallback.",
-                type(exc).__name__,
-                exc,
-            )
+    gateway = get_ai_gateway()
+    if gateway.is_configured():
+        answer = await gateway.generate_text(
+            prompt=prompt,
+            timeout=gateway.settings.AI_TIMEOUT_SECONDS,
+        )
+        if answer and answer.strip():
+            return answer.strip(), "grounded"
 
     # Deterministic verified fallback answer when Gemini is unavailable
     fallback_text = get_deterministic_tutor_fallback(module_title, question, mode)
@@ -499,7 +480,6 @@ def get_deterministic_tutor_fallback(module_title: str, question: str, mode: str
         return f"Based on '{module_title}': When reviewing citizen documents, verify that Full Name, Certificate Number (alphanumeric, min 6 chars), and Expiry Date are clearly readable."
 
 
-
 async def generate_rule_explanation(
     failed_rule_name: str,
     context: dict | str | None = None,
@@ -517,38 +497,15 @@ async def generate_rule_explanation(
     elif isinstance(context, str):
         reason_str = context
 
-    prompt = f"""You are a helpful citizen-support AI assistant for a local government portal.
-A deterministic compliance rule engine evaluated an uploaded Income Certificate and found that the following check failed:
-
-FAILED RULE: {failed_rule_name}
-FAILURE DETAIL: {reason_str or "Field check failed validation criteria."}
-
-Write a short, polite, 1-2 sentence plain-language explanation to the citizen explaining why this rule failed and what simple corrective action they should take before formal submission.
-Do NOT decide whether the document passes or fails—simply explain the rule failure clearly.
-"""
-    client = get_genai_client()
-    if client is not None:
-        try:
-            response = await asyncio.wait_for(
-                client.aio.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt,
-                ),
-                timeout=4.0,
-            )
-            if response and getattr(response, "text", None):
-                return response.text.strip()
-        except asyncio.TimeoutError:
-            logger.warning(
-                "Gemini rule explanation call timed out after 4.0s for rule '%s'. Engaging deterministic fallback.",
-                failed_rule_name,
-            )
-        except Exception as exc:
-            logger.warning(
-                "Gemini rule explanation call failed (%s: %s). Engaging deterministic fallback.",
-                type(exc).__name__,
-                exc,
-            )
+    gateway = get_ai_gateway()
+    if gateway.is_configured():
+        explanation = await gateway.generate_rule_explanation(
+            failed_rule_name=failed_rule_name,
+            failure_reason=reason_str,
+            timeout=gateway.settings.AI_TIMEOUT_SECONDS,
+        )
+        if explanation and explanation.strip():
+            return explanation.strip()
 
     # Deterministic plain-language fallback explanations per rule name
     if failed_rule_name == "Name present":

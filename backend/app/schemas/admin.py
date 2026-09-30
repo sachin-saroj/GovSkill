@@ -64,4 +64,3 @@ class DocumentPurgeResponse(BaseModel):
     bytes_reclaimed: int
     errors_count: int
     errors: list[str]
-

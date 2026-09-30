@@ -42,8 +42,9 @@ __all__ = [
 ]
 
 
-
-async def seed_quiz_questions_if_needed(db: AsyncSession, module_id: uuid.UUID | None = None) -> None:
+async def seed_quiz_questions_if_needed(
+    db: AsyncSession, module_id: uuid.UUID | None = None
+) -> None:
     # Check if any questions exist for this specific module
     if module_id is not None:
         result = await db.execute(
@@ -143,10 +144,14 @@ async def get_quiz_questions(
             focus_comps = mod_competencies[: max(1, len(mod_competencies) // 2)]
 
             prioritized = [
-                q for q in questions if (q.competency or "Core Government Procedures") in focus_comps
+                q
+                for q in questions
+                if (q.competency or "Core Government Procedures") in focus_comps
             ]
             remaining = [
-                q for q in questions if (q.competency or "Core Government Procedures") not in focus_comps
+                q
+                for q in questions
+                if (q.competency or "Core Government Procedures") not in focus_comps
             ]
             questions = prioritized + remaining
 
@@ -441,7 +446,6 @@ async def submit_quiz(
             if passed:
                 prog.status = "certified"
             await db.commit()
-
 
     return QuizSubmitResponse(
         score=score,

@@ -25,6 +25,9 @@ export interface CounterSlipModalProps {
   onClose: () => void;
   documentId: string;
   overallStatus?: string;
+  documentType?: string;
+  displayName?: string;
+  extractionSource?: string;
   extractedData?: Record<string, any> | null;
   validationResults: ValidationRuleResult[];
   passedCount?: number;
@@ -38,6 +41,9 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
   onClose,
   documentId,
   overallStatus = 'ACTION_REQUIRED',
+  documentType,
+  displayName,
+  extractionSource,
   extractedData,
   validationResults,
   passedCount,
@@ -81,6 +87,8 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
         hour: '2-digit',
         minute: '2-digit',
       });
+
+  const docName = displayName || (documentType ? documentType.replace(/_/g, ' ') : 'Income Certificate');
 
   const handlePrint = () => {
     window.print();
@@ -166,7 +174,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
             </div>
 
             {/* Document Metadata & Status Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-surface-light rounded-2xl border border-border-warm print:bg-white print:border-slate-300">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 bg-surface-light rounded-2xl border border-border-warm print:bg-white print:border-slate-300">
               <div className="space-y-1 sm:col-span-2">
                 <span className="font-mono text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em] block">
                   Document Reference ID:
@@ -184,6 +192,18 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
                 </div>
               </div>
 
+              <div className="space-y-1">
+                <span className="font-mono text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em] block">
+                  Certificate Category:
+                </span>
+                <span className="text-xs font-mono font-bold text-ink block truncate">
+                  {displayName || 'Income Certificate'}
+                </span>
+                <span className="text-[10px] font-mono text-ink-muted block">
+                  {documentType ? `${documentType} • ` : ''}{extractionSource === 'VISION_AI' ? 'Vision-Assisted' : 'Local OCR'}
+                </span>
+              </div>
+
               <div className="space-y-1 sm:text-right">
                 <span className="font-mono text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em] block">
                   Inspection Timestamp:
@@ -195,34 +215,49 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
               </div>
             </div>
 
-            {/* Extracted Certificate Profile */}
+            {/* Extracted Document Profile */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-caption">
-              <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
-                  <User className="h-3 w-3 text-civic" /> Applicant Name
-                </span>
-                <p className="font-bold text-ink text-sm">
-                  {extractedData?.name || <span className="text-rose italic font-normal">Not Detected</span>}
-                </p>
-              </div>
-
-              <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
-                  <Hash className="h-3 w-3 text-civic" /> Certificate Number
-                </span>
-                <p className="font-mono font-bold text-ink text-sm">
-                  {extractedData?.certificate_number || <span className="text-rose italic font-normal">Not Detected</span>}
-                </p>
-              </div>
-
-              <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
-                  <Calendar className="h-3 w-3 text-civic" /> Validity / Expiry Date
-                </span>
-                <p className="font-mono font-bold text-ink text-sm">
-                  {extractedData?.expiry_date || <span className="text-rose italic font-normal">Not Detected</span>}
-                </p>
-              </div>
+              {extractedData && Object.keys(extractedData).filter((k) => !k.startsWith('_')).length > 0 ? (
+                Object.entries(extractedData)
+                  .filter(([k]) => !k.startsWith('_'))
+                  .map(([key, val]) => (
+                    <div key={key} className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
+                        <User className="h-3 w-3 text-civic" /> {key.replace(/_/g, ' ')}
+                      </span>
+                      <p className="font-bold text-ink text-sm font-mono truncate">
+                        {val ? String(val) : <span className="text-rose italic font-normal">Not Detected</span>}
+                      </p>
+                    </div>
+                  ))
+              ) : (
+                <>
+                  <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
+                      <User className="h-3 w-3 text-civic" /> Applicant Name
+                    </span>
+                    <p className="font-bold text-ink text-sm">
+                      <span className="text-rose italic font-normal">Not Detected</span>
+                    </p>
+                  </div>
+                  <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
+                      <Hash className="h-3 w-3 text-civic" /> Certificate Number
+                    </span>
+                    <p className="font-mono font-bold text-ink text-sm">
+                      <span className="text-rose italic font-normal">Not Detected</span>
+                    </p>
+                  </div>
+                  <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.15em] font-bold text-ink-muted flex items-center gap-1">
+                      <Calendar className="h-3 w-3 text-civic" /> Validity / Expiry Date
+                    </span>
+                    <p className="font-mono font-bold text-ink text-sm">
+                      <span className="text-rose italic font-normal">Not Detected</span>
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Authoritative Overall Status Banner */}
@@ -353,7 +388,7 @@ export const CounterSlipModal: React.FC<CounterSlipModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-caption text-ink-muted">
                 <label className="flex items-start gap-2.5 p-3 bg-surface rounded-xl border border-border-warm text-ink">
                   <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 accent-ink" />
-                  <span className="text-xs font-medium">Original Income Certificate for physical inspection</span>
+                  <span className="text-xs font-medium">Original {docName} for physical inspection</span>
                 </label>
                 <label className="flex items-start gap-2.5 p-3 bg-surface rounded-xl border border-border-warm text-ink">
                   <input type="checkbox" defaultChecked={isPassed} className="mt-0.5 accent-ink" />

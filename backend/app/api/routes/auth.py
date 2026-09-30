@@ -80,7 +80,9 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": {"code": "ACCOUNT_DISABLED", "message": "User account has been disabled."}},
+            detail={
+                "error": {"code": "ACCOUNT_DISABLED", "message": "User account has been disabled."}
+            },
         )
 
     access_token = create_access_token(

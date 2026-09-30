@@ -22,8 +22,12 @@ def upgrade() -> None:
         "credentials",
         sa.Column("id", sa.Uuid(), nullable=False, primary_key=True),
         sa.Column("credential_id", sa.String(length=64), nullable=False),
-        sa.Column("user_id", sa.Uuid(), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
-        sa.Column("module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False),
+        sa.Column(
+            "user_id", sa.Uuid(), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        ),
+        sa.Column(
+            "module_id", sa.Uuid(), sa.ForeignKey("modules.id", ondelete="CASCADE"), nullable=False
+        ),
         sa.Column("score_achieved", sa.Integer(), nullable=False),
         sa.Column("total_score", sa.Integer(), nullable=False),
         sa.Column("verification_hash", sa.String(length=64), nullable=False),

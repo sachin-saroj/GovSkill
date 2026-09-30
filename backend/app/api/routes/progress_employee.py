@@ -25,6 +25,7 @@ from app.schemas.progress import (
 
 router = APIRouter(prefix="/progress", tags=["progress"])
 
+
 def calc_percentage(score: int, total: int) -> int:
     if total <= 0:
         return 0
@@ -214,7 +215,9 @@ async def get_my_skill_progress(
     if attempted_skills:
         # Highest score
         sorted_by_score = sorted(
-            attempted_skills, key=lambda s: (s.score_percentage, 1 if s.status == "certified" else 0), reverse=True
+            attempted_skills,
+            key=lambda s: (s.score_percentage, 1 if s.status == "certified" else 0),
+            reverse=True,
         )
         if sorted_by_score[0].score_percentage > 0 or sorted_by_score[0].status == "certified":
             top_s = sorted_by_score[0]
@@ -246,9 +249,7 @@ async def get_my_skill_progress(
     ]
 
     if overall_score == 100:
-        readiness_explanation = (
-            "You have achieved verified certification across all 4 operational modules. Full administrative compliance certified."
-        )
+        readiness_explanation = "You have achieved verified certification across all 4 operational modules. Full administrative compliance certified."
     elif overall_score >= 50:
         readiness_explanation = (
             f"You have certified {certified_count} of {total_mods} modules ({overall_score}%). "
@@ -260,9 +261,7 @@ async def get_my_skill_progress(
             "Attempt assessments to progress toward Substantial Readiness."
         )
     else:
-        readiness_explanation = (
-            "You are currently at the Initial Onboarding stage. Begin your assigned curriculum to build foundational digital competencies."
-        )
+        readiness_explanation = "You are currently at the Initial Onboarding stage. Begin your assigned curriculum to build foundational digital competencies."
 
     summary = CompetencySummary(
         overall_score=overall_score,
@@ -382,17 +381,25 @@ async def get_my_skill_progress(
                         }
                         for c in comps
                     }
-            def_meta = mod_meta.get("default", {
-                "competency": next((k for k in mod_meta.keys() if k != "default"), f"{s.module_title} Standards"),
-                "section_index": 0,
-                "section_title": f"Lesson 1: {s.module_title}",
-                "tutor_prompt": f"Can you explain the core concepts and procedures for {s.module_title}?",
-            })
+            def_meta = mod_meta.get(
+                "default",
+                {
+                    "competency": next(
+                        (k for k in mod_meta.keys() if k != "default"),
+                        f"{s.module_title} Standards",
+                    ),
+                    "section_index": 0,
+                    "section_title": f"Lesson 1: {s.module_title}",
+                    "tutor_prompt": f"Can you explain the core concepts and procedures for {s.module_title}?",
+                },
+            )
 
             target_comp = def_meta.get("competency", "Core Operating Procedures")
             target_sec_idx = def_meta.get("section_index", 0)
             target_sec_title = def_meta.get("section_title", f"Lesson 1: {s.module_title}")
-            tutor_prompt = def_meta.get("tutor_prompt", f"Explain key requirements for {s.module_title}.")
+            tutor_prompt = def_meta.get(
+                "tutor_prompt", f"Explain key requirements for {s.module_title}."
+            )
 
             # If user has attempt history with < 75%, prioritize the module's key weak competency
             if s.attempts_count > 0 and s.score_percentage < 75:
@@ -402,7 +409,9 @@ async def get_my_skill_progress(
                 if keys:
                     target_comp = keys[0]
                     target_sec_idx = mod_meta[target_comp].get("section_index", 0)
-                    target_sec_title = mod_meta[target_comp].get("section_title", f"Lesson 1: {s.module_title}")
+                    target_sec_title = mod_meta[target_comp].get(
+                        "section_title", f"Lesson 1: {s.module_title}"
+                    )
                     tutor_prompt = mod_meta[target_comp].get("tutor_prompt", tutor_prompt)
 
                 skill_gaps.append(
@@ -1014,4 +1023,3 @@ async def mark_module_lessons_completed(
         if (prog.completed_at and hasattr(prog.completed_at, "isoformat"))
         else (str(prog.completed_at) if prog.completed_at else None),
     )
-

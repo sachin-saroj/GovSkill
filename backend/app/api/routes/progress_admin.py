@@ -16,6 +16,7 @@ from app.schemas.progress import (
 
 router = APIRouter(prefix="/progress", tags=["progress"])
 
+
 @router.get("/admin/skills-overview", response_model=AdminSkillOverviewResponse)
 async def get_admin_skills_overview(
     db: AsyncSession = Depends(get_db),
@@ -117,7 +118,11 @@ async def get_admin_skills_overview(
             comp_avg = round(sum(pcts) / len(pcts))
             mastered_c = sum(1 for p in pcts if p >= 75)
             dev_c = sum(1 for p in pcts if p < 75)
-            status_str = "Healthy" if comp_avg >= 75 else ("Needs Attention" if comp_avg >= 50 else "Critical")
+            status_str = (
+                "Healthy"
+                if comp_avg >= 75
+                else ("Needs Attention" if comp_avg >= 50 else "Critical")
+            )
 
             for comp_name in comp_names:
                 if comp_avg < lowest_avg:

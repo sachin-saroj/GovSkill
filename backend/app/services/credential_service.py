@@ -49,8 +49,10 @@ def compute_credential_signature(
     """
     secret = settings.CREDENTIAL_SIGNING_KEY.encode("utf-8")
     canon_time = _canonical_timestamp(issued_at)
-    payload = f"{credential_id}:{user_id}:{module_id}:{score_achieved}:{total_score}:{canon_time}".encode(
-        "utf-8"
+    payload = (
+        f"{credential_id}:{user_id}:{module_id}:{score_achieved}:{total_score}:{canon_time}".encode(
+            "utf-8"
+        )
     )
     return hmac.new(secret, payload, hashlib.sha256).hexdigest()
 

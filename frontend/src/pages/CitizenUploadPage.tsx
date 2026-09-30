@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import api from '@/lib/api';
-import { DocumentUploadResponse, ValidationRuleResult } from '@/types';
+import { DocumentUploadResponse, FieldDetail, ValidationRuleResult } from '@/types';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -13,6 +13,7 @@ import {
   FileText,
   UploadCloud,
   AlertCircle,
+  AlertTriangle,
   Search,
   Copy,
   Check,
@@ -26,6 +27,7 @@ import {
   Loader2,
   RefreshCw,
   FileCheck2,
+  Sparkles,
 } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
@@ -50,6 +52,13 @@ export const CitizenUploadPage: React.FC = () => {
   const [recommendedNextStep, setRecommendedNextStep] = useState<string | null>(null);
   const [timestamp, setTimestamp] = useState<string | null>(null);
   const [extractedData, setExtractedData] = useState<Record<string, any> | null>(null);
+  const [documentType, setDocumentType] = useState<string>('income_certificate');
+  const [displayName, setDisplayName] = useState<string>('Income Certificate');
+  const [extractionSource, setExtractionSource] = useState<string>('LOCAL_OCR');
+  const [ocrQuality, setOcrQuality] = useState<string>('');
+  const [fieldDetails, setFieldDetails] = useState<Record<string, FieldDetail>>({});
+  const [detectedIssues, setDetectedIssues] = useState<string[]>([]);
+  const [classificationConfidence, setClassificationConfidence] = useState<number>(1.0);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState(false);
   const [isCounterSlipOpen, setIsCounterSlipOpen] = useState(false);
@@ -95,6 +104,13 @@ export const CitizenUploadPage: React.FC = () => {
       setRecommendedNextStep(res.data.recommended_next_step || null);
       setTimestamp(res.data.timestamp || null);
       setExtractedData(res.data.extracted_data);
+      setDocumentType(res.data.document_type || 'income_certificate');
+      setDisplayName(res.data.display_name || 'Income Certificate');
+      setExtractionSource(res.data.extraction_source || 'LOCAL_OCR');
+      setOcrQuality(res.data.ocr_quality || '');
+      setFieldDetails(res.data.field_details || {});
+      setDetectedIssues(res.data.detected_issues || []);
+      setClassificationConfidence(res.data.classification_confidence ?? 1.0);
     } catch (err: any) {
       const msg =
         err.response?.data?.detail?.error?.message ||
@@ -193,6 +209,13 @@ export const CitizenUploadPage: React.FC = () => {
       setRecommendedNextStep(res.data.recommended_next_step || null);
       setTimestamp(res.data.timestamp || null);
       setExtractedData(res.data.extracted_data);
+      setDocumentType(res.data.document_type || 'income_certificate');
+      setDisplayName(res.data.display_name || 'Income Certificate');
+      setExtractionSource(res.data.extraction_source || 'LOCAL_OCR');
+      setOcrQuality(res.data.ocr_quality || '');
+      setFieldDetails(res.data.field_details || {});
+      setDetectedIssues(res.data.detected_issues || []);
+      setClassificationConfidence(res.data.classification_confidence ?? 1.0);
       setSearchParams({ id: res.data.document_id });
     } catch (err: any) {
       const msg =
@@ -214,6 +237,13 @@ export const CitizenUploadPage: React.FC = () => {
     setDocumentId(null);
     setResults(null);
     setExtractedData(null);
+    setDocumentType('income_certificate');
+    setDisplayName('Income Certificate');
+    setExtractionSource('LOCAL_OCR');
+    setOcrQuality('');
+    setFieldDetails({});
+    setDetectedIssues([]);
+    setClassificationConfidence(1.0);
     setError(null);
     setLookupId('');
     setSearchParams({});
@@ -268,20 +298,20 @@ export const CitizenUploadPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-8 space-y-3">
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#AF411E]">
-                Pre-Submission Protocol • Module 01
+                Pre-Submission Protocol • Multi-Document Engine
               </span>
               <h1 className="font-sans text-2xl sm:text-3xl font-black uppercase tracking-tight text-ink">
-                Income Certificate Pre-submission Checker
+                GovAssist Document Pre-Check
               </h1>
               <p className="text-body text-ink-muted max-w-3xl leading-relaxed">
-                Upload your Income Certificate before formal submission to catch potential errors (expired dates, unreadable numbers, formatting issues).
+                Pre-check civic certificates and identity documents (Income, Caste, Domicile, Residence, Birth, Aadhaar, PAN, Voter ID, Driving License, Passport) before formal submission to detect formatting errors, expired dates, and missing required fields.
               </p>
 
               {/* Factual Disclaimer Strip */}
               <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm text-caption text-ink-muted flex items-start gap-2.5">
                 <Info className="h-4 w-4 text-[#AF411E] shrink-0 mt-0.5" />
                 <p className="leading-relaxed">
-                  <strong className="font-bold text-ink">Notice:</strong> This self-service pre-check validates standard document readability and format rules prior to your Taluk office visit. It does not replace formal verification by competent revenue authorities.
+                  <strong className="font-bold text-ink">Notice:</strong> This self-service pre-check validates standard document readability, format consistency, and civic schemas prior to your Taluk / Citizen Service Center visit. It does not replace formal verification by competent authorities.
                 </p>
               </div>
             </div>
@@ -375,10 +405,10 @@ export const CitizenUploadPage: React.FC = () => {
                   Step 01 • Intake
                 </span>
                 <h2 className="font-sans text-xl font-bold uppercase tracking-tight text-ink">
-                  Upload Income Certificate
+                  Upload Citizen Document
                 </h2>
                 <p className="text-caption text-ink-muted mt-1">
-                  Digital scan, photograph, or PDF file
+                  Digital scan, photograph, or PDF file • Auto-detected civic document verification
                 </p>
               </div>
 
@@ -437,10 +467,10 @@ export const CitizenUploadPage: React.FC = () => {
                           : 'text-ink hover:underline'
                       }`}
                     >
-                      Choose an Income Certificate to pre-check
+                      Choose a government document to pre-check
                     </span>
                     <span className="text-[11px] text-ink-muted block mt-1 font-mono">
-                      PNG, JPG, or PDF scan (Max 5MB) • 100% Deterministic Engine
+                      PNG, JPG, or PDF scan (Max 5MB) • Multi-Document Civic Engine
                     </span>
                     <input
                       id="file-upload"
@@ -521,28 +551,28 @@ export const CitizenUploadPage: React.FC = () => {
                 </Button>
               </form>
 
-              {/* Pre-check Rules Tested Guide */}
+              {/* Multi-Document Civic Capabilities Guide */}
               <div className="text-caption text-ink-muted space-y-2 pt-4 border-t border-border-warm">
                 <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-ink">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#AF411E]" />
-                  <span>Pre-check Compliance Rules:</span>
+                  <span>Supported Document Types:</span>
                 </div>
-                <ul className="grid grid-cols-1 gap-2 pl-1 text-xs">
+                <ul className="grid grid-cols-1 gap-1.5 pl-1 text-xs">
                   <li className="flex items-center gap-2 text-ink-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#AF411E] shrink-0" />
-                    <span><strong className="font-bold text-ink">Name present:</strong> Verifies applicant name is clearly readable.</span>
+                    <span><strong className="font-bold text-ink">Civic Certificates:</strong> Income, Caste, Domicile, Residence, Birth</span>
                   </li>
                   <li className="flex items-center gap-2 text-ink-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#AF411E] shrink-0" />
-                    <span><strong className="font-bold text-ink">Certificate number:</strong> Verifies alphanumeric format (≥6 chars).</span>
+                    <span><strong className="font-bold text-ink">Identity & Records:</strong> Aadhaar, PAN, Voter ID, Driving License, Passport</span>
                   </li>
                   <li className="flex items-center gap-2 text-ink-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#AF411E] shrink-0" />
-                    <span><strong className="font-bold text-ink">Expiry check:</strong> Confirms certificate date is not expired.</span>
+                    <span><strong className="font-bold text-ink">Quality Gate:</strong> Local OCR first + Gemini Vision fallback</span>
                   </li>
                   <li className="flex items-center gap-2 text-ink-muted">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#AF411E] shrink-0" />
-                    <span><strong className="font-bold text-ink">Mandatory extraction:</strong> Confirms all required fields are intact.</span>
+                    <span><strong className="font-bold text-ink">Deterministic Engine:</strong> 100% code-driven rule verification</span>
                   </li>
                 </ul>
               </div>
@@ -684,56 +714,92 @@ export const CitizenUploadPage: React.FC = () => {
                 exit={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
               >
                 <div className="bg-surface border border-border-warm rounded-2xl p-6 space-y-4 shadow-sm">
-                  <div className="flex items-center justify-between pb-3 border-b border-border-warm">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-border-warm">
                     <div className="flex items-center gap-2">
                       <FileCode2 className="h-4 w-4 text-[#AF411E]" />
                       <h3 className="font-sans font-bold text-base uppercase tracking-tight text-ink">
                         Extracted Data Fields
                       </h3>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-ink bg-surface-elevated px-2.5 py-0.5 rounded-full border border-border-warm">
+                        {displayName} • {(classificationConfidence * 100).toFixed(0)}% Match
+                      </span>
                     </div>
-                    <span className="text-[11px] font-mono text-ink-muted">Tesseract OCR Pipeline</span>
+
+                    <div className="flex items-center gap-2">
+                      {extractionSource === 'VISION_AI' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                          <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                          <span>Vision-assisted extraction</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-surface-light text-ink-muted border border-border-warm">
+                          <FileCode2 className="h-3.5 w-3.5 text-[#AF411E]" />
+                          <span>Local OCR extraction</span>
+                        </span>
+                      )}
+
+                      {ocrQuality && ocrQuality !== 'HIGH' && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-rose/10 text-rose border border-rose/30">
+                          {ocrQuality} Quality Scan
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-caption pt-1">
-                    <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                      <dt className="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Applicant Name:</dt>
-                      <dd className="font-bold text-ink text-sm">
-                        {extractedData.name ? (
-                          <span>{extractedData.name}</span>
-                        ) : (
-                          <span className="inline-block bg-orange-50 text-[#AF411E] px-2 py-0.5 text-[10px] font-mono font-bold rounded border border-orange-200 uppercase">
-                            Not detected
-                          </span>
-                        )}
-                      </dd>
-                    </div>
+                    {extractedData &&
+                      Object.entries(extractedData)
+                        .filter(([k]) => !k.startsWith('_'))
+                        .map(([key, val]) => {
+                          const detail = fieldDetails[key];
+                          const isUncertain = detail?.status === 'uncertain';
+                          const isUnreadable = detail?.status === 'unreadable';
+                          const isMissing = !val || val === 'NOT DETECTED';
 
-                    <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                      <dt className="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Certificate No:</dt>
-                      <dd className="font-bold text-ink text-sm font-mono">
-                        {extractedData.certificate_number ? (
-                          <span>{extractedData.certificate_number}</span>
-                        ) : (
-                          <span className="inline-block bg-orange-50 text-[#AF411E] px-2 py-0.5 text-[10px] font-mono font-bold rounded border border-orange-200 uppercase">
-                            Not detected
-                          </span>
-                        )}
-                      </dd>
-                    </div>
-
-                    <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
-                      <dt className="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Expiry Date:</dt>
-                      <dd className="font-bold text-ink text-sm font-mono">
-                        {extractedData.expiry_date ? (
-                          <span>{extractedData.expiry_date}</span>
-                        ) : (
-                          <span className="inline-block bg-orange-50 text-[#AF411E] px-2 py-0.5 text-[10px] font-mono font-bold rounded border border-orange-200 uppercase">
-                            Not detected
-                          </span>
-                        )}
-                      </dd>
-                    </div>
+                          return (
+                            <div key={key} className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1">
+                              <div className="flex items-center justify-between">
+                                <dt className="text-[10px] font-mono uppercase tracking-wider text-ink-muted">
+                                  {key.replace(/_/g, ' ')}:
+                                </dt>
+                                {isUncertain && (
+                                  <span className="inline-flex items-center gap-0.5 text-[9px] font-mono font-bold text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded border border-amber-300">
+                                    <AlertTriangle className="h-2.5 w-2.5" /> Uncertain
+                                  </span>
+                                )}
+                              </div>
+                              <dd className="font-bold text-ink text-sm font-mono truncate">
+                                {isUnreadable ? (
+                                  <span className="inline-block bg-neutral-100 text-neutral-600 px-2 py-0.5 text-[10px] font-mono font-bold rounded border border-neutral-300 uppercase">
+                                    Unable to read
+                                  </span>
+                                ) : isMissing ? (
+                                  <span className="inline-block bg-orange-50 text-[#AF411E] px-2 py-0.5 text-[10px] font-mono font-bold rounded border border-orange-200 uppercase">
+                                    Not detected
+                                  </span>
+                                ) : (
+                                  <span>{String(val)}</span>
+                                )}
+                              </dd>
+                            </div>
+                          );
+                        })}
                   </dl>
+
+                  {/* Scan & Quality Notices */}
+                  {detectedIssues && detectedIssues.length > 0 && (
+                    <div className="p-3.5 bg-surface-light rounded-xl border border-border-warm space-y-1.5 text-caption">
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-ink">
+                        <AlertCircle className="h-3.5 w-3.5 text-[#AF411E]" />
+                        <span>Scan & Extraction Notices ({detectedIssues.length})</span>
+                      </div>
+                      <ul className="space-y-1 text-ink-muted text-xs pl-5 list-disc">
+                        {detectedIssues.map((issue, idx) => (
+                          <li key={idx}>{issue}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -743,6 +809,10 @@ export const CitizenUploadPage: React.FC = () => {
           <ValidationResultCard
             results={results}
             overallStatus={overallStatus}
+            documentType={documentType}
+            displayName={displayName}
+            extractionSource={extractionSource}
+            ocrQuality={ocrQuality}
             passedRulesCount={passedCount}
             totalRulesCount={totalCount}
             recommendedNextStep={recommendedNextStep || undefined}
@@ -761,6 +831,9 @@ export const CitizenUploadPage: React.FC = () => {
           onClose={() => setIsCounterSlipOpen(false)}
           documentId={documentId}
           overallStatus={overallStatus}
+          documentType={documentType}
+          displayName={displayName}
+          extractionSource={extractionSource}
           extractedData={extractedData}
           validationResults={results}
           passedCount={passedCount}

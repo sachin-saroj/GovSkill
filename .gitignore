@@ -18,12 +18,18 @@ htmlcov/
 govskill.db
 backend/govskill.db
 
-# Uploads
+# Uploads & Assets
 backend/uploads/*
 !backend/uploads/.gitkeep
+backend/tessdata/
 
 # OS & IDE
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Scratch & Local Dev
+scratch/
+.env*.local
+

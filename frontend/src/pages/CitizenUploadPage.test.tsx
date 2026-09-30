@@ -187,6 +187,81 @@ describe('CitizenUploadPage & GovAssist Workflow', () => {
     expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
   });
 
+  it('renders Vision-assisted extraction badge and uncertain field indicators', async () => {
+    mockedPost.mockResolvedValue({
+      data: {
+        document_id: '550e8400-e29b-41d4-a716-446655440099',
+        overall_status: 'ACTION_REQUIRED',
+        document_type: 'income_certificate',
+        display_name: 'Income Certificate',
+        extraction_source: 'VISION_AI',
+        ocr_quality: 'LOW',
+        passed_rules_count: 3,
+        total_rules_count: 4,
+        extracted_data: {
+          name: 'Sunita Sharma',
+          certificate_number: 'INC112233',
+          expiry_date: null,
+        },
+        field_details: {
+          name: { value: 'Sunita Sharma', confidence: 0.95, status: 'extracted' },
+          certificate_number: { value: 'INC112233', confidence: 0.65, status: 'uncertain' },
+          expiry_date: { value: null, confidence: 0.0, status: 'unreadable' },
+        },
+        validation_results: [
+          { ruleName: 'Name present', passed: true },
+          { ruleName: 'Certificate number format', passed: true },
+          { ruleName: 'Certificate not expired', passed: false, reason: 'Expiry date missing' },
+          { ruleName: 'All required fields extracted', passed: false },
+        ],
+        detected_issues: ['Low contrast scan required vision fallback', 'Expiry date unreadable due to watermark'],
+      },
+    });
+
+    renderPage();
+    const file = new File(['blurry scan'], 'blurry.png', { type: 'image/png' });
+    fireEvent.change(screen.getByLabelText('Choose a file to upload'), { target: { files: [file] } });
+    fireEvent.click(screen.getByRole('button', { name: 'Run Pre-check Validation' }));
+
+    // Verify Vision-assisted badge rendered
+    expect(await screen.findByText('Vision-assisted extraction')).toBeInTheDocument();
+    // Verify Uncertain indicator for certificate number
+    expect(screen.getByText('Uncertain')).toBeInTheDocument();
+    // Verify Unable to read for expiry date
+    expect(screen.getByText('Unable to read')).toBeInTheDocument();
+    // Verify detected issues rendered
+    expect(screen.getByText(/Low contrast scan required vision fallback/i)).toBeInTheDocument();
+  });
+
+  it('renders unknown document state transparently with actionable guidance', async () => {
+    mockedPost.mockResolvedValue({
+      data: {
+        document_id: '550e8400-e29b-41d4-a716-446655440088',
+        overall_status: 'UNKNOWN_DOCUMENT',
+        document_type: 'unknown_document',
+        display_name: 'Unknown Document',
+        extraction_source: 'LOCAL_OCR',
+        ocr_quality: 'INSUFFICIENT',
+        passed_rules_count: 0,
+        total_rules_count: 1,
+        recommended_next_step: 'Document type could not be confidently identified. Please ensure the document is a supported civic certificate with clear headers.',
+        extracted_data: {},
+        validation_results: [
+          { ruleName: 'Document classification check', passed: false, reason: 'Could not identify civic certificate type' },
+        ],
+      },
+    });
+
+    renderPage();
+    const file = new File(['random text'], 'receipt.txt', { type: 'text/plain' });
+    fireEvent.change(screen.getByLabelText('Choose a file to upload'), { target: { files: [file] } });
+    fireEvent.click(screen.getByRole('button', { name: 'Run Pre-check Validation' }));
+
+    expect(await screen.findByText('Pre-Submission Notice: DOCUMENT TYPE UNRECOGNIZED')).toBeInTheDocument();
+    expect(screen.getByText('Unrecognized Document')).toBeInTheDocument();
+    expect(screen.getByText(/Document type could not be confidently identified/i)).toBeInTheDocument();
+  });
+
   it('passes automated accessibility audit without violations', async () => {
     const { container } = renderPage();
     const results = await axe(container);

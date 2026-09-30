@@ -19,7 +19,7 @@ export interface ChatMessage {
   sender: 'user' | 'tutor';
   text: string;
   matched_module_title?: string;
-  grounding_status?: 'grounded' | 'insufficient_context' | 'fallback';
+  grounding_status?: 'grounded' | 'insufficient_context' | 'fallback' | 'general_chat';
   suggested_followups?: string[];
   source_sections?: string[];
   mode?: string;
@@ -45,7 +45,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const shouldReduceMotion = useReducedMotion();
   const isOutOfScope = msg.grounding_status === 'insufficient_context';
   const isFallback = msg.grounding_status === 'fallback';
-
+  const isGeneral = msg.grounding_status === 'general_chat';
 
   return (
     <motion.div
@@ -57,10 +57,18 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
       {!isUser && (
         <div
           className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border ${
-            isOutOfScope ? 'bg-rose-500/20 text-rose-900 border-rose-500/40' : 'bg-surface text-ink border-border-warm shadow-xs'
+            isOutOfScope
+              ? 'bg-rose-500/20 text-rose-900 border-rose-500/40'
+              : isGeneral
+              ? 'bg-azure-500/20 text-azure-900 border-azure-500/40'
+              : 'bg-surface text-ink border-border-warm shadow-xs'
           }`}
         >
-          {isOutOfScope ? <AlertTriangle className="h-4 w-4 text-rose-700" /> : <Bot className="h-4 w-4 text-azure-700" />}
+          {isOutOfScope ? (
+            <AlertTriangle className="h-4 w-4 text-rose-700" />
+          ) : (
+            <Bot className="h-4 w-4 text-azure-700" />
+          )}
         </div>
       )}
 
@@ -82,6 +90,11 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-rose-900 bg-rose-500/15 px-2.5 py-1 border border-rose-500/30 rounded-full">
                   <AlertTriangle className="h-3 w-3 text-rose-700" />
                   <span>Unverified / Out of Scope</span>
+                </span>
+              ) : isGeneral ? (
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-azure-900 bg-azure-500/15 px-2.5 py-1 border border-azure-500/30 rounded-full">
+                  <Bot className="h-3 w-3 text-azure-700" />
+                  <span>General AI Chat</span>
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-sage-900 bg-sage-500/15 px-2.5 py-1 border border-sage-500/30 rounded-full">
@@ -130,7 +143,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         </div>
 
         {/* Quick Action Mode Chips (for tutor messages) */}
-        {!isUser && !isOutOfScope && msg.matched_module_title && onSelectModeAction && (
+        {!isUser && !isOutOfScope && !isGeneral && msg.matched_module_title && onSelectModeAction && (
           <div className="pt-2 border-t border-border-warm flex flex-wrap items-center gap-1.5">
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-muted mr-1">
               Actions:

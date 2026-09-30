@@ -198,13 +198,27 @@ export interface ValidationRuleResult {
   explanation?: string;
 }
 
+export interface FieldDetail {
+  value: string | null;
+  confidence: number;
+  status: 'extracted' | 'uncertain' | 'unreadable' | 'missing' | string;
+}
+
 export interface DocumentUploadResponse {
   document_id: string;
-  overall_status?: 'PASSED' | 'ACTION_REQUIRED' | string;
+  overall_status?: 'PASSED' | 'ACTION_REQUIRED' | 'UNKNOWN_DOCUMENT' | 'UNSUPPORTED_DOCUMENT' | string;
+  document_type?: string;
+  display_name?: string;
+  extraction_source?: 'LOCAL_OCR' | 'VISION_AI' | string;
+  ocr_quality?: 'HIGH' | 'MEDIUM' | 'LOW' | 'INSUFFICIENT' | string;
   extracted_data: Record<string, any>;
+  field_details?: Record<string, FieldDetail>;
   validation_results: ValidationRuleResult[];
   passed_rules_count?: number;
   total_rules_count?: number;
+  summary?: string;
+  detected_issues?: string[];
+  classification_confidence?: number;
   timestamp?: string;
   recommended_next_step?: string;
 }
@@ -233,10 +247,11 @@ export interface TutorAskResponse {
   answer: string;
   matched_module_id?: string | null;
   matched_module_title: string;
-  grounding_status: 'grounded' | 'insufficient_context' | 'fallback';
+  grounding_status: 'grounded' | 'insufficient_context' | 'fallback' | 'general_chat';
   suggested_followups?: string[];
   source_sections?: string[];
   mode?: string;
+  conversation_mode?: 'grounded_training' | 'general_chat';
 }
 
 export interface CredentialVerificationResponse {

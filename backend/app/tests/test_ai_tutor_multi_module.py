@@ -147,7 +147,9 @@ async def test_ai_tutor_copilot_pipeline():
             )
             assert tutor_resp_remediation.status_code == 200
             res_rem = tutor_resp_remediation.json()
-            assert "Targeted Remediation" in res_rem["answer"] or "Verification" in res_rem["answer"]
+            assert (
+                "Targeted Remediation" in res_rem["answer"] or "Verification" in res_rem["answer"]
+            )
             assert res_rem["mode"] == "remediation"
 
             # 4. Out-of-scope question refusal (Strict anti-hallucination guardrail)

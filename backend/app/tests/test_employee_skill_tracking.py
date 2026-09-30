@@ -291,7 +291,9 @@ async def test_competency_intelligence_multi_attempt_deltas_and_readiness_transi
             assert len(questions) == 4
 
             # Attempt 1: 0% correct (0/4)
-            wrong_answers = [{"question_id": q["id"], "selected_option_index": 99} for q in questions]
+            wrong_answers = [
+                {"question_id": q["id"], "selected_option_index": 99} for q in questions
+            ]
             att1_res = await client.post(
                 f"/api/quiz/{mod_id}/submit",
                 json={"answers": wrong_answers},
@@ -333,7 +335,8 @@ async def test_competency_intelligence_multi_attempt_deltas_and_readiness_transi
 
             # Activity timeline contains quiz_improved event
             act_improved = next(
-                (a for a in p2_data["recent_activity"] if a["activity_type"] == "quiz_improved"), None
+                (a for a in p2_data["recent_activity"] if a["activity_type"] == "quiz_improved"),
+                None,
             )
             assert act_improved is not None
             assert "+50%" in act_improved["detail"]
@@ -366,7 +369,9 @@ def test_competency_mapping_integrity():
     # Verify each question in SEED_QUESTIONS has a non-empty competency
     for q in SEED_QUESTIONS:
         comp = q.get("competency")
-        assert comp is not None and len(comp.strip()) > 0, f"Question {q['id']} must have a valid competency."
+        assert comp is not None and len(comp.strip()) > 0, (
+            f"Question {q['id']} must have a valid competency."
+        )
         mod_id = q["module_id"]
         assert mod_id in mod_sections, f"Question {q['id']} references unknown module {mod_id}."
 
@@ -396,9 +401,7 @@ async def test_competency_mastery_recency_weighting():
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-        async with AsyncClient(
-            transport=ASGITransport(app=app), base_url="http://test"
-        ) as client:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             await client.post(
                 "/api/auth/register",
                 json={"email": "mastery_emp@govskill.local", "password": "Password123!"},
@@ -422,7 +425,9 @@ async def test_competency_mastery_recency_weighting():
 
             # 2. Complete lessons for Module 1
             mod_1_id = "11111111-1111-1111-1111-111111111111"
-            await client.post(f"/api/progress/modules/{mod_1_id}/complete-lessons", headers=auth_headers)
+            await client.post(
+                f"/api/progress/modules/{mod_1_id}/complete-lessons", headers=auth_headers
+            )
 
             # 3. Attempt 1: 50% score (2/4 correct)
             quiz_res = await client.get(f"/api/quiz/{mod_1_id}", headers=auth_headers)
@@ -442,10 +447,16 @@ async def test_competency_mastery_recency_weighting():
             sub1_data = sub1.json()
             assert sub1_data["score"] == 2
             # Verify submit returns mastery_level on competency items
-            assert sub1_data["competency_breakdown"][0]["mastery_level"] in ["Mastered", "Operational", "Developing"]
+            assert sub1_data["competency_breakdown"][0]["mastery_level"] in [
+                "Mastered",
+                "Operational",
+                "Developing",
+            ]
 
             p1_res = await client.get("/api/progress/my-skills", headers=auth_headers)
-            p1_comps = [c for c in p1_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id]
+            p1_comps = [
+                c for c in p1_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id
+            ]
             assert p1_comps[0]["attempts_evaluated"] == 1
             assert p1_comps[0]["mastery_score"] == 50
             assert p1_comps[0]["mastery_level"] == "Operational"
@@ -467,7 +478,9 @@ async def test_competency_mastery_recency_weighting():
 
             # 5. Check recency weighting: 0.7 * 100 + 0.3 * 50 = 70 + 15 = 85%
             p2_res = await client.get("/api/progress/my-skills", headers=auth_headers)
-            p2_comps = [c for c in p2_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id]
+            p2_comps = [
+                c for c in p2_res.json()["competency_mastery"] if str(c["module_id"]) == mod_1_id
+            ]
             assert p2_comps[0]["attempts_evaluated"] == 2
             assert p2_comps[0]["mastery_score"] == 85
             assert p2_comps[0]["mastery_level"] == "Mastered"
@@ -503,9 +516,7 @@ async def test_adaptive_quiz_question_ordering():
         async with engine_test.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-        async with AsyncClient(
-            transport=ASGITransport(app=app), base_url="http://test"
-        ) as client:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             await client.post(
                 "/api/auth/register",
                 json={"email": "adaptive_emp@govskill.local", "password": "Password123!"},
@@ -528,7 +539,9 @@ async def test_adaptive_quiz_question_ordering():
 
             # 2. Submit a weak attempt (<75%)
             questions = std_data["questions"]
-            wrong_answers = [{"question_id": q["id"], "selected_option_index": 99} for q in questions]
+            wrong_answers = [
+                {"question_id": q["id"], "selected_option_index": 99} for q in questions
+            ]
             await client.post(
                 f"/api/quiz/{mod_1_id}/submit",
                 json={"answers": wrong_answers},
@@ -546,5 +559,3 @@ async def test_adaptive_quiz_question_ordering():
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
-
-

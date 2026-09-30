@@ -1,25 +1,52 @@
+import logging
 import os
 import re
 from datetime import datetime
 from PIL import Image, ImageEnhance
 import pytesseract
 
+logger = logging.getLogger("govskill.ocr")
+
 try:
     import fitz  # PyMuPDF for PDF rendering & text extraction
 except ImportError:
     fitz = None
 
-# Auto-detect Tesseract executable path on Windows if standard installation exists
-if os.name == "nt":
-    possible_paths = [
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-        os.path.expanduser(r"~\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"),
+
+def _ensure_tesseract_cmd() -> str:
+    """Auto-detects and sets Tesseract executable path on Windows."""
+    if os.name == "nt":
+        possible_paths = [
+            r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+            os.path.expanduser(r"~\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"),
+        ]
+        for p in possible_paths:
+            if os.path.exists(p):
+                pytesseract.pytesseract.tesseract_cmd = p
+                return p
+    return pytesseract.pytesseract.tesseract_cmd
+
+
+# Initial path check
+_ensure_tesseract_cmd()
+
+
+def _get_tessdata_dir() -> str | None:
+    """Finds directory containing Tesseract language models (e.g. eng.traineddata)."""
+    candidates = [
+        os.environ.get("TESSDATA_PREFIX", ""),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "tessdata")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "tessdata")),
+        os.path.abspath("tessdata"),
+        "/usr/share/tesseract-ocr/5/tessdata",
+        "/usr/share/tesseract-ocr/4.00/tessdata",
+        "/usr/share/tessdata",
     ]
-    for p in possible_paths:
-        if os.path.exists(p):
-            pytesseract.pytesseract.tesseract_cmd = p
-            break
+    for c in candidates:
+        if c and os.path.exists(c) and os.path.isdir(c):
+            return c
+    return None
 
 
 def _preprocess_image(img: Image.Image) -> Image.Image:
@@ -54,13 +81,25 @@ def _extract_pdf_text(file_path: str) -> str:
                 pix = page.get_pixmap(dpi=150)
                 img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
                 img = _preprocess_image(img)
-                ocr_text = pytesseract.image_to_string(img)
-                if ocr_text:
+                _ensure_tesseract_cmd()
+                ocr_text = None
+                try:
+                    ocr_text = pytesseract.image_to_string(img)
+                except Exception:
+                    ocr_text = None
+                if not ocr_text or not ocr_text.strip():
+                    try:
+                        tp = page.get_textpage_ocr(tessdata=_get_tessdata_dir())
+                        ocr_text = page.get_text(textpage=tp)
+                    except Exception:
+                        ocr_text = None
+                if ocr_text and ocr_text.strip():
                     extracted_pages.append(ocr_text.strip())
 
         doc.close()
         return "\n".join(extracted_pages).strip()
-    except Exception:
+    except Exception as exc:
+        logger.warning("PDF extraction failed for '%s': %s", file_path, exc)
         return ""
 
 
@@ -78,21 +117,48 @@ def extract_raw_text(file_path: str) -> str:
             return pdf_text
 
     # 2. Image File OCR Processing (JPG, PNG)
+    # 2a. Try pytesseract first
     try:
+        _ensure_tesseract_cmd()
         image = Image.open(file_path)
-        image = _preprocess_image(image)
-        text = pytesseract.image_to_string(image)
+        # First try preprocessed image
+        prep = _preprocess_image(image)
+        text = pytesseract.image_to_string(prep)
+        if not text or not text.strip():
+            # Fallback to direct image (digital certificates often OCR best without harsh binarization)
+            text = pytesseract.image_to_string(image)
         if text and text.strip():
             return text.strip()
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("pytesseract image OCR failed for '%s': %s", file_path, exc)
 
-    # 3. Fallback to reading plain text / sample files
-    try:
-        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-            return f.read().strip()
-    except Exception:
-        return ""
+    # 2b. Fallback to PyMuPDF embedded Tesseract engine
+    if fitz:
+        try:
+            tessdata_dir = _get_tessdata_dir()
+            img_doc = fitz.open(file_path)
+            pdf_bytes = img_doc.convert_to_pdf()
+            img_doc.close()
+            pdf = fitz.open("pdf", pdf_bytes)
+            page = pdf[0]
+            tp = page.get_textpage_ocr(tessdata=tessdata_dir)
+            fitz_text = page.get_text(textpage=tp)
+            pdf.close()
+            if fitz_text and fitz_text.strip():
+                return fitz_text.strip()
+        except Exception as exc:
+            logger.warning("PyMuPDF embedded Tesseract OCR failed for '%s': %s", file_path, exc)
+
+    # 3. Fallback to reading plain text / sample files (only for text files)
+    if ext in [".txt", ".text"]:
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                return f.read().strip()
+        except Exception as exc:
+            logger.warning("Plain text read failed for '%s': %s", file_path, exc)
+            return ""
+
+    return ""
 
 
 def _normalize_date(date_str: str) -> str | None:
@@ -207,7 +273,7 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
 
     # 1. Extract and Normalize Name
     name_patterns = [
-        r"(?:Name\s*of\s*Applicant|Applicant\s*Name|Holder\s*Name|Applicant|Holder|Name)\s*[:|-]\s*([A-Za-z\s.]+)",
+        r"(?:Name\s*of\s*Applicant|Applicant\s*Name|Holder\s*Name|Applicant|Holder|Name)\s*[:|-]?\s*([A-Za-z\s.]+)",
         r"(?:Shri|Smt|Kumari|Mr|Mrs|Ms)\.?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)",
         r"(?:certify that|certified that)\s+(?:Shri|Smt|Kumari|Mr|Mrs|Ms)?\.?\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+(?:son|daughter|wife)\s+of",
         r"(?:certify that|certified that)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+is",
@@ -230,7 +296,7 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
 
     # 2. Extract and Normalize Certificate Number
     cert_patterns = [
-        r"(?:Income\s*Certificate\s*(?:No|Number|#)|Certificate\s*(?:No|Number|#)|Cert\s*(?:No|#))\s*[:|-|#]\s*([A-Za-z0-9/-]+)",
+        r"(?:Income\s*Certificate\s*(?:No|Number|#)|Certificate\s*(?:No|Number|#)|Cert\s*(?:No|#))\s*[:|-|#]?\s*([A-Za-z0-9/-]+)",
         r"\b(INC[A-Za-z0-9/-]{3,})\b",
         r"\b(GOV[A-Za-z0-9/-]{3,})\b",
         r"Certificate\s*[:|-]\s*([A-Za-z0-9/-]+)",
@@ -239,14 +305,19 @@ def parse_structured_fields(raw_text: str) -> dict[str, str | None]:
         cert_match = re.search(pat, raw_text, re.IGNORECASE)
         if cert_match:
             cert_val = cert_match.group(1).strip()
-            if len(cert_val) >= 3 and cert_val.upper() not in [
-                "DEPT",
-                "OFFICE",
-                "GOVERNMENT",
-                "APPLICANT",
-                "CERTIFICATE",
-                "INCOME",
-            ]:
+            if (
+                len(cert_val) >= 3
+                and any(c.isdigit() for c in cert_val)
+                and cert_val.upper()
+                not in [
+                    "DEPT",
+                    "OFFICE",
+                    "GOVERNMENT",
+                    "APPLICANT",
+                    "CERTIFICATE",
+                    "INCOME",
+                ]
+            ):
                 data["certificate_number"] = cert_val
                 break
 

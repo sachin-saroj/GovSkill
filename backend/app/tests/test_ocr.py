@@ -101,3 +101,78 @@ def test_pdf_extraction_with_pymupdf(tmp_path):
     assert fields["name"] == "Amit Verma"
     assert fields["certificate_number"] == "INC778899"
     assert fields["expiry_date"] == "2028-12-31"
+
+
+def test_parse_karnataka_income_certificate_format():
+    """Verifies extraction against the exact format of Karnataka Income Certificate."""
+    sample_ocr = """
+    GOVERNMENT OF KARNATAKA
+    REVENUE DEPARTMENT - OFFICE OF THE TAHSILDAR
+
+    INCOME CERTIFICATE
+
+    Certificate Number : INC2026458321
+    Name of Applicant : Sachin Saroj
+    Father's / Guardian's Name : Ramesh Saroj
+    Address : House No. 42, Gandhi Nagar, Mysuru, Karnataka - 570001
+
+    Annual Income : Rs. 1,85,000 per annum
+    Date of Issue : 15/01/2026
+    Valid Until : 14/01/2027
+
+    This certificate is issued based on the records available
+    in this office and is valid for one year from the date of issue.
+
+    Place: Mysuru (Signature)
+    Date: 15/01/2026 Tahsildar
+    """
+    res = parse_structured_fields(sample_ocr)
+    assert res["name"] == "Sachin Saroj"
+    assert res["certificate_number"] == "INC2026458321"
+    assert res["expiry_date"] == "2027-01-14"
+
+
+def test_parse_missing_and_invalid_fields():
+    """Verifies that missing or invalid certificate fields produce None rather than false positives."""
+    # Missing name
+    no_name = "Certificate Number: INC123456\nValid Until: 2028-01-01"
+    assert parse_structured_fields(no_name)["name"] is None
+
+    # Missing certificate number
+    no_cert = "Name of Applicant: Rahul V\nValid Until: 2028-01-01"
+    assert parse_structured_fields(no_cert)["certificate_number"] is None
+
+    # Missing expiry date
+    no_date = "Name of Applicant: Rahul V\nCertificate Number: INC123456"
+    assert parse_structured_fields(no_date)["expiry_date"] is None
+
+    # Invalid noise text
+    noise = "Just some arbitrary document without any certificate labels or numbers"
+    res_noise = parse_structured_fields(noise)
+    assert res_noise["name"] is None
+    assert res_noise["certificate_number"] is None
+    assert res_noise["expiry_date"] is None
+
+
+def test_extract_raw_text_binary_image_safety(tmp_path):
+    """Ensures binary image files are never read as UTF-8 text if OCR fails."""
+    # Write dummy binary PNG bytes
+    fake_png = os.path.join(str(tmp_path), "test.png")
+    with open(fake_png, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR" + b"\x00" * 100)
+
+    # When OCR fails on fake/unsupported image, raw_text should be empty string, NOT binary strings
+    raw = extract_raw_text(fake_png)
+    assert raw == ""
+    fields = parse_structured_fields(raw)
+    assert fields == {"name": None, "certificate_number": None, "expiry_date": None}
+
+
+def test_extract_raw_text_corrupt_file_handling(tmp_path):
+    """Ensures corrupt files return empty string cleanly without unhandled exceptions."""
+    corrupt_file = os.path.join(str(tmp_path), "corrupt.jpg")
+    with open(corrupt_file, "wb") as f:
+        f.write(b"NOT_A_VALID_IMAGE_DATA_12345")
+
+    raw = extract_raw_text(corrupt_file)
+    assert raw == ""

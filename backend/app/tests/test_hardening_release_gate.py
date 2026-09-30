@@ -151,7 +151,9 @@ async def test_admin_skills_overview_dynamic_modules_and_unassessed_handling():
             admin_headers = {"Authorization": f"Bearer {token}"}
 
             # 1. Overview before any quiz attempts: all competencies should be Unassessed, lowest_performing is None
-            overview_res = await client.get("/api/progress/admin/skills-overview", headers=admin_headers)
+            overview_res = await client.get(
+                "/api/progress/admin/skills-overview", headers=admin_headers
+            )
             assert overview_res.status_code == 200
             data = overview_res.json()
             assert data["lowest_performing_competency"] is None
@@ -190,7 +192,9 @@ async def test_admin_skills_overview_dynamic_modules_and_unassessed_handling():
             # - Seed module 1 (60%) is Needs Attention
             # - Other seed modules (0 attempts) remain "Unassessed"
             # - lowest_performing_competency should be one of Seed Module 1's competencies (60%), NOT unassessed modules (0 attempts)!
-            overview_res2 = await client.get("/api/progress/admin/skills-overview", headers=admin_headers)
+            overview_res2 = await client.get(
+                "/api/progress/admin/skills-overview", headers=admin_headers
+            )
             assert overview_res2.status_code == 200
             data2 = overview_res2.json()
 
