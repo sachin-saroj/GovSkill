@@ -72,42 +72,61 @@ describe('LoginPage', () => {
     expect(navigate).toHaveBeenCalledWith('/progress');
   });
 
-  it('fills demo credentials when Employee demo button is clicked', async () => {
+  it('navigates from login mode to register mode when the register link is clicked', () => {
     renderPage();
-    const demoEmployeeBtn = screen.getByRole('button', { name: /employee/i });
-    fireEvent.click(demoEmployeeBtn);
+    const registerLink = screen.getByRole('button', { name: /create staff account/i });
+    fireEvent.click(registerLink);
 
-    const emailInput = screen.getByLabelText('Official Email Address') as HTMLInputElement;
-    const passwordInput = screen.getByLabelText('Password') as HTMLInputElement;
-
-    expect(emailInput.value).toBe('employee@govskill.local');
-    expect(passwordInput.value).toBe('Employee123!');
+    expect(screen.getByRole('button', { name: 'Send Verification Code' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /employee/i })).toBeNull();
   });
 
-  it('registers before logging in when account creation is selected', async () => {
+  it('registers via two-step OTP flow and logs in', async () => {
     mockedPost
-      .mockResolvedValueOnce({ data: {} })
-      .mockResolvedValueOnce({ data: { access_token: 'new-token' } });
+      .mockResolvedValueOnce({ data: { message: 'Verification code sent.' } })
+      .mockResolvedValueOnce({ data: { access_token: 'staff-token' } });
+    login.mockResolvedValue({ role: 'employee' });
 
     renderPage();
-    fireEvent.click(screen.getByRole('button', { name: 'Register Here' }));
+    fireEvent.click(screen.getByRole('button', { name: /create staff account/i }));
+
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
-      target: { value: 'new.employee@govskill.test' },
+      target: { value: 'test-staff@example.com' },
     });
     fireEvent.change(screen.getByLabelText('Password'), {
       target: { value: 'password123' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Register Account' }));
+    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+      target: { value: 'password123' },
+    });
 
-    await waitFor(() => expect(login).toHaveBeenCalledWith('new-token'));
-    expect(mockedPost.mock.calls[0]).toEqual([
-      '/auth/register',
-      { email: 'new.employee@govskill.test', password: 'password123', role: 'employee' },
-    ]);
-    expect(mockedPost.mock.calls[1]).toEqual([
-      '/auth/login',
-      { email: 'new.employee@govskill.test', password: 'password123' },
-    ]);
+    fireEvent.click(screen.getByRole('button', { name: 'Send Verification Code' }));
+
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/auth/register', {
+        email: 'test-staff@example.com',
+        password: 'password123',
+      })
+    );
+
+    const otpInput = screen.getByLabelText('Verification Code');
+    expect(otpInput).toBeInTheDocument();
+    expect(otpInput).toHaveAttribute('maxLength', '6');
+
+    fireEvent.change(otpInput, {
+      target: { value: '123456' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Complete Registration' }));
+
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/auth/register/verify', {
+        email: 'test-staff@example.com',
+        otp: '123456',
+        password: 'password123',
+      })
+    );
+    expect(login).toHaveBeenCalledWith('staff-token');
+    expect(navigate).toHaveBeenCalledWith('/progress');
   });
 
   it('renders the backend error when authentication fails', async () => {
@@ -128,21 +147,89 @@ describe('LoginPage', () => {
     expect(await screen.findByText('Invalid email or password')).toBeInTheDocument();
   });
 
-  it('logs in an admin and navigates to the admin dashboard page', async () => {
-    mockedPost.mockResolvedValue({ data: { access_token: 'admin-token' } });
+  it('logs in an admin via OTP and navigates to admin dashboard', async () => {
+    mockedPost
+      .mockResolvedValueOnce({
+        data: { requires_otp: true, otp_session_id: 'session-abc' },
+      })
+      .mockResolvedValueOnce({
+        data: { access_token: 'admin-token' },
+      });
     login.mockResolvedValue({ role: 'admin' });
 
     renderPage();
     fireEvent.change(screen.getByLabelText('Official Email Address'), {
-      target: { value: 'admin@govskill.test' },
+      target: { value: 'sachhhinsrj@gmail.com' },
     });
     fireEvent.change(screen.getByLabelText('Password'), {
       target: { value: 'password123' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
 
-    await waitFor(() => expect(login).toHaveBeenCalledWith('admin-token'));
+    await waitFor(() =>
+      expect(screen.getByLabelText('Verification Code')).toBeInTheDocument()
+    );
+
+    const otpInput = screen.getByLabelText('Verification Code');
+    fireEvent.change(otpInput, {
+      target: { value: '654321' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Verify & Sign In' }));
+
+    await waitFor(() =>
+      expect(mockedPost).toHaveBeenCalledWith('/auth/login/verify-otp', {
+        otp_session_id: 'session-abc',
+        otp: '654321',
+      })
+    );
+    expect(login).toHaveBeenCalledWith('admin-token');
     expect(navigate).toHaveBeenCalledWith('/admin');
+  });
+
+  it('shows two-factor authentication view for admin login', async () => {
+    mockedPost.mockResolvedValueOnce({
+      data: { requires_otp: true, otp_session_id: 'session-abc' },
+    });
+
+    renderPage();
+    fireEvent.change(screen.getByLabelText('Official Email Address'), {
+      target: { value: 'sachhhinsrj@gmail.com' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { name: /two-factor authentication/i })
+      ).toBeInTheDocument()
+    );
+  });
+
+  it('allows going back from OTP view to login view', async () => {
+    mockedPost.mockResolvedValueOnce({
+      data: { requires_otp: true, otp_session_id: 'session-abc' },
+    });
+
+    renderPage();
+    fireEvent.change(screen.getByLabelText('Official Email Address'), {
+      target: { value: 'sachhhinsrj@gmail.com' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Verification Code')).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '← Back' }));
+
+    expect(screen.getByLabelText('Official Email Address')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Verification Code')).toBeNull();
   });
 
   it('passes automated accessibility audit without violations', async () => {
@@ -153,10 +240,8 @@ describe('LoginPage', () => {
 
   it('passes automated accessibility audit in registration mode', async () => {
     const { container } = renderPage();
-    fireEvent.click(screen.getByRole('button', { name: 'Register Here' }));
+    fireEvent.click(screen.getByRole('button', { name: /create staff account/i }));
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 });
-
-
