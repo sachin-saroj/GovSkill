@@ -4,18 +4,18 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { getApiErrorMessage } from '@/lib/apiError';
 import api from '@/lib/api';
-import {
-  User,
-  Lock,
-  AlertCircle,
-} from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
+type ViewMode = 'login' | 'login-otp' | 'register' | 'register-otp';
+
 export const LoginPage: React.FC = () => {
-  const [isRegister, setIsRegister] = useState(false);
+  const [view, setView] = useState<ViewMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'employee' | 'admin'>('employee');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSessionId, setOtpSessionId] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const shouldReduceMotion = useReducedMotion();
@@ -23,42 +23,143 @@ export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
     try {
-      if (isRegister) {
-        await api.post('/auth/register', { email, password, role });
+      const res = await api.post<{
+        access_token?: string;
+        requires_otp?: boolean;
+        otp_session_id?: string;
+      }>('/auth/login', {
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      if (res.data.access_token) {
+        await login(res.data.access_token);
+        navigate('/progress');
+      } else if (res.data.requires_otp && res.data.otp_session_id) {
+        setOtpSessionId(res.data.otp_session_id);
+        setOtp('');
+        setView('login-otp');
       }
-      const res = await api.post<{ access_token: string }>('/auth/login', { email, password });
-      const loggedInUser = await login(res.data.access_token);
-      navigate(loggedInUser?.role === 'admin' ? '/admin' : '/progress');
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, 'Authentication failed'));
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, 'Invalid email or password.'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleFillDemo = (demoRole: 'employee' | 'admin') => {
+  const handleLoginOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
-    setIsRegister(false);
-    if (demoRole === 'admin') {
-      setEmail('admin@govskill.local');
-      setPassword('AdminPass123!');
-      setRole('admin');
-    } else {
-      setEmail('employee@govskill.local');
-      setPassword('Employee123!');
-      setRole('employee');
+    setIsLoading(true);
+
+    try {
+      const res = await api.post<{ access_token: string }>('/auth/login/verify-otp', {
+        otp_session_id: otpSessionId,
+        otp: otp.trim(),
+      });
+      await login(res.data.access_token);
+      navigate('/admin');
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, 'Invalid or expired verification code.'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const cleanEmail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await api.post('/auth/register', { email: cleanEmail, password });
+      setOtp('');
+      setView('register-otp');
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, 'Failed to send verification code.'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegisterOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const res = await api.post<{ access_token: string }>('/auth/register/verify', {
+        email: email.trim().toLowerCase(),
+        otp: otp.trim(),
+        password,
+      });
+      await login(res.data.access_token);
+      navigate('/progress');
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, 'Invalid or expired verification code.'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    if (view === 'login') return handleLoginSubmit(e);
+    if (view === 'login-otp') return handleLoginOtpSubmit(e);
+    if (view === 'register') return handleRegisterSubmit(e);
+    if (view === 'register-otp') return handleRegisterOtpSubmit(e);
+  };
+
+  const getHeading = () => {
+    switch (view) {
+      case 'login-otp':
+        return 'Two-factor authentication';
+      case 'register':
+        return 'Create staff account';
+      case 'register-otp':
+        return 'Verify your email';
+      case 'login':
+      default:
+        return 'Welcome back!';
+    }
+  };
+
+  const getSubheading = () => {
+    switch (view) {
+      case 'login-otp':
+        return `Enter the verification code sent to ${email}`;
+      case 'register':
+        return 'Register with your official email to receive a verification code.';
+      case 'register-otp':
+        return `Enter the code sent to ${email}`;
+      case 'login':
+      default:
+        return 'Your work, your team, your flow — all in one place.';
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#BBBBBB]">
-      {/* ── Main Split Authentication Card (matches reference) ── */}
+      {/* ── Main Split Authentication Card ── */}
       <motion.div
         variants={staggerContainerVariants}
         initial="hidden"
@@ -90,47 +191,15 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div className="space-y-5">
-            {/* Header: 'Welcome back!' + subtext */}
+            {/* Header */}
             <div className="text-center space-y-1.5">
               <h1 className="font-sans text-[26px] sm:text-[30px] font-bold tracking-tight text-zinc-900 leading-tight">
-                {isRegister ? 'Create an account' : 'Welcome back!'}
+                {getHeading()}
               </h1>
-              <p className="font-sans text-[13px] text-zinc-500 leading-relaxed max-w-[280px] mx-auto">
-                Your work, your team, your flow — all in one place.
+              <p className="font-sans text-[13px] text-zinc-500 leading-relaxed max-w-[320px] mx-auto break-words">
+                {getSubheading()}
               </p>
             </div>
-
-            {/* Quick Demo Pill Buttons (matches Google / Apple pill buttons in reference) */}
-            {!isRegister && (
-              <div className="space-y-3 pt-1">
-                <div className="grid grid-cols-2 gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('employee')}
-                    className="px-3 py-2 rounded-full border border-zinc-200/90 hover:border-zinc-400 bg-white hover:bg-zinc-50/80 text-zinc-800 text-[12px] font-medium tracking-tight transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
-                  >
-                    <User className="h-3.5 w-3.5 text-zinc-600" />
-                    <span>Sign in as Employee</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('admin')}
-                    className="px-3 py-2 rounded-full border border-zinc-200/90 hover:border-zinc-400 bg-white hover:bg-zinc-50/80 text-zinc-800 text-[12px] font-medium tracking-tight transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs min-h-[38px]"
-                  >
-                    <Lock className="h-3.5 w-3.5 text-zinc-600" />
-                    <span>Sign in as Supervisor</span>
-                  </button>
-                </div>
-
-                {/* 'Or' Divider */}
-                <div className="relative flex items-center justify-center pt-1">
-                  <div className="w-full border-t border-zinc-200/80" />
-                  <span className="bg-white px-3 text-[11px] font-normal text-zinc-400">
-                    Or
-                  </span>
-                </div>
-              </div>
-            )}
 
             {/* Error Message */}
             <AnimatePresence>
@@ -149,105 +218,165 @@ export const LoginPage: React.FC = () => {
 
             {/* Authentication Form */}
             <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <label htmlFor="official-email-address" className="sr-only">
-                  Official Email Address
-                </label>
-                <input
-                  id="official-email-address"
-                  type="email"
-                  aria-label="Official Email Address"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
-                />
-              </div>
+              {(view === 'login' || view === 'register') && (
+                <div>
+                  <label htmlFor="official-email-address" className="sr-only">
+                    Official Email Address
+                  </label>
+                  <input
+                    id="official-email-address"
+                    type="email"
+                    aria-label="Official Email Address"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                  />
+                </div>
+              )}
 
-              <div>
-                <label htmlFor="password-field" className="sr-only">
-                  Password
-                </label>
-                <input
-                  id="password-field"
-                  type="password"
-                  aria-label="Password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
-                />
-              </div>
+              {(view === 'login' || view === 'register') && (
+                <div>
+                  <label htmlFor="password-field" className="sr-only">
+                    Password
+                  </label>
+                  <input
+                    id="password-field"
+                    type="password"
+                    aria-label="Password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                  />
+                </div>
+              )}
 
-              {/* Account Role Dropdown (Registration Mode) */}
-              <AnimatePresence>
-                {isRegister && (
-                  <motion.div
-                    initial={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={shouldReduceMotion ? {} : { opacity: 0, height: 0 }}
-                    className="space-y-1 overflow-hidden"
-                  >
-                    <label
-                      htmlFor="role-select"
-                      className="block font-sans text-xs font-semibold text-zinc-700"
-                    >
-                      Account Role
-                    </label>
-                    <select
-                      id="role-select"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value as 'employee' | 'admin')}
-                      className="w-full rounded-xl border border-zinc-200/90 bg-white px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-1 focus:ring-black focus:border-black cursor-pointer min-h-[42px]"
-                    >
-                      <option value="employee">Government Employee (Trainee Officer)</option>
-                      <option value="admin">Department Supervisor (Admin)</option>
-                    </select>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {view === 'register' && (
+                <div>
+                  <label htmlFor="confirm-password-field" className="sr-only">
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirm-password-field"
+                    type="password"
+                    aria-label="Confirm Password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                  />
+                </div>
+              )}
 
-              {/* Primary Pill Button (matches black pill in reference) */}
+              {(view === 'login-otp' || view === 'register-otp') && (
+                <div>
+                  <label htmlFor="otp-field" className="sr-only">
+                    6-Digit Verification Code
+                  </label>
+                  <input
+                    id="otp-field"
+                    type="text"
+                    aria-label="Verification Code"
+                    placeholder="000000"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    required
+                    autoFocus
+                    className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-center font-mono text-lg tracking-widest text-zinc-900 placeholder:text-zinc-300 transition-all outline-none min-h-[44px]"
+                  />
+                </div>
+              )}
+
+              {/* Primary Pill Button */}
               <div className="pt-1">
                 <button
                   type="submit"
-                  aria-label={isRegister ? 'Register Account' : 'Sign In'}
+                  aria-label={
+                    view === 'login'
+                      ? 'Sign In'
+                      : view === 'login-otp'
+                      ? 'Verify & Sign In'
+                      : view === 'register'
+                      ? 'Send Verification Code'
+                      : 'Complete Registration'
+                  }
                   disabled={isLoading}
                   className="w-full rounded-full min-h-[44px] bg-[#111113] hover:bg-black text-white font-sans font-medium text-sm tracking-tight cursor-pointer shadow-sm transition-all hover:scale-[1.005] flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  ) : isRegister ? (
-                    'Register Account'
-                  ) : (
+                  ) : view === 'login' ? (
                     'Sign in with email'
+                  ) : view === 'login-otp' ? (
+                    'Verify & Sign In'
+                  ) : view === 'register' ? (
+                    'Send Verification Code'
+                  ) : (
+                    'Complete Registration'
                   )}
                 </button>
               </div>
+              {/* OTP Back Navigation Link (GAP 2) */}
+              {(view === 'login-otp' || view === 'register-otp') && (
+                <div className="text-center pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (view === 'login-otp') {
+                        setView('login');
+                        setOtp('');
+                        setOtpSessionId('');
+                      } else {
+                        setView('register');
+                        setOtp('');
+                      }
+                      setError(null);
+                    }}
+                    className="text-xs text-zinc-500 hover:text-black transition-colors cursor-pointer"
+                  >
+                    ← Back
+                  </button>
+                </div>
+              )}
             </form>
 
-            {/* Toggle Between Sign In and Register */}
-            <div className="text-center text-xs text-zinc-500 pt-1">
-              <span>
-                {isRegister ? 'Already have an account? ' : "Don't have an account? "}
-              </span>
-              <button
-                type="button"
-                aria-label={isRegister ? 'Sign In' : 'Register Here'}
-                onClick={() => {
-                  setIsRegister(!isRegister);
-                  setError(null);
-                }}
-                className="text-black font-semibold hover:underline cursor-pointer"
-              >
-                {isRegister ? 'Sign In' : 'Sign Up'}
-              </button>
+            {/* Mode Switch Navigation Link (GAP 1) */}
+            <div className="text-center pt-1">
+              {view === 'login' || view === 'login-otp' ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setView('register');
+                    setOtp('');
+                    setOtpSessionId('');
+                    setError(null);
+                  }}
+                  className="text-xs text-zinc-500 hover:text-black transition-colors cursor-pointer"
+                >
+                  New here? Create staff account
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setView('login');
+                    setOtp('');
+                    setError(null);
+                  }}
+                  className="text-xs text-zinc-500 hover:text-black transition-colors cursor-pointer"
+                >
+                  Already have an account? Sign in
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Bottom Footer Links (matches 'Help / Terms / Privacy' in reference) */}
+          {/* Bottom Footer Links */}
           <div className="pt-6 border-t border-zinc-100/80 flex items-center justify-center gap-3 text-[11px] text-zinc-400">
             <span className="hover:text-black cursor-pointer transition-colors">Help</span>
             <span>/</span>
@@ -261,7 +390,7 @@ export const LoginPage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* ── Right Column: Exact 1-Bit Dithered Architectural Landscape from Reference ── */}
+        {/* ── Right Column: Exact 1-Bit Dithered Architectural Landscape ── */}
         <motion.div
           variants={fadeUpVariants}
           className="hidden lg:block h-full relative overflow-hidden bg-black select-none"

@@ -11,6 +11,7 @@ import {
   FileCheck,
   ShieldCheck,
   LayoutDashboard,
+  UserPlus,
   LogOut,
   X,
   ChevronLeft,
@@ -63,6 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const adminNavItems: NavItem[] = [
     { name: 'Workforce Admin', path: '/admin', icon: LayoutDashboard, adminOnly: true },
+    { name: 'Supervisor Invites', path: '/admin/invites', icon: UserPlus, adminOnly: true },
   ];
 
   const renderNavGroup = (title: string, items: NavItem[]) => {

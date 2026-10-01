@@ -12,9 +12,10 @@ import DashboardLayout from '@/layout/DashboardLayout';
 import Skeleton from '@/components/ui/Skeleton';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
-// Route-level lazy loading for heavier/infrequently first-visited pages
 const AdminDashboardPage = lazy(() => import('@/pages/AdminDashboardPage'));
 const CitizenUploadPage = lazy(() => import('@/pages/CitizenUploadPage'));
+const AdminInvitesPage = lazy(() => import('@/pages/AdminInvitesPage'));
+const RegisterAdminPage = lazy(() => import('@/pages/RegisterAdminPage'));
 
 const RouteLoadingFallback: React.FC = () => (
   <div className="min-h-[60vh] p-6 md:p-8 max-w-7xl mx-auto space-y-6 animate-fade-in" data-testid="route-loading-fallback">
@@ -70,6 +71,7 @@ export const AppContent: React.FC = () => {
 
         {/* Route 02: Officer & Supervisor Authentication */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register-admin" element={<RegisterAdminPage />} />
 
         {/* Route 03: Officer Competency Dashboard */}
         <Route
@@ -136,6 +138,16 @@ export const AppContent: React.FC = () => {
             <ProtectedRoute adminOnly>
               <DashboardLayout>
                 <AdminDashboardPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/invites"
+          element={
+            <ProtectedRoute adminOnly>
+              <DashboardLayout>
+                <AdminInvitesPage />
               </DashboardLayout>
             </ProtectedRoute>
           }
