@@ -32,7 +32,7 @@ async def send_email(to: str, subject: str, body_text: str) -> None:
     if transport == "smtp":
         await asyncio.to_thread(_send_smtp, to, subject, body_text)
     else:
-        print(f"[NOTIFIER CONSOLE] To: {to} | Subject: {subject}\n{body_text}\n")
+        print(f"[NOTIFIER CONSOLE] To: {to} | Subject: {subject} | Body: {body_text.replace(chr(10), ' | ')}")
 
 
 async def send_registration_otp(to: str, otp: str) -> None:
