@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     DB_POOL_RECYCLE: int = 1800
     GEMINI_API_KEY: str = ""
     AI_PROVIDER: str = "gemini"
-    AI_MODEL: str = "gemini-3.5-flash-lite"
+    AI_MODEL: str = "gemini-2.5-flash"
     AI_TIMEOUT_SECONDS: float = 25.0
     AI_MAX_CONCURRENCY: int = 3
     AI_VISION_ENABLED: bool = False
