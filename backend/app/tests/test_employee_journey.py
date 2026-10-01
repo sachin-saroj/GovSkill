@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
+from app.tests.helpers import complete_admin_login, complete_staff_registration
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -18,7 +19,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_full_employee_journey():
+async def test_full_employee_journey(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -26,11 +27,11 @@ async def test_full_employee_journey():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # Step 1: Register employee and create admin user
-            emp_reg = await client.post(
-                "/api/auth/register",
-                json={"email": "emp@gov.in", "password": "pass12345", "role": "employee"},
+            emp_data = await complete_staff_registration(
+                client, "emp@gov.in", "pass12345", captured_emails
             )
-            assert emp_reg.status_code == 201
+            emp_token = emp_data["access_token"]
+            emp_headers = {"Authorization": f"Bearer {emp_token}"}
 
             async with async_session_test() as session:
                 from app.core.security import get_password_hash
@@ -43,15 +44,6 @@ async def test_full_employee_journey():
                 )
                 session.add(admin_user)
                 await session.commit()
-
-            # Step 2: Login employee
-            emp_login = await client.post(
-                "/api/auth/login",
-                json={"email": "emp@gov.in", "password": "pass12345"},
-            )
-            assert emp_login.status_code == 200
-            emp_token = emp_login.json()["access_token"]
-            emp_headers = {"Authorization": f"Bearer {emp_token}"}
 
             # Step 3: Read module
             mod_resp = await client.get("/api/modules/default", headers=emp_headers)
@@ -95,12 +87,10 @@ async def test_full_employee_journey():
             assert score_data["total"] == 4
 
             # Step 7: Login Admin & View Attempt Log
-            admin_login = await client.post(
-                "/api/auth/login",
-                json={"email": "admin@gov.in", "password": "adminpass123"},
+            admin_data = await complete_admin_login(
+                client, "admin@gov.in", "adminpass123", captured_emails
             )
-            assert admin_login.status_code == 200
-            admin_token = admin_login.json()["access_token"]
+            admin_token = admin_data["access_token"]
             admin_headers = {"Authorization": f"Bearer {admin_token}"}
 
             attempts_resp = await client.get("/api/admin/attempts", headers=admin_headers)

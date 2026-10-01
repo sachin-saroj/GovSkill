@@ -12,6 +12,7 @@ from app.main import app
 from app.models.module import Module
 from app.models.quiz import QuizAttempt
 from app.models.user import User
+from app.tests.helpers import complete_admin_login
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -78,7 +79,7 @@ def test_cors_origins_parsing():
 
 
 @pytest.mark.asyncio
-async def test_admin_attempts_pagination():
+async def test_admin_attempts_pagination(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -108,11 +109,10 @@ async def test_admin_attempts_pagination():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # Login as admin
-            login_resp = await client.post(
-                "/api/auth/login",
-                json={"email": "admin_page@gov.in", "password": "adminpass123"},
+            admin_data = await complete_admin_login(
+                client, "admin_page@gov.in", "adminpass123", captured_emails
             )
-            token = login_resp.json()["access_token"]
+            token = admin_data["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             # 1. Fetch default page (limit 20, offset 0) -> returns all 5 attempts

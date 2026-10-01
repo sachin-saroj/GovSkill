@@ -16,6 +16,7 @@ from app.services.credential_service import (
     mask_recipient_name,
     verify_credential_signature,
 )
+from app.tests.helpers import complete_staff_registration
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 engine_test = create_async_engine(TEST_DB_URL, echo=False)
@@ -84,7 +85,7 @@ def test_mask_recipient_name():
 
 
 @pytest.mark.asyncio
-async def test_quiz_passing_and_failing_credential_issuance_flow():
+async def test_quiz_passing_and_failing_credential_issuance_flow(captured_emails):
     """
     End-to-end integration test:
     1. Passing quiz attempt (100%) -> issues credential with credential_id.
@@ -98,16 +99,10 @@ async def test_quiz_passing_and_failing_credential_issuance_flow():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # 1. Register test employee
-            reg = await client.post(
-                "/api/auth/register",
-                json={"email": "cred_test_emp@gov.in", "password": "PassPassword123!"},
+            staff_data = await complete_staff_registration(
+                client, "cred_test_emp@gov.in", "PassPassword123!", captured_emails
             )
-            assert reg.status_code == 201
-            login = await client.post(
-                "/api/auth/login",
-                json={"email": "cred_test_emp@gov.in", "password": "PassPassword123!"},
-            )
-            token = login.json()["access_token"]
+            token = staff_data["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             # 2. Get questions for Module 1

@@ -8,6 +8,7 @@ from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
 from app.models.user import User
+from app.tests.helpers import complete_admin_login
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -21,7 +22,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_admin_cms_module_and_quiz_crud():
+async def test_admin_cms_module_and_quiz_crud(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -44,10 +45,10 @@ async def test_admin_cms_module_and_quiz_crud():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # Login tokens
-            admin_login = await client.post(
-                "/api/auth/login", json={"email": "admin_cms@gov.in", "password": "adminpass123"}
+            admin_data = await complete_admin_login(
+                client, "admin_cms@gov.in", "adminpass123", captured_emails
             )
-            admin_headers = {"Authorization": f"Bearer {admin_login.json()['access_token']}"}
+            admin_headers = {"Authorization": f"Bearer {admin_data['access_token']}"}
 
             emp_login = await client.post(
                 "/api/auth/login", json={"email": "emp_cms@gov.in", "password": "emppass123"}
@@ -153,7 +154,7 @@ async def test_admin_cms_module_and_quiz_crud():
 
 
 @pytest.mark.asyncio
-async def test_admin_reset_user_password():
+async def test_admin_reset_user_password(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -176,10 +177,10 @@ async def test_admin_reset_user_password():
             await session.commit()
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            admin_login = await client.post(
-                "/api/auth/login", json={"email": "admin_reset@gov.in", "password": "adminpass123"}
+            admin_data = await complete_admin_login(
+                client, "admin_reset@gov.in", "adminpass123", captured_emails
             )
-            admin_headers = {"Authorization": f"Bearer {admin_login.json()['access_token']}"}
+            admin_headers = {"Authorization": f"Bearer {admin_data['access_token']}"}
 
             emp_login = await client.post(
                 "/api/auth/login", json={"email": "emp_reset@gov.in", "password": "oldpassword123"}

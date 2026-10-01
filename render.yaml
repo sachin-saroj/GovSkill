@@ -39,6 +39,12 @@ services:
         generateValue: true
       - key: GEMINI_API_KEY
         sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: FRONTEND_URL
+        value: https://govskill-frontend.onrender.com
+      - key: EMAIL_TRANSPORT
+        value: console
       - key: ALLOWED_ORIGINS
         value: https://govskill-frontend.onrender.com,http://localhost:5173,http://localhost:3000
 

@@ -9,6 +9,7 @@ from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
 from app.models.user import User
+from app.tests.helpers import complete_admin_login, complete_staff_registration
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -22,7 +23,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_employee_skill_tracking_pipeline():
+async def test_employee_skill_tracking_pipeline(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -50,10 +51,10 @@ async def test_employee_skill_tracking_pipeline():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # Login tokens
-            admin_login = await client.post(
-                "/api/auth/login", json={"email": "admin_skills@gov.in", "password": "adminpass123"}
+            admin_data = await complete_admin_login(
+                client, "admin_skills@gov.in", "adminpass123", captured_emails
             )
-            admin_headers = {"Authorization": f"Bearer {admin_login.json()['access_token']}"}
+            admin_headers = {"Authorization": f"Bearer {admin_data['access_token']}"}
 
             emp1_login = await client.post(
                 "/api/auth/login", json={"email": "emp1_skills@gov.in", "password": "emppass123"}
@@ -377,7 +378,7 @@ def test_competency_mapping_integrity():
 
 
 @pytest.mark.asyncio
-async def test_competency_mastery_recency_weighting():
+async def test_competency_mastery_recency_weighting(captured_emails):
     """
     Phase 3: Verify that competency mastery applies 70/30 recency weighting
     and accurately transitions through mastery levels (Unknown -> Operational -> Mastered).
@@ -402,15 +403,10 @@ async def test_competency_mastery_recency_weighting():
             await conn.run_sync(Base.metadata.create_all)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            await client.post(
-                "/api/auth/register",
-                json={"email": "mastery_emp@govskill.local", "password": "Password123!"},
+            staff_data = await complete_staff_registration(
+                client, "mastery_emp@govskill.local", "Password123!", captured_emails
             )
-            login_res = await client.post(
-                "/api/auth/login",
-                json={"email": "mastery_emp@govskill.local", "password": "Password123!"},
-            )
-            token = login_res.json()["access_token"]
+            token = staff_data["access_token"]
             auth_headers = {"Authorization": f"Bearer {token}"}
 
             # 1. Initial State (no attempts) -> Competency Mastery has Unknown or Learning
@@ -493,7 +489,7 @@ async def test_competency_mastery_recency_weighting():
 
 
 @pytest.mark.asyncio
-async def test_adaptive_quiz_question_ordering():
+async def test_adaptive_quiz_question_ordering(captured_emails):
     """
     Phase 3: Verify adaptive quiz question prioritization when an employee has weak competencies.
     """
@@ -517,15 +513,10 @@ async def test_adaptive_quiz_question_ordering():
             await conn.run_sync(Base.metadata.create_all)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            await client.post(
-                "/api/auth/register",
-                json={"email": "adaptive_emp@govskill.local", "password": "Password123!"},
+            staff_data = await complete_staff_registration(
+                client, "adaptive_emp@govskill.local", "Password123!", captured_emails
             )
-            login_res = await client.post(
-                "/api/auth/login",
-                json={"email": "adaptive_emp@govskill.local", "password": "Password123!"},
-            )
-            token = login_res.json()["access_token"]
+            token = staff_data["access_token"]
             auth_headers = {"Authorization": f"Bearer {token}"}
 
             mod_1_id = "11111111-1111-1111-1111-111111111111"

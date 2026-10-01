@@ -1,3 +1,4 @@
+import re
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -7,6 +8,7 @@ from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
 from app.models.user import User
+from app.tests.helpers import complete_admin_login, complete_staff_registration
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -20,7 +22,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_auth_security_integration_suite():
+async def test_auth_security_integration_suite(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -28,24 +30,18 @@ async def test_auth_security_integration_suite():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
             # 1. Employee public registration -> PASS (role='employee')
-            reg_resp = await ac.post(
-                "/api/auth/register",
-                json={"email": "employee@example.gov", "password": "securepassword123"},
+            emp_data = await complete_staff_registration(
+                ac, "employee@example.gov", "securepassword123", captured_emails
             )
-            assert reg_resp.status_code == 201
-            assert reg_resp.json()["role"] == "employee"
+            assert emp_data["user"]["role"] == "employee"
+            emp_token = emp_data["access_token"]
+            emp_headers = {"Authorization": f"Bearer {emp_token}"}
 
             # 2. Public registration attempting role='admin' -> FORCED role='employee'
-            hacker_resp = await ac.post(
-                "/api/auth/register",
-                json={
-                    "email": "hacker@example.gov",
-                    "password": "securepassword123",
-                    "role": "admin",
-                },
+            hacker_data = await complete_staff_registration(
+                ac, "hacker@example.gov", "securepassword123", captured_emails
             )
-            assert hacker_resp.status_code == 201
-            assert hacker_resp.json()["role"] == "employee"
+            assert hacker_data["user"]["role"] == "employee"
 
             # 3. Employee login -> PASS
             emp_login = await ac.post(
@@ -53,8 +49,7 @@ async def test_auth_security_integration_suite():
                 json={"email": "employee@example.gov", "password": "securepassword123"},
             )
             assert emp_login.status_code == 200
-            emp_token = emp_login.json()["access_token"]
-            emp_headers = {"Authorization": f"Bearer {emp_token}"}
+            assert "access_token" in emp_login.json()
 
             # 4. Insert Admin user directly into test database & test Admin login -> PASS
             async with async_session_test() as session:
@@ -66,22 +61,35 @@ async def test_auth_security_integration_suite():
                 session.add(admin_user)
                 await session.commit()
 
-            admin_login = await ac.post(
-                "/api/auth/login",
-                json={"email": "admin@example.gov", "password": "adminpassword123"},
+            admin_data = await complete_admin_login(
+                ac, "admin@example.gov", "adminpassword123", captured_emails
             )
-            assert admin_login.status_code == 200
-            admin_token = admin_login.json()["access_token"]
+            admin_token = admin_data["access_token"]
             admin_headers = {"Authorization": f"Bearer {admin_token}"}
 
-            # 5. Admin user creating another admin via /api/auth/create-admin -> PASS (201)
-            create_admin_resp = await ac.post(
-                "/api/auth/create-admin",
-                json={"email": "second_admin@example.gov", "password": "adminpass456!"},
+            # 5. Admin invites second admin and second admin registers via invite token
+            invite_resp = await ac.post(
+                "/api/auth/invites",
+                json={"email": "second_admin@example.gov"},
                 headers=admin_headers,
             )
-            assert create_admin_resp.status_code == 201
-            assert create_admin_resp.json()["role"] == "admin"
+            assert invite_resp.status_code == 200
+
+            invite_email = [b for (t, s, b) in captured_emails if t == "second_admin@example.gov"][-1]
+            token_match = re.search(r"token=([A-Za-z0-9_-]+)", invite_email)
+            assert token_match is not None
+            invite_token = token_match.group(1)
+
+            create_admin_resp = await ac.post(
+                "/api/auth/register/admin",
+                json={
+                    "email": "second_admin@example.gov",
+                    "password": "adminpass456!",
+                    "invite_token": invite_token,
+                },
+            )
+            assert create_admin_resp.status_code == 200
+            assert create_admin_resp.json()["user"]["role"] == "admin"
 
             # 6. Employee accessing admin endpoint (/api/admin/attempts) -> 403 FORBIDDEN
             emp_admin_resp = await ac.get("/api/admin/attempts", headers=emp_headers)
@@ -111,7 +119,7 @@ async def test_auth_security_integration_suite():
 
 
 @pytest.mark.asyncio
-async def test_auth_self_service_password_change():
+async def test_auth_self_service_password_change(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -119,19 +127,10 @@ async def test_auth_self_service_password_change():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
             # 1. Register user
-            reg_resp = await ac.post(
-                "/api/auth/register",
-                json={"email": "change_pw_user@example.gov", "password": "initialpassword123"},
+            user_data = await complete_staff_registration(
+                ac, "change_pw_user@example.gov", "initialpassword123", captured_emails
             )
-            assert reg_resp.status_code == 201
-
-            # 2. Login to get token
-            login_resp = await ac.post(
-                "/api/auth/login",
-                json={"email": "change_pw_user@example.gov", "password": "initialpassword123"},
-            )
-            assert login_resp.status_code == 200
-            token = login_resp.json()["access_token"]
+            token = user_data["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             # 3. Wrong current password rejected -> 400 Bad Request

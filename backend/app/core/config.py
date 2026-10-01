@@ -1,5 +1,6 @@
 from typing import Union
-from pydantic import field_validator
+
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -31,11 +32,29 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3001",
     ]
 
+    BOOTSTRAP_ADMIN_EMAIL: str = ""
+    FRONTEND_URL: str = "https://govskill-frontend.onrender.com"
+    EMAIL_TRANSPORT: str = "console"
+    ENVIRONMENT: str = "development"
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @field_validator("EMAIL_TRANSPORT")
+    @classmethod
+    def validate_email_transport(cls, v: str) -> str:
+        clean = v.strip().lower()
+        if clean not in ("console", "smtp"):
+            raise ValueError(f"Invalid EMAIL_TRANSPORT '{v}'. Allowed: 'console', 'smtp'.")
+        return clean
 
     @field_validator("SECRET_KEY")
     @classmethod
@@ -85,6 +104,26 @@ class Settings(BaseSettings):
             if v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
                 return v.replace("postgresql://", "postgresql+asyncpg://", 1)
         return v
+
+    @model_validator(mode="after")
+    def validate_smtp_configuration(self) -> "Settings":
+        if self.EMAIL_TRANSPORT == "smtp":
+            missing = []
+            if not self.SMTP_HOST:
+                missing.append("SMTP_HOST")
+            if not self.SMTP_PORT:
+                missing.append("SMTP_PORT")
+            if not self.SMTP_USER:
+                missing.append("SMTP_USER")
+            if not self.SMTP_PASSWORD:
+                missing.append("SMTP_PASSWORD")
+            if not self.SMTP_FROM:
+                missing.append("SMTP_FROM")
+            if missing:
+                raise ValueError(
+                    f"EMAIL_TRANSPORT='smtp' requires all SMTP settings; missing: {', '.join(missing)}"
+                )
+        return self
 
 
 settings = Settings()

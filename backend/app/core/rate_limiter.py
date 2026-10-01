@@ -43,37 +43,36 @@ def get_client_ip(request: Request) -> str:
 
 
 class InMemoryRateLimiter:
-    """
-    Sliding window in-memory rate limiter for public unauthenticated endpoints.
-    Protects against automated scraping, brute-force enumeration, and denial of service.
-    """
-
-    def __init__(self, max_requests: int = 30, window_seconds: int = 60):
+    def __init__(self, max_requests: int = 30, window_seconds: int = 60, key_prefix: str = ""):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
+        self.key_prefix = key_prefix
         self.requests: dict[str, list[float]] = defaultdict(list)
 
     async def __call__(self, request: Request):
         client_ip = get_client_ip(request)
+        rate_key = f"{self.key_prefix}:{client_ip}" if self.key_prefix else client_ip
+        self.check_key(rate_key, self.max_requests, self.window_seconds)
+
+    def check_key(self, key: str, max_requests: int | None = None, window_seconds: int | None = None):
+        limit = max_requests or self.max_requests
+        window = window_seconds or self.window_seconds
         now = time.time()
+        valid_timestamps = [ts for ts in self.requests[key] if now - ts < window]
+        self.requests[key] = valid_timestamps
 
-        # Evict timestamps older than sliding window
-        valid_timestamps = [ts for ts in self.requests[client_ip] if now - ts < self.window_seconds]
-        self.requests[client_ip] = valid_timestamps
-
-        if len(valid_timestamps) >= self.max_requests:
+        if len(valid_timestamps) >= limit:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail={
                     "error": {
                         "code": "RATE_LIMIT_EXCEEDED",
-                        "message": f"Rate limit exceeded. Maximum {self.max_requests} requests per {self.window_seconds}s. Please wait before retrying.",
+                        "message": f"Rate limit exceeded. Maximum {limit} requests per {window}s. Please wait before retrying.",
                     }
                 },
             )
 
-        self.requests[client_ip].append(now)
+        self.requests[key].append(now)
 
     def reset(self):
-        """Clears all stored rate limit records (useful for test isolation)."""
         self.requests.clear()

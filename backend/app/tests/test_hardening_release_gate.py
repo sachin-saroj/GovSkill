@@ -12,6 +12,7 @@ from app.main import app
 from app.models.module import Module
 from app.models.quiz import QuizAttempt, QuizQuestion
 from app.models.user import User
+from app.tests.helpers import complete_admin_login
 
 
 class DummyRequest:
@@ -80,7 +81,7 @@ async def test_proxy_aware_rate_limiter_buckets():
 
 
 @pytest.mark.asyncio
-async def test_admin_skills_overview_dynamic_modules_and_unassessed_handling():
+async def test_admin_skills_overview_dynamic_modules_and_unassessed_handling(captured_emails):
     """
     Verify:
     1. Unassessed modules/competencies are marked status="Unassessed" and NOT picked as lowest_performing_competency.
@@ -143,11 +144,10 @@ async def test_admin_skills_overview_dynamic_modules_and_unassessed_handling():
             await session.commit()
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            login_res = await client.post(
-                "/api/auth/login",
-                json={"email": "admin_audit@govskill.local", "password": "AdminPass123!"},
+            admin_data = await complete_admin_login(
+                client, "admin_audit@govskill.local", "AdminPass123!", captured_emails
             )
-            token = login_res.json()["access_token"]
+            token = admin_data["access_token"]
             admin_headers = {"Authorization": f"Bearer {token}"}
 
             # 1. Overview before any quiz attempts: all competencies should be Unassessed, lowest_performing is None

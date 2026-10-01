@@ -13,6 +13,7 @@ from app.services.credential_service import (
     compute_credential_signature,
     generate_credential_id,
 )
+from app.tests.helpers import complete_staff_registration
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 engine_test = create_async_engine(TEST_DB_URL, echo=False)
@@ -25,7 +26,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_public_credential_verification_and_my_credentials_flow():
+async def test_public_credential_verification_and_my_credentials_flow(captured_emails):
     """
     Verifies public credential verification endpoint:
     - Valid credential lookup with PII-masking and HMAC validation
@@ -51,16 +52,10 @@ async def test_public_credential_verification_and_my_credentials_flow():
                 await session.commit()
 
             # 2. Register & login employee
-            reg = await client.post(
-                "/api/auth/register",
-                json={"email": "sachin.saroj@gov.in", "password": "PassPassword123!"},
+            staff_data = await complete_staff_registration(
+                client, "sachin.saroj@gov.in", "PassPassword123!", captured_emails
             )
-            assert reg.status_code == 201
-            login = await client.post(
-                "/api/auth/login",
-                json={"email": "sachin.saroj@gov.in", "password": "PassPassword123!"},
-            )
-            token = login.json()["access_token"]
+            token = staff_data["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             # Fetch user ID from /auth/me

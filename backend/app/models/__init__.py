@@ -4,6 +4,8 @@ from app.models.quiz import QuizQuestion, QuizAttempt
 from app.models.progress import UserProgress
 from app.models.document import CitizenDocument
 from app.models.credential import Credential
+from app.models.admin_invite import AdminInvite
+from app.models.email_otp import EmailOTP
 
 __all__ = [
     "User",
@@ -13,4 +15,6 @@ __all__ = [
     "UserProgress",
     "CitizenDocument",
     "Credential",
+    "AdminInvite",
+    "EmailOTP",
 ]

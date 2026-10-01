@@ -5,6 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
+from contextlib import asynccontextmanager
+from sqlalchemy import func, select
+
 from app.api.routes import (
     admin,
     auth,
@@ -18,13 +21,34 @@ from app.api.routes import (
     tutor,
 )
 from app.core.config import settings
-from app.db.session import check_db_health
+from app.db.session import async_session_maker, check_db_health
+from app.models.user import User
 
 logger = logging.getLogger("govskill")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if settings.EMAIL_TRANSPORT == "console" and settings.ENVIRONMENT == "production":
+        logger.warning("EMAIL_TRANSPORT is set to 'console' in production environment.")
+    try:
+        async with async_session_maker() as session:
+            admin_count = (
+                await session.execute(select(func.count(User.id)).where(User.role == "admin"))
+            ).scalar() or 0
+            if admin_count == 0 and not settings.BOOTSTRAP_ADMIN_EMAIL:
+                logger.warning(
+                    "No bootstrap admin configured and no admin exists in the database. Admin registration is currently impossible."
+                )
+    except Exception:
+        pass
+    yield
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

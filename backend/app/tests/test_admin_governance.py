@@ -13,6 +13,7 @@ from app.models.document import CitizenDocument
 from app.models.module import Module
 from app.models.progress import UserProgress
 from app.models.user import User
+from app.tests.helpers import complete_admin_login
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 engine_test = create_async_engine(TEST_DB_URL, echo=False)
@@ -25,7 +26,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_admin_compliance_export_and_citizen_defect_telemetry():
+async def test_admin_compliance_export_and_citizen_defect_telemetry(captured_emails):
     """
     Verifies Admin Governance Endpoints:
     1. Compliance Export JSON & CSV formats
@@ -112,12 +113,10 @@ async def test_admin_compliance_export_and_citizen_defect_telemetry():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # Login as Admin
-            admin_login = await client.post(
-                "/api/auth/login",
-                json={"email": "admin_gov@state.gov", "password": "AdminSecret123!"},
+            admin_data = await complete_admin_login(
+                client, "admin_gov@state.gov", "AdminSecret123!", captured_emails
             )
-            assert admin_login.status_code == 200
-            admin_token = admin_login.json()["access_token"]
+            admin_token = admin_data["access_token"]
             admin_headers = {"Authorization": f"Bearer {admin_token}"}
 
             # Login as Employee

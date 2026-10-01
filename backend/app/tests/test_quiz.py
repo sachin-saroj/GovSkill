@@ -10,6 +10,7 @@ from app.db.session import get_db
 from app.main import app
 from app.models.progress import UserProgress
 from app.models.quiz import QuizAttempt
+from app.tests.helpers import complete_staff_registration
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -23,7 +24,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_quiz_competency_assessment_engine():
+async def test_quiz_competency_assessment_engine(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -31,17 +32,10 @@ async def test_quiz_competency_assessment_engine():
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             # 1. Setup employee account & obtain token
-            reg_resp = await client.post(
-                "/api/auth/register",
-                json={"email": "quiz_emp@gov.in", "password": "pass123456"},
+            staff_data = await complete_staff_registration(
+                client, "quiz_emp@gov.in", "pass123456", captured_emails
             )
-            assert reg_resp.status_code == 201
-
-            login_resp = await client.post(
-                "/api/auth/login",
-                json={"email": "quiz_emp@gov.in", "password": "pass123456"},
-            )
-            token = login_resp.json()["access_token"]
+            token = staff_data["access_token"]
             headers = {"Authorization": f"Bearer {token}"}
 
             MODULE_1_ID = uuid.UUID("11111111-1111-1111-1111-111111111111")

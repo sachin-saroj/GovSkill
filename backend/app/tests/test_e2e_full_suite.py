@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
+from app.tests.helpers import complete_admin_login, complete_staff_registration
 
 TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
 
@@ -19,7 +20,7 @@ async def override_get_db():
 
 
 @pytest.mark.asyncio
-async def test_full_application_e2e():
+async def test_full_application_e2e(captured_emails):
     app.dependency_overrides[get_db] = override_get_db
     try:
         async with engine_test.begin() as conn:
@@ -32,11 +33,11 @@ async def test_full_application_e2e():
             assert h_resp.json()["status"] == "ok"
 
             # 2. Register employee & create admin user
-            e_reg = await client.post(
-                "/api/auth/register",
-                json={"email": "employee@test.gov", "password": "password123", "role": "employee"},
+            e_data = await complete_staff_registration(
+                client, "employee@test.gov", "password123", captured_emails
             )
-            assert e_reg.status_code == 201
+            e_token = e_data["access_token"]
+            e_hdr = {"Authorization": f"Bearer {e_token}"}
 
             async with async_session_test() as session:
                 from app.core.security import get_password_hash
@@ -50,13 +51,7 @@ async def test_full_application_e2e():
                 session.add(admin_user)
                 await session.commit()
 
-            # 3. Employee login & module read
-            e_login = await client.post(
-                "/api/auth/login", json={"email": "employee@test.gov", "password": "password123"}
-            )
-            e_token = e_login.json()["access_token"]
-            e_hdr = {"Authorization": f"Bearer {e_token}"}
-
+            # 3. Read module
             mod_resp = await client.get("/api/modules/default", headers=e_hdr)
             assert mod_resp.status_code == 200
 
@@ -81,10 +76,10 @@ async def test_full_application_e2e():
             assert "score" in submit_resp.json()
 
             # 6. Admin Login & Check Attempts
-            a_login = await client.post(
-                "/api/auth/login", json={"email": "admin@test.gov", "password": "password123"}
+            a_data = await complete_admin_login(
+                client, "admin@test.gov", "password123", captured_emails
             )
-            a_token = a_login.json()["access_token"]
+            a_token = a_data["access_token"]
             a_hdr = {"Authorization": f"Bearer {a_token}"}
 
             adm_resp = await client.get("/api/admin/attempts", headers=a_hdr)
