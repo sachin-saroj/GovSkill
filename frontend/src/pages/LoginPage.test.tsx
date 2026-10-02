@@ -218,6 +218,22 @@ describe('LoginPage', () => {
     expect(screen.queryByLabelText('Verification Code')).toBeNull();
   });
 
+  it('toggles password visibility between password and text type', () => {
+    renderPage();
+    const passwordInput = screen.getByLabelText('Password');
+    const toggleButton = screen.getByRole('button', { name: 'Show password' });
+
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    fireEvent.click(toggleButton);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('button', { name: 'Hide password' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    expect(screen.getByRole('button', { name: 'Show password' })).toBeInTheDocument();
+  });
+
   it('passes automated accessibility audit without violations', async () => {
     const { container } = renderPage();
     const results = await axe(container);
