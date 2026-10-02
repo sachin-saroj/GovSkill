@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import PublicVerificationPage from './PublicVerificationPage';
@@ -137,7 +137,7 @@ describe('PublicVerificationPage', () => {
 
   it('renders "Return to Dashboard" for authenticated employees and admins', () => {
     mockedUseAuth.mockReturnValue({
-      user: { id: 'user-1', email: 'officer@gov.test', role: 'employee', is_active: true },
+      user: { id: 'user-1', email: 'officer@gov.test', role: 'employee' },
       token: 'jwt-token',
       isLoading: false,
       login: vi.fn(),
