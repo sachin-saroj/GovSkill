@@ -2,8 +2,8 @@
 
 [![Live App](https://img.shields.io/badge/Live%20Demo-govskill--frontend.onrender.com-success?style=for-the-badge&logo=render&logoColor=white)](https://govskill-frontend.onrender.com)
 [![API Status](https://img.shields.io/badge/API%20Status-Healthy%20200%20OK-00C853?style=for-the-badge&logo=fastapi&logoColor=white)](https://govskill-backend.onrender.com/health)
-[![Backend Tests](https://img.shields.io/badge/Backend%20Tests-118%20Passed-blue?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
-[![Frontend Tests](https://img.shields.io/badge/Frontend%20Tests-114%20Passed-blueviolet?style=for-the-badge&logo=vitest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
+[![Backend Tests](https://img.shields.io/badge/Backend%20Tests-119%20Passed-blue?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
+[![Frontend Tests](https://img.shields.io/badge/Frontend%20Tests-119%20Passed-blueviolet?style=for-the-badge&logo=vitest&logoColor=white)](https://github.com/sachin-saroj/GovSkill)
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/Frontend-React%2018-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
@@ -31,7 +31,7 @@ GovSkill is deployed in production on Render with a containerized Docker backend
 | **Frontend Web Application** | **[https://govskill-frontend.onrender.com](https://govskill-frontend.onrender.com)** | 🟢 `Active` | HTTP 200 (Render Global CDN) |
 | **Backend REST API Engine** | **[https://govskill-backend.onrender.com](https://govskill-backend.onrender.com)** | 🟢 `Active` | [Probe `/health`](https://govskill-backend.onrender.com/health) |
 | **Interactive API Documentation** | **[https://govskill-backend.onrender.com/docs](https://govskill-backend.onrender.com/docs)** | 🟢 `Active` | OpenAPI 3.0 / Swagger UI |
-| **Managed Database** | `Render Managed PostgreSQL 16` | 🟢 `Connected` | 6/6 Alembic Migrations Synced |
+| **Managed Database** | `Render Managed PostgreSQL 16` | 🟢 `Connected` | 8/8 Alembic Migrations Synced |
 
 ### 🔑 Initial Administrator Bootstrapping
 
@@ -65,7 +65,7 @@ Production administrative accounts are not pre-seeded with static credentials. I
 | **Multi-Document Pre-Submission Checker (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-govassist-document-intelligence.png" alt="GovAssist Multi-Document Intelligence Checker" width="100%" /> | **Multi-Type Document Intelligence**<br>• Public access with zero citizen registration (complete PII isolation).<br>• Automatic document classification (Income, Caste, Residence/Domicile) with confidence scores.<br>• Contrast-boosting binarization and preprocessing for degraded photocopies and mobile camera scans.<br>• Drag-and-drop support with client-side 5MB payload caps. |
 | **Deterministic Rule Engine Results (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-deterministic-rule-validation.png" alt="Deterministic Rule Validation Breakdown" width="100%" /> | **100% Code-Driven Validation**<br>• Strict deterministic evaluation: Name presence, Certificate format regex, Validity/Expiry verification, and Seal/Authority completeness.<br>• **Zero LLM Hallucinations:** Validation pass/fail decisions are strictly executed in Python code.<br>• Plain-language Gemini AI remediation explanations for identified deficiencies.<br>• Extracted field audit table displaying extraction confidence and source metadata. |
 | **Printable Anti-Fraud Counter Slip (`/citizen`)**<br><br><img src="docs/screenshots/v2/06-counter-slip-qr-modal.png" alt="Printable Counter Slip with Verification QR" width="100%" /> | **Pre-Submission Counter Slip**<br>• Instant printable slip designed for citizens to present at physical municipal service counters.<br>• Dynamic QR code embedding cryptographic document tracking hash.<br>• Summarizes checklist readiness, counter queue classification, and official timestamps. |
-| **Public Certificate Verification (`/verify`)**<br><br><img src="docs/screenshots/v2/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **HMAC-SHA256 Credential Auditing**<br>• Public registry verifying official digital qualification credentials issued to civil servants.<br>• Validates certificate ID, officer name, issuing authority, and cryptographic signature digest.<br>• Instantly detects modified scores, forged dates, or tampered credentials. |
+| **Public Certificate Verification (`/verify` & `/verify/:credentialId`)**<br><br><img src="docs/screenshots/v2/07-public-certificate-verification.png" alt="Public Certificate Verification Portal" width="100%" /> | **HMAC-SHA256 Credential Auditing**<br>• Public registry verifying official digital qualification credentials issued to civil servants.<br>• Direct verification lookup via deep link `/verify/:credentialId`.<br>• Context-aware return navigation: routes officers to `/progress`, admins to `/admin`, and citizens to `/`.<br>• Validates certificate ID, officer name, issuing authority, and cryptographic signature digest.<br>• Instantly detects modified scores, forged dates, or tampered credentials. |
 
 ---
 
@@ -85,7 +85,7 @@ Production administrative accounts are not pre-seeded with static credentials. I
 | Screen | Architectural Details & Capabilities |
 |---|---|
 | **Supervisor Governance Dashboard (`/admin`)**<br><br><img src="docs/screenshots/v2/08-admin-governance-dashboard.png" alt="Supervisor Admin & Governance Dashboard" width="100%" /> | **Workforce Readiness Intelligence**<br>• Real-time departmental metrics: employee participation, pass rates, average attempts, and domain competency gaps.<br>• Curriculum CMS for updating lesson modules, circular excerpts, and question pools.<br>• Citizen document validation audit log with CSV and JSON data export capabilities. |
-| **Role-Based Civic Authentication (`/login`)**<br><br><img src="docs/screenshots/v2/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Accessible Civic Security**<br>• JWT Bearer authentication with separate privileges for `employee` and `admin` roles.<br>• DPDP Act 2023 compliance notices and statutory consent toggles.<br>• Full WCAG 2.2 AA accessibility with visible focus rings and high-contrast color tokens. |
+| **Role-Based Civic Authentication (`/login`)**<br><br><img src="docs/screenshots/v2/09-civic-authentication-portal.png" alt="Civic Authentication Portal" width="100%" /> | **Accessible Civic Security**<br>• Single-step staff registration with optional demographic age tracking.<br>• Production transactional Brevo SMTP relay supporting port 2525 cloud egress fallback with a 10s connection timeout guard.<br>• Multi-factor authentication (2FA) with 5-minute timed email OTPs for administrator logins.<br>• Cryptographic invitation tokens (`/register-admin?token=...`) with automated email dispatch.<br>• Interactive password visibility toggle (`Eye` / `EyeOff`) with WCAG 2.2 AA accessible screen-reader labels. |
 
 ---
 
@@ -188,7 +188,7 @@ GovSkill/
 │   ├── requirements.txt        # Frozen Python dependencies
 │   ├── alembic/                # Version-controlled database schema migrations
 │   │   ├── env.py              # Async migration runner with PostgreSQL / SQLite compatibility
-│   │   └── versions/           # 6 linear migration files (001 to 006)
+│   │   └── versions/           # 8 linear migration files (001 to 008)
 │   └── app/
 │       ├── main.py             # FastAPI factory, CORS regex middleware, exception handlers
 │       ├── api/                # REST API routers (auth, modules, tutor, quiz, documents, admin)
@@ -197,7 +197,7 @@ GovSkill/
 │       ├── models/             # SQLAlchemy declarative ORM models
 │       ├── schemas/            # Pydantic v2 validation schemas
 │       ├── services/           # OCR extraction, deterministic rule engine, Gemini AI gateway
-│       └── tests/              # 118 automated pytest test cases
+│       └── tests/              # 119 automated pytest test cases
 │
 └── frontend/                   # React 18 + Vite Frontend Application
     ├── Dockerfile              # Multi-stage Nginx production container
@@ -270,14 +270,14 @@ Open the application at: [http://localhost:3000](http://localhost:3000)
 Every component is subjected to strict automated verification before deployment:
 
 ```bash
-# 1. Run Backend Pytest Suite (118 tests passed)
+# 1. Run Backend Pytest Suite (119 tests passed)
 cd backend
 pytest -v
 
 # 2. Run Backend Linter (Ruff)
 ruff check .
 
-# 3. Run Frontend Vitest Suite (114 tests passed across 23 test files)
+# 3. Run Frontend Vitest Suite (119 tests passed across 23 test files)
 cd ../frontend
 npm test
 
@@ -295,7 +295,15 @@ npm run build
 | `SECRET_KEY` | Cryptographic secret for signing JWT session tokens. Insecure defaults are strictly rejected. | **Required** | `64-char hex string` |
 | `CREDENTIAL_SIGNING_KEY` | Dedicated HMAC-SHA256 key for issuing digital certificates. Separate from `SECRET_KEY`. | **Required** | `64-char hex string` |
 | `GEMINI_API_KEY` | Google Gemini API key for the AI Mentor and rule explanations. | Optional | From [Google AI Studio](https://aistudio.google.com/app/apikey) |
-| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins. | Optional | `http://localhost:3000,http://localhost:5173` |
+| `EMAIL_TRANSPORT` | Transactional email delivery mechanism (`console` for stdout or `smtp` for live email). | Optional | `console` (production: `smtp`) |
+| `SMTP_HOST` | Hostname of the transactional SMTP relay service. | Required if `smtp` | `smtp-relay.brevo.com` |
+| `SMTP_PORT` | SMTP relay port. Supports `587` (default) or `2525` (Brevo alternative for cloud egress restrictions). | Required if `smtp` | `2525` |
+| `SMTP_USER` | SMTP relay account username or login identifier. | Required if `smtp` | `bc42f3001@smtp-brevo.com` |
+| `SMTP_PASSWORD` | Secure SMTP application authentication token or relay password. | Required if `smtp` | `xsmtpsib-...` |
+| `SMTP_FROM` | Verified sender email address matching provider domain validation. | Required if `smtp` | `sachhhinsrj@gmail.com` |
+| `BOOTSTRAP_ADMIN_EMAIL` | Whitelisted email for initial one-shot administrator bootstrapping. | Optional | `admin@govskill.org` |
+| `FRONTEND_URL` | Base frontend URL used when generating administrative registration invite links. | Optional | `https://govskill-frontend.onrender.com` |
+| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins. | Optional | `https://govskill-frontend.onrender.com,http://localhost:3000` |
 | `VITE_API_BASE_URL` | Base API URL consumed by the frontend client. Defaults to `/api` for same-origin proxying. | Optional | `https://govskill-backend.onrender.com/api` |
 
 ---
