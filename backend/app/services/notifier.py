@@ -15,16 +15,19 @@ def _send_smtp(to: str, subject: str, body_text: str) -> None:
     msg["To"] = to
     msg.set_content(body_text)
 
-    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-        server.ehlo()
-        try:
-            server.starttls()
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
             server.ehlo()
-        except smtplib.SMTPNotSupportedError:
-            pass
-        if settings.SMTP_USER and settings.SMTP_PASSWORD:
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-        server.send_message(msg)
+            try:
+                server.starttls()
+                server.ehlo()
+            except smtplib.SMTPNotSupportedError:
+                pass
+            if settings.SMTP_USER and settings.SMTP_PASSWORD:
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+            server.send_message(msg)
+    except Exception:
+        logger.exception("SMTP send failed")
 
 
 async def send_email(to: str, subject: str, body_text: str) -> None:
@@ -33,16 +36,6 @@ async def send_email(to: str, subject: str, body_text: str) -> None:
         await asyncio.to_thread(_send_smtp, to, subject, body_text)
     else:
         print(f"[NOTIFIER CONSOLE] To: {to} | Subject: {subject} | Body: {body_text.replace(chr(10), ' | ')}")
-
-
-async def send_registration_otp(to: str, otp: str) -> None:
-    subject = "Your GovSkill Staff Verification Code"
-    body = (
-        f"Your GovSkill staff verification code is: {otp}\n\n"
-        "This code expires in 10 minutes.\n"
-        "If you did not request this code, please ignore this email."
-    )
-    await send_email(to=to, subject=subject, body_text=body)
 
 
 async def send_login_otp(to: str, otp: str) -> None:

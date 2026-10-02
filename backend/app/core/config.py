@@ -1,7 +1,10 @@
+import logging
 from typing import Union
 
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger("govskill.config")
 
 
 class Settings(BaseSettings):
@@ -123,6 +126,8 @@ class Settings(BaseSettings):
                 raise ValueError(
                     f"EMAIL_TRANSPORT='smtp' requires all SMTP settings; missing: {', '.join(missing)}"
                 )
+            if self.EMAIL_TRANSPORT == "smtp" and self.SMTP_HOST and "." not in self.SMTP_HOST:
+                logger.warning("SMTP_HOST '%s' looks invalid — no dot in hostname.", self.SMTP_HOST)
         return self
 
 
