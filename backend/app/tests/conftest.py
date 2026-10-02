@@ -7,11 +7,6 @@ from app.api.routes.auth import (
     register_ip_limiter,
 )
 from app.api.routes.documents import _recent_uploads, lookup_limiter, upload_limiter
-from app.tests.helpers import (
-    complete_admin_login,
-    complete_staff_registration,
-    fetch_latest_otp,
-)
 
 
 @pytest.fixture(autouse=True)

@@ -20,7 +20,6 @@ from app.schemas.user import (
     AdminInviteRequest,
     AdminInviteResponse,
     AdminRegisterRequest,
-    LoginOTPResponse,
     LoginOTPVerifyRequest,
     MessageResponse,
     RegisterRequest,
