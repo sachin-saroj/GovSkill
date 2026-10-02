@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     EMAIL_TRANSPORT: str = "console"
     ENVIRONMENT: str = "development"
     SMTP_HOST: str = ""
-    SMTP_PORT: int = 587
+    SMTP_PORT: int = 587  # Port 587 (default) or 2525 (Brevo alternative when 587 is blocked by hosting provider)
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
     SMTP_FROM: str = ""

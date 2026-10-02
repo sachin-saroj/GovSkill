@@ -16,7 +16,7 @@ def _send_smtp(to: str, subject: str, body_text: str) -> None:
     msg.set_content(body_text)
 
     try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
             server.ehlo()
             try:
                 server.starttls()
