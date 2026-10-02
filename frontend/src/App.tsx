@@ -158,6 +158,7 @@ export const AppContent: React.FC = () => {
 
         {/* Route 09: Public Certificate Verification */}
         <Route path="/verify" element={<PublicVerificationPage />} />
+        <Route path="/verify/:credentialId" element={<PublicVerificationPage />} />
 
         {/* Fallback Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
