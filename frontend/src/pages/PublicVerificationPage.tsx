@@ -19,11 +19,19 @@ import {
 import { Button } from '@/components/ui/Button';
 import { fadeUpVariants } from '@/lib/motion';
 import { GovSkillLogo } from '@/components/GovSkillLogo';
+import { useAuth } from '@/hooks/useAuth';
 
 export const PublicVerificationPage: React.FC = () => {
   const { credentialId: paramId } = useParams<{ credentialId?: string }>();
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
+  const { user } = useAuth();
+
+  const isAuthenticated = Boolean(user);
+  const returnLabel = isAuthenticated ? 'Return to Dashboard' : 'Return to Home';
+  const returnDestination = isAuthenticated
+    ? (user?.role === 'admin' ? '/admin' : '/progress')
+    : '/';
 
   const [searchId, setSearchId] = useState<string>(paramId || '');
   const [credential, setCredential] = useState<CredentialVerificationResponse | null>(null);
@@ -82,11 +90,11 @@ export const PublicVerificationPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(returnDestination)}
             className="flex items-center gap-1.5 text-caption text-ink-muted hover:text-ink hover:bg-surface-light rounded-full border border-border-warm px-4 py-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Return to Home</span>
+            <span>{returnLabel}</span>
           </Button>
 
           <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-ink-muted bg-surface-elevated px-4 py-1.5 rounded-full border border-border-warm uppercase tracking-wider shadow-sm">

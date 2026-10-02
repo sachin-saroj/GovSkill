@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import PublicVerificationPage from './PublicVerificationPage';
 import api from '@/lib/api';
+import { useAuth } from '@/hooks/useAuth';
 
 vi.mock('@/lib/api', () => ({
   default: {
@@ -10,11 +11,23 @@ vi.mock('@/lib/api', () => ({
   },
 }));
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(),
+}));
+
 const mockedGet = vi.mocked(api.get);
+const mockedUseAuth = vi.mocked(useAuth);
 
 describe('PublicVerificationPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockedUseAuth.mockReturnValue({
+      user: null,
+      token: null,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
   });
 
   it('renders the public verification header, portal badge, and search input', () => {
@@ -100,5 +113,45 @@ describe('PublicVerificationPage', () => {
     expect(
       screen.getByText(/Official credential record not found/i)
     ).toBeInTheDocument();
+  });
+
+  it('renders "Return to Home" for unauthenticated users', () => {
+    mockedUseAuth.mockReturnValue({
+      user: null,
+      token: null,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/verify']}>
+        <Routes>
+          <Route path="/verify" element={<PublicVerificationPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole('button', { name: /Return to Home/i })).toBeInTheDocument();
+  });
+
+  it('renders "Return to Dashboard" for authenticated employees and admins', () => {
+    mockedUseAuth.mockReturnValue({
+      user: { id: 'user-1', email: 'officer@gov.test', role: 'employee', is_active: true },
+      token: 'jwt-token',
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/verify']}>
+        <Routes>
+          <Route path="/verify" element={<PublicVerificationPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole('button', { name: /Return to Dashboard/i })).toBeInTheDocument();
   });
 });
