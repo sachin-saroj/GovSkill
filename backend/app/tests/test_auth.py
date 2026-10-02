@@ -173,3 +173,43 @@ async def test_auth_self_service_password_change(captured_emails):
             await conn.run_sync(Base.metadata.drop_all)
     finally:
         app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_staff_registration_single_step_and_duplicate():
+    app.dependency_overrides[get_db] = override_get_db
+    try:
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+            reg_resp = await ac.post(
+                "/api/auth/register",
+                json={"email": "single_step@example.gov", "password": "securepassword123", "age": 28},
+            )
+            assert reg_resp.status_code == 201
+            reg_data = reg_resp.json()
+            assert "access_token" in reg_data
+            assert reg_data["user"]["email"] == "single_step@example.gov"
+            assert reg_data["user"]["role"] == "employee"
+            assert reg_data["user"]["age"] == 28
+
+            no_age_resp = await ac.post(
+                "/api/auth/register",
+                json={"email": "no_age@example.gov", "password": "securepassword123"},
+            )
+            assert no_age_resp.status_code == 201
+            assert no_age_resp.json()["user"]["age"] is None
+
+            dup_resp = await ac.post(
+                "/api/auth/register",
+                json={"email": "single_step@example.gov", "password": "anotherpassword123"},
+            )
+            assert dup_resp.status_code == 400
+            assert dup_resp.json()["detail"]["error"]["code"] == "EMAIL_EXISTS"
+            assert dup_resp.json()["detail"]["error"]["message"] == "Email already registered."
+
+        async with engine_test.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+    finally:
+        app.dependency_overrides.clear()

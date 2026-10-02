@@ -14,19 +14,12 @@ def fetch_latest_otp(captured_emails: list, email: str) -> str:
 async def complete_staff_registration(
     client, email: str, password: str, captured_emails: list
 ) -> dict:
-    reg_resp = await client.post(
+    resp = await client.post(
         "/api/auth/register",
-        json={"email": email, "password": password},
+        json={"email": email, "password": password, "age": 25},
     )
-    assert reg_resp.status_code == 200, f"Register failed: {reg_resp.text}"
-
-    otp = fetch_latest_otp(captured_emails, email)
-    verify_resp = await client.post(
-        "/api/auth/register/verify",
-        json={"email": email, "otp": otp, "password": password},
-    )
-    assert verify_resp.status_code == 200, f"Register verify failed: {verify_resp.text}"
-    return verify_resp.json()
+    assert resp.status_code == 201, f"Register failed: {resp.text}"
+    return resp.json()
 
 
 async def complete_admin_login(

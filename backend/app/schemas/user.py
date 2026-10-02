@@ -21,6 +21,7 @@ class UserResponse(BaseModel):
     email: str
     role: str
     is_active: bool = True
+    age: int | None = None
 
 
 class TokenResponse(BaseModel):
@@ -37,12 +38,7 @@ class UserChangePassword(BaseModel):
 class RegisterRequest(BaseModel):
     email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
     password: str = Field(min_length=6)
-
-
-class RegisterVerifyRequest(BaseModel):
-    email: str = Field(pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
-    otp: str = Field(pattern=r"^\d{6}$")
-    password: str = Field(min_length=6)
+    age: int | None = None
 
 
 class AdminRegisterRequest(BaseModel):

@@ -77,14 +77,12 @@ describe('LoginPage', () => {
     const registerLink = screen.getByRole('button', { name: /create staff account/i });
     fireEvent.click(registerLink);
 
-    expect(screen.getByRole('button', { name: 'Send Verification Code' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /employee/i })).toBeNull();
   });
 
-  it('registers via two-step OTP flow and logs in', async () => {
-    mockedPost
-      .mockResolvedValueOnce({ data: { message: 'Verification code sent.' } })
-      .mockResolvedValueOnce({ data: { access_token: 'staff-token' } });
+  it('registers staff in one step and logs in', async () => {
+    mockedPost.mockResolvedValueOnce({ data: { access_token: 'staff-token' } });
     login.mockResolvedValue({ role: 'employee' });
 
     renderPage();
@@ -99,34 +97,22 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByLabelText('Confirm Password'), {
       target: { value: 'password123' },
     });
+    fireEvent.change(screen.getByLabelText('Age'), {
+      target: { value: '30' },
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Send Verification Code' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Create Account' }));
 
     await waitFor(() =>
       expect(mockedPost).toHaveBeenCalledWith('/auth/register', {
         email: 'test-staff@example.com',
         password: 'password123',
-      })
-    );
-
-    const otpInput = screen.getByLabelText('Verification Code');
-    expect(otpInput).toBeInTheDocument();
-    expect(otpInput).toHaveAttribute('maxLength', '6');
-
-    fireEvent.change(otpInput, {
-      target: { value: '123456' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Complete Registration' }));
-
-    await waitFor(() =>
-      expect(mockedPost).toHaveBeenCalledWith('/auth/register/verify', {
-        email: 'test-staff@example.com',
-        otp: '123456',
-        password: 'password123',
+        age: 30,
       })
     );
     expect(login).toHaveBeenCalledWith('staff-token');
     expect(navigate).toHaveBeenCalledWith('/progress');
+    expect(screen.queryByLabelText('Verification Code')).toBeNull();
   });
 
   it('renders the backend error when authentication fails', async () => {

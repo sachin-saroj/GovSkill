@@ -23,7 +23,6 @@ from app.schemas.user import (
     LoginOTPVerifyRequest,
     MessageResponse,
     RegisterRequest,
-    RegisterVerifyRequest,
     TokenResponse,
     UserChangePassword,
     UserLogin,
@@ -32,7 +31,6 @@ from app.schemas.user import (
 from app.services.notifier import (
     send_admin_invite,
     send_login_otp,
-    send_registration_otp,
 )
 
 logger = logging.getLogger("govskill.auth")
@@ -45,7 +43,7 @@ login_email_limiter = InMemoryRateLimiter(max_requests=5, window_seconds=60, key
 otp_ip_limiter = InMemoryRateLimiter(max_requests=10, window_seconds=60, key_prefix="auth_otp")
 
 
-@router.post("/register", response_model=MessageResponse)
+@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register(
     payload: RegisterRequest,
     request: Request,
@@ -58,82 +56,16 @@ async def register(
         await db.execute(select(User.id).where(User.email == clean_email))
     ).scalar_one_or_none()
     if existing_user:
-        return MessageResponse(message="Verification code sent.")
-
-    otp = f"{secrets.randbelow(1_000_000):06d}"
-    otp_record = EmailOTP(
-        email=clean_email,
-        otp_hash=get_password_hash(otp),
-        purpose="register_verify",
-        expires_at=datetime.now(timezone.utc) + timedelta(minutes=10),
-    )
-    db.add(otp_record)
-    await db.commit()
-
-    await send_registration_otp(clean_email, otp)
-    return MessageResponse(message="Verification code sent.")
-
-
-@router.post("/register/verify", response_model=TokenResponse)
-async def register_verify(
-    payload: RegisterVerifyRequest,
-    request: Request,
-    db: AsyncSession = Depends(get_db),
-    _limiter: None = Depends(register_ip_limiter),
-):
-    clean_email = payload.email.strip().lower()
-    now = datetime.now(timezone.utc)
-
-    query = (
-        select(EmailOTP)
-        .where(
-            EmailOTP.email == clean_email,
-            EmailOTP.purpose == "register_verify",
-            EmailOTP.consumed_at.is_(None),
-            EmailOTP.expires_at > now,
-        )
-        .order_by(EmailOTP.created_at.desc())
-        .limit(1)
-    )
-    otp_record = (await db.execute(query)).scalar_one_or_none()
-    if not otp_record:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_VERIFICATION", "message": "Invalid or expired verification code."}},
-        )
-
-    otp_record.attempt_count += 1
-    if otp_record.attempt_count > 5:
-        otp_record.consumed_at = now
-        await db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_VERIFICATION", "message": "Invalid or expired verification code."}},
-        )
-
-    if not verify_password(payload.otp, otp_record.otp_hash):
-        await db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_VERIFICATION", "message": "Invalid or expired verification code."}},
-        )
-
-    otp_record.consumed_at = now
-
-    existing = (
-        await db.execute(select(User.id).where(User.email == clean_email))
-    ).scalar_one_or_none()
-    if existing:
-        await db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": {"code": "INVALID_VERIFICATION", "message": "Invalid or expired verification code."}},
+            detail={"error": {"code": "EMAIL_EXISTS", "message": "Email already registered."}},
         )
 
     user = User(
         email=clean_email,
         password_hash=get_password_hash(payload.password),
         role="employee",
+        age=payload.age,
     )
     db.add(user)
     await db.commit()

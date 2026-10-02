@@ -7,13 +7,14 @@ import api from '@/lib/api';
 import { AlertCircle } from 'lucide-react';
 import { staggerContainerVariants, fadeUpVariants } from '@/lib/motion';
 
-type ViewMode = 'login' | 'login-otp' | 'register' | 'register-otp';
+type ViewMode = 'login' | 'login-otp' | 'register';
 
 export const LoginPage: React.FC = () => {
   const [view, setView] = useState<ViewMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [age, setAge] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSessionId, setOtpSessionId] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -92,31 +93,15 @@ export const LoginPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await api.post('/auth/register', { email: cleanEmail, password });
-      setOtp('');
-      setView('register-otp');
-    } catch (err: unknown) {
-      setError(getApiErrorMessage(err, 'Failed to send verification code.'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRegisterOtpSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const res = await api.post<{ access_token: string }>('/auth/register/verify', {
-        email: email.trim().toLowerCase(),
-        otp: otp.trim(),
+      const res = await api.post<{ access_token: string }>('/auth/register', {
+        email: cleanEmail,
         password,
+        age: age ? parseInt(age, 10) : null,
       });
       await login(res.data.access_token);
       navigate('/progress');
     } catch (err: unknown) {
-      setError(getApiErrorMessage(err, 'Invalid or expired verification code.'));
+      setError(getApiErrorMessage(err, 'Registration failed.'));
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +111,6 @@ export const LoginPage: React.FC = () => {
     if (view === 'login') return handleLoginSubmit(e);
     if (view === 'login-otp') return handleLoginOtpSubmit(e);
     if (view === 'register') return handleRegisterSubmit(e);
-    if (view === 'register-otp') return handleRegisterOtpSubmit(e);
   };
 
   const getHeading = () => {
@@ -135,8 +119,6 @@ export const LoginPage: React.FC = () => {
         return 'Two-factor authentication';
       case 'register':
         return 'Create staff account';
-      case 'register-otp':
-        return 'Verify your email';
       case 'login':
       default:
         return 'Welcome back!';
@@ -148,9 +130,7 @@ export const LoginPage: React.FC = () => {
       case 'login-otp':
         return `Enter the verification code sent to ${email}`;
       case 'register':
-        return 'Register with your official email to receive a verification code.';
-      case 'register-otp':
-        return `Enter the code sent to ${email}`;
+        return 'Set up your staff account to access training modules.';
       case 'login':
       default:
         return 'Your work, your team, your flow — all in one place.';
@@ -272,7 +252,24 @@ export const LoginPage: React.FC = () => {
                 </div>
               )}
 
-              {(view === 'login-otp' || view === 'register-otp') && (
+              {view === 'register' && (
+                <div>
+                  <label htmlFor="age-field" className="sr-only">
+                    Age
+                  </label>
+                  <input
+                    id="age-field"
+                    type="number"
+                    aria-label="Age"
+                    placeholder="Age (optional)"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    className="w-full bg-white border border-zinc-200/90 hover:border-zinc-300 focus:border-black focus:ring-1 focus:ring-black rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all outline-none min-h-[44px]"
+                  />
+                </div>
+              )}
+
+              {view === 'login-otp' && (
                 <div>
                   <label htmlFor="otp-field" className="sr-only">
                     6-Digit Verification Code
@@ -301,9 +298,7 @@ export const LoginPage: React.FC = () => {
                       ? 'Sign In'
                       : view === 'login-otp'
                       ? 'Verify & Sign In'
-                      : view === 'register'
-                      ? 'Send Verification Code'
-                      : 'Complete Registration'
+                      : 'Create Account'
                   }
                   disabled={isLoading}
                   className="w-full rounded-full min-h-[44px] bg-[#111113] hover:bg-black text-white font-sans font-medium text-sm tracking-tight cursor-pointer shadow-sm transition-all hover:scale-[1.005] flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
@@ -314,27 +309,20 @@ export const LoginPage: React.FC = () => {
                     'Sign in with email'
                   ) : view === 'login-otp' ? (
                     'Verify & Sign In'
-                  ) : view === 'register' ? (
-                    'Send Verification Code'
                   ) : (
-                    'Complete Registration'
+                    'Create Account'
                   )}
                 </button>
               </div>
               {/* OTP Back Navigation Link (GAP 2) */}
-              {(view === 'login-otp' || view === 'register-otp') && (
+              {view === 'login-otp' && (
                 <div className="text-center pt-1">
                   <button
                     type="button"
                     onClick={() => {
-                      if (view === 'login-otp') {
-                        setView('login');
-                        setOtp('');
-                        setOtpSessionId('');
-                      } else {
-                        setView('register');
-                        setOtp('');
-                      }
+                      setView('login');
+                      setOtp('');
+                      setOtpSessionId('');
                       setError(null);
                     }}
                     className="text-xs text-zinc-500 hover:text-black transition-colors cursor-pointer"
