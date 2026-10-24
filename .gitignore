@@ -33,3 +33,6 @@ Thumbs.db
 scratch/
 .env*.local
 
+
+*.docx
+*.pdf
