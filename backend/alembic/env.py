@@ -38,10 +38,15 @@ def do_run_migrations(connection):
 
 
 async def run_async_migrations() -> None:
+    connect_args = {}
+    if not settings.DATABASE_URL.startswith("sqlite"):
+        connect_args = {"timeout": 10}
+
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=connect_args,
     )
 
     async with connectable.connect() as connection:
