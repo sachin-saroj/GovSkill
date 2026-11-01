@@ -1,0 +1,14 @@
+{
+  "name": "govskill",
+  "version": "1.0.0",
+  "description": "GovSkill Sovereign Civic Platform & Document Intelligence",
+  "private": true,
+  "scripts": {
+    "db:studio": "drizzle-kit studio"
+  },
+  "devDependencies": {
+    "@libsql/client": "^0.18.0",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.4"
+  }
+}

@@ -36,3 +36,5 @@ scratch/
 
 *.docx
 *.pdf
+!GovSkill_Complete_Technical_Guide_Viva_Setup.pdf
+!docs/GovSkill_Complete_Technical_Guide_Viva_Setup.pdf
